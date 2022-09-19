@@ -5,16 +5,43 @@ import Stack from "@mui/material/Stack";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { addClassroom } from '../utils/mutations';
+import { collection, onSnapshot, query, where, doc } from "firebase/firestore";
+import { db } from '../utils/firebase';
 
-export default function Classrooms() {
+export default function Classrooms({ user }) {
 
    const [newClassroomName, setNewClassroomName] = React.useState("");
    const [signupCode, setSignupCode] = React.useState("");
 
    const handleAddClassroom = () => {
-      addClassroom(newClassroomName);
+      addClassroom(newClassroomName, user);
       setNewClassroomName("");
    }
+
+   const [classrooms, setClassrooms] = React.useState([]);
+   React.useEffect(() => {
+
+      const q = query(collection(db, "classrooms"), where("playerList", "array-contains", user?.uid));
+
+      onSnapshot(q, (snapshot) => {
+         const classroomsList = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+         console.log(classroomsList);
+         setClassrooms(classroomsList);
+      })
+
+      // const userRef = doc(db, "users", user.uid);
+      // onSnapshot(userRef, (doc) => {
+      //    console.log(doc.data());
+      //    const classroomList = doc.data().classrooms;
+
+      // })
+      // const classroomsList = 
+      // const q = "query here";
+
+      // onSnapshot(q, (snapshot) => {
+      //    setClassrooms(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+      // })
+   }, [user])
 
    return (
       <Grid container spacing={3}>

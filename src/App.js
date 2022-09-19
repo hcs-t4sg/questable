@@ -200,7 +200,7 @@ export default function App() {
             {isSignedIn ?
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="classrooms" element={<Classrooms />} />
+                <Route path="classrooms" element={<Classrooms user={currentUser} />} />
                 <Route path="settings" element={<Settings />} />
                 <Route
                   path="*"
