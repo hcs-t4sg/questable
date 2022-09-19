@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { collection, addDoc, doc, updateDoc, deleteDoc, setDoc, arrayUnion, query, where, getDocs } from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc, deleteDoc, setDoc, arrayUnion, query, where, getDocs, getDoc } from "firebase/firestore";
 
 export async function syncUsers(user) {
    const userRef = doc(db, 'users', user.uid);
@@ -44,4 +44,43 @@ export async function getClassrooms(user) {
    const classrooms = querySnapshot.map(doc => ({ ...doc.data(), id: doc.id }));
 
    return classrooms;
+}
+
+export async function joinClassroom(classID, user) {
+
+   const classroomRef = doc(db, "classrooms", classID);
+   const classroomSnap = await getDoc(classroomRef);
+   console.log(classroomSnap.data());
+   // Check if class exists
+   if (!classroomSnap.exists()) {
+      return "Code invalid, please make sure you are entering the right code"
+   }
+
+   // Check if student already in class
+   const classroomData = classroomSnap.data();
+   let playerList = classroomData.playerList;
+
+   if (playerList.includes(user.uid)) {
+      return "You are already in this class!"
+   }
+
+   // Update classroom.players
+   playerList.push(user.uid);
+   await updateDoc(classroomRef, {
+      playerList: playerList
+   });
+
+   console.log("updated classroom playerList");
+
+   // Update classroom with new player
+   const classroomPlayersRef = collection(classroomRef, "players");
+   await addDoc(classroomPlayersRef, {
+      avatar: 0,
+      money: 0,
+      name: "Adventurer",
+      role: "student",
+      user: user.uid
+   });
+
+   return "Successfully joined " + classroomData.name + "!"
 }

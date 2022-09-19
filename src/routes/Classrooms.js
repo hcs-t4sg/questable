@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Stack from "@mui/material/Stack";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { addClassroom } from '../utils/mutations';
+import { addClassroom, joinClassroom } from '../utils/mutations';
 import { collection, onSnapshot, query, where, doc } from "firebase/firestore";
 import { db } from '../utils/firebase';
 
@@ -16,6 +16,13 @@ export default function Classrooms({ user }) {
    const handleAddClassroom = () => {
       addClassroom(newClassroomName, user);
       setNewClassroomName("");
+   }
+
+   const handleJoinClassroom = () => {
+      joinClassroom(signupCode, user).then((value) => {
+         window.alert(value);
+      });
+      setSignupCode("");
    }
 
    const [classrooms, setClassrooms] = React.useState([]);
@@ -50,8 +57,8 @@ export default function Classrooms({ user }) {
          </Grid>
          <Grid item xs={12}>
             <Stack direction="row" spacing={2}>
-               <TextField id="signup-code" label="Signup Code" variant="standard" onChange={(event) => setSignupCode(event.target.value)} />
-               <Button variant="contained">Join Classroom</Button>
+               <TextField id="signup-code" label="Signup Code" variant="standard" onChange={(event) => setSignupCode(event.target.value)} value={signupCode} />
+               <Button variant="contained" onClick={handleJoinClassroom}>Join Classroom</Button>
             </Stack>
          </Grid>
          <Grid item xs={12}>
