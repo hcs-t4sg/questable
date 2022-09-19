@@ -22,6 +22,14 @@ import { db, SignInScreen } from './utils/firebase';
 import { mainListItems } from './components/listItems';
 import { Link, Outlet } from "react-router-dom";
 import { syncUsers } from "./utils/mutations";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Classrooms from "./routes/Classrooms";
+import Home from "./routes/Home";
+import Settings from "./routes/Settings";
 
 // MUI styling constants
 
@@ -100,17 +108,6 @@ export default function App() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  // Main content of homescreen. This is displayed conditionally from user auth status
-
-  function mainContent() {
-    if (isSignedIn) {
-      return (
-        <Outlet />
-      )
-    } else return (
-      <SignInScreen></SignInScreen>
-    )
-  }
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -200,7 +197,21 @@ export default function App() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {mainContent()}
+            {isSignedIn ?
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="classrooms" element={<Classrooms />} />
+                <Route path="settings" element={<Settings />} />
+                <Route
+                  path="*"
+                  element={
+                    <main style={{ padding: "1rem" }}>
+                      <p>There's nothing here!</p>
+                    </main>
+                  }
+                />
+              </Routes>
+              : <SignInScreen></SignInScreen>}
           </Container>
         </Box>
       </Box>
