@@ -64,7 +64,7 @@ export async function joinClassroom(classID, user) {
       return "You are already in this class!"
    }
 
-   // Update classroom.players
+   // Update classroom.playerList
    playerList.push(user.uid);
    await updateDoc(classroomRef, {
       playerList: playerList

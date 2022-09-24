@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import { addClassroom, joinClassroom } from '../utils/mutations';
 import { collection, onSnapshot, query, where, doc } from "firebase/firestore";
 import { db } from '../utils/firebase';
+import ClassroomCard from '../components/classroomCard';
 
 export default function Classrooms({ user }) {
 
@@ -67,6 +68,11 @@ export default function Classrooms({ user }) {
                <Button variant="contained" onClick={handleAddClassroom}>Create Classroom</Button>
             </Stack>
          </Grid>
+         {classrooms.map((classroom) => (
+            <Grid item xs={12} sm={6} md={4}>
+               <ClassroomCard className={classroom.name} id={classroom.id} />
+            </Grid>
+         ))}
       </Grid>
    )
 }
