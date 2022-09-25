@@ -19,14 +19,23 @@ export async function addClassroom(name, user) {
    const classroomRef = await addDoc(collection(db, "classrooms"), newClassroom);
 
    // Update created classroom with new player
-   const classroomPlayersRef = collection(classroomRef, "players");
-   await addDoc(classroomPlayersRef, {
+   const newPlayerRef = doc(db, classroomRef.path + '/players', user.uid);
+   await setDoc(newPlayerRef, {
       avatar: 0,
       money: 0,
       name: "Adventurer",
       role: "teacher",
-      user: user.uid
    });
+
+
+   // const classroomPlayersRef = collection(classroomRef, "players");
+   // await addDoc(classroomPlayersRef, {
+   //    avatar: 0,
+   //    money: 0,
+   //    name: "Adventurer",
+   //    role: "teacher",
+   //    user: user.uid
+   // });
 
    // Add ID of created classroom to user.classrooms in users collection
    const userRef = doc(db, 'users', user.uid);
@@ -50,7 +59,7 @@ export async function joinClassroom(classID, user) {
 
    const classroomRef = doc(db, "classrooms", classID);
    const classroomSnap = await getDoc(classroomRef);
-   console.log(classroomSnap.data());
+
    // Check if class exists
    if (!classroomSnap.exists()) {
       return "Code invalid, please make sure you are entering the right code"
@@ -73,14 +82,52 @@ export async function joinClassroom(classID, user) {
    console.log("updated classroom playerList");
 
    // Update classroom with new player
-   const classroomPlayersRef = collection(classroomRef, "players");
-   await addDoc(classroomPlayersRef, {
+   const newPlayerRef = doc(db, `classrooms/${classID}/players`, user.uid);
+   await setDoc(newPlayerRef, {
       avatar: 0,
       money: 0,
       name: "Adventurer",
       role: "student",
-      user: user.uid
    });
 
+
+   // const classroomPlayersRef = collection(classroomRef, "players");
+   // await addDoc(classroomPlayersRef, {
+   //    avatar: 0,
+   //    money: 0,
+   //    name: "Adventurer",
+   //    role: "student",
+   //    user: user.uid
+   // });
+
    return "Successfully joined " + classroomData.name + "!"
+}
+
+export async function getPlayerData(classID, user) {
+   const classroomRef = doc(db, "classrooms", classID);
+   const classroomSnap = await getDoc(classroomRef);
+   if (!classroomSnap.exists()) {
+      return null
+   }
+
+   const playerRef = doc(db, `classrooms/${classID}/players/${user}`)
+   const playerSnap = await getDoc(playerRef);
+
+   if (playerSnap.exists()) {
+      const playerData = playerSnap.data();
+      return playerData
+   } else {
+      return null
+   }
+
+
+
+   // // Check if class exists
+   // if (!classroomSnap.exists()) {
+   //    return null
+   // }
+
+
+   // const classroomData = classroomSnap.data();
+   // let playerList = classroomData.playerList;
 }

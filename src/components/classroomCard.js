@@ -1,19 +1,10 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-
-const bull = (
-   <Box
-      component="span"
-      sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-   >
-      •
-   </Box>
-);
+import * as React from 'react';
+import { Link } from "react-router-dom";
 
 export default function ClassroomCard({ className, classID }) {
    return (
@@ -24,7 +15,7 @@ export default function ClassroomCard({ className, classID }) {
             </Typography>
          </CardContent>
          <CardActions>
-            <Button size="small">Select Classroom</Button>
+            <Button size="small" component={Link} to={`/class/${classID}`}>Select Classroom</Button>
          </CardActions>
       </Card>
    );

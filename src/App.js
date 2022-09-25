@@ -7,29 +7,22 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import MuiDrawer from '@mui/material/Drawer';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
-import Stack from "@mui/material/Stack";
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import firebase from 'firebase/compat/app';
-import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import React from "react";
+import { Link, Route, Routes } from "react-router-dom";
 import './App.css';
-import { db, SignInScreen } from './utils/firebase';
 import { mainListItems } from './components/listItems';
-import { Link, Outlet } from "react-router-dom";
-import { syncUsers } from "./utils/mutations";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import Classroom from "./routes/Classroom";
 import Classrooms from "./routes/Classrooms";
 import Home from "./routes/Home";
 import Settings from "./routes/Settings";
+import { SignInScreen } from './utils/firebase';
+import { syncUsers } from "./utils/mutations";
 
 // MUI styling constants
 
@@ -79,7 +72,16 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const mdTheme = createTheme();
+const mdTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#5299f0',
+    },
+    secondary: {
+      main: '#94a7ff',
+    },
+  },
+});
 
 // App.js is the homepage and handles top-level functions like user auth.
 
@@ -87,11 +89,11 @@ export default function App() {
 
   // User authentication functionality. Would not recommend changing.
 
-  const [isSignedIn, setIsSignedIn] = useState(false); // Local signed-in state.
-  const [currentUser, setCurrentUser] = useState(null); // Local user info
+  const [isSignedIn, setIsSignedIn] = React.useState(false); // Local signed-in state.
+  const [currentUser, setCurrentUser] = React.useState(null); // Local user info
 
   // Listen to the Firebase Auth state and set the local state.
-  useEffect(() => {
+  React.useEffect(() => {
     const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
       setIsSignedIn(!!user);
       if (!!user) {
@@ -104,7 +106,7 @@ export default function App() {
 
   // Navbar drawer functionality
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -202,6 +204,9 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="classrooms" element={<Classrooms user={currentUser} />} />
                 <Route path="settings" element={<Settings />} />
+                <Route path="class">
+                  <Route path=":classID" element={<Classroom user={currentUser} />} />
+                </Route>
                 <Route
                   path="*"
                   element={

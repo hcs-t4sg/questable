@@ -1,13 +1,14 @@
-import React from "react";
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import Stack from "@mui/material/Stack";
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { addClassroom, joinClassroom } from '../utils/mutations';
-import { collection, onSnapshot, query, where, doc } from "firebase/firestore";
+import Typography from '@mui/material/Typography';
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import ClassroomCard from '../components/ClassroomCard';
 import { db } from '../utils/firebase';
-import ClassroomCard from '../components/classroomCard';
+import { addClassroom, joinClassroom } from '../utils/mutations';
 
 export default function Classrooms({ user }) {
 
@@ -33,22 +34,8 @@ export default function Classrooms({ user }) {
 
       onSnapshot(q, (snapshot) => {
          const classroomsList = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-         console.log(classroomsList);
          setClassrooms(classroomsList);
       })
-
-      // const userRef = doc(db, "users", user.uid);
-      // onSnapshot(userRef, (doc) => {
-      //    console.log(doc.data());
-      //    const classroomList = doc.data().classrooms;
-
-      // })
-      // const classroomsList = 
-      // const q = "query here";
-
-      // onSnapshot(q, (snapshot) => {
-      //    setClassrooms(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
-      // })
    }, [user])
 
    return (
@@ -70,9 +57,11 @@ export default function Classrooms({ user }) {
          </Grid>
          {classrooms.map((classroom) => (
             <Grid item xs={12} sm={6} md={4}>
-               <ClassroomCard className={classroom.name} id={classroom.id} />
+               <ClassroomCard className={classroom.name} classID={classroom.id} key={classroom.id} />
             </Grid>
          ))}
+         <Outlet />
+
       </Grid>
    )
 }
