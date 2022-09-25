@@ -1,5 +1,5 @@
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from './firebase';
-import { collection, addDoc, doc, updateDoc, deleteDoc, setDoc, arrayUnion, query, where, getDocs, getDoc } from "firebase/firestore";
 
 export async function syncUsers(user) {
    const userRef = doc(db, 'users', user.uid);
@@ -9,6 +9,7 @@ export async function syncUsers(user) {
    await setDoc(userRef, data, { merge: true });
 }
 
+// Create new classroom with user as teacher
 export async function addClassroom(name, user) {
 
    // Update classrooms collection with new classroom
@@ -27,25 +28,19 @@ export async function addClassroom(name, user) {
       role: "teacher",
    });
 
+   /* Update user's classrooms list. Not useful at the moment but we may keep 
+   for later. Don't delete for now */
+   // const userRef = doc(db, 'users', user.uid);
+   // await updateDoc(userRef, {
+   //    classrooms: arrayUnion(classroomRef.id)
+   // })
 
-   // const classroomPlayersRef = collection(classroomRef, "players");
-   // await addDoc(classroomPlayersRef, {
-   //    avatar: 0,
-   //    money: 0,
-   //    name: "Adventurer",
-   //    role: "teacher",
-   //    user: user.uid
-   // });
-
-   // Add ID of created classroom to user.classrooms in users collection
-   const userRef = doc(db, 'users', user.uid);
-   await updateDoc(userRef, {
-      classrooms: arrayUnion(classroomRef.id)
-   })
-
+   return;
 }
 
+// Get classrooms that the current user is in
 export async function getClassrooms(user) {
+
    const q = query(collection(db, "classrooms"), where("playerList", "array-contains", user.uid));
 
    const querySnapshot = await getDocs(q);
@@ -55,6 +50,7 @@ export async function getClassrooms(user) {
    return classrooms;
 }
 
+// Add user to existing classroom and set as student
 export async function joinClassroom(classID, user) {
 
    const classroomRef = doc(db, "classrooms", classID);
@@ -90,22 +86,15 @@ export async function joinClassroom(classID, user) {
       role: "student",
    });
 
-
-   // const classroomPlayersRef = collection(classroomRef, "players");
-   // await addDoc(classroomPlayersRef, {
-   //    avatar: 0,
-   //    money: 0,
-   //    name: "Adventurer",
-   //    role: "student",
-   //    user: user.uid
-   // });
-
    return "Successfully joined " + classroomData.name + "!"
 }
 
+// For a user in a classroom, return user's player data
 export async function getPlayerData(classID, user) {
+
    const classroomRef = doc(db, "classrooms", classID);
    const classroomSnap = await getDoc(classroomRef);
+
    if (!classroomSnap.exists()) {
       return null
    }
@@ -119,15 +108,4 @@ export async function getPlayerData(classID, user) {
    } else {
       return null
    }
-
-
-
-   // // Check if class exists
-   // if (!classroomSnap.exists()) {
-   //    return null
-   // }
-
-
-   // const classroomData = classroomSnap.data();
-   // let playerList = classroomData.playerList;
 }

@@ -87,11 +87,9 @@ const mdTheme = createTheme({
 
 export default function App() {
 
-  // User authentication functionality. Would not recommend changing.
-
-  const [isSignedIn, setIsSignedIn] = React.useState(false); // Local signed-in state.
-  const [currentUser, setCurrentUser] = React.useState(null); // Local user info
-
+  // User authentication functionality.
+  const [isSignedIn, setIsSignedIn] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState(null);
   // Listen to the Firebase Auth state and set the local state.
   React.useEffect(() => {
     const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
@@ -101,11 +99,11 @@ export default function App() {
         syncUsers(user);
       }
     });
-    return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
+    return () => unregisterAuthObserver();
+    // Make sure we un-register Firebase observers when the component unmounts.
   }, []);
 
   // Navbar drawer functionality
-
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -200,6 +198,9 @@ export default function App() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             {isSignedIn ?
+              /* Navigation routes set by react router. This is placed in
+              app.js rather than index.js so we can pass relevant top-level
+              props to the elements */
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="classrooms" element={<Classrooms user={currentUser} />} />
@@ -207,6 +208,7 @@ export default function App() {
                 <Route path="class">
                   <Route path=":classID" element={<Classroom user={currentUser} />} />
                 </Route>
+                {/* Catch-all route for any URLs that don't match an existing route */}
                 <Route
                   path="*"
                   element={

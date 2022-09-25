@@ -1,21 +1,20 @@
-import { useParams } from "react-router-dom";
-import React from "react";
-import { syncUsers, getPlayerData } from "../utils/mutations";
 import { getAuth } from "firebase/auth";
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { collection, onSnapshot, query, where, doc } from "firebase/firestore";
-import { db } from '../utils/firebase';
+import { doc, onSnapshot } from "firebase/firestore";
+import React from "react";
+import { useParams } from "react-router-dom";
 import StudentView from '../components/StudentView';
 import TeacherView from '../components/TeacherView';
+import { db } from '../utils/firebase';
+import { getPlayerData, syncUsers } from "../utils/mutations";
 
 export default function Classroom({ user }) {
 
+   // Use react router to fetch class ID from URL params
    let params = useParams();
    const classID = params.classID;
 
+   // Fetch user's player information for classroom
    const [player, setPlayer] = React.useState(null);
-
    React.useEffect(() => {
       const updatePlayer = async () => {
          const auth = getAuth();
@@ -29,12 +28,11 @@ export default function Classroom({ user }) {
       updatePlayer().catch(console.error);
    }, [classID]);
 
+   // Listen to classroom data
    const [classroom, setClassroom] = React.useState([]);
    React.useEffect(() => {
 
       const classroomRef = doc(db, "classrooms", classID);
-
-      // const q = query(collection(db, "classrooms"), where("playerList", "array-contains", user?.uid));
 
       onSnapshot(classroomRef, (doc) => {
          console.log({ ...doc.data(), id: doc.id });
@@ -42,12 +40,12 @@ export default function Classroom({ user }) {
       })
    }, [user, classID])
 
+   // Display variable views depending on player role (teacher/student)
    if (player?.role === "teacher") {
-      <TeacherView player={player} classroom={classroom} />
+      return <TeacherView player={player} classroom={classroom} />
    } else if (player?.role === "student") {
-      <StudentView player={player} classroom={classroom} />
+      return <StudentView player={player} classroom={classroom} />
    } else {
       return null
    }
-
 }

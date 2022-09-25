@@ -5,7 +5,6 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React from "react";
-import { Outlet } from "react-router-dom";
 import ClassroomCard from '../components/ClassroomCard';
 import { db } from '../utils/firebase';
 import { addClassroom, joinClassroom } from '../utils/mutations';
@@ -27,6 +26,7 @@ export default function Classrooms({ user }) {
       setSignupCode("");
    }
 
+   // Listen to user's classrooms
    const [classrooms, setClassrooms] = React.useState([]);
    React.useEffect(() => {
 
@@ -56,12 +56,10 @@ export default function Classrooms({ user }) {
             </Stack>
          </Grid>
          {classrooms.map((classroom) => (
-            <Grid item xs={12} sm={6} md={4}>
-               <ClassroomCard className={classroom.name} classID={classroom.id} key={classroom.id} />
+            <Grid item xs={12} sm={6} md={4} key={classroom.id}>
+               <ClassroomCard className={classroom.name} classID={classroom.id} />
             </Grid>
          ))}
-         <Outlet />
-
       </Grid>
    )
 }
