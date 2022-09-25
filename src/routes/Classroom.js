@@ -42,14 +42,12 @@ export default function Classroom({ user }) {
       })
    }, [user, classID])
 
-
-   return (
-      <Grid container spacing={3}>
-         <Grid item xs={12}>
-            <Typography variant="h2">{classroom.name}</Typography>
-         </Grid>
-         {player?.role == "teacher" ? <TeacherView player={player} classroom={classroom} /> : player?.role == "student" ? <StudentView player={player} classroom={classroom} /> : null}
-      </Grid>
-   )
+   if (player?.role === "teacher") {
+      <TeacherView player={player} classroom={classroom} />
+   } else if (player?.role === "student") {
+      <StudentView player={player} classroom={classroom} />
+   } else {
+      return null
+   }
 
 }
