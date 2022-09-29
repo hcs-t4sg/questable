@@ -16,6 +16,7 @@ export async function addClassroom(name, user) {
    const newClassroom = {
       name: name,
       playerList: [user.uid],
+      taskList: [],
    }
    const classroomRef = await addDoc(collection(db, "classrooms"), newClassroom);
 
@@ -27,6 +28,7 @@ export async function addClassroom(name, user) {
       name: "Adventurer",
       role: "teacher",
    });
+
 
    /* Update user's classrooms list. Not useful at the moment but we may keep 
    for later. Don't delete for now */

@@ -10,7 +10,15 @@ export default function StudentView({ player, classroom }) {
          <Grid item xs={12}>
             <Typography variant="h2">Student View</Typography>
             <Typography variant="h3">{player.name}</Typography>
-         </Grid>
+           </Grid>
+
+           <table>
+               <tr>
+                   <th>Name</th>
+                   <th>Reward</th>
+                   <th>Due</th>
+               </tr>
+           </table>
       </Grid>
    )
 }

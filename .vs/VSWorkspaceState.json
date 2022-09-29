@@ -1,8 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src"
+    "\\src",
+    "\\src\\components",
+    "\\src\\routes",
+    "\\src\\utils"
   ],
-  "SelectedNode": "\\src\\App.js",
+  "SelectedNode": "\\src\\routes\\Classroom.js",
   "PreviewInSolutionExplorer": false
 }
