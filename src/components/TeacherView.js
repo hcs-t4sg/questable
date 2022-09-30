@@ -9,9 +9,21 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { setDoc, updateDoc, query,  where, onSnapshot, doc, getDocs, addDoc, deleteDoc,  collection, getDoc } from "firebase/firestore";
+import { db } from '../utils/firebase';
+import React from "react";
 
 export default function TeacherView({ player, classroom }) {
-    console.log(classroom.tasks);
+    const taskCollectionRef = collection(db, 'classrooms/'+classroom.id+'/tasks');
+
+
+    const [tasks, setTasks] = React.useState([]);
+
+    onSnapshot(taskCollectionRef, (snapshot) => {
+       setTasks(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    })
+    
+    
     return (
       <Grid container spacing={3}>
          <Grid item xs={12}>
@@ -21,7 +33,7 @@ export default function TeacherView({ player, classroom }) {
             <Typography variant="h2">Teacher View</Typography>
             <Typography variant="h3">{player.name}</Typography>
            </Grid>
-
+            
            <TableContainer>
                <TableHead>
                    <TableRow>
@@ -31,7 +43,7 @@ export default function TeacherView({ player, classroom }) {
                    </TableRow>
                </TableHead>
                <TableBody>
-                   {classroom.tasks.map((task) => (
+                   {tasks?.map((task) => (
                     <TableRow
                     key={task.id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -40,7 +52,7 @@ export default function TeacherView({ player, classroom }) {
                         <TableCell align="right">{task.reward}</TableCell>
                         <TableCell alight="right">{task.due}</TableCell>
                     </TableRow>
-                   ))};
+                   ))}
                </TableBody>
            </TableContainer>
        </Grid>

@@ -29,9 +29,6 @@ export default function Classroom({ user }) {
       updatePlayer().catch(console.error);
    }, [classID]);
 
-   //Tasks collection
-   const [tasks, setTasks] = useState([]);
-
    // Listen to classroom data
    const [classroom, setClassroom] = React.useState([]);
    React.useEffect(() => {
@@ -41,12 +38,6 @@ export default function Classroom({ user }) {
       onSnapshot(classroomRef, (doc) => {
          console.log({ ...doc.data(), id: doc.id });
          setClassroom({ ...doc.data(), id: doc.id });
-      })
-      
-      const taskCollectionRef = collection(db, 'classrooms/'+{classID}+'/tasks');
-      
-      onSnapshot(taskCollectionRef, (snapshot) => {
-         setTasks(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
       })
 
    }, [user, classID])
