@@ -35,7 +35,7 @@ export default function StudentView({ player, classroom }) {
             <Typography variant="h2">Student View</Typography>
             <Typography variant="h3">{player.name}</Typography>
            </Grid>
-
+           {/* Create the table to hold the student's assigned tasks info and map the tasks to it */}
            <TableContainer>
                <TableHead>
                    <TableRow>
