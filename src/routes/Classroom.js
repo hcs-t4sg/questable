@@ -36,7 +36,6 @@ export default function Classroom({ user }) {
       const classroomRef = doc(db, "classrooms", classID);
 
       onSnapshot(classroomRef, (doc) => {
-         console.log({ ...doc.data(), id: doc.id });
          setClassroom({ ...doc.data(), id: doc.id });
       })
 

@@ -27,6 +27,7 @@ export async function addClassroom(name, user) {
       money: 0,
       name: "Adventurer",
       role: "teacher",
+      id: user.uid,
    });
 
 
@@ -86,6 +87,7 @@ export async function joinClassroom(classID, user) {
       money: 0,
       name: "Adventurer",
       role: "student",
+      id: user.uid,
    });
 
    return "Successfully joined " + classroomData.name + "!"

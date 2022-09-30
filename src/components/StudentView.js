@@ -1,7 +1,31 @@
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import { setDoc, updateDoc, query,  where, onSnapshot, doc, getDocs, addDoc, deleteDoc,  collection, getDoc } from "firebase/firestore";
+import { db } from '../utils/firebase';
+import React from "react";
+
 export default function StudentView({ player, classroom }) {
+      //Create a state variable to hold the tasks
+      const [tasks, setTasks] = React.useState([]);
+      //Create a reference to the tasks collection
+      const tasksCollectionRef = collection(db, 'classrooms/'+classroom.id+'/tasks');
+      //Create a query to filter for only the tasks that are assigned to the student
+      const q = query(tasksCollectionRef, where("players", "array-contains", player.id));
+      //Attach a listener to the tasks collection
+      onSnapshot(q, (snapshot) => {
+         //Append the task id as an element and then store the array in the tasks variable
+         setTasks(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+      })
+   
    return (
       <Grid container spacing={3}>
          <Grid item xs={12}>
@@ -12,13 +36,27 @@ export default function StudentView({ player, classroom }) {
             <Typography variant="h3">{player.name}</Typography>
            </Grid>
 
-           <table>
-               <tr>
-                   <th>Name</th>
-                   <th>Reward</th>
-                   <th>Due</th>
-               </tr>
-           </table>
+           <TableContainer>
+               <TableHead>
+                   <TableRow>
+                       <TableCell>Name</TableCell>
+                       <TableCell>Reward</TableCell>
+                       <TableCell>Due</TableCell>
+                   </TableRow>
+               </TableHead>
+               <TableBody>
+                   {tasks?.map((task) => (
+                    <TableRow
+                    key={task.id}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                        <TableCell component="th" scope="row">{task.name}</TableCell>
+                        <TableCell align="right">{task.reward}</TableCell>
+                        <TableCell alight="right">{task.due}</TableCell>
+                    </TableRow>
+                   ))}
+               </TableBody>
+           </TableContainer>
       </Grid>
    )
 }

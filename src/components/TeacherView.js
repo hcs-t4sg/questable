@@ -14,12 +14,13 @@ import { db } from '../utils/firebase';
 import React from "react";
 
 export default function TeacherView({ player, classroom }) {
+    //Create a reference to the tasks collection
     const taskCollectionRef = collection(db, 'classrooms/'+classroom.id+'/tasks');
-
-
+    //Create a state variable to hold the tasks
     const [tasks, setTasks] = React.useState([]);
-
+    //Attach a listener to the tasks collection
     onSnapshot(taskCollectionRef, (snapshot) => {
+        //Append the task id as an element and then store the array in the tasks variable
        setTasks(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
     })
     
@@ -33,7 +34,7 @@ export default function TeacherView({ player, classroom }) {
             <Typography variant="h2">Teacher View</Typography>
             <Typography variant="h3">{player.name}</Typography>
            </Grid>
-            
+            {/* Create the table to hold the tasks info and map the tasks to it */}
            <TableContainer>
                <TableHead>
                    <TableRow>
