@@ -9,9 +9,9 @@ import { updatePlayer } from '../utils/mutations';
 
 export default function PlayerCard({ player, user, classroomID }) {
    const [name, setName] = useState(player.name);
-   const [avatar,] = useState(player.avatar);
-   const [money,] = useState(player.money);
-   const [role,] = useState(player.role);
+   const [avatar, setAvatar] = useState(player.avatar);
+   const [money, setMoney] = useState(player.money);
+   const [role, setRole] = useState(player.role);
 
    const handleEdit = () => {
       const newPlayer = {
