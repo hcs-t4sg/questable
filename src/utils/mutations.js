@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from './firebase';
 
 export async function syncUsers(user) {
@@ -112,4 +112,25 @@ export async function getPlayerData(classID, user) {
    } else {
       return null
    }
+}
+
+//Mutation to handle task update
+export async function updateTask(classroomID, task)
+{  
+   await updateDoc(doc(db, "classrooms/"+classroomID+"/tasks", task.id), {
+      name: task.name,
+      due: task.due,
+      reward: task.reward,
+   });
+}
+
+//Mutation to delete tasks
+export async function deleteTask(classroomID, taskID)
+{
+   await deleteDoc(doc(db, "classrooms/"+classroomID+"/tasks", taskID));
+}
+
+export async function completeTask(classroomID, taskID, playerID)
+{
+   
 }

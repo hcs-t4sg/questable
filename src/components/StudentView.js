@@ -13,11 +13,13 @@ import { setDoc, updateDoc, query,  where, onSnapshot, doc, getDocs, addDoc, del
 import { db } from '../utils/firebase';
 import React from "react";
 
+import TaskModalStudent from './TaskModalStudent'
+
 export default function StudentView({ player, classroom }) {
       //Create a state variable to hold the tasks
       const [tasks, setTasks] = React.useState([]);
       //Create a reference to the tasks collection
-      const tasksCollectionRef = collection(db, 'classrooms/'+classroom.id+'/tasks');
+      const tasksCollectionRef = collection(db, 'classrooms/'+classroom.id+'/assignedTasks');
       //Create a query to filter for only the tasks that are assigned to the student
       const q = query(tasksCollectionRef, where("players", "array-contains", player.id));
       //Attach a listener to the tasks collection
@@ -53,6 +55,10 @@ export default function StudentView({ player, classroom }) {
                         <TableCell component="th" scope="row">{task.name}</TableCell>
                         <TableCell align="right">{task.reward}</TableCell>
                         <TableCell alight="right">{task.due}</TableCell>
+
+                        <TableCell sx={{ "padding-top": 0, "padding-bottom": 0 }} align="right">
+                            <TaskModalStudent task={task} classroom={classroom} player={player} />
+                        </TableCell>
                     </TableRow>
                    ))}
                </TableBody>

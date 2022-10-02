@@ -13,6 +13,8 @@ import { setDoc, updateDoc, query,  where, onSnapshot, doc, getDocs, addDoc, del
 import { db } from '../utils/firebase';
 import React from "react";
 
+import TaskModalTeacher from './TaskModalTeacher.js'
+
 export default function TeacherView({ player, classroom }) {
     //Create a reference to the tasks collection
     const taskCollectionRef = collection(db, 'classrooms/'+classroom.id+'/tasks');
@@ -23,8 +25,6 @@ export default function TeacherView({ player, classroom }) {
         //Append the task id as an element and then store the array in the tasks variable
        setTasks(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
     })
-    
-    
     return (
       <Grid container spacing={3}>
          <Grid item xs={12}>
@@ -52,6 +52,10 @@ export default function TeacherView({ player, classroom }) {
                         <TableCell component="th" scope="row">{task.name}</TableCell>
                         <TableCell align="right">{task.reward}</TableCell>
                         <TableCell alight="right">{task.due}</TableCell>
+
+                        <TableCell sx={{ "padding-top": 0, "padding-bottom": 0 }} align="right">
+                            <TaskModalTeacher task={task} classroom={classroom} />
+                        </TableCell>
                     </TableRow>
                    ))}
                </TableBody>
