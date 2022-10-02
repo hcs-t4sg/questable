@@ -42,7 +42,7 @@ export default function Classroom({ user }) {
 
    // Display variable views depending on player role (teacher/student)
    if (player?.role === "teacher") {
-      return <TeacherView player={player} classroom={classroom} user={user}/>
+      return <TeacherView player={player} classroom={classroom} />
    } else if (player?.role === "student") {
       return <StudentView player={player} classroom={classroom} />
    } else {

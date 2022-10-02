@@ -109,33 +109,3 @@ export async function getPlayerData(classID, user) {
       return null
    }
 }
-
-export async function addTask(classID, task, user) {
-   // Update tasks collection
-   const taskRef = await addDoc(collection(db, `classrooms/${classID}/tasks`), {
-      name: task.name,
-      description: task.description,
-      reward: task.reward,
-      created: Date.now(),
-      due: task.due,
-   });
-
-   // Update assignedTasks collection for every member in class except teacher
-   const docRef = doc(db, "classrooms", classID);
-   const docSnap = await getDoc(docRef);
-
-   if (docSnap.exists()) {
-      var listOfPlayers = docSnap.data().playerList;
-      for (var i = 0; i < listOfPlayers.length; i++) {
-         if (listOfPlayers[i] != user.uid) {
-            await addDoc(collection(db, `classrooms/${classID}/assignedTasks`), {
-               player: listOfPlayers[i],
-               assignedTask: taskRef.id,
-            });
-         }
-      }
-   } else {
-   // doc.data() will be undefined in this case
-   console.log("No such document!");
-   }
-}
