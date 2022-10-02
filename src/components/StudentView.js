@@ -25,19 +25,21 @@ export default function StudentView({ player, classroom }) {
     //Create a query to filter for only the tasks that are assigned to the student
     const q = query(assignedTasksCollectionRef, where("player", "==", player.id));
 
-   
+    async function getTask(assignedTask)
+    {
+        const task = await getTaskData(classroom.id, assignedTask.data().assignedTask);
+        return task;
+    }
+
     React.useEffect(() => {
         const mapTasks = async () => {
             //Attach a listener to the tasks collection
             onSnapshot(q, (snapshot) => {
-                setTasks(snapshot.docs.map((assignedTask) => (
-                    getTaskData(classroom.id, assignedTask.data().assignedTask)
-                )));
+                setTasks(snapshot.docs.map(getTask));
             })
         }
         mapTasks();
     }, []);
-
     
    return (
       <Grid container spacing={3}>
