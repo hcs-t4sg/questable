@@ -21,6 +21,8 @@ export default function Classroom({ user }) {
          const user = auth.currentUser;
          if (!!user) {
             syncUsers(user);
+
+            // Pull this code out into separate onSnapshot() listener
             const playerData = await getPlayerData(classID, user.uid);
             setPlayer(playerData);
          }
