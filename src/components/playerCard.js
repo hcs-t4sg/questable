@@ -3,9 +3,9 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import { useState } from 'react';
-import { updatePlayer } from '../utils/mutations';
+import Typography from '@mui/material/Typography';
+import PlayerModal from "./playerModal.js";
 
 export default function PlayerCard({ player, user, classroomID }) {
    const [name, setName] = useState(player.name);
@@ -13,53 +13,15 @@ export default function PlayerCard({ player, user, classroomID }) {
    const [money, setMoney] = useState(player.money);
    const [role, setRole] = useState(player.role);
 
-   const handleEdit = () => {
-      const newPlayer = {
-         name: name,
-         avatar: avatar,
-         money: money,
-         role: role,
-      };
-   
-      updatePlayer(player, user.uid, classroomID, newPlayer).catch(console.error);
-   };
-
    return (
       <Card>
          <CardContent>
-            <TextField
-                  margin="normal"
-                  id="name"
-                  label="Player Name"
-                  fullWidth
-                  variant="standard"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-            />
-
-            <TextField
-                  margin="normal"
-                  id="email"
-                  label="Email"
-                  fullWidth
-                  variant="standard"
-                  value={user.email}
-                  disabled ={true}
-            />
-
-            <TextField
-                  margin="normal"
-                  id="money"
-                  label="Money"
-                  fullWidth
-                  variant="standard"
-                  value={player.money}
-                  disabled={true}
-            />
+            <Typography variant="h5" component="div">{name}</Typography>
+            <Typography variant="h6" component="div">Email: {user.email}</Typography>
+            <Typography variant="h6" component="div">Money: {money}</Typography>
          </CardContent>
-
          <CardActions>
-            <Button size="small" onClick={handleEdit()}>Update Info</Button>
+            <PlayerModal player={player} user={user} classroomID={classroomID} type="edit"/>
          </CardActions>
       </Card>
    );

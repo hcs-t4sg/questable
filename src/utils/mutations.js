@@ -110,13 +110,10 @@ export async function getPlayerData(classID, user) {
    }
 }
 
-export async function updatePlayer(player, userID, classroomID, newPlayer) {
+export async function updatePlayer(userID, classroomID, newPlayer) {
    const playerRef = doc(db, `classrooms/${classroomID}/players/${userID}`)
 
    await updateDoc(playerRef, {
       name: newPlayer.name,
-      avatar: newPlayer.avatar,
-      money: newPlayer.money,
-      role: newPlayer.role,
    })
 }
