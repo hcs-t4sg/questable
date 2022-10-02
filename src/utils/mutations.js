@@ -151,5 +151,7 @@ export async function deleteTask(classroomID, taskID)
 
 export async function completeTask(classroomID, taskID, playerID)
 {
-   
+   deleteDoc(doc(db, "classrooms/"+classroomID+"/assignedTasks", taskID));
+   const task = await getTaskData(classroomID, taskID);
+   await setDoc(doc(db, `classrooms/${classroomID}/completedTasks/${taskID}`), task);
 }
