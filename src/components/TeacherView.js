@@ -23,7 +23,7 @@ export default function TeacherView({ player, classroom }) {
     //Attach a listener to the tasks collection
     onSnapshot(taskCollectionRef, (snapshot) => {
         //Append the task id as an element and then store the array in the tasks variable
-       setTasks(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+       setTasks(snapshot.docs);
     })
     return (
       <Grid container spacing={3}>

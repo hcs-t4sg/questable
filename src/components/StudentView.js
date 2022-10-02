@@ -14,20 +14,31 @@ import { db } from '../utils/firebase';
 import React from "react";
 
 import TaskModalStudent from './TaskModalStudent'
+import { getTaskData } from '../utils/mutations';
+
 
 export default function StudentView({ player, classroom }) {
-      //Create a state variable to hold the tasks
-      const [tasks, setTasks] = React.useState([]);
-      //Create a reference to the tasks collection
-      const tasksCollectionRef = collection(db, 'classrooms/'+classroom.id+'/assignedTasks');
-      //Create a query to filter for only the tasks that are assigned to the student
-      const q = query(tasksCollectionRef, where("players", "array-contains", player.id));
-      //Attach a listener to the tasks collection
-      onSnapshot(q, (snapshot) => {
-         //Append the task id as an element and then store the array in the tasks variable
-         setTasks(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-      })
+    //Create a state variable to hold the tasks assigned to the player
+    const [tasks, setTasks] = React.useState([]);
+    //Create a reference to the tasks collection
+    const assignedTasksCollectionRef = collection(db, 'classrooms/'+classroom.id+'/assignedTasks');
+    //Create a query to filter for only the tasks that are assigned to the student
+    const q = query(assignedTasksCollectionRef, where("player", "==", player.id));
+
    
+    React.useEffect(() => {
+        const mapTasks = async () => {
+            //Attach a listener to the tasks collection
+            onSnapshot(q, (snapshot) => {
+                setTasks(snapshot.docs.map((assignedTask) => (
+                    getTaskData(classroom.id, assignedTask.assignedTask)
+                )));
+            })
+        }
+        mapTasks();
+
+    }, []);
+
    return (
       <Grid container spacing={3}>
          <Grid item xs={12}>

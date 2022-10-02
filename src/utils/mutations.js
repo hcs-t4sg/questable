@@ -113,7 +113,25 @@ export async function getPlayerData(classID, user) {
       return null
    }
 }
+//for a task, get the task data
+export async function getTaskData(classID, taskID)
+{
+   const classroomRef = doc(db, "classrooms", classID);
+   const classroomSnap = await getDoc(classroomRef);
 
+   if (!classroomSnap.exists()) {
+      return null
+   }
+
+   const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`);
+   const taskSnap = await getDoc(taskRef);
+   if (taskSnap.exists()) {
+      const taskData = taskSnap.data();
+      return taskData
+   } else {
+      return null
+   }
+}
 //Mutation to handle task update
 export async function updateTask(classroomID, task)
 {  
