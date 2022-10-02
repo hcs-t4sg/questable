@@ -20,11 +20,19 @@ export default function TeacherView({ player, classroom }) {
     const taskCollectionRef = collection(db, 'classrooms/'+classroom.id+'/tasks');
     //Create a state variable to hold the tasks
     const [tasks, setTasks] = React.useState([]);
-    //Attach a listener to the tasks collection
-    onSnapshot(taskCollectionRef, (snapshot) => {
-        //Append the task id as an element and then store the array in the tasks variable
-       setTasks(snapshot.docs);
-    })
+    React.useEffect(() => {
+        const mapTasks = async () => {
+            //Attach a listener to the tasks collection
+            onSnapshot(taskCollectionRef, (snapshot) => {
+                //Append the task id as an element and then store the array in the tasks variable
+                setTasks(snapshot.docs.map((task) => (
+                        {...task.data()}
+                )));
+            })
+        }
+        mapTasks();
+    }, []);
+    
     return (
       <Grid container spacing={3}>
          <Grid item xs={12}>

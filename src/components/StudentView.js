@@ -31,14 +31,14 @@ export default function StudentView({ player, classroom }) {
             //Attach a listener to the tasks collection
             onSnapshot(q, (snapshot) => {
                 setTasks(snapshot.docs.map((assignedTask) => (
-                    getTaskData(classroom.id, assignedTask.assignedTask)
+                    getTaskData(classroom.id, assignedTask.data().assignedTask)
                 )));
             })
         }
         mapTasks();
-
     }, []);
 
+    
    return (
       <Grid container spacing={3}>
          <Grid item xs={12}>

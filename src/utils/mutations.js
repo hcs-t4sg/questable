@@ -125,6 +125,7 @@ export async function getTaskData(classID, taskID)
 
    const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`);
    const taskSnap = await getDoc(taskRef);
+
    if (taskSnap.exists()) {
       const taskData = taskSnap.data();
       return taskData
