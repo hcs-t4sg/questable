@@ -23,6 +23,7 @@ import Home from "./routes/Home";
 import Settings from "./routes/Settings";
 import { SignInScreen } from './utils/firebase';
 import { syncUsers } from "./utils/mutations";
+import { emptyEntry } from './utils/mutations';
 
 // MUI styling constants
 
