@@ -16,7 +16,6 @@ export async function addClassroom(name, user) {
    const newClassroom = {
       name: name,
       playerList: [user.uid],
-      taskList: [],
    }
    const classroomRef = await addDoc(collection(db, "classrooms"), newClassroom);
 

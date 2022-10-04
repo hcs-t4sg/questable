@@ -1,19 +1,16 @@
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { setDoc, updateDoc, query,  where, onSnapshot, doc, getDocs, addDoc, deleteDoc,  collection, getDoc } from "firebase/firestore";
-import { db } from '../utils/firebase';
+import { collection, onSnapshot } from "firebase/firestore";
 import React from "react";
+import { db } from '../utils/firebase';
 
-import TaskModalTeacher from './TaskModalTeacher.js'
+import TaskModalTeacher from './TaskModalTeacher.js';
 
 export default function TeacherView({ player, classroom }) {
     //Create a reference to the tasks collection
