@@ -151,7 +151,15 @@ export async function deleteTask(classroomID, taskID)
 
 export async function completeTask(classroomID, taskID, playerID)
 {
-   deleteDoc(doc(db, "classrooms/"+classroomID+"/assignedTasks", taskID));
-   const task = await getTaskData(classroomID, taskID);
-   await setDoc(doc(db, `classrooms/${classroomID}/completedTasks/${taskID}`), task);
+   let task = await getTaskData(classroomID, taskID);
+   //Remove the player from assigned task array
+   task.assigned = task.assigned.filter((id) => {
+      return id !== playerID; 
+   });
+   if(!task.completed.includes(playerID))
+   {
+      task.completed.push(playerID);
+   }
+
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), task);
 }
