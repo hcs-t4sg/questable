@@ -21,25 +21,22 @@ export default function StudentView({ player, classroom }) {
     //Create a state variable to hold the tasks assigned to the player
     const [tasks, setTasks] = React.useState([]);
     //Create a reference to the tasks collection
-    const tasksRef = collection(db, 'classrooms/'+classroom.id+'/tasksRef');
+    const tasksRef = collection(db, 'classrooms/'+classroom.id+'/tasks');
     //Create a query to filter for only the tasks that are assigned to the student
     const q = query(tasksRef, where("assigned", "array-contains", player.id));
 
-    async function getTask(assignedTask)
-    {
-        const task = await getTaskData(classroom.id, assignedTask.data().assignedTask);
-        return task;
-    }
-
     React.useEffect(() => {
-        const mapTasks = async () => {
-            //Attach a listener to the tasks collection
-            onSnapshot(q, (snapshot) => {
-                setTasks(snapshot.docs.map(getTask));
-            })
-        }
-        mapTasks();
-        console.log(tasks);
+        //Attach a listener to the tasks collection
+        onSnapshot(q, (snapshot) => {
+            const mapTasks = async () => {
+                //Append the task id as an element and then store the array in the tasks variable
+                const tasks = await snapshot.docs.map(async (doc)=>(
+                    await getTaskData(classroom.id, doc.data().id)
+                )); 
+                setTasks(await Promise.all(tasks));
+            }   
+            mapTasks().catch(console.error);
+        })
     }, []);
 
    return (
