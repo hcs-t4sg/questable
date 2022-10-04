@@ -72,28 +72,23 @@ export default function TaskModalTeacher({ task, classroom}) {
     const editButton = <Button onClick={handleEdit}>Edit</Button>;
     const deleteButton = <Button onClick={handleDelete}>Delete</Button>;
 
-    const completedTaskRef = collection(db, `classrooms/${classroom.id}/completedTasks`);
-    const q = query(completedTaskRef, where("completedTask", "==", task.id));
-
-    async function getName(player)
-    {
-        const name = await getPlayerData(classroom.id, player.data().player);
-        return name.name;
-    }
-
+    const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
+    
     const [completed, setCompleted] = React.useState([]);
-    React.useEffect(() => {
-        const mapCompleted = async () => {
-            //Attach a listener to the tasks collection
-            onSnapshot(q, (snapshot) => {
-                //Append the task id as an element and then store the array in the tasks variable
-                setCompleted(snapshot.docs.map((player)=>player.data().player)); //TODO: get the player name, not the id
-            })
-        }
-        mapCompleted();
-        console.log(completed);
-    }, []);
 
+    React.useEffect(() => {
+            //Attach a listener to the tasks collection
+            onSnapshot(taskRef, (snapshot) => {
+                const mapCompleted = async () => {
+                    //Append the task id as an element and then store the array in the tasks variable
+                    const names = await snapshot.data().completed.map(async (player)=>(
+                        {id: player, name: (await getPlayerData(classroom.id, player)).name}
+                    )); 
+                    setCompleted(await Promise.all(names));
+                }   
+                mapCompleted().catch(console.error);
+            })
+    }, []);
 
 return (
     <div>
@@ -153,12 +148,12 @@ return (
                    </TableRow>
                </TableHead>
                <TableBody>
-                {completed.map((playerName) => ( 
+                {completed.map((player) => ( 
                     <TableRow
-                    key={playerName}
+                    key={player.id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
-                        <TableCell component="th" scope="row">{playerName}</TableCell>
+                        <TableCell component="th" scope="row">{player.name}</TableCell>
                     </TableRow>
                 ))}
                </TableBody>

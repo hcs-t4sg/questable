@@ -21,9 +21,9 @@ export default function StudentView({ player, classroom }) {
     //Create a state variable to hold the tasks assigned to the player
     const [tasks, setTasks] = React.useState([]);
     //Create a reference to the tasks collection
-    const assignedTasksCollectionRef = collection(db, 'classrooms/'+classroom.id+'/assignedTasks');
+    const tasksRef = collection(db, 'classrooms/'+classroom.id+'/tasksRef');
     //Create a query to filter for only the tasks that are assigned to the student
-    const q = query(assignedTasksCollectionRef, where("player", "==", player.id));
+    const q = query(tasksRef, where("assigned", "array-contains", player.id));
 
     async function getTask(assignedTask)
     {
@@ -39,8 +39,9 @@ export default function StudentView({ player, classroom }) {
             })
         }
         mapTasks();
+        console.log(tasks);
     }, []);
-    
+
    return (
       <Grid container spacing={3}>
          <Grid item xs={12}>
@@ -68,7 +69,6 @@ export default function StudentView({ player, classroom }) {
                         <TableCell component="th" scope="row">{task.name}</TableCell>
                         <TableCell align="right">{task.reward}</TableCell>
                         <TableCell alight="right">{task.due}</TableCell>
-
                         <TableCell sx={{ "padding-top": 0, "padding-bottom": 0 }} align="right">
                             <TaskModalStudent task={task} classroom={classroom} player={player} />
                         </TableCell>

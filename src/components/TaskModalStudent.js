@@ -49,6 +49,7 @@ export default function TaskModalStudent({ task, classroom, player }) {
 
     const handleComplete = () => {
         completeTask(classroom.id, task.id, player.id);
+        handleClose();
     };
 
     const openButton =  <IconButton onClick={handleClickOpen}>
@@ -63,17 +64,17 @@ return (
        <Dialog open={open} onClose={handleClose}>
           <DialogTitle>{name}</DialogTitle>
           <DialogContent>
-             <Typography variant="h2">Name</Typography>
-             <Typography variant="h2">{name}</Typography>
+             <Typography variant="h4">Name</Typography>
+             <Typography variant="h4">{name}</Typography>
 
-             <Typography variant="h2">Due</Typography>
-             <Typography variant="h2">{due}</Typography>
+             <Typography variant="h4">Due</Typography>
+             <Typography variant="h4">{due}</Typography>
 
-             <Typography variant="h2">Reward</Typography>
-             <Typography variant="h2">{reward}</Typography>
+             <Typography variant="h4">Reward</Typography>
+             <Typography variant="h4">{reward}</Typography>
             
-             <Typography variant="h2">Description</Typography>
-             <Typography variant="h2">{description}</Typography>
+             <Typography variant="h4">Description</Typography>
+             <Typography variant="h4">{description}</Typography>
 
           {completeButton}
           
