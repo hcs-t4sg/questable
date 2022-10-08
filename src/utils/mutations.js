@@ -135,7 +135,7 @@ export async function getTaskData(classID, taskID)
 //Mutation to handle task update
 export async function updateTask(classroomID, task)
 {  
-   await updateDoc(doc(db, "classrooms/"+classroomID+"/tasks", task.id), {
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/task.id`), {
       name: task.name,
       due: task.due,
       reward: task.reward,
@@ -145,12 +145,13 @@ export async function updateTask(classroomID, task)
 //Mutation to delete tasks
 export async function deleteTask(classroomID, taskID)
 {
-   await deleteDoc(doc(db, "classrooms/"+classroomID+"/tasks", taskID));
+   await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/taskID`));
 }
 
 export async function completeTask(classroomID, taskID, playerID)
 {
    let task = await getTaskData(classroomID, taskID);
+   console.log(task);
    //Remove the player from assigned task array
    task.assigned = task.assigned.filter((id) => {
       return id !== playerID; 

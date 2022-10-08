@@ -1,55 +1,41 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import * as React from 'react';
-import { useState } from 'react';
-import { updateTask, deleteTask, getPlayerData} from '../utils/mutations';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import TextField from '@mui/material/TextField';
+import { doc, onSnapshot } from "firebase/firestore";
+import * as React from 'react';
+import { useState } from 'react';
 import { db } from '../utils/firebase';
-import Typography from '@mui/material/Typography';
-import { setDoc, updateDoc, query,  where, onSnapshot, doc, getDocs, addDoc, deleteDoc,  collection, getDoc } from "firebase/firestore";
-// Modal component for individual entries.
-
-/* EntryModal parameters:
-entry: Data about the entry in question
-type: Type of entry modal being opened.
-   This can be "add" (for adding a new entry) or
-   "edit" (for opening or editing an existing entry from table).
-user: User making query (The current logged in user). */
+import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 
 export default function TaskModalTeacher({ task, classroom}) {
+    //State variables
     const [open, setOpen] = useState(false);
     const [name, setName] = useState(task.name);
     const [reward, setReward] = useState(task.reward);
     const [due, setDue] = useState(task.due);
     const [description, setDescription] = useState(task.description);
 
-    //Array that holds all players to have completed this task
-
+    // Open the task modal
     const handleClickOpen = () => {
         setOpen(true);
         setName(task.name);
         setDue(task.due);
         setReward(task.reward);
     };
-
+    // Close the task modal
     const handleClose = () => {
         setOpen(false);
     };
-
+    // Handle the click of an edit button
     const handleEdit = () => {
         const updatedTask = {
             name: name,
@@ -57,10 +43,12 @@ export default function TaskModalTeacher({ task, classroom}) {
             reward: reward,
             id: task.id,
         }
+        // Call the `updateTask` mutation
         updateTask(classroom.id, updatedTask);
         handleClose();
     };
 
+    // Call the `deleteTask` mutation
     const handleDelete = () => {
         deleteTask(classroom.id, task.id);
     };
@@ -77,15 +65,19 @@ export default function TaskModalTeacher({ task, classroom}) {
     const [completed, setCompleted] = React.useState([]);
 
     React.useEffect(() => {
-            //Attach a listener to the tasks collection
+            // Attach a listener to the tasks collection
             onSnapshot(taskRef, (snapshot) => {
                 const mapCompleted = async () => {
-                    //Append the task id as an element and then store the array in the tasks variable
+                    //Map all the player ID's to their names using `getPlayerData(...)`
                     const names = await snapshot.data().completed.map(async (player)=>(
                         {id: player, name: (await getPlayerData(classroom.id, player)).name}
                     )); 
+                    // Await the resolution of all the promises in the returned array
+                    // Then, store this array of names in the completed state variable
+                    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
                     setCompleted(await Promise.all(names));
-                }   
+                }
+                //Run this async function   
                 mapCompleted().catch(console.error);
             })
     }, []);
@@ -96,7 +88,6 @@ return (
        <Dialog open={open} onClose={handleClose}>
           <DialogTitle>{name}</DialogTitle>
           <DialogContent>
-             {/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
              <TextField
                 margin="normal"
                 id="name"

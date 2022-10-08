@@ -14,14 +14,14 @@ import TaskModalTeacher from './TaskModalTeacher.js';
 
 export default function TeacherView({ player, classroom }) {
     //Create a reference to the tasks collection
-    const taskCollectionRef = collection(db, 'classrooms/'+classroom.id+'/tasks');
+    const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`);
     //Create a state variable to hold the tasks
     const [tasks, setTasks] = React.useState([]);
     React.useEffect(() => {
         const mapTasks = async () => {
             //Attach a listener to the tasks collection
             onSnapshot(taskCollectionRef, (snapshot) => {
-                //Append the task id as an element and then store the array in the tasks variable
+                //Store the tasks in the `tasks` state variable
                 setTasks(snapshot.docs.map((task) => (
                         {...task.data()}
                 )));

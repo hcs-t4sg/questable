@@ -1,44 +1,45 @@
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { setDoc, updateDoc, query,  where, onSnapshot, doc, getDocs, addDoc, deleteDoc,  collection, getDoc } from "firebase/firestore";
-import { db } from '../utils/firebase';
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React from "react";
+import { db } from '../utils/firebase';
 
-import TaskModalStudent from './TaskModalStudent'
 import { getTaskData } from '../utils/mutations';
+import TaskModalStudent from './TaskModalStudent';
 
 
 export default function StudentView({ player, classroom }) {
     //Create a state variable to hold the tasks assigned to the player
     const [tasks, setTasks] = React.useState([]);
     //Create a reference to the tasks collection
-    const tasksRef = collection(db, 'classrooms/'+classroom.id+'/tasks');
+    const tasksRef = collection(db, `classrooms/${classroom.id}/tasks`);
     //Create a query to filter for only the tasks that are assigned to the student
     const q = query(tasksRef, where("assigned", "array-contains", player.id));
 
     React.useEffect(() => {
-        //Attach a listener to the tasks collection
+        // Attach a listener to the tasks collection
         onSnapshot(q, (snapshot) => {
             const mapTasks = async () => {
-                //Append the task id as an element and then store the array in the tasks variable
+                // Map the task id's to the task data using `getTaskData`
                 const tasks = await snapshot.docs.map(async (doc)=>(
                     await getTaskData(classroom.id, doc.data().id)
                 )); 
+                // Await the resolution of all promises in the returned array
+                // and then store them in the `tasks` state variable
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
                 setTasks(await Promise.all(tasks));
             }   
+            // Call the async `mapTasks` function
             mapTasks().catch(console.error);
         })
     }, []);
-
+    
    return (
       <Grid container spacing={3}>
          <Grid item xs={12}>
