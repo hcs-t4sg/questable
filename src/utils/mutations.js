@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayRemove, arrayUnion } from "firebase/firestore";
 import { db } from './firebase';
 
 export async function syncUsers(user) {
@@ -137,5 +137,40 @@ export async function addTask(classID, task, user) {
    } else {
    // doc.data() will be undefined in this case
    console.log("No such document!");
+   }
+}
+
+// Remove player ID from completed array and add to confirmed array.
+export async function confirmTask(classID, studentID, taskID){
+   const classroomRef = doc(db, 'classrooms', classID)
+   const classroomSnap = await getDoc(classroomRef)
+   if (!classroomSnap.exists()) {
+      return "Could not find classroom"
+   }
+
+   const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`)
+   const taskSnap = await getDoc(taskRef)
+   if(taskSnap.exists()) {
+      updateDoc(taskRef, {
+         completed: arrayRemove(studentID),
+         confirmed: arrayUnion(studentID)
+      })
+   }
+}
+
+// Remove player ID from completed array.
+export async function denyTask(classID, studentID, taskID){
+   const classroomRef = doc(db, 'classrooms', classID)
+   const classroomSnap = await getDoc(classroomRef)
+   if (!classroomSnap.exists()) {
+      // console.error("Could not find classroom")
+      return "Could not find classroom"
+   }
+   const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`)
+   const taskSnap = await getDoc(taskRef)
+   if(taskSnap.exists()) {
+      updateDoc(taskRef, {
+         completed: arrayRemove(studentID)
+      })
    }
 }
