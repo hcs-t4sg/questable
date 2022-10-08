@@ -127,7 +127,7 @@ export async function addTask(classID, task, user) {
    if (docSnap.exists()) {
       var listOfPlayers = docSnap.data().playerList;
       for (var i = 0; i < listOfPlayers.length; i++) {
-         if (listOfPlayers[i] != user.uid) {
+         if (listOfPlayers[i] !== user.uid) {
             await addDoc(collection(db, `classrooms/${classID}/assignedTasks`), {
                player: listOfPlayers[i],
                assignedTask: taskRef.id,
