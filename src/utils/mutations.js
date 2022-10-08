@@ -128,7 +128,7 @@ export async function confirmTask(classID, studentID, taskID){
    }
 }
 
-// Remove player ID from completed array.
+// Remove player ID from completed array and add to assigned array.
 export async function denyTask(classID, studentID, taskID){
    const classroomRef = doc(db, 'classrooms', classID)
    const classroomSnap = await getDoc(classroomRef)
@@ -140,7 +140,8 @@ export async function denyTask(classID, studentID, taskID){
    const taskSnap = await getDoc(taskRef)
    if(taskSnap.exists()) {
       updateDoc(taskRef, {
-         completed: arrayRemove(studentID)
+         completed: arrayRemove(studentID),
+         assigned: arrayUnion(studentID)
       })
    }
 }

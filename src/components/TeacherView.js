@@ -60,7 +60,8 @@ export default function TeacherView({ player, classroom }) {
          <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
                <TableRow>
-                  <TableCell align="center">Student</TableCell>
+                  <TableCell align="center">Student Name</TableCell>
+                  <TableCell align="center">Email</TableCell>
                   <TableCell align="center">Task</TableCell>
                   <TableCell align="center">Confirmation</TableCell>
                </TableRow>
@@ -72,7 +73,8 @@ export default function TeacherView({ player, classroom }) {
                         const playersCompleted = playerData.filter(player => player.id === playerID)
                         return (playersCompleted.map(player => (
                            <TableRow key={'test'} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                              <TableCell align="center" component="th" scope="row"> {player.name}</TableCell>
+                              <TableCell align="center" component="th" scope="row">{player.name}</TableCell>
+                              <TableCell align="center" component="th" scope="row">{player.email}</TableCell>
                               <TableCell align="center">{task.name}</TableCell>
                               <TableCell align="center">
                                  <Button onClick={() => confirmTask(classroom.id, player.id, task.id)} variant="contained">Confirm</Button>
