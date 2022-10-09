@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 
-export default function TaskModalTeacher({ task, classroom}) {
+export default function TaskModalTeacher({ task, classroom }) {
     //State variables
     const [open, setOpen] = useState(false);
     const [name, setName] = useState(task.name);
@@ -53,107 +53,108 @@ export default function TaskModalTeacher({ task, classroom}) {
         deleteTask(classroom.id, task.id);
     };
 
-    const openButton =  <IconButton onClick={handleClickOpen}>
-                            <OpenInNewIcon />
-                        </IconButton>;
+    const openButton = <IconButton onClick={handleClickOpen}>
+        <OpenInNewIcon />
+    </IconButton>;
 
     const editButton = <Button onClick={handleEdit}>Edit</Button>;
     const deleteButton = <Button onClick={handleDelete}>Delete</Button>;
 
-    const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
-    
     const [completed, setCompleted] = React.useState([]);
 
     React.useEffect(() => {
-            // Attach a listener to the tasks collection
-            onSnapshot(taskRef, (snapshot) => {
-                const mapCompleted = async () => {
-                    //Map all the player ID's to their names using `getPlayerData(...)`
-                    const names = await snapshot.data().completed.map(async (player)=>(
-                        {id: player, name: (await getPlayerData(classroom.id, player)).name}
-                    )); 
-                    // Await the resolution of all the promises in the returned array
-                    // Then, store this array of names in the completed state variable
-                    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
-                    setCompleted(await Promise.all(names));
-                }
-                //Run this async function   
-                mapCompleted().catch(console.error);
-            })
+
+        const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
+
+        // Attach a listener to the tasks collection
+        onSnapshot(taskRef, (snapshot) => {
+            const mapCompleted = async () => {
+                //Map all the player ID's to their names using `getPlayerData(...)`
+                const names = await snapshot.data().completed.map(async (player) => (
+                    { id: player, name: (await getPlayerData(classroom.id, player)).name }
+                ));
+                // Await the resolution of all the promises in the returned array
+                // Then, store this array of names in the completed state variable
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+                setCompleted(await Promise.all(names));
+            }
+            //Run this async function   
+            mapCompleted().catch(console.error);
+        })
     }, []);
 
-return (
-    <div>
-       {openButton}
-       <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>{name}</DialogTitle>
-          <DialogContent>
-             <TextField
-                margin="normal"
-                id="name"
-                label="Name"
-                fullWidth
-                variant="standard"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-             />
-             <TextField
-                margin="normal"
-                id="reward"
-                label="Reward"
-                placeholder="0"
-                fullWidth
-                variant="standard"
-                value={reward}
-                onChange={(event) => setReward(event.target.value)}
-             />
-             <TextField
-                margin="normal"
-                id="date"
-                label="Date"
-                fullWidth
-                variant="standard"
-                placeholder=""
-                multiline
-                maxRows={1}
-                value={due}
-                onChange={(event) => setDue(event.target.value)}
-             />
-            <TextField
-                margin="normal"
-                id="description"
-                label="Description"
-                fullWidth
-                variant="standard"
-                placeholder=""
-                multiline
-                maxRows={8}
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-             />
-            {/* Table to hold all students to have completed the task */}
-            <TableContainer>
-               <TableHead>
-                   <TableRow>
-                       <TableCell>Stuents that Have Completed this Task</TableCell>
-                   </TableRow>
-               </TableHead>
-               <TableBody>
-                {completed.map((player) => ( 
-                    <TableRow
-                    key={player.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                        <TableCell component="th" scope="row">{player.name}</TableCell>
-                    </TableRow>
-                ))}
-               </TableBody>
-           </TableContainer>
+    return (
+        <div>
+            {openButton}
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>{name}</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        margin="normal"
+                        id="name"
+                        label="Name"
+                        fullWidth
+                        variant="standard"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
+                    />
+                    <TextField
+                        margin="normal"
+                        id="reward"
+                        label="Reward"
+                        placeholder="0"
+                        fullWidth
+                        variant="standard"
+                        value={reward}
+                        onChange={(event) => setReward(event.target.value)}
+                    />
+                    <TextField
+                        margin="normal"
+                        id="date"
+                        label="Date"
+                        fullWidth
+                        variant="standard"
+                        placeholder=""
+                        multiline
+                        maxRows={1}
+                        value={due}
+                        onChange={(event) => setDue(event.target.value)}
+                    />
+                    <TextField
+                        margin="normal"
+                        id="description"
+                        label="Description"
+                        fullWidth
+                        variant="standard"
+                        placeholder=""
+                        multiline
+                        maxRows={8}
+                        value={description}
+                        onChange={(event) => setDescription(event.target.value)}
+                    />
+                    {/* Table to hold all students to have completed the task */}
+                    <TableContainer>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Stuents that Have Completed this Task</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {completed.map((player) => (
+                                <TableRow
+                                    key={player.id}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row">{player.name}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </TableContainer>
 
-          {editButton}
-          {deleteButton}
-          </DialogContent>
-       </Dialog>
-    </div>
- );
+                    {editButton}
+                    {deleteButton}
+                </DialogContent>
+            </Dialog>
+        </div>
+    );
 }
