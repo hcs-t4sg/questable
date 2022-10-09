@@ -1,18 +1,18 @@
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-
+import * as React from 'react';
+import CreateTaskModal from './CreateTaskModal';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { collection, onSnapshot } from "firebase/firestore";
-import React from "react";
 import { db } from '../utils/firebase';
 
 import TaskModalTeacher from './TaskModalTeacher.js';
 
-export default function TeacherView({ player, classroom }) {
+export default function TeacherView({ player, classroom, user }) {
 
     //Create a state variable to hold the tasks
     const [tasks, setTasks] = React.useState([]);
@@ -40,6 +40,7 @@ export default function TeacherView({ player, classroom }) {
                 <Typography variant="h2">Teacher View</Typography>
                 <Typography variant="h3">{player.name}</Typography>
             </Grid>
+            <CreateTaskModal classroom={classroom} user={user} />
             {/* Create the table to hold the tasks info and map the tasks to it */}
             <TableContainer>
                 <TableHead>
@@ -67,6 +68,5 @@ export default function TeacherView({ player, classroom }) {
                 </TableBody>
             </TableContainer>
         </Grid>
-
     )
 }

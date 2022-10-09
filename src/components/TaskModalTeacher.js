@@ -70,13 +70,15 @@ export default function TaskModalTeacher({ task, classroom }) {
         onSnapshot(taskRef, (snapshot) => {
             const mapCompleted = async () => {
                 //Map all the player ID's to their names using `getPlayerData(...)`
-                const names = await snapshot.data().completed.map(async (player) => (
+                const names = await snapshot.data()?.completed.map(async (player) => (
                     { id: player, name: (await getPlayerData(classroom.id, player)).name }
                 ));
                 // Await the resolution of all the promises in the returned array
                 // Then, store this array of names in the completed state variable
                 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
-                setCompleted(await Promise.all(names));
+                if (names) {
+                    setCompleted(await Promise.all(names));
+                }
             }
             //Run this async function   
             mapCompleted().catch(console.error);

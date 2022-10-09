@@ -1,4 +1,4 @@
-import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion} from "firebase/firestore";
+import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion } from "firebase/firestore";
 import { db } from './firebase';
 
 export async function syncUsers(user) {
@@ -112,9 +112,9 @@ export async function getPlayerData(classID, user) {
       return null
    }
 }
+
 //for a task, get the task data
-export async function getTaskData(classID, taskID)
-{
+export async function getTaskData(classID, taskID) {
    const classroomRef = doc(db, "classrooms", classID);
    const classroomSnap = await getDoc(classroomRef);
 
@@ -133,8 +133,7 @@ export async function getTaskData(classID, taskID)
    }
 }
 //Mutation to handle task update
-export async function updateTask(classroomID, task)
-{  
+export async function updateTask(classroomID, task) {
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/task.id`), {
       name: task.name,
       due: task.due,
@@ -143,15 +142,37 @@ export async function updateTask(classroomID, task)
 }
 
 //Mutation to delete tasks
-export async function deleteTask(classroomID, taskID)
-{
+export async function deleteTask(classroomID, taskID) {
    await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/taskID`));
 }
 
-export async function completeTask(classroomID, taskID, playerID)
-{
+export async function completeTask(classroomID, taskID, playerID) {
    // Add `playerID` to completed array
-   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {completed: arrayUnion(playerID)});
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
    // Remove `playerID` from assigned array
-   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {assigned: arrayRemove(playerID)});
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) });
+}
+
+export async function addTask(classID, task, user) {
+   // Update assignedTasks collection for every member in class except teacher
+   const classRef = doc(db, "classrooms", classID);
+   const classSnap = await getDoc(classRef);
+
+   if (!classSnap.exists()) {
+      // doc.data() will be undefined in this case
+      return "No such document!"
+   }
+
+   const listOfPlayers = classSnap.data().playerList;
+   const listOfStudents = listOfPlayers.filter(playerId => playerId !== user.uid);
+
+   // Update tasks collection
+   await addDoc(collection(db, `classrooms/${classID}/tasks`), {
+      name: task.name,
+      description: task.description,
+      reward: task.reward,
+      created: Date.now(),
+      due: task.due,
+      assigned: listOfStudents,
+   });
 }

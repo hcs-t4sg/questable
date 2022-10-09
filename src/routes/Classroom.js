@@ -1,12 +1,12 @@
 import { getAuth } from "firebase/auth";
-import { setDoc, updateDoc, query,  where, onSnapshot, doc, getDocs, addDoc, deleteDoc,  collection, getDoc } from "firebase/firestore";
+import { setDoc, updateDoc, query, where, onSnapshot, doc, getDocs, addDoc, deleteDoc, collection, getDoc } from "firebase/firestore";
 import React from "react";
 import { useParams } from "react-router-dom";
 import StudentView from '../components/StudentView';
 import TeacherView from '../components/TeacherView';
 import { db } from '../utils/firebase';
 import { getPlayerData, syncUsers } from "../utils/mutations";
-import {  useState } from "react";
+import { useState } from "react";
 
 export default function Classroom({ user }) {
 
@@ -44,7 +44,7 @@ export default function Classroom({ user }) {
 
    // Display variable views depending on player role (teacher/student)
    if (player?.role === "teacher") {
-      return <TeacherView player={player} classroom={classroom} />
+      return <TeacherView player={player} classroom={classroom} user={user} />
    } else if (player?.role === "student") {
       return <StudentView player={player} classroom={classroom} />
    } else {
