@@ -132,6 +132,7 @@ export async function getTaskData(classID, taskID) {
       return null
    }
 }
+
 //Mutation to handle task update
 export async function updateTask(classroomID, task) {
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/task.id`), {
@@ -175,4 +176,40 @@ export async function addTask(classID, task, user) {
       due: task.due,
       assigned: listOfStudents,
    });
+}
+
+// Remove player ID from completed array and add to confirmed array.
+export async function confirmTask(classID, studentID, taskID) {
+   const classroomRef = doc(db, 'classrooms', classID)
+   const classroomSnap = await getDoc(classroomRef)
+   if (!classroomSnap.exists()) {
+      return "Could not find classroom"
+   }
+
+   const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`)
+   const taskSnap = await getDoc(taskRef)
+   if (taskSnap.exists()) {
+      updateDoc(taskRef, {
+         completed: arrayRemove(studentID),
+         confirmed: arrayUnion(studentID)
+      })
+   }
+}
+
+// Remove player ID from completed array and add to assigned array.
+export async function denyTask(classID, studentID, taskID) {
+   const classroomRef = doc(db, 'classrooms', classID)
+   const classroomSnap = await getDoc(classroomRef)
+   if (!classroomSnap.exists()) {
+      // console.error("Could not find classroom")
+      return "Could not find classroom"
+   }
+   const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`)
+   const taskSnap = await getDoc(taskRef)
+   if (taskSnap.exists()) {
+      updateDoc(taskRef, {
+         completed: arrayRemove(studentID),
+         assigned: arrayUnion(studentID)
+      })
+   }
 }
