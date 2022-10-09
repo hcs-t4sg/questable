@@ -41,6 +41,7 @@ export default function ConfirmTasksTable({ classroom }) {
                queryRes.push(Object.assign({ id: doc.id }, doc.data()))
             })
             setCompletedTasks(queryRes)
+            console.log(completedTasks)
          }
          cTaskFetch().catch(console.error)
       })
@@ -49,6 +50,7 @@ export default function ConfirmTasksTable({ classroom }) {
 
    return (
       <Grid item xs={12}>
+         <Typography variant="h4">Task Confirmation Table</Typography>
          <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                <TableHead>
@@ -62,7 +64,7 @@ export default function ConfirmTasksTable({ classroom }) {
                <TableBody>
                   {/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
                   {completedTasks.map(task => {
-                     return (task.completed.map(playerID => {
+                     return (task.completed?.map(playerID => {
                         const playersCompleted = playerData.filter(player => player.id === playerID)
                         return (playersCompleted.map(player => (
                            <TableRow key={'test'} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
