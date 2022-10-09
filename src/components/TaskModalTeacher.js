@@ -81,7 +81,7 @@ export default function TaskModalTeacher({ task, classroom }) {
             //Run this async function   
             mapCompleted().catch(console.error);
         })
-    }, []);
+    });
 
     return (
         <div>
