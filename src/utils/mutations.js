@@ -121,15 +121,12 @@ export async function addTask(classID, task, user) {
       return "No such document!"
    }
 
-   var listOfStudents = [];
-
-   var listOfPlayers = classSnap.data().playerList;
-   for (var i = 0; i < listOfPlayers.length; i++) {
-      if (listOfPlayers[i] != user.uid) {
-         // Update listOfStudents
-         listOfStudents.push(listOfPlayers[i]);
-      }
-   }
+   const listOfPlayers = classSnap.data().playerList;
+   const listOfStudents = listOfPlayers.filter(checkStudent);
+   
+   function checkStudent(playerId) {
+      return playerId != user.uid;
+    }
 
    // Update tasks collection
    const taskRef = await addDoc(collection(db, `classrooms/${classID}/tasks`), {
