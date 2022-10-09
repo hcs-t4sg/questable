@@ -40,7 +40,7 @@ export default function StudentView({ player, classroom }) {
             // Call the async `mapTasks` function
             mapTasks().catch(console.error);
         })
-    }, []);
+    });
 
     return (
         <Grid container spacing={3}>

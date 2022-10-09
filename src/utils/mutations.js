@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion} from "firebase/firestore";
 import { db } from './firebase';
 
 export async function syncUsers(user) {
@@ -150,16 +150,8 @@ export async function deleteTask(classroomID, taskID)
 
 export async function completeTask(classroomID, taskID, playerID)
 {
-   let task = await getTaskData(classroomID, taskID);
-   console.log(task);
-   //Remove the player from assigned task array
-   task.assigned = task.assigned.filter((id) => {
-      return id !== playerID; 
-   });
-   if(!task.completed.includes(playerID))
-   {
-      task.completed.push(playerID);
-   }
-
-   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), task);
+   // Add `playerID` to completed array
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {completed: arrayUnion(playerID)});
+   // Remove `playerID` from assigned array
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {assigned: arrayRemove(playerID)});
 }
