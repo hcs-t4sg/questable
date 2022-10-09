@@ -206,8 +206,8 @@ export default function App() {
                 <Route path="classrooms" element={<Classrooms user={currentUser} />} />
                 <Route path="settings" element={<Settings />} />
                 <Route path="class">
-                  <Route path=":classID" element={<Classroom user={currentUser} />} />
-                </Route>
+                <Route path=":classID" element={<Classroom user={currentUser} />} />
+              </Route>
                 {/* Catch-all route for any URLs that don't match an existing route */}
                 <Route
                   path="*"

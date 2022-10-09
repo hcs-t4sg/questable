@@ -1,11 +1,12 @@
 import { getAuth } from "firebase/auth";
-import { doc, onSnapshot } from "firebase/firestore";
+import { setDoc, updateDoc, query,  where, onSnapshot, doc, getDocs, addDoc, deleteDoc,  collection, getDoc } from "firebase/firestore";
 import React from "react";
 import { useParams } from "react-router-dom";
 import StudentView from '../components/StudentView';
 import TeacherView from '../components/TeacherView';
 import { db } from '../utils/firebase';
 import { getPlayerData, syncUsers } from "../utils/mutations";
+import {  useState } from "react";
 
 export default function Classroom({ user }) {
 
@@ -35,10 +36,11 @@ export default function Classroom({ user }) {
       const classroomRef = doc(db, "classrooms", classID);
 
       onSnapshot(classroomRef, (doc) => {
-         console.log({ ...doc.data(), id: doc.id });
          setClassroom({ ...doc.data(), id: doc.id });
       })
+
    }, [user, classID])
+
 
    // Display variable views depending on player role (teacher/student)
    if (player?.role === "teacher") {

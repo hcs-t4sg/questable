@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from './firebase';
 
 export async function syncUsers(user) {
@@ -26,7 +26,9 @@ export async function addClassroom(name, user) {
       money: 0,
       name: "Adventurer",
       role: "teacher",
+      id: user.uid,
    });
+
 
    /* Update user's classrooms list. Not useful at the moment but we may keep 
    for later. Don't delete for now */
@@ -84,6 +86,7 @@ export async function joinClassroom(classID, user) {
       money: 0,
       name: "Adventurer",
       role: "student",
+      id: user.uid,
    });
 
    return "Successfully joined " + classroomData.name + "!"
@@ -108,4 +111,55 @@ export async function getPlayerData(classID, user) {
    } else {
       return null
    }
+}
+//for a task, get the task data
+export async function getTaskData(classID, taskID)
+{
+   const classroomRef = doc(db, "classrooms", classID);
+   const classroomSnap = await getDoc(classroomRef);
+
+   if (!classroomSnap.exists()) {
+      return null
+   }
+
+   const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`);
+   const taskSnap = await getDoc(taskRef);
+
+   if (taskSnap.exists()) {
+      const taskData = taskSnap.data();
+      return taskData
+   } else {
+      return null
+   }
+}
+//Mutation to handle task update
+export async function updateTask(classroomID, task)
+{  
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/task.id`), {
+      name: task.name,
+      due: task.due,
+      reward: task.reward,
+   });
+}
+
+//Mutation to delete tasks
+export async function deleteTask(classroomID, taskID)
+{
+   await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/taskID`));
+}
+
+export async function completeTask(classroomID, taskID, playerID)
+{
+   let task = await getTaskData(classroomID, taskID);
+   console.log(task);
+   //Remove the player from assigned task array
+   task.assigned = task.assigned.filter((id) => {
+      return id !== playerID; 
+   });
+   if(!task.completed.includes(playerID))
+   {
+      task.completed.push(playerID);
+   }
+
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), task);
 }
