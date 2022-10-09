@@ -111,6 +111,26 @@ export async function getPlayerData(classID, user) {
 }
 
 export async function addTask(classID, task, user) {
+
+   // Update assignedTasks collection for every member in class except teacher
+   const classRef = doc(db, "classrooms", classID);
+   const classSnap = await getDoc(classRef);
+
+   if (!classSnap.exists()) {
+      // doc.data() will be undefined in this case
+      return "No such document!"
+   }
+
+   var listOfStudents = [];
+
+   var listOfPlayers = classSnap.data().playerList;
+   for (var i = 0; i < listOfPlayers.length; i++) {
+      if (listOfPlayers[i] != user.uid) {
+         // Update listOfStudents
+         listOfStudents.push(listOfPlayers[i]);
+      }
+   }
+
    // Update tasks collection
    const taskRef = await addDoc(collection(db, `classrooms/${classID}/tasks`), {
       name: task.name,
@@ -118,24 +138,7 @@ export async function addTask(classID, task, user) {
       reward: task.reward,
       created: Date.now(),
       due: task.due,
+      assigned: listOfStudents,
    });
 
-   // Update assignedTasks collection for every member in class except teacher
-   const docRef = doc(db, "classrooms", classID);
-   const docSnap = await getDoc(docRef);
-
-   if (docSnap.exists()) {
-      var listOfPlayers = docSnap.data().playerList;
-      for (var i = 0; i < listOfPlayers.length; i++) {
-         if (listOfPlayers[i] != user.uid) {
-            await addDoc(collection(db, `classrooms/${classID}/assignedTasks`), {
-               player: listOfPlayers[i],
-               assignedTask: taskRef.id,
-            });
-         }
-      }
-   } else {
-   // doc.data() will be undefined in this case
-   console.log("No such document!");
-   }
 }

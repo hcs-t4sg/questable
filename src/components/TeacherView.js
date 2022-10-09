@@ -41,7 +41,6 @@ export default function TeacherView({ player, classroom, user }) {
          reward: reward,
          due: due,
       };
-      
       addTask(classroom.id, newTask, user).catch(console.error);
       handleClose();
    };
@@ -57,9 +56,8 @@ export default function TeacherView({ player, classroom, user }) {
       <Button variant="contained" onClick={handleAdd}>Add Task</Button>
    </DialogActions>
 
-
    return (
-   <>
+      <>
       <Grid container spacing={3}>
          <Grid item xs={12}>
             <Typography variant="h2">{classroom.name}</Typography>
@@ -121,6 +119,6 @@ export default function TeacherView({ player, classroom, user }) {
             {actionButtons}
          </Dialog>
       </div>
-    </>
+      </>
    )
 }
