@@ -122,14 +122,10 @@ export async function addTask(classID, task, user) {
    }
 
    const listOfPlayers = classSnap.data().playerList;
-   const listOfStudents = listOfPlayers.filter(checkStudent);
-   
-   function checkStudent(playerId) {
-      return playerId != user.uid;
-    }
+   const listOfStudents = listOfPlayers.filter(playerId => playerId !== user.uid);
 
    // Update tasks collection
-   const taskRef = await addDoc(collection(db, `classrooms/${classID}/tasks`), {
+   await addDoc(collection(db, `classrooms/${classID}/tasks`), {
       name: task.name,
       description: task.description,
       reward: task.reward,
