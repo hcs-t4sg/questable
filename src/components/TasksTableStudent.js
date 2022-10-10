@@ -17,6 +17,8 @@ export default function StudentView({ player, classroom }) {
 
    React.useEffect(() => {
 
+      console.log("useEffect runs");
+
       // Create a reference to the tasks collection
       const tasksRef = collection(db, `classrooms/${classroom.id}/tasks`);
       // Create a query to filter for only the tasks that are assigned to the student
@@ -24,20 +26,22 @@ export default function StudentView({ player, classroom }) {
 
       // Attach a listener to the tasks collection
       onSnapshot(q, (snapshot) => {
+         console.log("Snapshot");
          const mapTasks = async () => {
+            console.log("Snapshot");
             // Map the task id's to the task data using `getTaskData`
-            const tasks = await snapshot.docs.map(async (doc) => (
-               await getTaskData(classroom.id, doc.data().id)
+            const taskMap = await snapshot.docs.map(async (doc) => (
+               await getTaskData(classroom.id, doc.id)
             ));
             // Await the resolution of all promises in the returned array
             // and then store them in the `tasks` state variable
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
-            setTasks(await Promise.all(tasks));
+            setTasks(await Promise.all(taskMap));
          }
          // Call the async `mapTasks` function
          mapTasks().catch(console.error);
       })
-   });
+   }, [classroom, player]);
 
    return (
       <Grid item xs={12}>
@@ -50,7 +54,7 @@ export default function StudentView({ player, classroom }) {
                </TableRow>
             </TableHead>
             <TableBody>
-               {tasks?.map((task) => (
+               {tasks.map((task) => (
                   <TableRow
                      key={task.id}
                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

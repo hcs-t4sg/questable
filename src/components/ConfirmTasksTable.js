@@ -41,7 +41,7 @@ export default function ConfirmTasksTable({ classroom }) {
                queryRes.push(Object.assign({ id: doc.id }, doc.data()))
             })
             setCompletedTasks(queryRes)
-            console.log(completedTasks)
+            console.log(completedTasks);
          }
          cTaskFetch().catch(console.error)
       })

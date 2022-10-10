@@ -106,7 +106,7 @@ export async function getPlayerData(classID, user) {
    const playerSnap = await getDoc(playerRef);
 
    if (playerSnap.exists()) {
-      const playerData = playerSnap.data();
+      const playerData = { ...playerSnap.data(), id: playerSnap.id };
       return playerData
    } else {
       return null
