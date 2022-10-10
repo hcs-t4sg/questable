@@ -50,7 +50,7 @@ export default function ConfirmTasksTable({ classroom }) {
 
    return (
       <Grid item xs={12}>
-         <Typography variant="h4">Task Confirmation Table</Typography>
+         <Typography variant="h4">Tasks Awaiting Confirmation</Typography>
          <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                <TableHead>

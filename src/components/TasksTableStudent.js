@@ -9,9 +9,10 @@ import React from "react";
 import { db } from '../utils/firebase';
 import { getTaskData } from '../utils/mutations';
 import TaskModalStudent from './TaskModalStudent';
+import Typography from '@mui/material/Typography';
 
 
-export default function StudentView({ player, classroom }) {
+export default function TasksTableStudent({ player, classroom }) {
    //Create a state variable to hold the tasks assigned to the player
    const [tasks, setTasks] = React.useState([]);
 
@@ -45,6 +46,7 @@ export default function StudentView({ player, classroom }) {
 
    return (
       <Grid item xs={12}>
+         <Typography variant="h4">Assigned Tasks</Typography>
          <TableContainer>
             <TableHead>
                <TableRow>

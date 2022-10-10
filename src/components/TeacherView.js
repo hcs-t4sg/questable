@@ -10,7 +10,7 @@ export default function TeacherView({ player, classroom, user }) {
     return (
         <Grid container spacing={3}>
             <Grid item xs={12}>
-                <Typography variant="h2">{classroom.name}</Typography>
+                <Typography variant="h1">{classroom.name}</Typography>
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="h2">Teacher View</Typography>

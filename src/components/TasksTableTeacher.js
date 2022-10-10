@@ -8,6 +8,7 @@ import * as React from 'react';
 import { db } from '../utils/firebase';
 import TaskModalTeacher from './TaskModalTeacher.js';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 export default function TasksTableTeacher({ classroom }) {
 
@@ -30,6 +31,7 @@ export default function TasksTableTeacher({ classroom }) {
 
    return (
       <Grid item xs={12}>
+         <Typography variant="h4">Created Tasks</Typography>
          <TableContainer>
             <TableHead>
                <TableRow>

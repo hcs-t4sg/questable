@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from '../utils/firebase';
 
+
 export default function CompletedTasks({ player, classroom }) {
    const [completedTasks, setCompletedTasks] = useState([])
    const [confirmedTasks, setConfirmedTasks] = useState([])
@@ -40,6 +41,7 @@ export default function CompletedTasks({ player, classroom }) {
 
    return (
       <Grid item xs={12}>
+         <Typography variant="h4">Completed Tasks</Typography>
          <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                <TableHead>
