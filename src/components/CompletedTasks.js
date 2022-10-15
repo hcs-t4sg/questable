@@ -48,6 +48,7 @@ export default function CompletedTasks({ player, classroom }) {
                   <TableRow>
                      <TableCell align="center">Task</TableCell>
                      <TableCell align="center">Description</TableCell>
+                     <TableCell align="center">Reward</TableCell>
                      <TableCell align="center">Status</TableCell>
                   </TableRow>
                </TableHead>
@@ -56,6 +57,7 @@ export default function CompletedTasks({ player, classroom }) {
                      <TableRow>
                         <TableCell align="center">{task.name}</TableCell>
                         <TableCell align="center">{task.description}</TableCell>
+                        <TableCell align="center">{task.reward ? `$${task.reward}` : '-'}</TableCell>
                         <TableCell align="center">Awaiting confirmation</TableCell>
                      </TableRow>
                   ))}
@@ -63,6 +65,7 @@ export default function CompletedTasks({ player, classroom }) {
                      <TableRow>
                         <TableCell align="center">{task.name}</TableCell>
                         <TableCell align="center">{task.description}</TableCell>
+                        <TableCell align="center">{task.reward ? `$${task.reward}` : '-'}</TableCell>
                         <TableCell align="center">Confirmed</TableCell>
                      </TableRow>
                   ))}

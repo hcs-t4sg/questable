@@ -5,8 +5,9 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React from "react";
-import ClassroomCard from '../components/ClassroomCard';
+import ClassroomCard from '../components/classroomCard';
 import { db } from '../utils/firebase';
+import { useEffect } from "react"
 import { addClassroom, joinClassroom } from '../utils/mutations';
 
 export default function Classrooms({ user }) {
@@ -28,8 +29,7 @@ export default function Classrooms({ user }) {
 
    // Listen to user's classrooms
    const [classrooms, setClassrooms] = React.useState([]);
-   React.useEffect(() => {
-
+   useEffect(() => {
       const q = query(collection(db, "classrooms"), where("playerList", "array-contains", user?.uid));
 
       onSnapshot(q, (snapshot) => {
