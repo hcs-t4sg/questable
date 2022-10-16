@@ -1,12 +1,11 @@
 import { getAuth } from "firebase/auth";
-import { setDoc, updateDoc, query, where, onSnapshot, doc, getDocs, addDoc, deleteDoc, collection, getDoc } from "firebase/firestore";
+import { onSnapshot, doc } from "firebase/firestore";
 import React from "react";
 import { useParams } from "react-router-dom";
 import StudentView from '../components/StudentView';
 import TeacherView from '../components/TeacherView';
 import { db } from '../utils/firebase';
 import { getPlayerData, syncUsers } from "../utils/mutations";
-import { useState } from "react";
 
 export default function Classroom({ user }) {
 

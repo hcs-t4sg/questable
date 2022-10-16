@@ -144,11 +144,12 @@ export async function updateTask(classroomID, task) {
 
 //Mutation to delete tasks
 export async function deleteTask(classroomID, taskID) {
-   await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/taskID`));
+   await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`));
 }
 
 export async function completeTask(classroomID, taskID, playerID) {
    // Add `playerID` to completed array
+   console.log(taskID)
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
    // Remove `playerID` from assigned array
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) });
@@ -171,7 +172,7 @@ export async function addTask(classID, task, user) {
    await addDoc(collection(db, `classrooms/${classID}/tasks`), {
       name: task.name,
       description: task.description,
-      reward: task.reward,
+      reward: parseInt(task.reward),
       created: Date.now(),
       due: task.due,
       assigned: listOfStudents,
@@ -192,6 +193,14 @@ export async function confirmTask(classID, studentID, taskID) {
       updateDoc(taskRef, {
          completed: arrayRemove(studentID),
          confirmed: arrayUnion(studentID)
+      })
+   }
+
+   const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
+   const playerSnap = await getDoc(playerRef)
+   if (playerSnap.exists()) {
+      updateDoc(playerRef, {
+         money: parseInt(playerSnap.data().money + taskSnap.data().reward)
       })
    }
 }

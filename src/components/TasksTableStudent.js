@@ -7,42 +7,31 @@ import TableRow from '@mui/material/TableRow';
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import React from "react";
 import { db } from '../utils/firebase';
-import { getTaskData } from '../utils/mutations';
 import TaskModalStudent from './TaskModalStudent';
 import Typography from '@mui/material/Typography';
+import { useEffect, useState } from 'react'
 
 
 export default function TasksTableStudent({ player, classroom }) {
-   //Create a state variable to hold the tasks assigned to the player
-   const [tasks, setTasks] = React.useState([]);
-
-   React.useEffect(() => {
-
-      console.log("useEffect runs");
-
-      // Create a reference to the tasks collection
+   //Create a state variable to hold the tasks assigned to the student.
+   const [tasks, setTasks] = useState([]);
+   useEffect(() => {
+      // Create a reference to the tasks collection & filter for tasks that are assigned to the student.
       const tasksRef = collection(db, `classrooms/${classroom.id}/tasks`);
-      // Create a query to filter for only the tasks that are assigned to the student
       const q = query(tasksRef, where("assigned", "array-contains", player.id));
 
       // Attach a listener to the tasks collection
       onSnapshot(q, (snapshot) => {
-         console.log("Snapshot");
-         const mapTasks = async () => {
-            console.log("Snapshot");
-            // Map the task id's to the task data using `getTaskData`
-            const taskMap = await snapshot.docs.map(async (doc) => (
-               await getTaskData(classroom.id, doc.id)
-            ));
-            // Await the resolution of all promises in the returned array
-            // and then store them in the `tasks` state variable
-            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
-            setTasks(await Promise.all(taskMap));
+         const taskFetch = async () => {
+            const assigned = []
+            snapshot.forEach(doc => {
+               assigned.push(Object.assign({ id: doc.id }, doc.data()))
+            })
+            setTasks(assigned)
          }
-         // Call the async `mapTasks` function
-         mapTasks().catch(console.error);
+         taskFetch().catch(console.error)
       })
-   }, [classroom, player]);
+   }, [classroom, player])
 
    return (
       <Grid item xs={12}>

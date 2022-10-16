@@ -33,10 +33,10 @@ export default function CreateTaskModal({ classroom, user }) {
 
    const handleAdd = () => {
       const newTask = {
-         name: name,
-         description: description,
-         reward: reward,
-         due: due,
+         name,
+         description,
+         reward,
+         due,
       };
       addTask(classroom.id, newTask, user).catch(console.error);
       handleClose();
