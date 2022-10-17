@@ -18,7 +18,6 @@ import { Link, Route, Routes } from "react-router-dom";
 import './App.css';
 import { mainListItems } from './components/listItems';
 import Classroom from "./routes/Classroom";
-import Classrooms from "./routes/Classrooms";
 import Home from "./routes/Home";
 import Settings from "./routes/Settings";
 import { SignInScreen } from './utils/firebase';
@@ -153,6 +152,19 @@ export default function App() {
             >
               Signed in as {firebase.auth().currentUser?.displayName}
             </Typography>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{
+                marginTop: '5px',
+                marginBottom: '5px',
+                marginRight: '20px',
+              }}
+              component={Link}
+              to={`/settings`}
+            >
+              Settings
+            </Button>
             <Button variant="contained" size="small"
               sx={{
                 marginTop: '5px',
@@ -202,12 +214,12 @@ export default function App() {
               app.js rather than index.js so we can pass relevant top-level
               props to the elements */
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="classrooms" element={<Classrooms user={currentUser} />} />
+                <Route path="/" element={<Home user={currentUser} />} />
+                {/* <Route path="classrooms" element={<Classrooms user={currentUser} />} /> */}
                 <Route path="settings" element={<Settings />} />
                 <Route path="class">
-                <Route path=":classID" element={<Classroom user={currentUser} />} />
-              </Route>
+                  <Route path=":classID" element={<Classroom user={currentUser} />} />
+                </Route>
                 {/* Catch-all route for any URLs that don't match an existing route */}
                 <Route
                   path="*"
