@@ -16,7 +16,7 @@ import firebase from 'firebase/compat/app';
 import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import './App.css';
-import { mainListItems } from './components/listItems';
+import { mainListItemsTeacher } from './components/listItems';
 import Classroom from "./routes/Classroom";
 import Home from "./routes/Home";
 import Settings from "./routes/Settings";
@@ -192,7 +192,7 @@ export default function App() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            {mainListItemsTeacher}
           </List>
         </Drawer>
         <Box
