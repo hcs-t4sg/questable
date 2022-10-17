@@ -17,30 +17,31 @@ export default function TeacherView({ player, classroom, user }) {
 
     const [teacher, setTeacher] = React.useState()
 
-    const playersRef = collection(db, `classrooms/${classroom.id}/players`);
-
     React.useEffect(() => {
-  
+
+        // If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
+        const playersRef = collection(db, `classrooms/${classroom.id}/players`);
         const teacherQuery = query(playersRef, where('role', '==', 'teacher'));
+
         //Attach a listener to the teacher document
-        onSnapshot(teacherQuery, (snapshot)=>{
-           const mapTeacher = async () => {
-              // Map the task id's to the task data using `getTaskData`
-              const teachers = await snapshot.docs.map(async (doc)=>{
-                 //Append the player's email to the student struct
-                 console.log("doc.id: " + doc.id)
-                 console.log("user data of doc id: " + getUserData(doc.id))
-                 const email = (await getUserData(doc.id)).email;
-                 return {...doc.data(), id: doc.id, email: email};
-              }); 
-              // Await the resolution of all promises in the returned array
-              // and then store them in the `students` state variable
-              // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
-              setTeacher((await Promise.all(teachers))[0]);
-           }
-  
-           // Call the async `mapTasks` function
-           mapTeacher().catch(console.error);
+        onSnapshot(teacherQuery, (snapshot) => {
+            const mapTeacher = async () => {
+
+                let teachers = await Promise.all(snapshot.docs.map(async (player) => {
+                    const email = (await getUserData(player.id)).email;
+                    return { ...player.data(), id: player.id, email: email };
+                }))
+
+                // Await the resolution of all promises in the returned array
+                // and then store them in the `students` state variable
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+                console.log("yeet");
+                console.log(teachers);
+                setTeacher(teachers[0]);
+            }
+
+            // Call the async `mapTeacher` function
+            mapTeacher().catch(console.error);
         })
     }, []);
 
@@ -57,11 +58,11 @@ export default function TeacherView({ player, classroom, user }) {
             <TasksTableTeacher classroom={classroom} />
             <ConfirmTasksTable classroom={classroom} />
             <Card>
-            <CardContent>
-               <Typography variant="body1">Name: {player.name}</Typography>
-               <Typography variant="body1">email: {player.email}</Typography>
-            </CardContent>
-         </Card>
+                <CardContent>
+                    <Typography variant="body1">Name: {player.name}</Typography>
+                    <Typography variant="body1">email: {player.email}</Typography>
+                </CardContent>
+            </Card>
         </Grid>
     )
 }
