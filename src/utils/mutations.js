@@ -113,6 +113,19 @@ export async function getPlayerData(classID, user) {
    }
 }
 
+export async function getUserData(userID)
+{
+   const userRef = doc(db, `users/${userID}`);
+   const userSnap = await getDoc(userRef);
+
+   if(!userSnap.exists())
+   {
+      return null;
+   }
+
+   return userSnap.data();
+}
+
 //for a task, get the task data
 export async function getTaskData(classID, taskID) {
    const classroomRef = doc(db, "classrooms", classID);
