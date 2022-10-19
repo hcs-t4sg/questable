@@ -10,11 +10,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
-import { doc, onSnapshot } from "firebase/firestore";
 import * as React from 'react';
 import { useState } from 'react';
 import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
+import { collection, doc, onSnapshot } from "firebase/firestore";
+
 
 export default function TaskModalTeacher({ task, classroom }) {
     //State variables
@@ -41,10 +42,9 @@ export default function TaskModalTeacher({ task, classroom }) {
             name: name,
             due: due,
             reward: reward,
-            id: task.id,
         }
         // Call the `updateTask` mutation
-        updateTask(classroom.id, updatedTask);
+        updateTask(classroom.id, task.id, updatedTask);
         handleClose();
     };
 
@@ -63,27 +63,21 @@ export default function TaskModalTeacher({ task, classroom }) {
     const [completed, setCompleted] = React.useState([]);
 
     React.useEffect(() => {
-
+        // Create a reference to the tasks collection & filter for tasks that are assigned to the student.
         const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
-
+  
         // Attach a listener to the tasks collection
         onSnapshot(taskRef, (snapshot) => {
-            const mapCompleted = async () => {
-                //Map all the player ID's to their names using `getPlayerData(...)`
-                const names = await snapshot.data()?.completed.map(async (player) => (
-                    { id: player, name: (await getPlayerData(classroom.id, player)).name }
-                ));
-                // Await the resolution of all the promises in the returned array
-                // Then, store this array of names in the completed state variable
-                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
-                if (names) {
-                    setCompleted(await Promise.all(names));
-                }
-            }
-            //Run this async function   
-            mapCompleted().catch(console.error);
+           const playersFetch = async () => {
+              const completedPlayers = [];
+              snapshot.data()?.completed.forEach(async (completedID) => {
+                completedPlayers.push(Object.assign({ id: completedID }, (await getPlayerData(classroom.id, completedID))))
+                })
+              setCompleted(completedPlayers)
+           }
+           playersFetch().catch(console.error)
         })
-    });
+     }, [classroom])
 
     return (
         <div>

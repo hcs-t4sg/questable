@@ -134,8 +134,8 @@ export async function getTaskData(classID, taskID) {
 }
 
 //Mutation to handle task update
-export async function updateTask(classroomID, task) {
-   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${task.id}`), {
+export async function updateTask(classroomID, taskID, task) {
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
       name: task.name,
       due: task.due,
       reward: task.reward,
