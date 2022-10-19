@@ -176,6 +176,8 @@ export async function addTask(classID, task, user) {
       created: Date.now(),
       due: task.due,
       assigned: listOfStudents,
+      completed: [],
+      confirmed: []
    });
 }
 
