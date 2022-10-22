@@ -1,9 +1,12 @@
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import firebase from 'firebase/compat/app';
-import PlayerCard from '../components/playerCard';
+import * as React from 'react';
+import ConfirmTasksTable from './ConfirmTasksTable';
+import CreateTaskModal from './CreateTaskModal';
+import TasksTableTeacher from './TasksTableTeacher';
 
 export default function TeacherView({ player, classroom, user }) {
+
     return (
         <Grid container spacing={3}>
             <Grid item xs={12}>

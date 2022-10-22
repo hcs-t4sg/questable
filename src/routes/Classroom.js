@@ -13,29 +13,20 @@ export default function Classroom({ user }) {
    let params = useParams();
    const classID = params.classID;
 
-   // Synchronize user's player information for classroom
+   // Fetch user's player information for classroom
    const [player, setPlayer] = React.useState(null);
    React.useEffect(() => {
-      const syncPlayer = async () => {
+      const updatePlayer = async () => {
          const auth = getAuth();
          const user = auth.currentUser;
          if (!!user) {
             syncUsers(user);
+            const playerData = await getPlayerData(classID, user.uid);
+            setPlayer(playerData);
          }
       }
-      syncPlayer().catch(console.error);
+      updatePlayer().catch(console.error);
    }, [classID]);
-
-
-   React.useEffect(() => {
-      const playerRef = doc(db, `classrooms/${classID}/players/${user.uid}`)
-
-      onSnapshot(playerRef, (doc) => {
-         console.log({ ...doc.data(), id: doc.id });
-         setPlayer({ ...doc.data(), id: doc.id });
-      })
-   }, [user, classID]);
-
 
    // Listen to classroom data
    const [classroom, setClassroom] = React.useState([]);
@@ -52,9 +43,9 @@ export default function Classroom({ user }) {
 
    // Display variable views depending on player role (teacher/student)
    if (player?.role === "teacher") {
-      return <TeacherView user={user} player={player} classroom={classroom} />
+      return <TeacherView player={player} classroom={classroom} user={user} />
    } else if (player?.role === "student") {
-      return <StudentView user={user} player={player} classroom={classroom} />
+      return <StudentView player={player} classroom={classroom} />
    } else {
       return null
    }
