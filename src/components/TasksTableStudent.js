@@ -28,7 +28,6 @@ export default function TasksTableStudent({ player, classroom }) {
                assigned.push(Object.assign({ id: doc.id }, doc.data()))
             })
             setTasks(assigned)
-            console.log(tasks);
          }
          taskFetch().catch(console.error)
       })
