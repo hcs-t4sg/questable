@@ -13,22 +13,29 @@ export default function Classroom({ user }) {
    let params = useParams();
    const classID = params.classID;
 
-   // Fetch user's player information for classroom
+   // Synchronize user's player information for classroom
    const [player, setPlayer] = React.useState(null);
    React.useEffect(() => {
-      const updatePlayer = async () => {
+      const syncPlayer = async () => {
          const auth = getAuth();
          const user = auth.currentUser;
          if (!!user) {
             syncUsers(user);
-
-            // Pull this code out into separate onSnapshot() listener
-            const playerData = await getPlayerData(classID, user.uid);
-            setPlayer(playerData);
          }
       }
-      updatePlayer().catch(console.error);
+      syncPlayer().catch(console.error);
    }, [classID]);
+
+
+   React.useEffect(() => {
+      const playerRef = doc(db, `classrooms/${classID}/players/${user.uid}`)
+
+      onSnapshot(playerRef, (doc) => {
+         console.log({ ...doc.data(), id: doc.id });
+         setPlayer({ ...doc.data(), id: doc.id });
+      })
+   }, [user, classID]);
+
 
    // Listen to classroom data
    const [classroom, setClassroom] = React.useState([]);
