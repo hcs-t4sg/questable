@@ -4,6 +4,7 @@ import 'firebase/compat/auth';
 import "firebase/compat/firestore";
 import { getFirestore } from "firebase/firestore";
 import StyledFirebaseAuth from '../components/StyledFirebaseAuth.tsx';
+import Layout from '../components/Layout.js';
 
 // ! DO NOT CHANGE THIS FILE.
 
@@ -41,10 +42,10 @@ export const db = getFirestore();
 // Export FirebaseUI signin screen
 export function SignInScreen() {
    return (
-      <div>
+      <Layout>
          <h1>Sign in to Questable</h1>
          <p>Please sign-in with your email account:</p>
          <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-      </div>
+      </Layout>
    );
 }

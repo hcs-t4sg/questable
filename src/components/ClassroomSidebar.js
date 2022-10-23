@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import React from "react";
 import '../App.css';
-import { mainListItemsTeacher } from './listItems';
+import { mainListItemsStudent, mainListItemsTeacher } from './listItems';
 
 const drawerWidth = 240;
 
@@ -38,7 +38,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
    }),
 );
 
-export default function ClassroomSidebar() {
+export default function ClassroomSidebar({ role }) {
    // Navbar drawer functionality
    const [open, setOpen] = React.useState(false);
    const toggleDrawer = () => {
@@ -61,7 +61,7 @@ export default function ClassroomSidebar() {
          </Toolbar>
          <Divider />
          <List component="nav">
-            {mainListItemsTeacher}
+            {role === "teacher" ? mainListItemsTeacher : role === "student" ? mainListItemsStudent : null}
          </List>
       </Drawer>
    )

@@ -9,6 +9,7 @@ import ClassroomCard from '../components/ClassroomCard';
 import { db } from '../utils/firebase';
 import { useEffect } from "react"
 import { addClassroom, joinClassroom } from '../utils/mutations';
+import Layout from '../components/Layout.js';
 
 export default function Classrooms({ user }) {
 
@@ -39,27 +40,29 @@ export default function Classrooms({ user }) {
    }, [user])
 
    return (
-      <Grid container spacing={3}>
-         <Grid item xs={12}>
-            <Typography variant="h2">Classrooms</Typography>
-         </Grid>
-         <Grid item xs={12}>
-            <Stack direction="row" spacing={2}>
-               <TextField id="signup-code" label="Signup Code" variant="standard" onChange={(event) => setSignupCode(event.target.value)} value={signupCode} />
-               <Button variant="contained" onClick={handleJoinClassroom}>Join Classroom</Button>
-            </Stack>
-         </Grid>
-         <Grid item xs={12}>
-            <Stack direction="row" spacing={2}>
-               <TextField id="classroom-name" label="Classroom Name" variant="standard" onChange={(event) => setNewClassroomName(event.target.value)} value={newClassroomName} />
-               <Button variant="contained" onClick={handleAddClassroom}>Create Classroom</Button>
-            </Stack>
-         </Grid>
-         {classrooms.map((classroom) => (
-            <Grid item xs={12} sm={6} md={4} key={classroom.id}>
-               <ClassroomCard className={classroom.name} classID={classroom.id} />
+      <Layout>
+         <Grid container spacing={3}>
+            <Grid item xs={12}>
+               <Typography variant="h2">Classrooms</Typography>
             </Grid>
-         ))}
-      </Grid>
+            <Grid item xs={12}>
+               <Stack direction="row" spacing={2}>
+                  <TextField id="signup-code" label="Signup Code" variant="standard" onChange={(event) => setSignupCode(event.target.value)} value={signupCode} />
+                  <Button variant="contained" onClick={handleJoinClassroom}>Join Classroom</Button>
+               </Stack>
+            </Grid>
+            <Grid item xs={12}>
+               <Stack direction="row" spacing={2}>
+                  <TextField id="classroom-name" label="Classroom Name" variant="standard" onChange={(event) => setNewClassroomName(event.target.value)} value={newClassroomName} />
+                  <Button variant="contained" onClick={handleAddClassroom}>Create Classroom</Button>
+               </Stack>
+            </Grid>
+            {classrooms.map((classroom) => (
+               <Grid item xs={12} sm={6} md={4} key={classroom.id}>
+                  <ClassroomCard className={classroom.name} classID={classroom.id} />
+               </Grid>
+            ))}
+         </Grid>
+      </Layout>
    )
 }
