@@ -47,6 +47,7 @@ export default function ClassroomSidebar({ role }) {
 
    return (
       <Drawer variant="permanent" open={open}>
+         <Toolbar />
          <Toolbar
             sx={{
                display: 'flex',
