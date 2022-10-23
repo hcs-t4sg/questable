@@ -7,7 +7,6 @@ export default function Layout({ children, classroom, role }) {
    return (
       <Box sx={{
          display: 'flex',
-         height: '100vh',
       }}>
          {classroom && <ClassroomSidebar role={role} />}
          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
