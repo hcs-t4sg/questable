@@ -9,30 +9,31 @@ import FortIcon from '@mui/icons-material/Fort';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import EmailIcon from '@mui/icons-material/Email';
 import * as React from 'react';
+import { Link } from "react-router-dom";
 
 // Handles list of pages on sidebar. Edit if you want to add more pages
 
 export const mainListItemsTeacher = (
    <React.Fragment>
-      <ListItemButton>
+      <ListItemButton component={Link} to="tasks">
          <ListItemIcon>
             <AssignmentIcon />
          </ListItemIcon>
          <ListItemText primary="Tasks" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton component={Link} to="requests">
          <ListItemIcon>
             <EmailIcon />
          </ListItemIcon>
          <ListItemText primary="Requests" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton component={Link} to="class-teacher">
          <ListItemIcon>
             <GroupIcon />
          </ListItemIcon>
          <ListItemText primary="Class" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton component={Link} to="class-settings">
          <ListItemIcon>
             <SettingsIcon />
          </ListItemIcon>
@@ -47,19 +48,19 @@ export const mainListItemsStudent = (
          <ListItemIcon>
             <FortIcon />
          </ListItemIcon>
-         <ListItemText primary="Main" />
+         <ListItemText primary="Main" component={Link} to="main" />
       </ListItemButton>
       <ListItemButton>
          <ListItemIcon>
             <SellIcon />
          </ListItemIcon>
-         <ListItemText primary="Shop" />
+         <ListItemText primary="Shop" component={Link} to="shop" />
       </ListItemButton>
       <ListItemButton>
          <ListItemIcon>
             <GroupIcon />
          </ListItemIcon>
-         <ListItemText primary="Class" />
+         <ListItemText primary="Class" component={Link} to="class-student" />
       </ListItemButton>
    </React.Fragment>
 );

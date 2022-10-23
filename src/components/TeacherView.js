@@ -5,12 +5,21 @@ import ConfirmTasksTable from './ConfirmTasksTable';
 import CreateTaskModal from './CreateTaskModal';
 import TasksTableTeacher from './TasksTableTeacher';
 import Layout from './Layout.js';
+import { Link, Route, Routes, Outlet } from "react-router-dom";
+import ClassSettings from '../routes/teacher/ClassSettings';
+import ClassTeacher from '../routes/teacher/ClassTeacher';
+import Requests from '../routes/teacher/Requests';
+import Tasks from '../routes/teacher/Tasks';
 
 export default function TeacherView({ player, classroom, user }) {
 
     return (
-        <Layout classroom role="teacher">
-            <Grid container spacing={3}>
+        <Outlet />
+    )
+}
+
+
+{/* <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Typography variant="h1">{classroom.name}</Typography>
                 </Grid>
@@ -21,7 +30,4 @@ export default function TeacherView({ player, classroom, user }) {
                 <CreateTaskModal classroom={classroom} user={user} />
                 <TasksTableTeacher classroom={classroom} />
                 <ConfirmTasksTable classroom={classroom} />
-            </Grid>
-        </Layout>
-    )
-}
+            </Grid> */}
