@@ -121,7 +121,7 @@ export default function App() {
             </Button>
           </Toolbar>
         </AppBar>
-        <ClassroomSidebar />
+        {/* Start factoring out here, create a generic layout file and conditionally render classroom sidebar with student or teacher prop */}
         <Box
           component="main"
           sx={{
@@ -135,30 +135,37 @@ export default function App() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {isSignedIn ?
-              /* Navigation routes set by react router. This is placed in
-              app.js rather than index.js so we can pass relevant top-level
-              props to the elements */
-              <Routes>
-                <Route path="/" element={<Home user={currentUser} />} />
-                {/* <Route path="classrooms" element={<Classrooms user={currentUser} />} /> */}
-                <Route path="settings" element={<Settings />} />
-                <Route path="class">
-                  <Route path=":classID" element={<Classroom user={currentUser} />} />
-                </Route>
-                {/* Catch-all route for any URLs that don't match an existing route */}
-                <Route
-                  path="*"
-                  element={
-                    <main style={{ padding: "1rem" }}>
-                      <p>There's nothing here!</p>
-                    </main>
-                  }
-                />
-              </Routes>
-              : <SignInScreen></SignInScreen>}
-          </Container>
+          {/* Place sidebar here, potentially need new box for layout */}
+          <Box sx={{
+            display: 'flex',
+            height: '100vh',
+          }}>
+            <ClassroomSidebar />
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+              {isSignedIn ?
+                /* Navigation routes set by react router. This is placed in
+                app.js rather than index.js so we can pass relevant top-level
+                props to the elements */
+                <Routes>
+                  <Route path="/" element={<Home user={currentUser} />} />
+                  {/* <Route path="classrooms" element={<Classrooms user={currentUser} />} /> */}
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="class">
+                    <Route path=":classID" element={<Classroom user={currentUser} />} />
+                  </Route>
+                  {/* Catch-all route for any URLs that don't match an existing route */}
+                  <Route
+                    path="*"
+                    element={
+                      <main style={{ padding: "1rem" }}>
+                        <p>There's nothing here!</p>
+                      </main>
+                    }
+                  />
+                </Routes>
+                : <SignInScreen></SignInScreen>}
+            </Container>
+          </Box>
         </Box>
       </Box>
     </ThemeProvider>

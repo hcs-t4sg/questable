@@ -43,13 +43,13 @@ export default function ClassroomSidebar() {
 
    return (
       <Drawer variant="permanent" open={open} onMouseOver={() => setOpen(true)} onMouseOut={() => setOpen(false)}>
-         <Toolbar
+         {/* <Toolbar
             sx={{
                px: [1],
             }}
          >
          </Toolbar>
-         <Divider />
+         <Divider /> */}
          {/* <Toolbar
             sx={{
               display: 'flex',
