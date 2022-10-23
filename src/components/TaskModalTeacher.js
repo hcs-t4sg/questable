@@ -42,9 +42,10 @@ export default function TaskModalTeacher({ task, classroom }) {
             name: name,
             due: due,
             reward: reward,
+            id: task.id,
         }
         // Call the `updateTask` mutation
-        updateTask(classroom.id, task.id, updatedTask);
+        updateTask(classroom.id, updatedTask);
         handleClose();
     };
 
@@ -65,19 +66,19 @@ export default function TaskModalTeacher({ task, classroom }) {
     React.useEffect(() => {
         // Create a reference to the tasks collection & filter for tasks that are assigned to the student.
         const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
-  
+
         // Attach a listener to the tasks collection
         onSnapshot(taskRef, (snapshot) => {
-           const playersFetch = async () => {
-              const completedPlayers = [];
-              snapshot.data()?.completed.forEach(async (completedID) => {
-                completedPlayers.push(Object.assign({ id: completedID }, (await getPlayerData(classroom.id, completedID))))
+            const playersFetch = async () => {
+                const completedPlayers = [];
+                snapshot.data()?.completed.forEach(async (completedID) => {
+                    completedPlayers.push(Object.assign({ id: completedID }, (await getPlayerData(classroom.id, completedID))))
                 })
-              setCompleted(completedPlayers)
-           }
-           playersFetch().catch(console.error)
+                setCompleted(completedPlayers)
+            }
+            playersFetch().catch(console.error)
         })
-     }, [classroom])
+    }, [classroom])
 
     return (
         <div>
