@@ -1,4 +1,5 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Divider from '@mui/material/Divider';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -40,31 +41,24 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function ClassroomSidebar() {
    // Navbar drawer functionality
    const [open, setOpen] = React.useState(false);
+   const toggleDrawer = () => {
+      setOpen(!open);
+   };
 
    return (
-      <Drawer variant="permanent" open={open} onMouseOver={() => setOpen(true)} onMouseOut={() => setOpen(false)}>
-         {/* <Toolbar
+      <Drawer variant="permanent" open={open}>
+         <Toolbar
             sx={{
+               display: 'flex',
+               alignItems: 'center',
+               justifyContent: 'flex-start',
                px: [1],
             }}
          >
-         </Toolbar>
-         <Divider /> */}
-         {/* <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer} sx={{
-              // pt: 2,
-              // pb: 2,
-            }}>
-              {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            <IconButton onClick={toggleDrawer}>
+               {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
-          </Toolbar> */}
+         </Toolbar>
          <Divider />
          <List component="nav">
             {mainListItemsTeacher}
