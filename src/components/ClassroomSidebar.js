@@ -39,24 +39,32 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function ClassroomSidebar() {
    // Navbar drawer functionality
-   const [open, setOpen] = React.useState(true);
-   const toggleDrawer = () => {
-      setOpen(!open);
-   };
+   const [open, setOpen] = React.useState(false);
+
    return (
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={open} onMouseOver={() => setOpen(true)} onMouseOut={() => setOpen(false)}>
          <Toolbar
             sx={{
-               display: 'flex',
-               alignItems: 'center',
-               justifyContent: 'flex-end',
                px: [1],
             }}
          >
-            <IconButton onClick={toggleDrawer}>
-               <ChevronLeftIcon />
-            </IconButton>
          </Toolbar>
+         <Divider />
+         {/* <Toolbar
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              px: [1],
+            }}
+          >
+            <IconButton onClick={toggleDrawer} sx={{
+              // pt: 2,
+              // pb: 2,
+            }}>
+              {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </Toolbar> */}
          <Divider />
          <List component="nav">
             {mainListItemsTeacher}
