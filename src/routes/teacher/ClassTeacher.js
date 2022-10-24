@@ -1,3 +1,3 @@
 export default function ClassTeacher() {
-   return (<h1>Class Teacher</h1>)
+   return (<h1>Class</h1>)
 }

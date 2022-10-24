@@ -31,13 +31,3 @@ export default function Layout({ children, classroom, role }) {
       </Box>
    )
 }
-
-// <Box sx={{
-//          display: 'flex',
-//          height: '100vh',
-//       }}>
-//          {classroom && <ClassroomSidebar role={role} />}
-//          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-//             {children}
-//          </Container>
-//       </Box>

@@ -1,15 +1,7 @@
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import MenuIcon from '@mui/icons-material/Menu';
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import MuiDrawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -17,17 +9,13 @@ import firebase from 'firebase/compat/app';
 import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import './App.css';
-import { mainListItemsTeacher } from './components/listItems';
 import Classroom from "./routes/Classroom";
 import Home from "./routes/Home";
 import Settings from "./routes/Settings";
 import { SignInScreen } from './utils/firebase';
 import { syncUsers } from "./utils/mutations";
-import ClassroomSidebar from './components/ClassroomSidebar';
 
 // MUI styling constants
-
-const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1
@@ -121,15 +109,12 @@ export default function App() {
             </Button>
           </Toolbar>
         </AppBar>
-        {/* Start factoring out here, create a generic layout file and conditionally render classroom sidebar with student or teacher prop */}
-        {/* Place sidebar here, potentially need new box for layout */}
         {isSignedIn ?
           /* Navigation routes set by react router. This is placed in
           app.js rather than index.js so we can pass relevant top-level
           props to the elements */
           <Routes>
             <Route path="/" element={<Home user={currentUser} />} />
-            {/* <Route path="classrooms" element={<Classrooms user={currentUser} />} /> */}
             <Route path="settings" element={<Settings />} />
             <Route path="class">
               <Route path=":classID/*" element={<Classroom user={currentUser} />} />
