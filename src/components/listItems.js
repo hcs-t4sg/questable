@@ -44,23 +44,23 @@ export const mainListItemsTeacher = (
 
 export const mainListItemsStudent = (
    <React.Fragment>
-      <ListItemButton>
+      <ListItemButton component={Link} to="main">
          <ListItemIcon>
             <FortIcon />
          </ListItemIcon>
-         <ListItemText primary="Main" component={Link} to="main" />
+         <ListItemText primary="Main" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton component={Link} to="shop">
          <ListItemIcon>
             <SellIcon />
          </ListItemIcon>
-         <ListItemText primary="Shop" component={Link} to="shop" />
+         <ListItemText primary="Shop" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton component={Link} to="class-student">
          <ListItemIcon>
             <GroupIcon />
          </ListItemIcon>
-         <ListItemText primary="Class" component={Link} to="class-student" />
+         <ListItemText primary="Class" />
       </ListItemButton>
    </React.Fragment>
 );
