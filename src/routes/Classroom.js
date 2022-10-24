@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { onSnapshot, doc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import React from "react";
 import { useParams } from "react-router-dom";
 import StudentView from '../components/StudentView';
@@ -40,8 +40,6 @@ export default function Classroom({ user }) {
 
    }, [user, classID])
 
-
-   // Display variable views depending on player role (teacher/student)
    if (player?.role === "teacher") {
       return <TeacherView player={player} classroom={classroom} user={user} />
    } else if (player?.role === "student") {
