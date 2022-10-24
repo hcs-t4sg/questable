@@ -49,28 +49,28 @@ export default function Classroom({ user }) {
 
    }, [user, classID])
 
-   if (!player) {
-      return null
-   } else return (
-      <Layout classroom role={player?.role}>
-         <Routes>
-            <Route path="tasks" element={<Tasks />} />
-            <Route path="requests" element={<Requests />} />
-            <Route path="class-teacher" element={<ClassTeacher />} />
-            <Route path="class-settings" element={<ClassSettings />} />
-            <Route path="main" element={<Main />} />
-            <Route path="shop" element={<Shop />} />
-            <Route path="class-student" element={<ClassStudent />} />
-         </Routes>
-         {player?.role === "teacher" ? <TeacherView player={player} classroom={classroom} user={user} /> : player?.role === "student" ? <StudentView player={player} classroom={classroom} /> : null}
-      </Layout>
-   )
-   // Display variable views depending on player role (teacher/student)
-   // if (player?.role === "teacher") {
-   //    return <TeacherView player={player} classroom={classroom} user={user} />
-   // } else if (player?.role === "student") {
-   //    return <StudentView player={player} classroom={classroom} />
-   // } else {
+   // if (!player) {
    //    return null
-   // }
+   // } else return (
+   //    <Layout classroom role={player?.role}>
+   //       <Routes>
+   //          <Route path="tasks" element={<Tasks />} />
+   //          <Route path="requests" element={<Requests />} />
+   //          <Route path="class-teacher" element={<ClassTeacher />} />
+   //          <Route path="class-settings" element={<ClassSettings />} />
+   //          <Route path="main" element={<Main />} />
+   //          <Route path="shop" element={<Shop />} />
+   //          <Route path="class-student" element={<ClassStudent />} />
+   //       </Routes>
+   //       {player?.role === "teacher" ? <TeacherView player={player} classroom={classroom} user={user} /> : player?.role === "student" ? <StudentView player={player} classroom={classroom} /> : null}
+   //    </Layout>
+   // )
+   // Display variable views depending on player role (teacher/student)
+   if (player?.role === "teacher") {
+      return <TeacherView player={player} classroom={classroom} user={user} />
+   } else if (player?.role === "student") {
+      return <StudentView player={player} classroom={classroom} />
+   } else {
+      return null
+   }
 }
