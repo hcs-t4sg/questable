@@ -91,18 +91,6 @@ export default function TaskModalTeacher({ task, classroom }) {
                 {argument: 'Not yet started', value:numAssigned},
             ]);
 
-            // const mapCompleted = async () => {
-            //     //Map all the player ID's to their names using `getPlayerData(...)`
-            //     const names = await snapshot.data()?.completed.map(async (player) => (
-            //         { id: player, name: (await getPlayerData(classroom.id, player)).name }
-            //     ));
-
-            //     if (names) {
-            //         setCompleted(await Promise.all(names));
-            //     }
-            // }
-            // //Run this async function   
-            // mapCompleted().catch(console.error);
         })
     });
 
@@ -150,8 +138,9 @@ export default function TaskModalTeacher({ task, classroom }) {
                         <FormControlLabel label="50" value="50" control={<Radio />} />
                     </RadioGroup>
 
+                    {/* TODO: the 'ok' button doesn't work for some reason */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <DatePicker
+                        <DatePicker   
                             label="DatePicker"
                             inputVariant="outlined"
                             value={date}

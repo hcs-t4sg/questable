@@ -40,7 +40,7 @@ export default function ClassTeacher({ player, classroom, user }) {
 
                 let players = await Promise.all(snapshot.docs.map(async (player) => {
                     const email = (await getUserData(player.id)).email;
-                    return { ...player.data(), id: player.id, email: email };
+                    return { ...player.data(), id: player.id, email: email};
                 }))
 
                 // Await the resolution of all promises in the returned array

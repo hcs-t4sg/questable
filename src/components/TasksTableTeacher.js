@@ -23,7 +23,10 @@ function truncate(description){
 }
 
 function percentDone(task){
-   return Math.random()*100;
+   const numCompleted = task.completed?.length;
+   const numAssigned = task.assigned?.length;
+   const numConfirmed = task.confirmed?.length;
+   return ((numConfirmed)/(numCompleted+numConfirmed+numAssigned))*100;
 }
 
 export default function TasksTableTeacher({ classroom }) {
@@ -47,6 +50,7 @@ export default function TasksTableTeacher({ classroom }) {
    return (
       <Grid item xs={12}>
          <TableContainer component={Paper}>
+         <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
                <TableRow>
                   <TableCell></TableCell>
@@ -64,18 +68,19 @@ export default function TasksTableTeacher({ classroom }) {
                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                      
-                     <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0 }} align="right">
+                     <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0 }} align="left">
                         <TaskModalTeacher task={task} classroom={classroom} />
                      </TableCell>
 
                      <TableCell component="th" scope="row">{task.name}</TableCell>
-                     <TableCell align="right">{truncate(task.description)}</TableCell>
-                     <TableCell align="right">{task.due}</TableCell>
-                     <TableCell alight="right">{task.reward}</TableCell>
-                     <TableCell align="right"><LinearProgress variant="determinate" value={percentDone(task)}/></TableCell>
+                     <TableCell align="left">{truncate(task.description)}</TableCell>
+                     <TableCell align="left">{new Date(task.due).toLocaleDateString("en-US")}</TableCell>
+                     <TableCell alight="left">{task.reward}</TableCell>
+                     <TableCell align="left"><LinearProgress variant="determinate" value={percentDone(task)}/></TableCell>
                   </TableRow>
                ))}
             </TableBody>
+            </Table>
          </TableContainer>
       </Grid>
    )
