@@ -13,40 +13,48 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { query, where } from "firebase/firestore";
 import { useEffect } from 'react'
+import { LinearProgress } from '@mui/material';
 
+function truncate(description){
+   if(description.length > 50){
+      return description.slice(0, 50) + "..."
+   }
+   return description;
+}
+
+function percentDone(task){
+   return Math.random()*100;
+}
 
 export default function TasksTableTeacher({ classroom }) {
 
    //Create a state variable to hold the tasks
    const [tasks, setTasks] = React.useState([]);
-
    React.useEffect(() => {
-      //Create a reference to the tasks collection
-      const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`);
-
-      //Attach a listener to the tasks collection
-      onSnapshot(taskCollectionRef, (snapshot) => {
-         const tasksFetch = async () => {
-            const tasks = [];
-            snapshot.forEach(doc => {
-               tasks.push(Object.assign({id: doc.id}, doc.data()))
-            })
-            setTasks(tasks);
-         }
-         tasksFetch().catch(console.error);
-      })
-   }, [classroom]);
-
+      const mapTasks = async () => {
+         //Create a reference to the tasks collection
+         const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`);
+         //Attach a listener to the tasks collection
+         onSnapshot(taskCollectionRef, (snapshot) => {
+            //Store the tasks in the `tasks` state variable
+            setTasks(snapshot.docs.map((doc) => (
+               { ...doc.data(), id:doc.id }
+            )));
+         })
+      }
+      mapTasks();
+   }, []);
    return (
       <Grid item xs={12}>
-         <Typography variant="h4">Created Tasks</Typography>
          <TableContainer component={Paper}>
-         <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Reward</TableCell>
-                  <TableCell>Due</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell>Task</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Deadline</TableCell>
+                  <TableCell>Reward </TableCell>
+                  <TableCell>Students Confirmed</TableCell>
                </TableRow>
             </TableHead>
             <TableBody>
@@ -55,17 +63,19 @@ export default function TasksTableTeacher({ classroom }) {
                      key={task.id}
                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                     <TableCell component="th" scope="row" align="center">{task.name}</TableCell>
-                     <TableCell align="center">{task.reward}</TableCell>
-                     <TableCell alight="center">{task.due}</TableCell>
-
-                     <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0 }} align="center">
+                     
+                     <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0 }} align="right">
                         <TaskModalTeacher task={task} classroom={classroom} />
                      </TableCell>
+
+                     <TableCell component="th" scope="row">{task.name}</TableCell>
+                     <TableCell align="right">{truncate(task.description)}</TableCell>
+                     <TableCell align="right">{task.due}</TableCell>
+                     <TableCell alight="right">{task.reward}</TableCell>
+                     <TableCell align="right"><LinearProgress variant="determinate" value={percentDone(task)}/></TableCell>
                   </TableRow>
                ))}
             </TableBody>
-         </Table>
          </TableContainer>
       </Grid>
    )

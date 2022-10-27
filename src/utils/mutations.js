@@ -113,6 +113,20 @@ export async function getPlayerData(classID, user) {
    }
 }
 
+
+export async function getUserData(userID)
+{
+   const userRef = doc(db, `users/${userID}`);
+   const userSnap = await getDoc(userRef);
+
+   if(!userSnap.exists())
+   {
+      return null;
+   }
+
+   return userSnap.data();
+}
+
 //for a task, get the task data
 export async function getTaskData(classID, taskID) {
    const classroomRef = doc(db, "classrooms", classID);
@@ -141,6 +155,15 @@ export async function updateTask(classroomID, task) {
       reward: task.reward,
    });
 }
+// Mutation to update player data
+export async function updatePlayer(userID, classroomID, newPlayer) {
+   const playerRef = doc(db, `classrooms/${classroomID}/players/${userID}`)
+
+   await updateDoc(playerRef, {
+      name: newPlayer.name,
+      avatar: newPlayer.avatar
+ })
+}
 
 //Mutation to delete tasks
 export async function deleteTask(classroomID, taskID) {
@@ -155,7 +178,7 @@ export async function completeTask(classroomID, taskID, playerID) {
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) });
 }
 
-export async function addTask(classID, task, user) {
+export async function addTask(classID, task, teacherID) {
    // Update assignedTasks collection for every member in class except teacher
    const classRef = doc(db, "classrooms", classID);
    const classSnap = await getDoc(classRef);
@@ -165,8 +188,7 @@ export async function addTask(classID, task, user) {
       return "No such document!"
    }
 
-   const listOfPlayers = classSnap.data().playerList;
-   const listOfStudents = listOfPlayers.filter(playerId => playerId !== user.uid);
+   console.log(task);
 
    // Update tasks collection
    await addDoc(collection(db, `classrooms/${classID}/tasks`), {
@@ -174,11 +196,12 @@ export async function addTask(classID, task, user) {
       description: task.description,
       reward: parseInt(task.reward),
       created: Date.now(),
-      due: task.due,
-      assigned: listOfStudents,
+      due: task.date,
+      assigned: classSnap.data().playerList.filter((id)=>(id !== teacherID)), // filter out the teacher's id
       completed: [],
       confirmed: []
    });
+
 }
 
 // Remove player ID from completed array and add to confirmed array.
