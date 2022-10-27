@@ -6,7 +6,7 @@ import * as React from 'react';
 import ConfirmTasksTable from '../../components/ConfirmTasksTable';
 import CreateTaskModal from '../../components/CreateTaskModal';
 import TasksTableTeacher from '../../components/TasksTableTeacher';
-import ManageTasksModal from '../../components/ManageTasksModal';
+import ClassTeacherModal from '../../components/ClassTeacherModal';
 
 import { collection, onSnapshot, doc, query, where } from "firebase/firestore";
 import { db } from '../../utils/firebase';
@@ -14,6 +14,7 @@ import { getUserData } from '../../utils/mutations';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Box from '@mui/material/Box';
 
 export default function ClassTeacher({ player, classroom, user }) {
 
@@ -70,16 +71,25 @@ export default function ClassTeacher({ player, classroom, user }) {
                </Card>  
             </Grid>
 
+
             {students?.map((student)=>(
-                <Card>
-                <CardContent>
-                    <Typography variant="body1">Avatar: {student.avatar}</Typography>
-                    <Typography variant="body1">Name: {student.name}</Typography>
-                    <Typography variant="body1">Email: {student.email}</Typography>
-                    <Typography variant="body1">Money: {student.money}</Typography>
-                    <ManageTasksModal classroom={classroom} student={student}/>
-                </CardContent>
-                </Card>
+               <Card sx={{width:0.22, m:2}}>
+                  <CardContent>
+                     <Box
+                        component="img"
+                        sx={{
+                        height: 50,
+                        width: 50,
+                        }}
+                        alt={`Avatar ${student.avatar}`}
+                        src={`../../static/${student.avatar}.png`}
+                     />
+                     <Typography variant="body1">Name: {student.name}</Typography>
+                     <Typography variant="body1">Account Balance: {student.money}</Typography>
+                     <Typography variant="body1">{student.email}</Typography>
+                     <ClassTeacherModal classroom={classroom} student={student}/>
+                  </CardContent>
+               </Card>
             ))}
         </Grid>
     )

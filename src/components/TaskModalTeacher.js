@@ -11,6 +11,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
+import Grid from '@mui/material/Grid';
 
 import { DatePicker } from '@material-ui/pickers'
 
@@ -18,6 +19,12 @@ import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 
+import {
+    Chart,
+    PieSeries,
+    Title
+  } from '@devexpress/dx-react-chart-material-ui';
+    
 
 export default function TaskModalTeacher({ task, classroom }) {
     //State variables
@@ -66,33 +73,53 @@ export default function TaskModalTeacher({ task, classroom }) {
 
     const [completed, setCompleted] = React.useState([]);
 
+    const [chartData, setChartData] = React.useState([]);
+
     React.useEffect(() => {
 
         const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
 
         // Attach a listener to the tasks collection
         onSnapshot(taskRef, (snapshot) => {
-            const mapCompleted = async () => {
-                //Map all the player ID's to their names using `getPlayerData(...)`
-                const names = await snapshot.data()?.completed.map(async (player) => (
-                    { id: player, name: (await getPlayerData(classroom.id, player)).name }
-                ));
+            
+            const numCompleted = snapshot.data()?.completed.length;
+            const numAssigned = snapshot.data()?.assigned.length;
+            const numConfirmed = snapshot.data()?.confirmed.length;
 
-                if (names) {
-                    setCompleted(await Promise.all(names));
-                }
-            }
-            //Run this async function   
-            mapCompleted().catch(console.error);
+            setChartData([
+                {argument: 'Finished', value:numCompleted+numConfirmed}, // TODO: is this how we want this to be?
+                {argument: 'Not yet started', value:numAssigned},
+            ]);
+
+            // const mapCompleted = async () => {
+            //     //Map all the player ID's to their names using `getPlayerData(...)`
+            //     const names = await snapshot.data()?.completed.map(async (player) => (
+            //         { id: player, name: (await getPlayerData(classroom.id, player)).name }
+            //     ));
+
+            //     if (names) {
+            //         setCompleted(await Promise.all(names));
+            //     }
+            // }
+            // //Run this async function   
+            // mapCompleted().catch(console.error);
         })
     });
+
 
     return (
         <div>
             {openButton}
             <Dialog open={open} onClose={handleClose}>
                 <DialogContent>
+                <Grid>
                     <Typography variant="h5">Overview</Typography>
+                    <Grid xs ={5}>
+                    <Chart data={chartData}>
+                        <PieSeries valueField="value" argumentField="argument" innerRadius={0.6} />
+                    </Chart>
+                    </Grid>
+                    <Grid>
                     <Typography variant="h5">Edit Task</Typography>
                     <TextField
                         margin="normal"
@@ -134,6 +161,8 @@ export default function TaskModalTeacher({ task, classroom }) {
                     <br />
                     {editButton}
                     {deleteButton}
+                    </Grid>
+                </Grid>
                 </DialogContent>
             </Dialog>
         </div>
