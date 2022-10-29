@@ -69,6 +69,7 @@ export default function TaskModalTeacher({ task, classroom }) {
 
     const editButton = <Button onClick={handleEdit}>Edit</Button>;
     const deleteButton = <Button onClick={handleDelete}>Delete</Button>;
+    const cancelButton = <Button onClick={handleClose}>Cancel</Button>;
 
     const [completed, setCompleted] = React.useState([]);
 
@@ -135,6 +136,7 @@ export default function TaskModalTeacher({ task, classroom }) {
                         value={description} 
                         onChange={(event) => setDescription(event.target.value)}
                     />
+                    <Typography>Reward</Typography>
                     <RadioGroup row onChange={(event) => {setReward(event.target.value)}}>    
                         <FormControlLabel label="10" value="10" control={<Radio />} />
                         <FormControlLabel label="20" value="20" control={<Radio />} />
@@ -154,6 +156,7 @@ export default function TaskModalTeacher({ task, classroom }) {
                     <br />
                     {editButton}
                     {deleteButton}
+                    {cancelButton}
                     </Grid>
                 </Grid>
                 </DialogContent>

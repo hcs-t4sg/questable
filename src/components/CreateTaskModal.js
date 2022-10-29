@@ -96,6 +96,7 @@ export default function CreateTaskModal({ classroom, player }) {
                         value={description} 
                         onChange={(event) => setDescription(event.target.value)}
                     />
+                    <Typography>Reward</Typography>
                     <RadioGroup row onChange={(event) => {setReward(event.target.value)}} defaultValue="10">    
                         <FormControlLabel label="10" value="10" control={<Radio />} />
                         <FormControlLabel label="20" value="20" control={<Radio />} />
