@@ -144,7 +144,7 @@ export default function TaskModalTeacher({ task, classroom }) {
                             label="DatePicker"
                             inputVariant="outlined"
                             value={date}
-                            onChange={(event) => {setDate(event.target.value)}}
+                            onChange={setDate}
                         />
                     </MuiPickersUtilsProvider>
                     <br />
