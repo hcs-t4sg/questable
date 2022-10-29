@@ -60,7 +60,6 @@ export default function TaskModalTeacher({ task, classroom }) {
 
     // Call the `deleteTask` mutation
     const handleDelete = () => {
-        console.log(task)
         deleteTask(classroom.id, task.id);
     };
 
@@ -94,6 +93,12 @@ export default function TaskModalTeacher({ task, classroom }) {
         })
     });
 
+
+    // function to handle the date change
+    // store the date as a unix time stamp
+    const handleDateChange = (date) => {
+        setDate(date.getTime());
+    };
 
     return (
         <div>
@@ -138,13 +143,12 @@ export default function TaskModalTeacher({ task, classroom }) {
                         <FormControlLabel label="50" value="50" control={<Radio />} />
                     </RadioGroup>
 
-                    {/* TODO: the 'ok' button doesn't work for some reason */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <DatePicker   
                             label="DatePicker"
                             inputVariant="outlined"
                             value={date}
-                            onChange={setDate}
+                            onChange={handleDateChange}
                         />
                     </MuiPickersUtilsProvider>
                     <br />
