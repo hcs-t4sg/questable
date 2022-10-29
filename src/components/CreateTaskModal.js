@@ -55,6 +55,12 @@ export default function CreateTaskModal({ classroom, player }) {
       handleClose();
    };
 
+    // function to handle the date change
+    // store the date as a unix time stamp
+    const handleDateChange = (date) => {
+      setDate(date.getTime());
+   };
+
    const openButton = <Button sx={{width:1}}  onClick={handleOpen}>Create Manually</Button>
 
    const actionButtons =
@@ -99,11 +105,11 @@ export default function CreateTaskModal({ classroom, player }) {
                     </RadioGroup>
 
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <DatePicker
+                        <DatePicker   
                             label="DatePicker"
                             inputVariant="outlined"
                             value={date}
-                            onChange={(event) => {setDate(event.target.value)}}
+                            onChange={handleDateChange}
                         />
                     </MuiPickersUtilsProvider>
                     <br />
