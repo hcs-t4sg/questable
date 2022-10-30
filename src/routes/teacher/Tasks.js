@@ -22,7 +22,7 @@ export default function Tasks({ player, classroom, user }) {
     const [numStudents, setNumStudents] = React.useState();
 
     const classroomRef = doc(db, `classrooms/${classroom.id}`);
-    onSnapshot(classroomRef, (doc)=>{
+    onSnapshot(classroomRef, (doc) => {
         setNumStudents(doc.data().playerList.length - 1);
     })
     const [teacher, setTeacher] = React.useState()
@@ -50,15 +50,17 @@ export default function Tasks({ player, classroom, user }) {
     }, []);
 
     return (
-        <Grid container spacing={3} sx={{p:5}}>
+        <Grid container spacing={3} sx={{ p: 5 }}>
             <Grid item xs={12}>
-               <Card sx={{width:1}}>
-                  <CardContent>
-                     <Typography variant="h4" component="div">{classroom.name}</Typography>
-                     <Typography variant="h5" component="div">{player.name}</Typography> {/*Do we want a separate user name?*/}
-                     <Typography variant="h5" component="div">{numStudents} Total Students</Typography>
-                  </CardContent>
-               </Card>  
+                <Typography variant="h2" component="div">{classroom.name}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <Card sx={{ width: 1 }}>
+                    <CardContent>
+                        <Typography variant="h5" component="div">{player.name}</Typography> {/*Do we want a separate user name?*/}
+                        <Typography variant="h5" component="div">{numStudents} Total Students</Typography>
+                    </CardContent>
+                </Card>
             </Grid>
 
             <Grid item xs={12}>
@@ -67,8 +69,8 @@ export default function Tasks({ player, classroom, user }) {
             </Grid>
 
             <Grid item xs={12}>
-               <Typography variant="h5">View and Edit Tasks</Typography>
-               <TasksTableTeacher classroom={classroom} />
+                <Typography variant="h5">View and Edit Tasks</Typography>
+                <TasksTableTeacher classroom={classroom} />
             </Grid>
         </Grid>
     )
