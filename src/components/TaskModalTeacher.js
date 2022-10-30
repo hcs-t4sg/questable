@@ -1,20 +1,29 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { doc, onSnapshot } from "firebase/firestore";
 import * as React from 'react';
 import { useState } from 'react';
 import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import Grid from '@mui/material/Grid';
+
+import { DatePicker } from '@material-ui/pickers'
+
+import DateFnsUtils from '@date-io/date-fns';
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+
+
+import {
+    Chart,
+    PieSeries,
+    Title
+} from '@devexpress/dx-react-chart-material-ui';
 
 
 export default function TaskModalTeacher({ task, classroom }) {
@@ -22,14 +31,14 @@ export default function TaskModalTeacher({ task, classroom }) {
     const [open, setOpen] = useState(false);
     const [name, setName] = useState(task.name);
     const [reward, setReward] = useState(task.reward);
-    const [due, setDue] = useState(task.due);
+    const [date, setDate] = useState(new Date());
     const [description, setDescription] = useState(task.description);
 
     // Open the task modal
     const handleClickOpen = () => {
         setOpen(true);
         setName(task.name);
-        setDue(task.due);
+        setDate(task.due);
         setReward(task.reward);
     };
     // Close the task modal
@@ -40,7 +49,7 @@ export default function TaskModalTeacher({ task, classroom }) {
     const handleEdit = () => {
         const updatedTask = {
             name: name,
-            due: due,
+            due: date,
             reward: reward,
             id: task.id,
         }
@@ -60,96 +69,96 @@ export default function TaskModalTeacher({ task, classroom }) {
 
     const editButton = <Button onClick={handleEdit}>Edit</Button>;
     const deleteButton = <Button onClick={handleDelete}>Delete</Button>;
+    const cancelButton = <Button onClick={handleClose}>Cancel</Button>;
 
     const [completed, setCompleted] = React.useState([]);
 
+    const [chartData, setChartData] = React.useState([]);
+
     React.useEffect(() => {
-        // Create a reference to the tasks collection & filter for tasks that are assigned to the student.
+
         const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
 
         // Attach a listener to the tasks collection
         onSnapshot(taskRef, (snapshot) => {
-            const playersFetch = async () => {
-                const completedPlayers = [];
-                snapshot.data()?.completed.forEach(async (completedID) => {
-                    completedPlayers.push(Object.assign({ id: completedID }, (await getPlayerData(classroom.id, completedID))))
-                })
-                setCompleted(completedPlayers)
-            }
-            playersFetch().catch(console.error)
+
+            const numCompleted = snapshot.data()?.completed.length;
+            const numAssigned = snapshot.data()?.assigned.length;
+            const numConfirmed = snapshot.data()?.confirmed.length;
+
+            setChartData([
+                { argument: 'Finished', value: numCompleted + numConfirmed }, // TODO: is this how we want this to be?
+                { argument: 'Not yet started', value: numAssigned },
+            ]);
+
         })
-    }, [classroom])
+    });
+
+
+    // function to handle the date change
+    // store the date as a unix time stamp
+    const handleDateChange = (date) => {
+        setDate(date.getTime());
+    };
 
     return (
         <div>
             {openButton}
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>{name}</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        margin="normal"
-                        id="name"
-                        label="Name"
-                        fullWidth
-                        variant="standard"
-                        value={name}
-                        onChange={(event) => setName(event.target.value)}
-                    />
-                    <TextField
-                        margin="normal"
-                        id="reward"
-                        label="Reward"
-                        placeholder="0"
-                        fullWidth
-                        variant="standard"
-                        value={reward}
-                        onChange={(event) => setReward(event.target.value)}
-                    />
-                    <TextField
-                        margin="normal"
-                        id="date"
-                        label="Date"
-                        fullWidth
-                        variant="standard"
-                        placeholder=""
-                        multiline
-                        maxRows={1}
-                        value={due}
-                        onChange={(event) => setDue(event.target.value)}
-                    />
-                    <TextField
-                        margin="normal"
-                        id="description"
-                        label="Description"
-                        fullWidth
-                        variant="standard"
-                        placeholder=""
-                        multiline
-                        maxRows={8}
-                        value={description}
-                        onChange={(event) => setDescription(event.target.value)}
-                    />
-                    {/* Table to hold all students to have completed the task */}
-                    <TableContainer>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Stuents that Have Completed this Task</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {completed.map((player) => (
-                                <TableRow
-                                    key={player.id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">{player.name}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </TableContainer>
+                    <Grid>
+                        <Typography variant="h5">Overview</Typography>
+                        <Grid item xs={5}>
+                            <Chart data={chartData}>
+                                <PieSeries valueField="value" argumentField="argument" innerRadius={0.6} />
+                            </Chart>
+                        </Grid>
+                        <Grid>
+                            <Typography variant="h5">Edit Task</Typography>
+                            <TextField
+                                margin="normal"
+                                id="name"
+                                label="Task Name"
+                                fullWidth
+                                variant="standard"
+                                value={name}
+                                onChange={(event) => setName(event.target.value)}
+                            />
+                            <TextField
+                                margin="normal"
+                                id="description"
+                                label="Description"
+                                fullWidth
+                                variant="standard"
+                                placeholder=""
+                                multiline
+                                maxRows={8}
+                                value={description}
+                                onChange={(event) => setDescription(event.target.value)}
+                            />
+                            <Typography>Reward</Typography>
+                            <RadioGroup row value={reward} onChange={(event) => { setReward(event.target.value) }}>
+                                <FormControlLabel label="10" value="10" control={<Radio />} />
+                                <FormControlLabel label="20" value="20" control={<Radio />} />
+                                <FormControlLabel label="30" value="30" control={<Radio />} />
+                                <FormControlLabel label="40" value="40" control={<Radio />} />
+                                <FormControlLabel label="50" value="50" control={<Radio />} />
+                            </RadioGroup>
 
-                    {editButton}
-                    {deleteButton}
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <DatePicker
+                                    label="DatePicker"
+                                    inputVariant="outlined"
+                                    value={date}
+                                    onChange={handleDateChange}
+                                />
+                            </MuiPickersUtilsProvider>
+                            <br />
+                            {editButton}
+                            {deleteButton}
+                            {cancelButton}
+                        </Grid>
+                    </Grid>
                 </DialogContent>
             </Dialog>
         </div>
