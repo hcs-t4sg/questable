@@ -23,8 +23,8 @@ import {
     Chart,
     PieSeries,
     Title
-  } from '@devexpress/dx-react-chart-material-ui';
-    
+} from '@devexpress/dx-react-chart-material-ui';
+
 
 export default function TaskModalTeacher({ task, classroom }) {
     //State variables
@@ -81,14 +81,14 @@ export default function TaskModalTeacher({ task, classroom }) {
 
         // Attach a listener to the tasks collection
         onSnapshot(taskRef, (snapshot) => {
-            
+
             const numCompleted = snapshot.data()?.completed.length;
             const numAssigned = snapshot.data()?.assigned.length;
             const numConfirmed = snapshot.data()?.confirmed.length;
 
             setChartData([
-                {argument: 'Finished', value:numCompleted+numConfirmed}, // TODO: is this how we want this to be?
-                {argument: 'Not yet started', value:numAssigned},
+                { argument: 'Finished', value: numCompleted + numConfirmed }, // TODO: is this how we want this to be?
+                { argument: 'Not yet started', value: numAssigned },
             ]);
 
         })
@@ -106,59 +106,59 @@ export default function TaskModalTeacher({ task, classroom }) {
             {openButton}
             <Dialog open={open} onClose={handleClose}>
                 <DialogContent>
-                <Grid>
-                    <Typography variant="h5">Overview</Typography>
-                    <Grid xs ={5}>
-                    <Chart data={chartData}>
-                        <PieSeries valueField="value" argumentField="argument" innerRadius={0.6} />
-                    </Chart>
-                    </Grid>
                     <Grid>
-                    <Typography variant="h5">Edit Task</Typography>
-                    <TextField
-                        margin="normal"
-                        id="name"
-                        label="Task Name"
-                        fullWidth
-                        variant="standard"
-                        value={name}
-                        onChange={(event) => setName(event.target.value)}
-                    />
-                    <TextField
-                        margin="normal"
-                        id="description"
-                        label="Description"
-                        fullWidth
-                        variant="standard"
-                        placeholder=""
-                        multiline
-                        maxRows={8}
-                        value={description} 
-                        onChange={(event) => setDescription(event.target.value)}
-                    />
-                    <Typography>Reward</Typography>
-                    <RadioGroup row onChange={(event) => {setReward(event.target.value)}}>    
-                        <FormControlLabel label="10" value="10" control={<Radio />} />
-                        <FormControlLabel label="20" value="20" control={<Radio />} />
-                        <FormControlLabel label="30" value="30" control={<Radio />} />
-                        <FormControlLabel label="40" value="40" control={<Radio />} />
-                        <FormControlLabel label="50" value="50" control={<Radio />} />
-                    </RadioGroup>
+                        <Typography variant="h5">Overview</Typography>
+                        <Grid item xs={5}>
+                            <Chart data={chartData}>
+                                <PieSeries valueField="value" argumentField="argument" innerRadius={0.6} />
+                            </Chart>
+                        </Grid>
+                        <Grid>
+                            <Typography variant="h5">Edit Task</Typography>
+                            <TextField
+                                margin="normal"
+                                id="name"
+                                label="Task Name"
+                                fullWidth
+                                variant="standard"
+                                value={name}
+                                onChange={(event) => setName(event.target.value)}
+                            />
+                            <TextField
+                                margin="normal"
+                                id="description"
+                                label="Description"
+                                fullWidth
+                                variant="standard"
+                                placeholder=""
+                                multiline
+                                maxRows={8}
+                                value={description}
+                                onChange={(event) => setDescription(event.target.value)}
+                            />
+                            <Typography>Reward</Typography>
+                            <RadioGroup row value={reward} onChange={(event) => { setReward(event.target.value) }}>
+                                <FormControlLabel label="10" value="10" control={<Radio />} />
+                                <FormControlLabel label="20" value="20" control={<Radio />} />
+                                <FormControlLabel label="30" value="30" control={<Radio />} />
+                                <FormControlLabel label="40" value="40" control={<Radio />} />
+                                <FormControlLabel label="50" value="50" control={<Radio />} />
+                            </RadioGroup>
 
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <DatePicker   
-                            label="DatePicker"
-                            inputVariant="outlined"
-                            value={date}
-                            onChange={handleDateChange}
-                        />
-                    </MuiPickersUtilsProvider>
-                    <br />
-                    {editButton}
-                    {deleteButton}
-                    {cancelButton}
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <DatePicker
+                                    label="DatePicker"
+                                    inputVariant="outlined"
+                                    value={date}
+                                    onChange={handleDateChange}
+                                />
+                            </MuiPickersUtilsProvider>
+                            <br />
+                            {editButton}
+                            {deleteButton}
+                            {cancelButton}
+                        </Grid>
                     </Grid>
-                </Grid>
                 </DialogContent>
             </Dialog>
         </div>

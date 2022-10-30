@@ -24,7 +24,7 @@ export default function ClassTeacher({ player, classroom, user }) {
     const [numStudents, setNumStudents] = React.useState();
 
     const classroomRef = doc(db, `classrooms/${classroom.id}`);
-    onSnapshot(classroomRef, (doc)=>{
+    onSnapshot(classroomRef, (doc) => {
         setNumStudents(doc.data().playerList.length - 1);
     })
 
@@ -40,7 +40,7 @@ export default function ClassTeacher({ player, classroom, user }) {
 
                 let players = await Promise.all(snapshot.docs.map(async (player) => {
                     const email = (await getUserData(player.id)).email;
-                    return { ...player.data(), id: player.id, email: email};
+                    return { ...player.data(), id: player.id, email: email };
                 }))
 
                 // Await the resolution of all promises in the returned array
@@ -62,34 +62,34 @@ export default function ClassTeacher({ player, classroom, user }) {
     return (
         <Grid container spacing={3}>
             <Grid item xs={12}>
-               <Card sx={{width:1}}>
-                  <CardContent>
-                     <Typography variant="h4" component="div">{classroom.name}</Typography>
-                     <Typography variant="h5" component="div">{player.name}</Typography> {/*Do we want a separate user name?*/}
-                     <Typography variant="h5" component="div">{numStudents} Total Students</Typography>
-                  </CardContent>
-               </Card>  
+                <Card sx={{ width: 1 }}>
+                    <CardContent>
+                        <Typography variant="h4" component="div">{classroom.name}</Typography>
+                        <Typography variant="h5" component="div">{player.name}</Typography> {/*Do we want a separate user name?*/}
+                        <Typography variant="h5" component="div">{numStudents} Total Students</Typography>
+                    </CardContent>
+                </Card>
             </Grid>
 
 
-            {students?.map((student)=>(
-               <Card sx={{width:0.22, m:2}}>
-                  <CardContent>
-                     <Box
-                        component="img"
-                        sx={{
-                        height: 50,
-                        width: 50,
-                        }}
-                        alt={`Avatar ${student.avatar}`}
-                        src={`../../static/${student.avatar}.png`}
-                     />
-                     <Typography variant="body1">Name: {student.name}</Typography>
-                     <Typography variant="body1">Account Balance: {student.money}</Typography>
-                     <Typography variant="body1">{student.email}</Typography>
-                     <ClassTeacherModal classroom={classroom} student={student}/>
-                  </CardContent>
-               </Card>
+            {students?.map((student) => (
+                <Card sx={{ width: 0.22, m: 2 }}>
+                    <CardContent>
+                        <Box
+                            component="img"
+                            sx={{
+                                height: 50,
+                                width: 50,
+                            }}
+                            alt={`Avatar ${student.avatar}`}
+                            src={`../../static/${student.avatar}.png`}
+                        />
+                        <Typography variant="body1">Name: {student.name}</Typography>
+                        <Typography variant="body1">Account Balance: {student.money}</Typography>
+                        <Typography variant="body1">{student.email}</Typography>
+                        <ClassTeacherModal classroom={classroom} student={student} />
+                    </CardContent>
+                </Card>
             ))}
         </Grid>
     )
