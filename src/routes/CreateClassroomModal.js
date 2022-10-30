@@ -7,15 +7,16 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { useState } from 'react';
 import Grid from '@mui/material/Grid';
+import { addClassroom } from '../utils/mutations';
 
-export default function JoinClassroomModal({ user }) {
+export default function CreateClassroomModal({ user }) {
 
     const [open, setOpen] = useState(false);
-    const [signupCode, setSignupCode] = React.useState("");
+    const [newClassroomName, setNewClassroomName] = React.useState("");
  
     const handleClickOpen = () => {
         setOpen(true);
-       setSignupCode("");
+        setNewClassroomName("");
     };
  
     const handleClose = () => {
@@ -23,33 +24,30 @@ export default function JoinClassroomModal({ user }) {
     };
 
    // Mutation handlers
-
-    const handleJoinClassroom = () => {
-        joinClassroom(signupCode, user).then((value) => {
-        window.alert(value);
-        });
-        setSignupCode("");
-    }
+    const handleAddClassroom = () => {
+      addClassroom(newClassroomName, user);
+      setNewClassroomName("");
+   }
 
    const openButton =
       <Button variant="contained" onClick={handleClickOpen}>
-         Join!
+         Create!
       </Button>
 
    const actionButtons =
       <DialogActions>
          <Button onClick={handleClose}>Cancel</Button>
-         <Button variant="contained" onClick={handleJoinClassroom}>Join</Button>
+         <Button variant="contained" onClick={handleAddClassroom}>Create</Button>
       </DialogActions>
 
    return (
       <Grid item xs={12}>
          {openButton}
          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{"Join Classroom"}</DialogTitle>
+            <DialogTitle>{"Create Classroom"}</DialogTitle>
             <DialogContent>
                 {/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
-                <TextField id="classroom-name" label="Classroom Name" variant="standard" onChange={(event) => setSignupCode(event.target.value)} value={signupCode} />
+                <TextField id="classroom-name" label="Classroom Name" variant="standard" onChange={(event) => setNewClassroomName(event.target.value)} value={newClassroomName} />
             </DialogContent>
             {actionButtons}
         </Dialog>
