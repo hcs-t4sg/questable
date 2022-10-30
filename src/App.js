@@ -202,7 +202,7 @@ export default function App() {
               app.js rather than index.js so we can pass relevant top-level
               props to the elements */
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Home user={currentUser}/>} />
                 <Route path="classrooms" element={<Classrooms user={currentUser} />} />
                 <Route path="settings" element={<Settings />} />
                 <Route path="class">
