@@ -10,6 +10,9 @@ import { db } from '../utils/firebase';
 import { useEffect } from "react"
 import { addClassroom, joinClassroom } from '../utils/mutations';
 import Layout from '../components/Layout.js';
+import Box from '@mui/material/Box';
+import CreateClassroomModal from '../components/CreateClassroomModal';
+import JoinClassroomModal from '../components/JoinClassroomModal';
 
 export default function Classrooms({ user }) {
 
@@ -43,25 +46,38 @@ export default function Classrooms({ user }) {
       <Layout>
          <Grid container spacing={3}>
             <Grid item xs={12}>
-               <Typography variant="h2">Classrooms</Typography>
+               <Box
+                  sx={{
+                     width: '100%',
+                     height: 300,
+                     backgroundColor: 'primary.dark',
+                     display: "flex",
+                     flexWrap: "wrap",
+                     justifyContent: "center",
+                     alignItems: "center",
+                     textAlign: "center",
+                  }}
+               >
+                  <Typography variant="h3" sx={{ flex: '100%', }}>Welcome Back!</Typography>
+                  <JoinClassroomModal user={user} sx={{ flex: '10%' }} />
+                  <CreateClassroomModal user={user} sx={{ flex: '10%' }} />
+               </Box>
             </Grid>
             <Grid item xs={12}>
-               <Stack direction="row" spacing={2}>
-                  <TextField id="signup-code" label="Signup Code" variant="standard" onChange={(event) => setSignupCode(event.target.value)} value={signupCode} />
-                  <Button variant="contained" onClick={handleJoinClassroom}>Join Classroom</Button>
-               </Stack>
+               <Typography variant="h5" sx={{ flex: '100%', }}>Pinned Classrooms</Typography>
             </Grid>
             <Grid item xs={12}>
-               <Stack direction="row" spacing={2}>
-                  <TextField id="classroom-name" label="Classroom Name" variant="standard" onChange={(event) => setNewClassroomName(event.target.value)} value={newClassroomName} />
-                  <Button variant="contained" onClick={handleAddClassroom}>Create Classroom</Button>
-               </Stack>
+               <Typography variant="h5" sx={{ flex: '100%', }}>Joined Classrooms</Typography>
             </Grid>
             {classrooms.map((classroom) => (
                <Grid item xs={12} sm={6} md={4} key={classroom.id}>
                   <ClassroomCard className={classroom.name} classID={classroom.id} />
                </Grid>
             ))}
+            <Grid item xs={12}>
+               <Typography variant="h5" sx={{ flex: '100%', }}>Created Classrooms</Typography>
+            </Grid>
+
          </Grid>
       </Layout>
    )
