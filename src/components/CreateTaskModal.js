@@ -5,6 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { doc, onSnapshot } from "firebase/firestore";
@@ -13,10 +14,10 @@ import { useState } from 'react';
 import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 
-import { DatePicker } from '@material-ui/pickers'
+// import { DatePicker } from '@material-ui/pickers'
 
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+// import DateFnsUtils from '@date-io/date-fns';
+// import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 import { addTask } from '../utils/mutations';
 import Grid from '@mui/material/Grid';
@@ -61,7 +62,7 @@ export default function CreateTaskModal({ classroom, player }) {
       setDate(date.getTime());
    };
 
-   const openButton = <Button sx={{width:1}}  onClick={handleOpen}>Create Manually</Button>
+   const openButton = <Button sx={{width:1}}  onClick={handleOpen} startIcon={<AddCircleOutlineIcon />}>Create Manually</Button>
 
    const actionButtons =
       <DialogActions>
@@ -105,14 +106,14 @@ export default function CreateTaskModal({ classroom, player }) {
                         <FormControlLabel label="50" value="50" control={<Radio />} />
                     </RadioGroup>
 
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <DatePicker   
                             label="DatePicker"
                             inputVariant="outlined"
                             value={date}
                             onChange={handleDateChange}
                         />
-                    </MuiPickersUtilsProvider>
+                    </MuiPickersUtilsProvider> */}
                     <br />
                     {actionButtons}
                 </DialogContent>

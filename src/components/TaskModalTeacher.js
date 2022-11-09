@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { doc, onSnapshot } from "firebase/firestore";
@@ -12,19 +13,9 @@ import { useState } from 'react';
 import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 import Grid from '@mui/material/Grid';
-
-import { DatePicker } from '@material-ui/pickers'
-
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-
-
-import {
-    Chart,
-    PieSeries,
-    Title
-} from '@devexpress/dx-react-chart-material-ui';
-
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import PropTypes from 'prop-types';
 
 export default function TaskModalTeacher({ task, classroom }) {
     //State variables
@@ -58,18 +49,14 @@ export default function TaskModalTeacher({ task, classroom }) {
         handleClose();
     };
 
-    // Call the `deleteTask` mutation
-    const handleDelete = () => {
-        deleteTask(classroom.id, task.id);
-    };
-
     const openButton = <IconButton onClick={handleClickOpen}>
         <OpenInNewIcon />
     </IconButton>;
 
-    const editButton = <Button onClick={handleEdit}>Edit</Button>;
-    const deleteButton = <Button onClick={handleDelete}>Delete</Button>;
-    const cancelButton = <Button onClick={handleClose}>Cancel</Button>;
+    
+
+    const saveButton = <Button onClick={handleEdit} variant="contained">Save Changes</Button>;
+    const closeButton = <IconButton onClick={handleClose}><CloseIcon /></IconButton>;
 
     const [completed, setCompleted] = React.useState([]);
 
@@ -85,15 +72,47 @@ export default function TaskModalTeacher({ task, classroom }) {
             const numCompleted = snapshot.data()?.completed.length;
             const numAssigned = snapshot.data()?.assigned.length;
             const numConfirmed = snapshot.data()?.confirmed.length;
-
-            setChartData([
-                { argument: 'Finished', value: numCompleted + numConfirmed }, // TODO: is this how we want this to be?
-                { argument: 'Not yet started', value: numAssigned },
-            ]);
-
+            const total = numAssigned+numCompleted+numConfirmed;
+            // check if values are definied then check if there will not be a divide by 0 error
+            if (!(numCompleted === undefined || numAssigned === undefined || numConfirmed === undefined || total === 0)) {
+                setChartData(numConfirmed/total);
+            }else{
+                setChartData(0);
+            }
         })
     });
-
+    function CircularProgressWithLabel(props) {
+        return (
+          <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+            <CircularProgress variant="determinate" {...props} />
+            <Box
+              sx={{
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                position: 'absolute',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography variant="caption" component="div" color="text.secondary">
+                {`${Math.round(props.value)}%`}
+              </Typography>
+            </Box>
+          </Box>
+        );
+      }
+      
+      CircularProgressWithLabel.propTypes = {
+        /**
+         * The value of the progress indicator for the determinate variant.
+         * Value between 0 and 100.
+         * @default 0
+         */
+        value: PropTypes.number.isRequired,
+      };
 
     // function to handle the date change
     // store the date as a unix time stamp
@@ -104,14 +123,17 @@ export default function TaskModalTeacher({ task, classroom }) {
     return (
         <div>
             {openButton}
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: "50%", height: "100%" } }}>
                 <DialogContent>
                     <Grid>
+                        <Grid container justifyContent="flex-begin">
                         <Typography variant="h5">Overview</Typography>
-                        <Grid item xs={5}>
-                            <Chart data={chartData}>
-                                <PieSeries valueField="value" argumentField="argument" innerRadius={0.6} />
-                            </Chart>
+                        </Grid>
+                        <Grid container justifyContent="flex-end">
+                            {closeButton}
+                        </Grid>
+                        <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center">
+                            <CircularProgressWithLabel variant="indeterminant" thickness="1.25" size="20vh" value={chartData}/>
                         </Grid>
                         <Grid>
                             <Typography variant="h5">Edit Task</Typography>
@@ -145,7 +167,7 @@ export default function TaskModalTeacher({ task, classroom }) {
                                 <FormControlLabel label="50" value="50" control={<Radio />} />
                             </RadioGroup>
 
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <DatePicker
                                     label="DatePicker"
                                     inputVariant="outlined"
@@ -153,10 +175,12 @@ export default function TaskModalTeacher({ task, classroom }) {
                                     onChange={handleDateChange}
                                 />
                             </MuiPickersUtilsProvider>
-                            <br />
-                            {editButton}
-                            {deleteButton}
-                            {cancelButton}
+                            <br /> */}
+
+                            {/* center the save button */}
+                            <Grid container justifyContent="center">
+                                {saveButton}
+                            </Grid>
                         </Grid>
                     </Grid>
                 </DialogContent>

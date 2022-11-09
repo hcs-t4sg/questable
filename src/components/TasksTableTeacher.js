@@ -13,7 +13,9 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { query, where } from "firebase/firestore";
 import { useEffect } from 'react'
-import { LinearProgress } from '@mui/material';
+import { IconButton, LinearProgress } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {deleteTask} from '../utils/mutations';
 
 function truncate(description){
    if(description.length > 50){
@@ -47,6 +49,11 @@ export default function TasksTableTeacher({ classroom }) {
       }
       mapTasks();
    }, []);
+
+   const handleDelete = (task) => {
+      deleteTask(classroom.id, task.id).catch(console.error);
+   }
+
    return (
       <Grid item xs={12}>
          <TableContainer component={Paper}>
@@ -77,6 +84,7 @@ export default function TasksTableTeacher({ classroom }) {
                      <TableCell align="left">{new Date(task.due).toLocaleDateString("en-US")}</TableCell>
                      <TableCell alight="left">{task.reward}</TableCell>
                      <TableCell align="left"><LinearProgress variant="determinate" value={percentDone(task)}/></TableCell>
+                     <TableCell align="right"><IconButton onClick={()=>{handleDelete(task, classroom)}}><DeleteIcon /></IconButton></TableCell>
                   </TableRow>
                ))}
             </TableBody>
