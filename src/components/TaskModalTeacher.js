@@ -14,8 +14,9 @@ import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 import Grid from '@mui/material/Grid';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import moment from 'moment';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { fromUnixTime } from 'date-fns';
+import { getUnixTime } from 'date-fns';
 
 // import { DatePicker } from '@material-ui/pickers'
 
@@ -42,7 +43,7 @@ export default function TaskModalTeacher({ task, classroom }) {
     const handleClickOpen = () => {
         setOpen(true);
         setName(task.name);
-        setDate(moment.unix(task.due));
+        setDate(fromUnixTime(task.due));
         setReward(task.reward);
     };
     // Close the task modal
@@ -53,7 +54,7 @@ export default function TaskModalTeacher({ task, classroom }) {
     const handleEdit = () => {
         const updatedTask = {
             name: name,
-            due: date.unix(),
+            due: getUnixTime(date),
             reward: reward,
             id: task.id,
         }
@@ -158,7 +159,7 @@ export default function TaskModalTeacher({ task, classroom }) {
                                     onChange={handleDateChange}
                                 />
                             </MuiPickersUtilsProvider> */}
-                            <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
                                     label="Basic example"
                                     value={date}

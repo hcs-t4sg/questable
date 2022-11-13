@@ -14,8 +14,8 @@ import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import moment from 'moment';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { getUnixTime } from 'date-fns';
 
 // import { DatePicker } from '@material-ui/pickers'
 
@@ -36,7 +36,7 @@ export default function CreateTaskModal({ classroom, player }) {
    const handleOpen = () => {
       setOpen(true);
       setName("");
-      setDueDate(moment());
+      setDueDate(new Date());
       setDescription("");
       setReward("10");
    };
@@ -52,7 +52,7 @@ export default function CreateTaskModal({ classroom, player }) {
          name,
          description,
          reward,
-         due: dueDate.unix(),
+         due: getUnixTime(dueDate),
       };
 
       addTask(classroom.id, newTask, player.id).catch(console.error);
@@ -117,7 +117,7 @@ export default function CreateTaskModal({ classroom, player }) {
                             onChange={handleDateChange}
                         />
                     </MuiPickersUtilsProvider> */}
-               <LocalizationProvider dateAdapter={AdapterMoment}>
+               <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                      label="Basic example"
                      value={dueDate}

@@ -14,7 +14,7 @@ import Paper from '@mui/material/Paper';
 import { query, where } from "firebase/firestore";
 import { useEffect } from 'react'
 import { LinearProgress } from '@mui/material';
-import moment from 'moment';
+import { format, fromUnixTime } from 'date-fns';
 
 function truncate(description) {
    if (description.length > 50) {
@@ -47,6 +47,7 @@ export default function TasksTableTeacher({ classroom }) {
          })
       }
       mapTasks();
+      console.log(tasks);
    }, []);
    return (
       <Grid item xs={12}>
@@ -75,7 +76,7 @@ export default function TasksTableTeacher({ classroom }) {
 
                         <TableCell component="th" scope="row">{task.name}</TableCell>
                         <TableCell align="left">{truncate(task.description)}</TableCell>
-                        <TableCell align="left">{moment.unix(task.due).format("MM/DD/YYYY")}</TableCell>
+                        <TableCell align="left">{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
                         <TableCell alight="left">{task.reward}</TableCell>
                         <TableCell align="left"><LinearProgress variant="determinate" value={percentDone(task)} /></TableCell>
                      </TableRow>
