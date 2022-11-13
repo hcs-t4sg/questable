@@ -114,13 +114,11 @@ export async function getPlayerData(classID, user) {
 }
 
 
-export async function getUserData(userID)
-{
+export async function getUserData(userID) {
    const userRef = doc(db, `users/${userID}`);
    const userSnap = await getDoc(userRef);
 
-   if(!userSnap.exists())
-   {
+   if (!userSnap.exists()) {
       return null;
    }
 
@@ -162,7 +160,7 @@ export async function updatePlayer(userID, classroomID, newPlayer) {
    await updateDoc(playerRef, {
       name: newPlayer.name,
       avatar: newPlayer.avatar
- })
+   })
 }
 
 //Mutation to delete tasks
@@ -196,8 +194,8 @@ export async function addTask(classID, task, teacherID) {
       description: task.description,
       reward: parseInt(task.reward),
       created: Date.now(),
-      due: task.date,
-      assigned: classSnap.data().playerList.filter((id)=>(id !== teacherID)), // filter out the teacher's id
+      due: task.due,
+      assigned: classSnap.data().playerList.filter((id) => (id !== teacherID)), // filter out the teacher's id
       completed: [],
       confirmed: []
    });
