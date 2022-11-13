@@ -1,21 +1,18 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { completeTask } from '../utils/mutations';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { 
     Typography, 
     Box, 
     IconButton,
-    Button, 
     Modal, 
+    Button
 } from '@mui/material';
 import sprite1 from '../utils/tempAssets/sprite1.svg'
-import crossButton from '../utils/tempAssets/crossButton.svg'
+import crossButton from '../utils/tempAssets/CrossButton.svg'
+import { completeTask } from '../utils/mutations';
 
-
-
-
-export default function TaskModalStudent({ task, classroom, player }) {
+export default function TaskModalStudent({ classroom, player, task }) {
     // State variables
     const [open, setOpen] = useState(false);
 
@@ -27,16 +24,18 @@ export default function TaskModalStudent({ task, classroom, player }) {
     const handleClose = () => {
         setOpen(false);
     };
+
     // Handle task completion
-    // const handleComplete = () => {
-    //     // Call the `completeTask` mutation
-    //     completeTask(classroom.id, task.id, player.id);
-    //     handleClose();
-    // };
+    const handleComplete = () => {
+        // Call the `completeTask` mutation
+        if(window.confirm("Are you sure you want to mark this task as complete?")) {
+          completeTask(classroom.id, task.id, player.id)
+        }
+    }
 
     const Cluster = ({title, data}) => (
       <>
-        <Typography sx={{marginTop: '30px'}} fontWeight="medium" variant="h7">{title}</Typography>
+        <Typography sx={{marginTop: '25px'}} fontWeight="medium" variant="h7">{title}</Typography>
         <Typography fontWeight="light" variant="h7">{data}</Typography>
       </>
     )
@@ -49,8 +48,12 @@ export default function TaskModalStudent({ task, classroom, player }) {
 return (
     <div>
        {openButton}
-       <Modal sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} open={open} onClose={handleClose}>
+       <Modal sx={{ overflow: "scroll"}} open={open} onClose={handleClose}>
           <Box sx={{
+                position: 'absolute', 
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
                 width: '70%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -80,8 +83,8 @@ return (
             <Box
               component="img"
               sx={{
-                width: '30%',
-                height: '60%',
+                width: '15%',
+                // height: '30%',
                 maxHeight: '200px',
                 maxWidth: '200px',
                 marginBottom: '24px'
@@ -89,12 +92,15 @@ return (
               alt="User's avatar"
               src={sprite1}
             />
-          <Typography sx={{textAlign: 'center', maxWidth: '400px'}} fontWeight="light" variant="h5">Flavored Text: Strawberry Vanilla Chocolate!</Typography>
+          <Typography sx={{textAlign: 'center', maxWidth: '400px'}} fontWeight="light" variant="h6">Flavored Text: Strawberry Vanilla Chocolate!</Typography>
           <Box sx={{width:'100%', flexDirection: 'column', display: 'flex', justifyContent: 'left'}}>
             <Cluster title="Task Name" data={task.name}/>
             <Cluster title="Description" data={task.description}/>
             <Cluster title="Deadline" data={task.due}/>
             <Cluster title="Reward Amount" data={`$${task.reward}`}/>
+            {task.status === 'assigned' ? (<Cluster title="Completion" data={<Button onClick={handleComplete} variant="contained">Mark as complete</Button>}/>)
+              : <Cluster title="Completion" data={task.status === 'completed' ? 'Marked as completed!' : task.status === 'confirmed' ? 'Confirmed!' : 'Unavailable'}/>
+            }
           </Box>
         </Box>
        </Modal>
