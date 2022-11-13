@@ -15,6 +15,7 @@ import Grid from '@mui/material/Grid';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import moment from 'moment';
 
 // import { DatePicker } from '@material-ui/pickers'
 
@@ -41,7 +42,7 @@ export default function TaskModalTeacher({ task, classroom }) {
     const handleClickOpen = () => {
         setOpen(true);
         setName(task.name);
-        setDate(task.due);
+        setDate(moment.unix(task.due));
         setReward(task.reward);
     };
     // Close the task modal

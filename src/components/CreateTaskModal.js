@@ -15,6 +15,7 @@ import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import moment from 'moment';
 
 // import { DatePicker } from '@material-ui/pickers'
 
@@ -30,12 +31,12 @@ export default function CreateTaskModal({ classroom, player }) {
    const [name, setName] = useState("");
    const [description, setDescription] = useState("");
    const [reward, setReward] = React.useState("10");
-   const [date, setDate] = React.useState(null);
+   const [dueDate, setDueDate] = React.useState(null);
 
    const handleOpen = () => {
       setOpen(true);
       setName("");
-      setDate(Date.now);
+      setDueDate(moment());
       setDescription("");
       setReward("10");
    };
@@ -51,7 +52,7 @@ export default function CreateTaskModal({ classroom, player }) {
          name,
          description,
          reward,
-         date,
+         due: dueDate.unix(),
       };
 
       addTask(classroom.id, newTask, player.id).catch(console.error);
@@ -59,9 +60,8 @@ export default function CreateTaskModal({ classroom, player }) {
    };
 
    // function to handle the date change
-   // store the date as a unix time stamp
    const handleDateChange = (date) => {
-      setDate(date);
+      setDueDate(date);
       console.log(date);
    };
 
@@ -120,7 +120,7 @@ export default function CreateTaskModal({ classroom, player }) {
                <LocalizationProvider dateAdapter={AdapterMoment}>
                   <DatePicker
                      label="Basic example"
-                     value={date}
+                     value={dueDate}
                      onChange={handleDateChange}
                      renderInput={(params) => <TextField {...params} />}
                   />
