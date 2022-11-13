@@ -12,11 +12,14 @@ import * as React from 'react';
 import { useState } from 'react';
 import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-import { DatePicker } from '@material-ui/pickers'
+// import { DatePicker } from '@material-ui/pickers'
 
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+// import DateFnsUtils from '@date-io/date-fns';
+// import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 import { addTask } from '../utils/mutations';
 import Grid from '@mui/material/Grid';
@@ -27,7 +30,7 @@ export default function CreateTaskModal({ classroom, player }) {
    const [name, setName] = useState("");
    const [description, setDescription] = useState("");
    const [reward, setReward] = React.useState("10");
-   const [date, setDate] = React.useState(Date.now);
+   const [date, setDate] = React.useState(null);
 
    const handleOpen = () => {
       setOpen(true);
@@ -55,13 +58,14 @@ export default function CreateTaskModal({ classroom, player }) {
       handleClose();
    };
 
-    // function to handle the date change
-    // store the date as a unix time stamp
-    const handleDateChange = (date) => {
-      setDate(date.getTime());
+   // function to handle the date change
+   // store the date as a unix time stamp
+   const handleDateChange = (date) => {
+      setDate(date);
+      console.log(date);
    };
 
-   const openButton = <Button sx={{width:1}}  onClick={handleOpen}>Create Manually</Button>
+   const openButton = <Button sx={{ width: 1 }} onClick={handleOpen}>Create Manually</Button>
 
    const actionButtons =
       <DialogActions>
@@ -73,38 +77,38 @@ export default function CreateTaskModal({ classroom, player }) {
       <Grid item xs={12}>
          {openButton}
          <Dialog open={open} onClose={handleClose}>
-                <DialogContent>
-                    <Typography variant="h5">Create New Task</Typography>
-                    <TextField
-                        margin="normal"
-                        id="name"
-                        label="Task Name"
-                        fullWidth
-                        variant="standard"
-                        value={name}
-                        onChange={(event) => setName(event.target.value)}
-                    />
-                    <TextField
-                        margin="normal"
-                        id="description"
-                        label="Description"
-                        fullWidth
-                        variant="standard"
-                        placeholder=""
-                        multiline
-                        maxRows={8}
-                        value={description} 
-                        onChange={(event) => setDescription(event.target.value)}
-                    />
-                    <Typography>Reward</Typography>
-                    <RadioGroup row onChange={(event) => {setReward(event.target.value)}} defaultValue="10">    
-                        <FormControlLabel label="10" value="10" control={<Radio />} />
-                        <FormControlLabel label="20" value="20" control={<Radio />} />
-                        <FormControlLabel label="30" value="30" control={<Radio />} />
-                        <FormControlLabel label="40" value="40" control={<Radio />} />
-                        <FormControlLabel label="50" value="50" control={<Radio />} />
-                    </RadioGroup>
-
+            <DialogContent>
+               <Typography variant="h5">Create New Task</Typography>
+               <TextField
+                  margin="normal"
+                  id="name"
+                  label="Task Name"
+                  fullWidth
+                  variant="standard"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+               />
+               <TextField
+                  margin="normal"
+                  id="description"
+                  label="Description"
+                  fullWidth
+                  variant="standard"
+                  placeholder=""
+                  multiline
+                  maxRows={8}
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+               />
+               <Typography>Reward</Typography>
+               <RadioGroup row onChange={(event) => { setReward(event.target.value) }} defaultValue="10">
+                  <FormControlLabel label="10" value="10" control={<Radio />} />
+                  <FormControlLabel label="20" value="20" control={<Radio />} />
+                  <FormControlLabel label="30" value="30" control={<Radio />} />
+                  <FormControlLabel label="40" value="40" control={<Radio />} />
+                  <FormControlLabel label="50" value="50" control={<Radio />} />
+               </RadioGroup>
+               {/* 
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <DatePicker   
                             label="DatePicker"
@@ -112,11 +116,19 @@ export default function CreateTaskModal({ classroom, player }) {
                             value={date}
                             onChange={handleDateChange}
                         />
-                    </MuiPickersUtilsProvider>
-                    <br />
-                    {actionButtons}
-                </DialogContent>
-            </Dialog>
+                    </MuiPickersUtilsProvider> */}
+               <LocalizationProvider dateAdapter={AdapterMoment}>
+                  <DatePicker
+                     label="Basic example"
+                     value={date}
+                     onChange={handleDateChange}
+                     renderInput={(params) => <TextField {...params} />}
+                  />
+               </LocalizationProvider>
+               <br />
+               {actionButtons}
+            </DialogContent>
+         </Dialog>
       </Grid>
    )
 }
