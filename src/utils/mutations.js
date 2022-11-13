@@ -1,5 +1,6 @@
 import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion } from "firebase/firestore";
 import { db } from './firebase';
+import moment from 'moment';
 
 export async function syncUsers(user) {
    const userRef = doc(db, 'users', user.uid);
@@ -193,7 +194,7 @@ export async function addTask(classID, task, teacherID) {
       name: task.name,
       description: task.description,
       reward: parseInt(task.reward),
-      created: Date.now(),
+      created: moment().unix(),
       due: task.due,
       assigned: classSnap.data().playerList.filter((id) => (id !== teacherID)), // filter out the teacher's id
       completed: [],
