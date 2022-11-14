@@ -13,6 +13,10 @@ import { useState } from 'react';
 import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import PropTypes from 'prop-types';
+
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -64,12 +68,12 @@ export default function TaskModalTeacher({ task, classroom }) {
         handleClose();
     };
 
+
     const openButton = <IconButton onClick={handleClickOpen}>
         <OpenInNewIcon />
     </IconButton>;
 
     
-
     const saveButton = <Button onClick={handleEdit} variant="contained">Save Changes</Button>;
     const closeButton = <IconButton onClick={handleClose}><CloseIcon /></IconButton>;
 
@@ -141,16 +145,9 @@ export default function TaskModalTeacher({ task, classroom }) {
             {openButton}
             <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: "50%", height: "100%" } }}>
                 <DialogContent>
-                    <Grid>
-                        <Grid container justifyContent="flex-begin">
+                    <Grid container justifyContent="flex-begin">
                         <Typography variant="h5">Overview</Typography>
-                        {/* <Grid item xs={5}>
-                            <Chart data={chartData}>
-                                <PieSeries valueField="value" argumentField="argument" innerRadius={0.6} />
-                            </Chart>
-                        </Grid> */}
                         <Grid>
-                            <Typography variant="h5">Edit Task</Typography>
                             <TextField
                                 margin="normal"
                                 id="name"
@@ -181,14 +178,6 @@ export default function TaskModalTeacher({ task, classroom }) {
                                 <FormControlLabel label="50" value="50" control={<Radio />} />
                             </RadioGroup>
 
-                            {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <DatePicker
-                                    label="DatePicker"
-                                    inputVariant="outlined"
-                                    value={date}
-                                    onChange={handleDateChange}
-                                />
-                            </MuiPickersUtilsProvider> */}
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
                                     label="Basic example"
@@ -198,9 +187,10 @@ export default function TaskModalTeacher({ task, classroom }) {
                                 />
                             </LocalizationProvider>
                             <br />
-                            {editButton}
-                            {deleteButton}
-                            {cancelButton}
+                            {/* center the save button */}
+                            <Grid container justifyContent="center">
+                                {saveButton}
+                            </Grid>
                         </Grid>
                     </Grid>
                 </DialogContent>

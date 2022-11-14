@@ -15,6 +15,7 @@ import { query, where } from "firebase/firestore";
 import { useEffect } from 'react'
 import { LinearProgress } from '@mui/material';
 import { format, fromUnixTime } from 'date-fns';
+import {deleteTask} from '../utils/mutations'
 
 function truncate(description) {
    if (description.length > 50) {
