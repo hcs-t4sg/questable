@@ -249,7 +249,7 @@ export async function denyTask(classID, studentID, taskID) {
 }
 
 // mutation to move task from assigned array to expired array
-export async function expireTask(taskID, playerID)
+export async function expireTask(classID, taskID, studentID)
 {
    const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`);
    const taskSnap = await getDoc(taskRef);
