@@ -5,6 +5,7 @@ import { Typography, Box } from '@mui/material';
 import ClassStudent from '../routes/student/ClassStudent';
 import Main from '../routes/student/Main';
 import Shop from '../routes/student/Shop';
+import Inventory from '../routes/student/Inventory';
 import placeholderAvatar from '../utils/tempAssets/oval.png'
 
 export default function StudentView({ player, classroom }) {
@@ -75,6 +76,7 @@ export default function StudentView({ player, classroom }) {
             <Route path="main" element={<Main classroom={classroom}  player={player}/>} />
             <Route path="shop" element={<Shop />} />
             <Route path="class-student" element={<ClassStudent />} />
+            <Route path="inventory" element={<Inventory />} />
             <Route
                path="*"
                element={
