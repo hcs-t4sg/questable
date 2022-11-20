@@ -9,7 +9,6 @@ import { db } from '../../utils/firebase';
 import TaskModalStudent from '../../components/TaskModalStudent'
 
 
-
 export default function Main({classroom, player}) {
    const [assigned, setAssigned] = useState([]);
    const [completed, setCompleted] = useState([]);
