@@ -12,18 +12,23 @@ import { useState } from 'react';
 import { db } from '../utils/firebase';
 import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 import Grid from '@mui/material/Grid';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { fromUnixTime } from 'date-fns';
+import { getUnixTime } from 'date-fns';
 
-import { DatePicker } from '@material-ui/pickers'
+// import { DatePicker } from '@material-ui/pickers'
 
-import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+// import DateFnsUtils from '@date-io/date-fns';
+// import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 
-import {
-    Chart,
-    PieSeries,
-    Title
-} from '@devexpress/dx-react-chart-material-ui';
+// import {
+//     Chart,
+//     PieSeries,
+//     Title
+// } from '@devexpress/dx-react-chart-material-ui';
 
 
 export default function TaskModalTeacher({ task, classroom }) {
@@ -31,14 +36,14 @@ export default function TaskModalTeacher({ task, classroom }) {
     const [open, setOpen] = useState(false);
     const [name, setName] = useState(task.name);
     const [reward, setReward] = useState(task.reward);
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(null);
     const [description, setDescription] = useState(task.description);
 
     // Open the task modal
     const handleClickOpen = () => {
         setOpen(true);
         setName(task.name);
-        setDate(task.due);
+        setDate(fromUnixTime(task.due));
         setReward(task.reward);
     };
     // Close the task modal
@@ -49,7 +54,7 @@ export default function TaskModalTeacher({ task, classroom }) {
     const handleEdit = () => {
         const updatedTask = {
             name: name,
-            due: date,
+            due: getUnixTime(date),
             reward: reward,
             id: task.id,
         }
@@ -98,7 +103,8 @@ export default function TaskModalTeacher({ task, classroom }) {
     // function to handle the date change
     // store the date as a unix time stamp
     const handleDateChange = (date) => {
-        setDate(date.getTime());
+        setDate(date);
+        console.log(date);
     };
 
     return (
@@ -108,11 +114,11 @@ export default function TaskModalTeacher({ task, classroom }) {
                 <DialogContent>
                     <Grid>
                         <Typography variant="h5">Overview</Typography>
-                        <Grid item xs={5}>
+                        {/* <Grid item xs={5}>
                             <Chart data={chartData}>
                                 <PieSeries valueField="value" argumentField="argument" innerRadius={0.6} />
                             </Chart>
-                        </Grid>
+                        </Grid> */}
                         <Grid>
                             <Typography variant="h5">Edit Task</Typography>
                             <TextField
@@ -145,14 +151,22 @@ export default function TaskModalTeacher({ task, classroom }) {
                                 <FormControlLabel label="50" value="50" control={<Radio />} />
                             </RadioGroup>
 
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <DatePicker
                                     label="DatePicker"
                                     inputVariant="outlined"
                                     value={date}
                                     onChange={handleDateChange}
                                 />
-                            </MuiPickersUtilsProvider>
+                            </MuiPickersUtilsProvider> */}
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                    label="Basic example"
+                                    value={date}
+                                    onChange={handleDateChange}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
                             <br />
                             {editButton}
                             {deleteButton}
