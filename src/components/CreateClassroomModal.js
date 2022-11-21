@@ -27,6 +27,7 @@ export default function CreateClassroomModal({ user }) {
    const handleAddClassroom = () => {
       addClassroom(newClassroomName, user);
       setNewClassroomName("");
+      setOpen(false);
    }
 
    const openButton =
