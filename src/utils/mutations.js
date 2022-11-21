@@ -69,6 +69,7 @@ export async function joinClassroom(classID, user) {
    // Check if student already in class
    const classroomData = classroomSnap.data();
    let playerList = classroomData.playerList;
+   let studentList = classroomData.studentList;
 
    if (playerList.includes(user.uid)) {
       return "You are already in this class!"
@@ -311,5 +312,31 @@ export async function purchaseItem(classID, studentID, itemID, isCustom) {
          money: playerSnap.data().money - itemSnap.data().cost
       })
 
+//Mutation to add Pin
+export async function addPin(userID, classID) {
+   const userRef = doc(db, `users/${userID}`)
+   const pinnedSnap = await getDoc(userRef)
+   const pinned = pinnedSnap.data().pinned;
+   pinned.push(classID)
+   if (pinnedSnap.exists()) {
+      updateDoc(userRef, {
+         pinned: pinned
+      })
+   }
+}
+
+//Mutation to delete Pin
+export async function deletePin(userID, classID) {
+   const userRef = doc(db, `users/${userID}`)
+   const pinnedSnap = await getDoc(userRef)
+   const pinned = pinnedSnap.data().pinned;
+   var index = pinned.indexOf(classID);
+   if (index > -1) {
+      pinned.splice(index, 1);
+   }
+   if (pinnedSnap.exists()) {
+      updateDoc(userRef, {
+         pinned: pinned
+      })
    }
 }
