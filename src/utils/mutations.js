@@ -69,7 +69,6 @@ export async function joinClassroom(classID, user) {
    // Check if student already in class
    const classroomData = classroomSnap.data();
    let playerList = classroomData.playerList;
-   let studentList = classroomData.studentList;
 
    if (playerList.includes(user.uid)) {
       return "You are already in this class!"
@@ -311,6 +310,8 @@ export async function purchaseItem(classID, studentID, itemID, isCustom) {
       await updateDoc(playerRef, {
          money: playerSnap.data().money - itemSnap.data().cost
       })
+   }
+}
 
 //Mutation to add Pin
 export async function addPin(userID, classID) {
