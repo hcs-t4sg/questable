@@ -1,4 +1,4 @@
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Button } from '@mui/material';
 import placeholderAvatar from '../../utils/tempAssets/oval.png'
 import checkboxChecked from '../../utils/tempAssets/checkboxChecked.svg'
 import checkboxEmpty from '../../utils/tempAssets/checkboxUnchecked.svg'
@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from '../../utils/firebase';
 import TaskModalStudent from '../../components/TaskModalStudent'
+import { set } from 'date-fns';
 
 
 
@@ -14,6 +15,14 @@ export default function Main({classroom, player}) {
    const [assigned, setAssigned] = useState([]);
    const [completed, setCompleted] = useState([]);
    const [confirmed, setConfirmed] = useState([]);
+   const [overdue, setOverdue] = useState([]);
+
+   // Stores the currently active page:
+   // (0) All Quests
+   // (1) Requested
+   // (2) Confirmed
+   // (3) Overdue
+   const [page, setPage] = useState(0);
 
    useEffect(() => {
       // fetch task information
@@ -23,6 +32,8 @@ export default function Main({classroom, player}) {
             const assigned = []
             const completed = []
             const confirmed = []
+            const overdue = []
+
             snapshot.forEach(doc => {
                // Find assigned, completed, and confirmed tasks using player's id.
                if(doc.data().assigned?.includes(player.id)) {
@@ -34,10 +45,16 @@ export default function Main({classroom, player}) {
                if (doc.data().confirmed?.includes(player.id)) {
                   confirmed.push(Object.assign({ id: doc.id }, doc.data()))
                }
+               // if task is overdue, add to overdue list
+               if(doc.data().due < Date.now()) {
+                  overdue.push(Object.assign({ id: doc.id }, doc.data()))
+                  console.log(overdue);
+               }
             })
             setAssigned(assigned)
             setCompleted(completed)
-            setConfirmed(confirmed)
+            setConfirmed(confirmed);
+            setOverdue(overdue);
          }
          taskFetch().catch(console.error)
       })
@@ -48,8 +65,9 @@ export default function Main({classroom, player}) {
          completeTask(classroom.id, task.id, player.id)
       }
    }
-
-   const QuestCard = ({task, completed, confirmed}) => {
+   
+   // create a list of tasks to display based on the current page
+   const QuestCard = ({task}) => {     
       return(
          <Box sx={{
             width: '100%',
@@ -76,10 +94,10 @@ export default function Main({classroom, player}) {
                />
                <Typography>{task && task.description}</Typography>
             </Box>
-            <Box sx={{display: 'flex', flexDirection: confirmed ? 'column' : 'row', alignItems: 'center'}}>
+            <Box sx={{display: 'flex', flexDirection: confirmed.includes(task) ? 'column' : 'row', alignItems: 'center'}}>
                <Typography>${task && task.reward} Reward</Typography>
                <TaskModalStudent task={task} classroom={classroom} player={player} />
-               {confirmed ? 
+               {confirmed.includes(task) ? 
                   <Box 
                      sx={{
                         marginTop: '10px', 
@@ -95,25 +113,39 @@ export default function Main({classroom, player}) {
                   <Box component="img" 
                      onClick={() => handleComplete(task)}
                      sx={{ height: '30px', marginLeft: '20px'}} 
-                     src={completed ? checkboxChecked : checkboxEmpty}
+                     src={completed.includes(task) ? checkboxChecked : checkboxEmpty}
                   />
                }
             </Box>
          </Box>
    )}
 
+   // Returns the quests that should be displayed on the page
+   const getQuests = () => {
+      switch(page) {
+         case 0:
+            return assigned.concat(completed).concat(confirmed);
+         case 1:
+            return [];
+         case 2:
+            return confirmed;
+         case 3:
+            return overdue;
+         default:
+            return [];
+      }
+   }
+
    return (
       <div style={{marginLeft: '36px'}}>
-         <Typography sx={{marginBottom: '22px'}} variant="h4">All Quests</Typography>
-         {assigned.map((task) => (
-            <QuestCard task={task}/>
+         <Button sx={{marginBottom: '22px'}} onClick={()=>{setPage(0)}} variant="h4">All Quests</Button>
+         <Button sx={{marginBottom: '22px'}} onClick={()=>{setPage(1)}} variant="h4">Requested</Button> 
+         <Button sx={{marginBottom: '22px'}} onClick={()=>{setPage(2)}} variant="h4">Confirmed</Button>
+         <Button sx={{marginBottom: '22px'}} onClick={()=>{setPage(3)}} variant="h4">Overdue</Button>
+         {getQuests().map((task) => (
+            <QuestCard task={task} />
          ))}
-         {completed.map((task) => (
-            <QuestCard task={task} completed/>
-         ))}
-         {confirmed.map((task) => (
-            <QuestCard task={task} confirmed/>
-         ))}
+
       </div>
    )
 

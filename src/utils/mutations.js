@@ -187,8 +187,6 @@ export async function addTask(classID, task, teacherID) {
       return "No such document!"
    }
 
-   console.log(task);
-
    // Update tasks collection
    await addDoc(collection(db, `classrooms/${classID}/tasks`), {
       name: task.name,
@@ -247,16 +245,16 @@ export async function denyTask(classID, studentID, taskID) {
    }
 }
 
-// mutation to move task from assigned array to expired array
-export async function expireTask(classID, taskID, studentID)
-{
-   const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`);
-   const taskSnap = await getDoc(taskRef);
+// // mutation to move task from assigned array to expired array
+// export async function expireTask(classID, taskID, studentID)
+// {
+//    const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`);
+//    const taskSnap = await getDoc(taskRef);
 
-   if (taskSnap.exists()) {
-      updateDoc(taskRef, {
-         assigned: arrayRemove(studentID),
-         expired: arrayUnion(studentID)
-      })
-   }
-}
+//    if (taskSnap.exists()) {
+//       updateDoc(taskRef, {
+//          assigned: arrayRemove(studentID),
+//          expired: arrayUnion(studentID)
+//       })
+//    }
+// }

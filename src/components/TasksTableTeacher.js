@@ -16,6 +16,8 @@ import { useEffect } from 'react'
 import { LinearProgress } from '@mui/material';
 import { format, fromUnixTime } from 'date-fns';
 import {deleteTask} from '../utils/mutations'
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 
 function truncate(description) {
    if (description.length > 50) {
@@ -85,6 +87,7 @@ export default function TasksTableTeacher({ classroom }) {
                         <TableCell align="left">{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
                         <TableCell alight="left">{task.reward}</TableCell>
                         <TableCell align="left"><LinearProgress variant="determinate" value={percentDone(task)} /></TableCell>
+                        <TableCell align="left"><IconButton onClick={() => handleDelete(task)}><DeleteIcon /></IconButton></TableCell>
                      </TableRow>
                   ))}
                </TableBody>
