@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import sprite1 from '../utils/tempAssets/sprite1.svg'
 import crossButton from '../utils/tempAssets/crossButton.svg'
-
+import CloseIcon from '@mui/icons-material/Close';
 
 
 
@@ -27,12 +27,6 @@ export default function TaskModalStudent({ task, classroom, player }) {
     const handleClose = () => {
         setOpen(false);
     };
-    // Handle task completion
-    // const handleComplete = () => {
-    //     // Call the `completeTask` mutation
-    //     completeTask(classroom.id, task.id, player.id);
-    //     handleClose();
-    // };
 
     const Cluster = ({title, data}) => (
       <>
@@ -51,20 +45,20 @@ return (
        {openButton}
        <Modal sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} open={open} onClose={handleClose}>
           <Box sx={{
-                width: '70%',
+                width: '40%',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '35px',
-                paddingTop: '25px',
+                padding: '40px',
+                paddingTop: '40px',
                 backgroundColor: 'white',
                 marginBottom: '18px',
               }}
           >
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
               <Typography fontWeight='light' variant="h5">Overview</Typography>
-              <Box onClick={handleClose} component="img" src={crossButton}></Box>
+              <IconButton onClick={handleClose}><CloseIcon /></IconButton>
             </Box>
 
             <hr 
@@ -74,16 +68,16 @@ return (
                 borderWidth: '0px',
                 borderRadius: '5px',
                 width: '100%',
-                marginBottom: '35px'
+                marginBottom: '10px'
               }}
             />          
             <Box
               component="img"
               sx={{
                 width: '30%',
-                height: '60%',
-                maxHeight: '200px',
-                maxWidth: '200px',
+                height: '40%',
+                maxHeight: '100px',
+                maxWidth: '100px',
                 marginBottom: '24px'
               }}
               alt="User's avatar"

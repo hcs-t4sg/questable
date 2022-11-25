@@ -1,5 +1,5 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { FormControlLabel, Radio, RadioGroup, Modal} from '@mui/material';
+import { FormControlLabel, Radio, RadioGroup, Modal, Select, MenuItem, FormControl, InputLabel} from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -51,9 +51,6 @@ export default function TaskModalTeacher({ task, classroom }) {
             reward: reward,
             id: task.id,
         }
-        console.log(getUnixTime(date));
-
-        console.log(updatedTask);
         // Call the `updateTask` mutation
         updateTask(classroom.id, updatedTask);
         handleClose();
@@ -135,67 +132,89 @@ export default function TaskModalTeacher({ task, classroom }) {
         <div>
             {openButton}
             <Modal sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} open={open} onClose={handleClose}>
-            <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: "50%", height: "100%" } }}>
-                <DialogContent>
-                    <Grid container justifyContent="center">
-                        <Typography variant="h5">Overview</Typography>
-                        <Grid container justifyContent="flex-end">
-                            {closeButton}
-                        </Grid>
+            <Box sx={{
+                    width: '40%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '40px',
+                    paddingTop: '40px',
+                    backgroundColor: 'white',
+                    marginBottom: '18px',
+                }}
+            >
+            <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <Typography fontWeight='light' variant="h5">Overview</Typography>
+            <IconButton onClick={handleClose}><CloseIcon /></IconButton>
+            </Box>
+            <hr 
+              style={{
+                backgroundColor: '#D9D9D9',
+                height: '1px',
+                borderWidth: '0px',
+                borderRadius: '5px',
+                width: '100%',
+                marginBottom: '10px'
+              }}
+            />          
+            <TextField
+                margin="normal"
+                id="name"
+                label="Task Name"
+                fullWidth
+                variant="standard"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+            />
+            <TextField
+                margin="normal"
+                id="description"
+                label="Description"
+                fullWidth
+                variant="standard"
+                placeholder=""
+                multiline
+                maxRows={8}
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+            />
 
-                        <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center">
-                            <CircularProgressWithLabel variant="indeterminant" thickness="1.25" size="20vh" value={chartData}/>
-                        </Grid>
-
-                        <Grid>
-                            <TextField
-                                margin="normal"
-                                id="name"
-                                label="Task Name"
-                                fullWidth
-                                variant="standard"
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
-                            />
-                            <TextField
-                                margin="normal"
-                                id="description"
-                                label="Description"
-                                fullWidth
-                                variant="standard"
-                                placeholder=""
-                                multiline
-                                maxRows={8}
-                                value={description}
-                                onChange={(event) => setDescription(event.target.value)}
-                            />
-                            <Typography>Reward</Typography>
-                            <RadioGroup row value={reward} onChange={(event) => { setReward(event.target.value) }}>
-                                <FormControlLabel label="10" value="10" control={<Radio />} />
-                                <FormControlLabel label="20" value="20" control={<Radio />} />
-                                <FormControlLabel label="30" value="30" control={<Radio />} />
-                                <FormControlLabel label="40" value="40" control={<Radio />} />
-                                <FormControlLabel label="50" value="50" control={<Radio />} />
-                            </RadioGroup>
-
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <DatePicker
-                                    label="Basic example"
-                                    value={date}
-                                    onChange={handleDateChange}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </LocalizationProvider>
-                            <br />
-                            {/* center the save button */}
-                            <Grid container justifyContent="center">
-                                {saveButton}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-            </Dialog>
-            </Modal>
+            <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: 2}}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+                label="Due Date"
+                value={date}
+                onChange={handleDateChange}
+                renderInput={(params) => <TextField {...params} />}
+            />
+            </LocalizationProvider>
+            </Box>
+            <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: 2}}>
+                
+            <FormControl fullWidth>
+            <InputLabel id="reward-dropdown-label">Reward</InputLabel>
+            <Select 
+                labelId="reward-dropdown"
+                id="reward-dropdown"
+                value={reward}
+                label="Reward"
+                onChange={(event) => setReward(event.target.value)}
+            >
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={40}>40</MenuItem>
+            </Select>
+            </FormControl>
+            </Box>
+            <br />
+            {/* center the save button */}
+            <Grid container justifyContent="center">
+                {saveButton}
+            </Grid>
+            </Box>
+        </Modal>
         </div>
     );
 }
