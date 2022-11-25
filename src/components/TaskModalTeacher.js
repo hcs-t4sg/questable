@@ -1,5 +1,5 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { FormControlLabel, Radio, RadioGroup, Modal} from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -129,16 +129,24 @@ export default function TaskModalTeacher({ task, classroom }) {
     const handleDateChange = (date) => {
 
         setDate(date);
-        console.log(date);
     };
 
     return (
         <div>
             {openButton}
+            <Modal sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} open={open} onClose={handleClose}>
             <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: "50%", height: "100%" } }}>
                 <DialogContent>
-                    <Grid container justifyContent="flex-begin">
+                    <Grid container justifyContent="center">
                         <Typography variant="h5">Overview</Typography>
+                        <Grid container justifyContent="flex-end">
+                            {closeButton}
+                        </Grid>
+
+                        <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center">
+                            <CircularProgressWithLabel variant="indeterminant" thickness="1.25" size="20vh" value={chartData}/>
+                        </Grid>
+
                         <Grid>
                             <TextField
                                 margin="normal"
@@ -187,6 +195,7 @@ export default function TaskModalTeacher({ task, classroom }) {
                     </Grid>
                 </DialogContent>
             </Dialog>
+            </Modal>
         </div>
     );
 }
