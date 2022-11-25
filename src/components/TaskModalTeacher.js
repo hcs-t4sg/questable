@@ -23,18 +23,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { fromUnixTime } from 'date-fns';
 import { getUnixTime } from 'date-fns';
 
-// import { DatePicker } from '@material-ui/pickers'
-
-// import DateFnsUtils from '@date-io/date-fns';
-// import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-
-
-// import {
-//     Chart,
-//     PieSeries,
-//     Title
-// } from '@devexpress/dx-react-chart-material-ui';
-
 
 export default function TaskModalTeacher({ task, classroom }) {
     //State variables
@@ -63,6 +51,9 @@ export default function TaskModalTeacher({ task, classroom }) {
             reward: reward,
             id: task.id,
         }
+        console.log(getUnixTime(date));
+
+        console.log(updatedTask);
         // Call the `updateTask` mutation
         updateTask(classroom.id, updatedTask);
         handleClose();
@@ -136,6 +127,7 @@ export default function TaskModalTeacher({ task, classroom }) {
     // function to handle the date change
     // store the date as a unix time stamp
     const handleDateChange = (date) => {
+
         setDate(date);
         console.log(date);
     };

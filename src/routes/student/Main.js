@@ -46,9 +46,8 @@ export default function Main({classroom, player}) {
                   confirmed.push(Object.assign({ id: doc.id }, doc.data()))
                }
                // if task is overdue, add to overdue list
-               if(doc.data().due < Date.now()) {
+               if(doc.data().due < Date.now() / 1000) {
                   overdue.push(Object.assign({ id: doc.id }, doc.data()))
-                  console.log(overdue);
                }
             })
             setAssigned(assigned)
@@ -65,9 +64,25 @@ export default function Main({classroom, player}) {
          completeTask(classroom.id, task.id, player.id)
       }
    }
+
+   // functions to determine if a task is in a certain list
+   const includesTask = (task, list) =>
+   {
+      if(!task)
+         return false;
+      if(!list)
+         return false;
+
+      for(let i = 0; i < list.length; i++) {
+         if(list[i].id === task.id) {
+            return true;
+         }
+      }
+      return false;
+   }
    
    // create a list of tasks to display based on the current page
-   const QuestCard = ({task}) => {     
+   const QuestCard = ({task}) => {   
       return(
          <Box sx={{
             width: '100%',
@@ -97,7 +112,7 @@ export default function Main({classroom, player}) {
             <Box sx={{display: 'flex', flexDirection: confirmed.includes(task) ? 'column' : 'row', alignItems: 'center'}}>
                <Typography>${task && task.reward} Reward</Typography>
                <TaskModalStudent task={task} classroom={classroom} player={player} />
-               {confirmed.includes(task) ? 
+               {includesTask(task,confirmed) ? 
                   <Box 
                      sx={{
                         marginTop: '10px', 
@@ -113,7 +128,7 @@ export default function Main({classroom, player}) {
                   <Box component="img" 
                      onClick={() => handleComplete(task)}
                      sx={{ height: '30px', marginLeft: '20px'}} 
-                     src={completed.includes(task) ? checkboxChecked : checkboxEmpty}
+                     src={includesTask(task,completed) ? checkboxChecked : checkboxEmpty}
                   />
                }
             </Box>
@@ -121,6 +136,8 @@ export default function Main({classroom, player}) {
    )}
 
    // Returns the quests that should be displayed on the page
+   // NOTE: Overdue tasks are still in the "assigned", "completed", or "confirmed" lists, but they are *also* in the "overdue" list.
+   
    const getQuests = () => {
       switch(page) {
          case 0:
