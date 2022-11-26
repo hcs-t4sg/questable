@@ -22,7 +22,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { fromUnixTime } from 'date-fns';
 import { getUnixTime } from 'date-fns';
-
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function TaskModalTeacher({ task, classroom }) {
     //State variables
@@ -58,7 +58,7 @@ export default function TaskModalTeacher({ task, classroom }) {
 
 
     const openButton = <IconButton onClick={handleClickOpen}>
-        <OpenInNewIcon />
+        <EditIcon />
     </IconButton>;
 
     
