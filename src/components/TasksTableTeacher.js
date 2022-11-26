@@ -18,6 +18,8 @@ import { format, fromUnixTime } from 'date-fns';
 import {deleteTask} from '../utils/mutations'
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
 
 function truncate(description) {
    if (description.length > 50) {
@@ -32,6 +34,30 @@ function percentDone(task) {
    const numConfirmed = task.confirmed?.length;
    return ((numConfirmed) / (numCompleted + numConfirmed + numAssigned)) * 100;
 }
+
+function LinearProgressWithLabel(props) {
+   return (
+     <Box sx={{ display: 'flex', alignItems: 'center' }}>
+       <Box sx={{ width: '100%', mr: 1 }}>
+         <LinearProgress variant="determinate" {...props} />
+       </Box>
+       <Box sx={{ minWidth: 35 }}>
+         <Typography variant="body2" color="text.secondary">{`${Math.round(
+           props.value,
+         )}%`}</Typography>
+       </Box>
+     </Box>
+   );
+ }
+ 
+ LinearProgressWithLabel.propTypes = {
+   /**
+    * The value of the progress indicator for the determinate and buffer variants.
+    * Value between 0 and 100.
+    */
+   value: PropTypes.number.isRequired,
+ };
+ 
 
 export default function TasksTableTeacher({ classroom }) {
 
@@ -86,7 +112,7 @@ export default function TasksTableTeacher({ classroom }) {
                         <TableCell align="left">{truncate(task.description)}</TableCell>
                         <TableCell align="left">{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
                         <TableCell alight="left">{task.reward}</TableCell>
-                        <TableCell align="left"><LinearProgress variant="determinate" value={percentDone(task)} /></TableCell>
+                        <TableCell align="left"><LinearProgressWithLabel variant="determinate" value={percentDone(task)} /></TableCell>
                         <TableCell align="left"><IconButton onClick={() => handleDelete(task)}><DeleteIcon /></IconButton></TableCell>
                      </TableRow>
                   ))}

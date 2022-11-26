@@ -30,6 +30,7 @@ export default function JoinClassroomModal({ user }) {
          window.alert(value);
       });
       setSignupCode("");
+      setOpen(false);
    }
 
    const openButton =
@@ -50,7 +51,7 @@ export default function JoinClassroomModal({ user }) {
             <DialogTitle>{"Join Classroom"}</DialogTitle>
             <DialogContent>
                {/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
-               <TextField id="classroom-name" label="Classroom Name" variant="standard" onChange={(event) => setSignupCode(event.target.value)} value={signupCode} />
+               <TextField id="classroom-name" label="Classroom ID" variant="standard" onChange={(event) => setSignupCode(event.target.value)} value={signupCode} />
             </DialogContent>
             {actionButtons}
          </Dialog>
