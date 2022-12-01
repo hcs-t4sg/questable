@@ -47,8 +47,8 @@ export default function Inventory() {
                 steps={1}
                 fps={10}
                 loop={true}
-                startAt={0}
-                endAt={10}
+                startAt={1}
+                endAt={1}
                 isResponsive={true}
                 />
        
