@@ -8,7 +8,7 @@ import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from '../../utils/firebase';
 import TaskModalStudent from '../../components/TaskModalStudent'
 import { set } from 'date-fns';
-
+import {Tabs, Tab} from '@mui/material';
 
 
 export default function Main({classroom, player}) {
@@ -153,12 +153,19 @@ export default function Main({classroom, player}) {
       }
    }
 
+   const handleTabChange = (event, newTabIndex) => {
+      setPage(newTabIndex);
+    };
+
    return (
       <div style={{marginLeft: '36px'}}>
-         <Button sx={{marginBottom: '22px'}} onClick={()=>{setPage(0)}} variant="h4">All Quests</Button>
-         <Button sx={{marginBottom: '22px'}} onClick={()=>{setPage(1)}} variant="h4">Requested</Button> 
-         <Button sx={{marginBottom: '22px'}} onClick={()=>{setPage(2)}} variant="h4">Confirmed</Button>
-         <Button sx={{marginBottom: '22px'}} onClick={()=>{setPage(3)}} variant="h4">Overdue</Button>
+         <Tabs value={page} onChange={handleTabChange}>
+            <Tab label="All Quests" />
+            <Tab label="Requested"  />
+            <Tab label="Confirmed" />
+            <Tab label="Overdue"  />
+         </Tabs>
+         
          {getQuests().map((task) => (
             <QuestCard task={task} />
          ))}

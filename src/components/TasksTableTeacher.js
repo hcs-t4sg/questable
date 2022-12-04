@@ -51,7 +51,6 @@ function LinearProgressWithLabel({task}) {
 
 
 export default function TasksTableTeacher({ classroom }) {
-
    //Create a state variable to hold the tasks
    const [tasks, setTasks] = React.useState([]);
    React.useEffect(() => {
@@ -100,7 +99,7 @@ export default function TasksTableTeacher({ classroom }) {
                      >
 
                         <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0, width: .01 }} align="left">
-                           <TaskModalTeacher task={task} classroom={classroom} />
+                              <TaskModalTeacher task={task} classroom={classroom}/>
                         </TableCell>
 
                         <TableCell component="th" scope="row">{task.name}</TableCell>

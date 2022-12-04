@@ -130,7 +130,7 @@ export default function CreateTaskModal({ classroom, player }) {
                 }}
             >
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-            <Typography fontWeight='light' variant="h5">Overview</Typography>
+            <Typography fontWeight='light' variant="h5">Create Task</Typography>
             <IconButton onClick={handleClose}><CloseIcon /></IconButton>
             </Box>
             
@@ -169,6 +169,7 @@ export default function CreateTaskModal({ classroom, player }) {
                 onChange={(event) => setDescription(event.target.value)}
             />
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: 2}}>
+            {/* either show a due date option or max completions based on if task is repeatable */}
             {!isRepeatable ? 
             <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker

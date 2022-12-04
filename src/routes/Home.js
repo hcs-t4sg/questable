@@ -32,15 +32,27 @@ export default function Classrooms({ user }) {
    }
 
    // Listen to user's classrooms
-   const [classrooms, setClassrooms] = React.useState([]);
+   const [joinedClassrooms, setJoinedClassrooms] = React.useState([]);
    useEffect(() => {
       const q = query(collection(db, "classrooms"), where("playerList", "array-contains", user?.uid));
 
       onSnapshot(q, (snapshot) => {
          const classroomsList = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-         setClassrooms(classroomsList);
+         setJoinedClassrooms(classroomsList);
       })
    }, [user])
+
+
+   // listen to created classrooms
+   const [createdClassrooms, setCreatedClassrooms] = React.useState([]);
+   useEffect(() => {
+      const q = query(collection(db, "classrooms"), where("teacher", "==", user?.uid));
+
+      onSnapshot(q, (snapshot) => {
+         const classroomsList = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+         setCreatedClassrooms(classroomsList);
+      })
+   }, [user]);
 
    return (
       <Layout>
@@ -69,7 +81,7 @@ export default function Classrooms({ user }) {
             <Grid item xs={12}>
                <Typography variant="h5" sx={{ flex: '100%', }}>Joined Classrooms</Typography>
             </Grid>
-            {classrooms.map((classroom) => (
+            {joinedClassrooms.map((classroom) => (
                <Grid item xs={12} sm={6} md={4} key={classroom.id}>
                   <ClassroomCard className={classroom.name} classID={classroom.id} />
                </Grid>
@@ -77,6 +89,11 @@ export default function Classrooms({ user }) {
             <Grid item xs={12}>
                <Typography variant="h5" sx={{ flex: '100%', }}>Created Classrooms</Typography>
             </Grid>
+            {createdClassrooms.map((classroom) => (
+               <Grid item xs={12} sm={6} md={4} key={classroom.id}>
+                  <ClassroomCard className={classroom.name} classID={classroom.id} />
+               </Grid>
+            ))}
 
          </Grid>
       </Layout>

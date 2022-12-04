@@ -16,8 +16,13 @@ export async function addClassroom(name, user) {
    // Update classrooms collection with new classroom
    const newClassroom = {
       name: name,
-      playerList: [user.uid],
+      playerList: [],
+      teacher: user.uid,
    }
+   // NOTE: I made a slight change here. Instead of storing the teacher in the playersList,
+   // I'm storing it in a separate field called teacher. This is because I want to be able to differntiate the classes
+   // owned by each user easily when displaying "created classrooms."
+
    const classroomRef = await addDoc(collection(db, "classrooms"), newClassroom);
 
    // Update created classroom with new player
@@ -171,7 +176,6 @@ export async function deleteTask(classroomID, taskID) {
 
 export async function completeTask(classroomID, taskID, playerID) {
    // Add `playerID` to completed array
-   console.log(taskID)
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
    // Remove `playerID` from assigned array
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) });
@@ -211,9 +215,6 @@ export async function addRepeatable(classID, task, teacherID) {
       return "No such document!"
    }
 
-   console.log(classID);
-   console.log(task);
-   console.log(teacherID);
 
    // Update tasks collection
    const repeatableRef = await addDoc(collection(db, `classrooms/${classID}/repeatables`), {
