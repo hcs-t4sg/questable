@@ -178,7 +178,8 @@ export async function completeTask(classroomID, taskID, playerID) {
    // Add `playerID` to completed array
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
    // Remove `playerID` from assigned array
-   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) });
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) }); 
+
 }
 
 export async function addTask(classID, task, teacherID) {
