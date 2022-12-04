@@ -13,7 +13,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import * as React from 'react';
 import { useState } from 'react';
 import { db } from '../utils/firebase';
-import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
+import { addRepeatable, deleteTask, getPlayerData, updateTask } from '../utils/mutations';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -40,7 +40,7 @@ export default function CreateTaskModal({ classroom, player }) {
       setDescription("");
       setReward("10");
       setMaxCompletions(1);
-      isRepeatable(false);
+      setIsRepeatable(false);
    };
 
    const handleClose = () => {
@@ -50,14 +50,45 @@ export default function CreateTaskModal({ classroom, player }) {
    // Mutation handlers
 
    const handleAdd = () => {
-      const newTask = {
-         name,
-         description,
-         reward,
-         due: getUnixTime(dueDate),
-      };
+      if(isRepeatable)
+      {
+         // check the max completions input
+         console.log("maxCompletions: " + maxCompletions);
+         if(maxCompletions < 1)
+         {
+            setMaxCompletions(1);
+            alert("Max completions must be greater than 0");
+            return;
+         }
+         // else if(!Number.isInteger(maxCompletions))
+         // {
+         //    setMaxCompletions(1);
+         //    alert("Max completions must be an integer");
+         //    return;
+         // }
 
-      addTask(classroom.id, newTask, player.id).catch(console.error);
+         const newTask = {
+            name,
+            description,
+            reward,
+            maxCompletions
+         }
+
+         addRepeatable(classroom.id, newTask, player.id).catch(console.error);         
+
+      }
+      else
+      {
+         const newTask = {
+            name,
+            description,
+            reward,
+            due: getUnixTime(dueDate),
+         };
+   
+         addTask(classroom.id, newTask, player.id).catch(console.error);
+      }
+
       handleClose();
    };
 
@@ -156,7 +187,7 @@ export default function CreateTaskModal({ classroom, player }) {
             placeholder=""
             multiline
             maxRows={8}
-            value={description}
+            value={maxCompletions}
             onChange={(event) => setMaxCompletions(event.target.value)}
             />
             }  

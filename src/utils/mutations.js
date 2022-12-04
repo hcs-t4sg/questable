@@ -201,6 +201,45 @@ export async function addTask(classID, task, teacherID) {
 
 }
 
+export async function addRepeatable(classID, task, teacherID) {
+   // Update assignedTasks collection for every member in class except teacher
+   const classRef = doc(db, "classrooms", classID);
+   const classSnap = await getDoc(classRef);
+
+   if (!classSnap.exists()) {
+      // doc.data() will be undefined in this case
+      return "No such document!"
+   }
+
+   console.log(classID);
+   console.log(task);
+   console.log(teacherID);
+
+   // Update tasks collection
+   const repeatableRef = await addDoc(collection(db, `classrooms/${classID}/repeatables`), {
+      name: task.name,
+      description: task.description,
+      reward: parseInt(task.reward),
+      created: getUnixTime(new Date()),
+      maxCompletions: task.maxCompletions,
+      assigned: classSnap.data().playerList.filter((id) => (id !== teacherID)), // filter out the teacher's id
+      completed: [],
+      confirmed: []
+   });
+
+   // add subcollections
+   task.classSnap.data().playerList.filter((id) => (id !== teacherID)).forEach( async (element) => {
+      await addDoc(collection(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/lastRefresh`), {
+         id: element.id,
+         lastRefresh: getUnixTime(new Date())
+      });
+      await addDoc(collection(db,`classrooms/${classID}/repeatables/${repeatableRef.id}/completions`), {
+         id: element.id,
+         completions: 0
+      });
+   });
+}
+
 // Remove player ID from completed array and add to confirmed array.
 export async function confirmTask(classID, studentID, taskID) {
    const classroomRef = doc(db, 'classrooms', classID)
@@ -244,17 +283,3 @@ export async function denyTask(classID, studentID, taskID) {
       })
    }
 }
-
-// // mutation to move task from assigned array to expired array
-// export async function expireTask(classID, taskID, studentID)
-// {
-//    const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`);
-//    const taskSnap = await getDoc(taskRef);
-
-//    if (taskSnap.exists()) {
-//       updateDoc(taskRef, {
-//          assigned: arrayRemove(studentID),
-//          expired: arrayUnion(studentID)
-//       })
-//    }
-// }
