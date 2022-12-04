@@ -1,4 +1,4 @@
-import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion } from "firebase/firestore";
+import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion, serverTimestamp } from "firebase/firestore";
 import { db } from './firebase';
 import { getUnixTime } from 'date-fns';
 
@@ -179,6 +179,11 @@ export async function completeTask(classroomID, taskID, playerID) {
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
    // Remove `playerID` from assigned array
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) }); 
+   // Add completion timestamp
+   await addDoc(collection(db,`classrooms/${classroomID}/tasks/${taskID}/completionTimes`), {
+      id: playerID,
+      time: serverTimestamp
+   })
 
 }
 
