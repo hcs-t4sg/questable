@@ -30,12 +30,17 @@ export default function CreateTaskModal({ classroom, player }) {
    const [reward, setReward] = React.useState("10");
    const [dueDate, setDueDate] = React.useState(null);
 
+   const[isRepeatable, setIsRepeatable] = useState(false);
+   const[maxCompletions, setMaxCompletions] = useState(1);
+
    const handleOpen = () => {
       setOpen(true);
       setName("");
       setDueDate(new Date());
       setDescription("");
       setReward("10");
+      setMaxCompletions(1);
+      isRepeatable(false);
    };
 
    const handleClose = () => {
@@ -64,10 +69,18 @@ export default function CreateTaskModal({ classroom, player }) {
 
    const openButton = <Button sx={{ width: 1 }} onClick={handleOpen} startIcon={<AddCircleOutlineIcon />}>Create Manually</Button>
 
+   const repeatableButton = 
+   <DialogActions>
+      <Button sx={{ width: 1 }} variant="contained" onClick={()=>{setIsRepeatable(false)}}>One Time</Button>
+      <Button sx={{ width: 1 }} variant="contained" onClick={()=>{setIsRepeatable(true)}}>Repeatable</Button>
+   </DialogActions>
+
    const actionButtons =
       <DialogActions>
          <Button variant="contained" onClick={handleAdd}>Add Task</Button>
       </DialogActions>
+
+
 
    return (
       <div>
@@ -89,6 +102,7 @@ export default function CreateTaskModal({ classroom, player }) {
             <Typography fontWeight='light' variant="h5">Overview</Typography>
             <IconButton onClick={handleClose}><CloseIcon /></IconButton>
             </Box>
+            
             <hr 
               style={{
                 backgroundColor: '#D9D9D9',
@@ -98,7 +112,10 @@ export default function CreateTaskModal({ classroom, player }) {
                 width: '100%',
                 marginBottom: '10px'
               }}
-            />          
+            />  
+
+            {repeatableButton}
+    
             <TextField
                 margin="normal"
                 id="name"
@@ -120,8 +137,8 @@ export default function CreateTaskModal({ classroom, player }) {
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
             />
-
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: 2}}>
+            {!isRepeatable ? 
             <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
                 label="Due Date"
@@ -129,7 +146,20 @@ export default function CreateTaskModal({ classroom, player }) {
                 onChange={handleDateChange}
                 renderInput={(params) => <TextField {...params} />}
             />
-            </LocalizationProvider>
+            </LocalizationProvider> :
+            <TextField
+            margin="normal"
+            id="description"
+            label="Max Completions"
+            fullWidth
+            variant="standard"
+            placeholder=""
+            multiline
+            maxRows={8}
+            value={description}
+            onChange={(event) => setMaxCompletions(event.target.value)}
+            />
+            }  
             </Box>
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: 2}}>
                 
@@ -156,6 +186,6 @@ export default function CreateTaskModal({ classroom, player }) {
             </Grid>
             </Box>
         </Modal>
-        </div>
+      </div>
    )
 }
