@@ -19,6 +19,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { getUnixTime } from 'date-fns';
 
+import {Tabs, Tab} from '@mui/material';
+
 import { addTask } from '../utils/mutations';
 import Grid from '@mui/material/Grid';
 
@@ -100,11 +102,17 @@ export default function CreateTaskModal({ classroom, player }) {
 
    const openButton = <Button sx={{ width: 1 }} onClick={handleOpen} startIcon={<AddCircleOutlineIcon />}>Create Manually</Button>
 
+   const handleTabChange = (event, newValue) => {
+      setIsRepeatable(newValue === 1);
+   }
+
    const repeatableButton = 
-   <DialogActions>
-      <Button sx={{ width: 1 }} variant="contained" onClick={()=>{setIsRepeatable(false)}}>One Time</Button>
-      <Button sx={{ width: 1 }} variant="contained" onClick={()=>{setIsRepeatable(true)}}>Repeatable</Button>
-   </DialogActions>
+      <Tabs value={isRepeatable ? 1 : 0} onChange={handleTabChange}>
+         <Tab label="One Time" />
+         <Tab label="Repeatable" />
+      </Tabs>
+
+
 
    const actionButtons =
       <DialogActions>
