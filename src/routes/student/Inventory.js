@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useReducer } from "react"
 // import ReactDOM from "react-dom"
 import Spritesheet from "react-responsive-spritesheet"
 import { Box, ThemeProvider, createTheme, zIndex} from '@mui/system';
-// import Player from "./Player"
+import Player from "./Player"
 // import debounce from 'lodash.debounce'
 // import { keybindings } from './keys'
 // import { KeysContext } from './index'
@@ -74,15 +74,6 @@ export default function Inventory() {
       )
  }
 
-
- //Making the avatar display 
-
-  
-//   let spriteClass = css`
-//     width: 150px;
-//     position: absolute;
-//     top: 0;
-//     left: 0;`
 
 
  

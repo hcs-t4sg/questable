@@ -49,3 +49,7 @@ export default function Player () {
     )
 }
 
+
+
+
+// Avatar fields for what is currently equipped on the avatar
