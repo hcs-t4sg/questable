@@ -30,6 +30,7 @@ export default function JoinClassroomModal({ user }) {
          window.alert(value);
       });
       setSignupCode("");
+      setOpen(false);
    }
 
    const openButton =
