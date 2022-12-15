@@ -15,7 +15,7 @@ import { Box, ThemeProvider, createTheme, zIndex} from '@mui/system';
 // import braids from '../../utils/spriteSheets/current/braids.png'
 
 
-
+const inventoryItems = []
 
 // export default function Inventory() {
 //     return (
@@ -131,7 +131,7 @@ export default function Inventory() {
        
         <TabPanel value={value} index={0}> 
             <Grid item xs={12} sm={6} md={4}>
-                  <ShopItemCard image = {} itemType = {} itenName = {} itemAmt={} itemDescription ={}/>
+                  <ShopItemCard/>
             </Grid>
         </TabPanel>
         <TabPanel value={value} index={1}> Item Two </TabPanel>
