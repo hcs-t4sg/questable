@@ -1,5 +1,6 @@
 import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion } from "firebase/firestore";
 import { db } from './firebase';
+import { getUnixTime } from 'date-fns';
 
 export async function syncUsers(user) {
    const userRef = doc(db, 'users', user.uid);
@@ -16,6 +17,8 @@ export async function addClassroom(name, user) {
    const newClassroom = {
       name: name,
       playerList: [user.uid],
+      teacherList: [user.uid],
+      //studentList: [],
    }
    const classroomRef = await addDoc(collection(db, "classrooms"), newClassroom);
 
@@ -66,6 +69,7 @@ export async function joinClassroom(classID, user) {
    // Check if student already in class
    const classroomData = classroomSnap.data();
    let playerList = classroomData.playerList;
+   let studentList = classroomData.studentList;
 
    if (playerList.includes(user.uid)) {
       return "You are already in this class!"
@@ -73,8 +77,10 @@ export async function joinClassroom(classID, user) {
 
    // Update classroom.playerList
    playerList.push(user.uid);
+   //studentList.push(user.uid);
    await updateDoc(classroomRef, {
-      playerList: playerList
+      playerList: playerList,
+      //studentList: studentList
    });
 
    console.log("updated classroom playerList");
@@ -114,13 +120,11 @@ export async function getPlayerData(classID, user) {
 }
 
 
-export async function getUserData(userID)
-{
+export async function getUserData(userID) {
    const userRef = doc(db, `users/${userID}`);
    const userSnap = await getDoc(userRef);
 
-   if(!userSnap.exists())
-   {
+   if (!userSnap.exists()) {
       return null;
    }
 
@@ -162,7 +166,7 @@ export async function updatePlayer(userID, classroomID, newPlayer) {
    await updateDoc(playerRef, {
       name: newPlayer.name,
       avatar: newPlayer.avatar
- })
+   })
 }
 
 //Mutation to delete tasks
@@ -195,9 +199,9 @@ export async function addTask(classID, task, teacherID) {
       name: task.name,
       description: task.description,
       reward: parseInt(task.reward),
-      created: Date.now(),
-      due: task.date,
-      assigned: classSnap.data().playerList.filter((id)=>(id !== teacherID)), // filter out the teacher's id
+      created: getUnixTime(new Date()),
+      due: task.due,
+      assigned: classSnap.data().playerList.filter((id) => (id !== teacherID)), // filter out the teacher's id
       completed: [],
       confirmed: []
    });
@@ -275,6 +279,37 @@ export async function purchaseItem(classID, studentID, itemID, isCustom) {
       await updateDoc(playerRef, {
          money: playerSnap.data().money - itemSnap.data().cost
       })
+   }
+}
 
+//Mutation to add Pin
+export async function addPin(userID, classID) {
+   const userRef = doc(db, `users/${userID}`)
+   const pinnedSnap = await getDoc(userRef)
+   let pinnedClassrooms = pinnedSnap.data().pinned;
+   if (pinnedClassrooms) {
+      updateDoc(userRef, {
+         pinned: pinnedClassrooms
+      })
+   } else {
+      updateDoc(userRef, {
+         pinned: [classID]
+      })
+   }
+}
+
+//Mutation to delete Pin
+export async function deletePin(userID, classID) {
+   const userRef = doc(db, `users/${userID}`)
+   const pinnedSnap = await getDoc(userRef)
+   const pinned = pinnedSnap.data().pinned;
+   var index = pinned.indexOf(classID);
+   if (index > -1) {
+      pinned.splice(index, 1);
+   }
+   if (pinnedSnap.exists()) {
+      updateDoc(userRef, {
+         pinned: pinned
+      })
    }
 }
