@@ -69,7 +69,7 @@ export default function StudentView({ player, classroom }) {
          <Routes>
             <Route path="/" element={<Navigate to="main" />} />
             <Route path="main" element={<Main classroom={classroom}  player={player}/>} />
-            <Route path="shop" element={<Shop />} />
+            <Route path="shop" element={<Shop player={player}/>} />
             <Route path="class-student" element={<ClassStudent />} />
             <Route path="inventory" element={<Inventory />} />
             <Route
