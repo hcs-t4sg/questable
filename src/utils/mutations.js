@@ -69,7 +69,6 @@ export async function joinClassroom(classID, user) {
    // Check if student already in class
    const classroomData = classroomSnap.data();
    let playerList = classroomData.playerList;
-   let studentList = classroomData.studentList;
 
    if (playerList.includes(user.uid)) {
       return "You are already in this class!"
@@ -281,5 +280,36 @@ export async function deletePin(userID, classID) {
       updateDoc(userRef, {
          pinned: pinned
       })
+   }
+}
+
+export async function purchaseItem(classID, studentID, itemID, isCustom) {
+   // isCustom should be a boolean denoting whether the item being purchased is an item created for a particular classroom.
+   const classroomRef = doc(db, 'classrooms', classID)
+   const classroomSnap = await getDoc(classroomRef)
+   if (!classroomSnap.exists()){
+      return "Could not find classroom"
+   }
+   const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
+   const playerSnap = await getDoc(playerRef)
+
+   const itemRef = doc(db, isCustom ? `classrooms/${classID}/customShopItems/${itemID}` : `shopItems/${itemID}`)
+   const itemSnap = await getDoc(itemRef)
+   if (itemSnap.exists() && playerSnap.exists()){
+      if (itemSnap.data().cost > playerSnap.data().money){
+         return "Not enough money!"
+      }
+
+      const newItem = {
+         item_id: itemSnap.data().id,
+         type: itemSnap.data().type || 'custom'
+      }
+
+      await addDoc(collection(db, `classrooms/${classID}/players/${studentID}/inventory`), newItem);
+
+      await updateDoc(playerRef, {
+         money: playerSnap.data().money - itemSnap.data().cost
+      })
+
    }
 }
