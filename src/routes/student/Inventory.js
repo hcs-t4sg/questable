@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useReducer } from "react"
 import Grid from '@mui/material/Grid';
 import Layout from '../../components/Layout.js';
-import ClassroomCard from "../../components/ClassroomCard";
+import ShopItemCard from "../../components/ShopItemCard.js";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -129,7 +129,11 @@ export default function Inventory() {
             </Tabs>
         </Box>
        
-        <TabPanel value={value} index={0}> Item One </TabPanel>
+        <TabPanel value={value} index={0}> 
+            <Grid item xs={12} sm={6} md={4}>
+                  <ShopItemCard image = {} itemType = {} itenName = {} itemAmt={} itemDescription ={}/>
+            </Grid>
+        </TabPanel>
         <TabPanel value={value} index={1}> Item Two </TabPanel>
         <TabPanel value={value} index={2}> Item Three </TabPanel>
     </Layout>

@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { Link } from "react-router-dom";
 
-export default function ShopItemCard({ image, itemType, itemName, itemAmt, itemDescription }) {
+export default function ShopItemCard({image, itemType, itemName, itemAmt, itemDescription }) {
    return (
       <Card>
          <CardContent>
@@ -24,7 +24,7 @@ export default function ShopItemCard({ image, itemType, itemName, itemAmt, itemD
             </Typography>
          </CardContent>
          <CardActions>
-            <Button size="small" component={Link} to={`/class/${classID}`}>Purchase</Button>
+            {/* <Button size="small" component={Link} to={`/class/${classID}`}>Purchase</Button> */}
          </CardActions>
       </Card>
    );
