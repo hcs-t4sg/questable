@@ -1,18 +1,17 @@
 import { Typography, Box } from '@mui/material';
-import placeholderAvatar from '../../utils/tempAssets/oval.png'
-import checkboxChecked from '../../utils/tempAssets/checkboxChecked.svg'
-import checkboxEmpty from '../../utils/tempAssets/checkboxUnchecked.svg'
-import { completeTask } from '../../utils/mutations';
 import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from '../../utils/firebase';
-import TaskModalStudent from '../../components/TaskModalStudent'
-
+import TasksTableStudent from '../../components/TasksTableStudent';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 export default function Main({classroom, player}) {
-   const [assigned, setAssigned] = useState([]);
-   const [completed, setCompleted] = useState([]);
-   const [confirmed, setConfirmed] = useState([]);
+   const [assigned, setAssigned] = useState([])
+   const [completed, setCompleted] = useState([])
+   const [confirmed, setConfirmed] = useState([])
+   const [filter, setFilter] = useState('all')
+   const [filteredTasks, setFilteredTasks] = useState(null)
 
    useEffect(() => {
       // fetch task information
@@ -25,13 +24,13 @@ export default function Main({classroom, player}) {
             snapshot.forEach(doc => {
                // Find assigned, completed, and confirmed tasks using player's id.
                if(doc.data().assigned?.includes(player.id)) {
-                  assigned.push(Object.assign({id: doc.id}, doc.data()))
+                  assigned.push(Object.assign({id: doc.id, status: 'Not Done'}, doc.data()))
                }
                if (doc.data().completed?.includes(player.id)) {
-                  completed.push(Object.assign({ id: doc.id }, doc.data()))
+                  completed.push(Object.assign({ id: doc.id, status: 'Confirmation Requested' }, doc.data()))
                }
                if (doc.data().confirmed?.includes(player.id)) {
-                  confirmed.push(Object.assign({ id: doc.id }, doc.data()))
+                  confirmed.push(Object.assign({ id: doc.id, status: 'Confirmed' }, doc.data()))
                }
             })
             setAssigned(assigned)
@@ -41,79 +40,45 @@ export default function Main({classroom, player}) {
          taskFetch().catch(console.error)
       })
    }, [classroom.id, player.id])
-
-   const handleComplete = (task) => {
-      if(window.confirm("Are you sure you want to mark this task as complete?")) {
-         completeTask(classroom.id, task.id, player.id)
+    
+    function a11yProps(index) {
+      return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+      };
+    }
+    
+   const handleChange = (_, newValue) => {
+      setFilter(newValue)
+      if(newValue === 'all'){
+         setFilteredTasks(assigned.concat(completed).concat(confirmed))
       }
-   }
-
-   const QuestCard = ({task, completed, confirmed}) => {
-      return(
-         <Box sx={{
-            width: '100%',
-            height: '154px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '35px',
-            backgroundColor: '#D9D9D9',
-            borderRadius: '20px',
-            marginBottom: '18px',
-         }}
-         >
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
-               <Box
-                  component="img"
-                  sx={{
-                     width: '104px',
-                     height: '100px',
-                     marginRight: '40px'
-                  }}
-                  alt="User's avatar"
-                  src={placeholderAvatar}
-               />
-               <Typography>{task && task.description}</Typography>
-            </Box>
-            <Box sx={{display: 'flex', flexDirection: confirmed ? 'column' : 'row', alignItems: 'center'}}>
-               <Typography>${task && task.reward} Reward</Typography>
-               <TaskModalStudent task={task} classroom={classroom} player={player} />
-               {confirmed ? 
-                  <Box 
-                     sx={{
-                        marginTop: '10px', 
-                        backgroundColor:'#545454', 
-                        color:'white', 
-                        borderRadius: '2px', 
-                        paddingLeft: '30px', paddingRight:'30px', paddingTop: '3px', paddingBottom: '3px'
-                     }}
-                  > 
-                     Finished!
-                  </Box> : 
-               
-                  <Box component="img" 
-                     onClick={() => handleComplete(task)}
-                     sx={{ height: '30px', marginLeft: '20px'}} 
-                     src={completed ? checkboxChecked : checkboxEmpty}
-                  />
-               }
-            </Box>
-         </Box>
-   )}
-
+      else if (newValue === 'assigned'){
+         setFilteredTasks(assigned)
+      }
+      else if (newValue === 'completed'){
+         setFilteredTasks(completed)
+      }
+      else if (newValue === 'confirmed'){
+         setFilteredTasks(confirmed)
+      }
+   };
+    
    return (
-      <div style={{marginLeft: '36px'}}>
-         <Typography sx={{marginBottom: '22px'}} variant="h4">All Quests</Typography>
-         {assigned.map((task) => (
-            <QuestCard task={task}/>
-         ))}
-         {completed.map((task) => (
-            <QuestCard task={task} completed/>
-         ))}
-         {confirmed.map((task) => (
-            <QuestCard task={task} confirmed/>
-         ))}
-      </div>
+      <>
+        <Typography sx={{marginBottom: '20px'}} variant="h4">All</Typography>
+        <Box sx={{ width: '100%' }}>
+          <Box>
+            <Tabs value={filter} onChange={handleChange} aria-label="tabs" sx={{border: 0, backgroundColor: 'white'}}>
+              <Tab value={'all'} label="All" {...a11yProps(0)} />
+              <Tab value={'assigned'} label="Assigned" {...a11yProps(1)} />
+              <Tab value={'completed'} label="Completed" {...a11yProps(2)} />
+              <Tab value={'confirmed'} label="Confirmed" {...a11yProps(3)} />
+            </Tabs>
+          </Box>
+        </Box>
+        <TasksTableStudent filter={filter} tasks={filteredTasks || assigned.concat(completed).concat(confirmed)} player={player} classroom={classroom} />
+      </>
    )
 
 }

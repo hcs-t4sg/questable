@@ -76,15 +76,6 @@ export default function Inventory() {
 
 
 
- 
-
-
-
- 
-
- 
-
-
 
 
 // 1) Given an id for a particular item 
