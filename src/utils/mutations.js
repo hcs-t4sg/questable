@@ -312,35 +312,3 @@ export async function purchaseItem(classID, studentID, itemID, isCustom) {
       })
    }
 }
-
-//Mutation to add Pin
-export async function addPin(userID, classID) {
-   const userRef = doc(db, `users/${userID}`)
-   const pinnedSnap = await getDoc(userRef)
-   let pinnedClassrooms = pinnedSnap.data().pinned;
-   if (pinnedClassrooms) {
-      updateDoc(userRef, {
-         pinned: pinnedClassrooms
-      })
-   } else {
-      updateDoc(userRef, {
-         pinned: [classID]
-      })
-   }
-}
-
-//Mutation to delete Pin
-export async function deletePin(userID, classID) {
-   const userRef = doc(db, `users/${userID}`)
-   const pinnedSnap = await getDoc(userRef)
-   const pinned = pinnedSnap.data().pinned;
-   var index = pinned.indexOf(classID);
-   if (index > -1) {
-      pinned.splice(index, 1);
-   }
-   if (pinnedSnap.exists()) {
-      updateDoc(userRef, {
-         pinned: pinned
-      })
-   }
-}
