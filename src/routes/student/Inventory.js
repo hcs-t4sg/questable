@@ -146,7 +146,7 @@ export default function Inventory() {
 
 // 1) Given an id for a particular item 
 // 2) Go to the correct location on the spritesheet
-// Display the item on the inventory page
+// Display the item on the inventory page.
 
 
 
