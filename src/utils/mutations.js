@@ -303,7 +303,7 @@ export async function purchaseItem(classID, studentID, itemID, isCustom) {
 
       const newItem = {
          item_id: itemSnap.data().id,
-         type: itemSnap.data().type || 'custom'
+         type: isCustom ? itemSnap.data().type : 'custom'
       }
 
       await addDoc(collection(db, `classrooms/${classID}/players/${studentID}/inventory`), newItem);
