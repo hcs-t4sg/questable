@@ -8,7 +8,7 @@ import {
   Modal,
   Button
 } from '@mui/material';
-import sprite1 from '../utils/tempAssets/sprite1.svg';
+import sprite1 from '../assets/tempAssets/sprite1.svg';
 import { completeTask } from '../utils/mutations';
 import CloseIcon from '@mui/icons-material/Close';
 
