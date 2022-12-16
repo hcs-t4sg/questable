@@ -1,25 +1,25 @@
 import React, { useState, useEffect, useContext, useReducer } from "react"
 import Spritesheet from "react-responsive-spritesheet"
 import { Box, ThemeProvider, createTheme, zIndex } from '@mui/system';
-import _, { map } from 'underscore';
+import { capitalize } from 'lodash';
 
 import body from '../assets/spriteSheets/characters/char_all.png';
 
-import bob from 'src/assets/spriteSheets/hair/bob.png';
-import braids from 'src/assets/spriteSheets/hair/braids.png';
-import buzzcut from 'src/assets/spriteSheets/hair/buzzcut.png';
-import curly from 'src/assets/spriteSheets/hair/curly.png';
-import emo from 'src/assets/spriteSheets/hair/emo.png';
-import extra_long_skirt from 'src/assets/spriteSheets/hair/extra_long_skirt.png';
-import extra_long from 'src/assets/spriteSheets/hair/extra_long.png';
-import french_curl from 'src/assets/spriteSheets/hair/french_curl.png';
-import gentleman from 'src/assets/spriteSheets/hair/gentleman.png';
-import long_straight from 'src/assets/spriteSheets/hair/long_straight.png';
-import long_straight_skirt from 'src/assets/spriteSheets/hair/long_straight_skirt.png';
-import midiwave from 'src/assets/spriteSheets/hair/midiwave.png';
-import ponytail from 'src/assets/spriteSheets/hair/ponytail.png';
-import spacebuns from 'src/assets/spriteSheets/hair/spacebuns.png';
-import wavy from 'src/assets/spriteSheets/hair/wavy.png';
+import bob from '../assets/spriteSheets/hair/bob.png';
+import braids from '../assets/spriteSheets/hair/braids.png';
+import buzzcut from '../assets/spriteSheets/hair/buzzcut.png';
+import curly from '../assets/spriteSheets/hair/curly.png';
+import emo from '../assets/spriteSheets/hair/emo.png';
+import extra_long_skirt from '../assets/spriteSheets/hair/extra_long_skirt.png';
+import extra_long from '../assets/spriteSheets/hair/extra_long.png';
+import french_curl from '../assets/spriteSheets/hair/french_curl.png';
+import gentleman from '../assets/spriteSheets/hair/gentleman.png';
+import long_straight from '../assets/spriteSheets/hair/long_straight.png';
+import long_straight_skirt from '../assets/spriteSheets/hair/long_straight_skirt.png';
+import midiwave from '../assets/spriteSheets/hair/midiwave.png';
+import ponytail from '../assets/spriteSheets/hair/ponytail.png';
+import spacebuns from '../assets/spriteSheets/hair/spacebuns.png';
+import wavy from '../assets/spriteSheets/hair/wavy.png';
 
 import shirt from '../assets/spriteSheets/clothes/basic.png';
 import pants from '../assets/spriteSheets/clothes/pants.png';
@@ -32,6 +32,31 @@ import shoes from '../assets/spriteSheets/clothes/shoes.png';
 // Note that in our local data structure, item ID, spritesheet location, and color all correspond.
 const clothingColors = ['black', 'dark blue', 'light blue', 'brown', 'dark green', 'light green', 'pink', 'purple', 'red', 'beige'];
 const hairColors = ['black', 'blonde', 'dark brown', 'light brown', 'ginger', 'dark green', 'light green', 'gray', 'light purple', 'blue', 'pink', 'purple', 'red', 'turquoise'];
+
+
+// Render function to generate item sprites
+function render(file, spriteStart, doAnimation) {
+   // Import object to allow the correct image import based on the subtype string.
+   const imports = { bob, braids, buzzcut, curly, emo, extra_long_skirt, extra_long, french_curl, gentleman, long_straight_skirt, long_straight, midiwave, ponytail, spacebuns, wavy, body, shirt, pants, shoes }
+
+   return (
+      <Spritesheet
+         style={{
+            imageRendering: 'pixelated',
+            position: 'absolute',
+            width: '50%'
+         }}
+         image={imports[file]}
+         widthFrame={32}
+         heightFrame={32}
+         fps={10}
+         loop={true}
+         startAt={spriteStart}
+         endAt={doAnimation ? spriteStart + 7 : spriteStart}
+         isResponsive={true}
+      />
+   )
+}
 
 /* Class description for Body, Shirt, Pants, Shoes:
 
@@ -67,43 +92,11 @@ export class Body {
    }
 
    renderStatic() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={body}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart}
-            isResponsive={true}
-         />
-      )
+      return render("body", this.#spriteStart, false)
    }
 
    renderAnimated() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={body}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart + 7}
-            isResponsive={true}
-         />
-      )
+      return render("body", this.#spriteStart, true)
    }
 }
 
@@ -115,55 +108,20 @@ export class Hair {
    type = "hair";
    subtype;
 
-   // Import object to allow the correct image import based on the subtype string. This is a static private field of the class
-   static #imports = { bob, braids, buzzcut, curly, emo, extra_long_skirt, extra_long, french_curl, gentleman, long_straight_skirt, long_straight, midiwave, ponytail, spacebuns, wavy }
-
    constructor(id, subtype) {
       this.id = id;
-      this.name = _.capitalize(hairColors[id]) + this.subtype.replaceAll('_', ' ') + "hair";
-      this.description = _.capitalize(hairColors[id]) + this.subtype.replaceAll('_', ' ') + "hair for your avatar!";
+      this.name = capitalize(hairColors[id]) + " " + subtype.replaceAll('_', ' ') + " hair";
+      this.description = capitalize(hairColors[id]) + " " + subtype.replaceAll('_', ' ') + " hair for your avatar!";
       this.#spriteStart = 8 * id + 1;
       this.subtype = subtype;
    }
 
    renderStatic() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={Hair.#imports[this.subtype]}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart}
-            isResponsive={true}
-         />
-      )
+      return render(this.subtype, this.#spriteStart, false)
    }
 
    renderAnimated() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={Hair.#imports[this.subtype]}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart + 7}
-            isResponsive={true}
-         />
-      )
+      return render(this.subtype, this.#spriteStart, true)
    }
 }
 
@@ -176,50 +134,18 @@ export class Shirt {
 
    constructor(id, subtype) {
       this.id = id;
-      this.name = _.capitalize(clothingColors[id]) + "shirt";
-      this.description = "A " + _.capitalize(clothingColors[id]) + " shirt for your avatar!";
+      this.name = capitalize(clothingColors[id]) + "shirt";
+      this.description = "A " + capitalize(clothingColors[id]) + " shirt for your avatar!";
       this.#spriteStart = 8 * id + 1;
       this.subtype = subtype;
    }
 
    renderStatic() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={shirt}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart}
-            isResponsive={true}
-         />
-      )
+      return render("shirt", this.#spriteStart, false)
    }
 
    renderAnimated() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={shirt}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart + 7}
-            isResponsive={true}
-         />
-      )
+      return render("shirt", this.#spriteStart, true)
    }
 }
 
@@ -232,49 +158,17 @@ export class Pants {
 
    constructor(id) {
       this.id = id;
-      this.name = _.capitalize(clothingColors[id]) + "pants";
-      this.description = _.capitalize(clothingColors[id]) + "pants for your avatar!";
+      this.name = capitalize(clothingColors[id]) + "pants";
+      this.description = capitalize(clothingColors[id]) + "pants for your avatar!";
       this.#spriteStart = 8 * id + 1;
    }
 
    renderStatic() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={pants}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart}
-            isResponsive={true}
-         />
-      )
+      return render("pants", this.#spriteStart, false)
    }
 
    renderAnimated() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={pants}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart + 7}
-            isResponsive={true}
-         />
-      )
+      return render("pants", this.#spriteStart, true)
    }
 }
 
@@ -287,53 +181,22 @@ export class Shoes {
 
    constructor(id) {
       this.id = id;
-      this.name = _.capitalize(clothingColors[id]) + "shoes";
-      this.description = _.capitalize(clothingColors[id]) + "shoes for your avatar!";
+      this.name = capitalize(clothingColors[id]) + "shoes";
+      this.description = capitalize(clothingColors[id]) + "shoes for your avatar!";
       this.#spriteStart = 8 * id + 1;
    }
 
    renderStatic() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={shoes}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart}
-            isResponsive={true}
-         />
-      )
+      return render("shoes", this.#spriteStart, false)
    }
 
    renderAnimated() {
-      return (
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={shoes}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={this.#spriteStart}
-            endAt={this.#spriteStart + 7}
-            isResponsive={true}
-         />
-      )
+      return render("shoes", this.#spriteStart, true)
    }
 }
 
-// Functions to generate all items of a given type in the game (for use in Shop)
+// Functions to generate all items of a given type in the game (for use in Shop).
+// Items are returned as an array of Item objects which can then be individually rendered.
 
 export function getBodyItems() {
    // Generate id array from 0 to 7
