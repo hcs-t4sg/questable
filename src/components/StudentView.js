@@ -42,16 +42,13 @@ export default function StudentView({ player, classroom }) {
    const shoesItems = getShoesItems();
    console.log(shoesItems);
 
-   console.log(bodyItems[1]);
-   console.log(bodyItems[1].renderStatic());
-
-
+   // Given the IDs for the outfit fetched from Firebase (and the hair subtype), you can designate the avatar outfit like so.
    const testOutfit = {
-      body: bodyItems[1],
-      shirt: shirtItems[2],
-      hair: hairItems[3],
-      pants: pantsItems[4],
-      shoes: shoesItems[5],
+      body: new Body(2),
+      shirt: new Shirt(3),
+      hair: new Hair(4, 'emo'),
+      pants: new Pants(5),
+      shoes: new Shoes(3),
    }
 
 
