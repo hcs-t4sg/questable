@@ -24,99 +24,22 @@ import shirt from '../assets/spriteSheets/clothes/basic.png';
 import pants from '../assets/spriteSheets/clothes/pants.png';
 import shoes from '../assets/spriteSheets/clothes/shoes.png';
 
+/* Renders the player's avatar sprite. 
+
+Keep in mind that the sprite stretches to fill its parent container. When using this, you must place <Avatar /> inside a parent MUI component with a defined width! */
+
 export default function Avatar({ outfit }) {
 
-   const bodyItems = getBodyItems();
-   console.log(bodyItems);
-
-   const hairItems = getHairItems();
-   console.log(hairItems);
-
-   const pantsItems = getPantsItems();
-   console.log(pantsItems);
-   const shoesItems = getShoesItems();
-   console.log(shoesItems);
-
-   console.log(bodyItems[1]);
-   console.log(bodyItems[1].renderStatic());
-
    return (
-      <Box sx={{ width: '10%' }}>
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={body}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={1}
-            endAt={1}
-            isResponsive={true}
-         />
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={braids}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={1}
-            endAt={1}
-            isResponsive={true}
-         />
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={shirt}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={1}
-            endAt={1}
-            isResponsive={true}
-         />
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={pants}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={1}
-            endAt={1}
-            isResponsive={true}
-         />
-         <Spritesheet
-            style={{
-               imageRendering: 'pixelated',
-               position: 'absolute',
-               width: '50%'
-            }}
-            image={shoes}
-            widthFrame={32}
-            heightFrame={32}
-            fps={10}
-            loop={true}
-            startAt={1}
-            endAt={1}
-            isResponsive={true}
-         />
+      <Box sx={{
+         width: '100%',
+         position: 'relative',
+      }}>
+         {outfit.body.renderStatic()}
+         {outfit.hair.renderStatic()}
+         {outfit.shirt.renderStatic()}
+         {outfit.pants.renderStatic()}
+         {outfit.shoes.renderStatic()}
       </Box>
    )
 }

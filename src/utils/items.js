@@ -44,7 +44,7 @@ function render(file, spriteStart, doAnimation) {
          style={{
             imageRendering: 'pixelated',
             position: 'absolute',
-            width: '50%'
+            width: '100%'
          }}
          image={imports[file]}
          widthFrame={32}

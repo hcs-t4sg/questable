@@ -121,7 +121,7 @@ export default function Inventory() {
 
   return (
     <Layout>
-      {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="All" {...a11yProps(0)} />
           <Tab label="Avatars" {...a11yProps(1)} />
@@ -132,9 +132,7 @@ export default function Inventory() {
 
       <TabPanel value={value} index={0}> Item One </TabPanel>
       <TabPanel value={value} index={1}> Item Two </TabPanel>
-      <TabPanel value={value} index={2}> Item Three </TabPanel> */}
-      <p>test</p>
-      <Avatar />
+      <TabPanel value={value} index={2}> Item Three </TabPanel>
     </Layout>
   )
 }
