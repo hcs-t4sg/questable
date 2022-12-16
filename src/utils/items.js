@@ -70,6 +70,8 @@ Fields:
 Methods:
 - renderStatic(): Display an unmoving version of the item
 - renderAnimated(): Display an animated version of the item
+
+Keep in mind that rendered sprites display with 'absolute' positioning and will fill their container. You need to set a container with a defined width if you are displaying the sprite by itself (such as in shop).
 */
 
 /*
