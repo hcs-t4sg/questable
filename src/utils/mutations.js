@@ -270,7 +270,7 @@ export async function purchaseItem(classID, studentID, itemID, isCustom) {
       }
 
       const newItem = {
-         item_id: itemSnap.data().id,
+         item_id: itemID,
          type: isCustom ? itemSnap.data().type : 'custom'
       }
 
