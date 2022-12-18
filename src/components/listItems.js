@@ -2,6 +2,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import GroupIcon from '@mui/icons-material/Group';
 import SellIcon from '@mui/icons-material/Sell';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -61,6 +62,12 @@ export const mainListItemsStudent = (
             <GroupIcon />
          </ListItemIcon>
          <ListItemText primary="Class" />
+      </ListItemButton>
+      <ListItemButton component={Link} to="inventory">
+         <ListItemIcon>
+            <InventoryIcon />
+         </ListItemIcon>
+         <ListItemText primary="Inventory" />
       </ListItemButton>
    </React.Fragment>
 );
