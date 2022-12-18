@@ -69,7 +69,6 @@ export async function joinClassroom(classID, user) {
    // Check if student already in class
    const classroomData = classroomSnap.data();
    let playerList = classroomData.playerList;
-   let studentList = classroomData.studentList;
 
    if (playerList.includes(user.uid)) {
       return "You are already in this class!"
