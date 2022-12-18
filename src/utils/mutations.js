@@ -279,6 +279,8 @@ export async function purchaseItem(classID, studentID, itemID, isCustom) {
       await updateDoc(playerRef, {
          money: playerSnap.data().money - itemSnap.data().cost
       })
+   }
+}
 
 //Mutation to add Pin
 export async function addPin(userID, classID) {
