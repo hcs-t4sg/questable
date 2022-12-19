@@ -1,4 +1,4 @@
-import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion, serverTimestamp } from "firebase/firestore";
+import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion, serverTimestamp, increment} from "firebase/firestore";
 import { db } from './firebase';
 import { getUnixTime } from 'date-fns';
 
@@ -173,19 +173,41 @@ export async function updatePlayer(userID, classroomID, newPlayer) {
 export async function deleteTask(classroomID, taskID) {
    await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`));
 }
+// Mutation to delete repeatable
+export async function deleteRepeatable(classroomID, repeatableID){
+   await deleteDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`));
+}
 
 export async function completeTask(classroomID, taskID, playerID) {
    // Add `playerID` to completed array
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
    // Remove `playerID` from assigned array
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) }); 
-   // Add completion timestamp
-   await addDoc(collection(db,`classrooms/${classroomID}/tasks/${taskID}/completionTimes`), {
-      id: playerID,
-      time: serverTimestamp
-   })
-
+   // // Add completion timestamp
+   // await addDoc(collection(db,`classrooms/${classroomID}/tasks/${taskID}/completionTimes`), {
+   //    playerID: playerID,
+   //    time: serverTimestamp
+   // })
 }
+
+export async function completeRepeatable(classroomID, repeatableID, playerID) 
+{
+   const completionsDocRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
+   const docSnap = await getDoc(completionsDocRef);
+   if(!docSnap.exists())
+   {
+      await setDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`), {
+         completions: 0
+      });
+   }
+   // increment completions
+   let prev = await docSnap.data();
+   console.log(prev);
+   updateDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`), {
+      completions: increment(1)
+   })
+}
+
 
 export async function addTask(classID, task, teacherID) {
    // Update assignedTasks collection for every member in class except teacher
@@ -230,8 +252,6 @@ export async function addRepeatable(classID, task, teacherID) {
       created: getUnixTime(new Date()),
       maxCompletions: task.maxCompletions,
       assigned: classSnap.data().playerList.filter((id) => (id !== teacherID)), // filter out the teacher's id
-      completed: [],
-      confirmed: []
    });
 
    // add subcollections
@@ -288,5 +308,60 @@ export async function denyTask(classID, studentID, taskID) {
          completed: arrayRemove(studentID),
          assigned: arrayUnion(studentID)
       })
+   }
+}
+
+// Mutation to deny repeatable completion
+export async function denyRepeatable(classroomID, playerID, repeatableID) {
+   const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
+   const repeatableSnap = await getDoc(repeatableRef)
+   if (repeatableSnap.exists()) {
+      
+      const completionsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
+      const completionsSnap = await getDoc(completionsRef);
+      if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
+         updateDoc(completionsRef, {
+            completions: increment(-1)
+         })
+      }
+   }
+}
+
+// Mutation to confirm repeatable completion
+export async function confirmRepeatable(classroomID, playerID, repeatableID) {
+   console.log("confirming repeatable")
+   const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
+   const repeatableSnap = await getDoc(repeatableRef)
+   if (repeatableSnap.exists()) {
+      // increment confirmations
+      const confirmationsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/confirmations/${playerID}`);
+      const confirmationsSnap = await getDoc(confirmationsRef);
+      if (!confirmationsSnap.exists()) {
+         await setDoc(confirmationsRef, {
+            confirmations: 1
+         })
+      }else{
+      updateDoc(confirmationsRef, {
+         confirmations: increment(1)
+      })
+      }
+
+      // decrement completions
+      const completionsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
+      const completionsSnap = await getDoc(completionsRef);
+      if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
+         updateDoc(completionsRef, {
+            completions: increment(-1)
+         })
+      }
+
+      // increment money
+      const playerRef = doc(db, `classrooms/${classroomID}/players/${playerID}`)
+      const playerSnap = await getDoc(playerRef)
+      if (playerSnap.exists()) {
+         updateDoc(playerRef, {
+            money: parseInt(playerSnap.data().money + repeatableSnap.data().reward)
+         })
+      }
    }
 }

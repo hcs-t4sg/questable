@@ -16,8 +16,8 @@ import { query, where } from "firebase/firestore";
 import { useEffect } from 'react'
 import { LinearProgress } from '@mui/material';
 import { format, fromUnixTime } from 'date-fns';
-import {deleteTask} from '../utils/mutations'
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {deleteRepeatable} from '../utils/mutations'
+import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -52,7 +52,7 @@ export default function RepeatableTableTeacher({ classroom }) {
    const handleDelete = (task) => {
       // message box to confirm deletion
       if (window.confirm("Are you sure you want to delete this repeatable task?")) {
-         deleteTask(classroom.id, task.id).catch(console.error);
+         deleteRepeatable(classroom.id, task.id).catch(console.error);
       }
    }
 
@@ -86,7 +86,7 @@ export default function RepeatableTableTeacher({ classroom }) {
                         <TableCell alight="left">{repeatable.reward}</TableCell>
 
                         <TableCell align="right" sx={{width:.01}}>
-                           <IconButton onClick={() => handleDelete(repeatable)}><MoreVertIcon /></IconButton>
+                           <IconButton onClick={() => handleDelete(repeatable)}><DeleteIcon /></IconButton>
                         </TableCell>
 
                      </TableRow>

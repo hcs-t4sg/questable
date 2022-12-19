@@ -16,7 +16,7 @@ import { useEffect } from 'react'
 import { LinearProgress } from '@mui/material';
 import { format, fromUnixTime } from 'date-fns';
 import {deleteTask} from '../utils/mutations'
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -109,7 +109,7 @@ export default function TasksTableTeacher({ classroom }) {
                         <TableCell align="left"><LinearProgressWithLabel variant="determinate" task={task} /></TableCell>
 
                         <TableCell align="right" sx={{width:.01}}>
-                           <IconButton onClick={() => handleDelete(task)}><MoreVertIcon /></IconButton>
+                           <IconButton onClick={() => handleDelete(task)}><DeleteIcon /></IconButton>
                         </TableCell>
 
                      </TableRow>

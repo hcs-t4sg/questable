@@ -1,14 +1,27 @@
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Box, Button, IconButton, Icon } from '@mui/material';
 import placeholderAvatar from '../../utils/tempAssets/oval.png'
 import checkboxChecked from '../../utils/tempAssets/checkboxChecked.svg'
 import checkboxEmpty from '../../utils/tempAssets/checkboxUnchecked.svg'
-import { completeTask } from '../../utils/mutations';
+import { completeTask, completeRepeatable } from '../../utils/mutations';
 import { useEffect, useState } from 'react'
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, query, getDoc, doc } from "firebase/firestore";
 import { db } from '../../utils/firebase';
 import TaskModalStudent from '../../components/TaskModalStudent'
 import { set } from 'date-fns';
 import {Tabs, Tab} from '@mui/material';
+import TasksTableStudent from '../../components/TasksTableStudent';
+import {Table, TableCell, TableContainer, TableRow, TableBody, TableHead} from '@mui/material';
+import Paper from '@mui/material/Paper';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import DoneIcon from '@mui/icons-material/Done';
+
+function truncate(description) {
+   if (description.length > 50) {
+      return description.slice(0, 50) + "..."
+   }
+   return description;
+}
 
 
 export default function Main({classroom, player}) {
@@ -16,13 +29,39 @@ export default function Main({classroom, player}) {
    const [completed, setCompleted] = useState([]);
    const [confirmed, setConfirmed] = useState([]);
    const [overdue, setOverdue] = useState([]);
+   const [repeatables, setRepeatables] = useState([]);
 
-   // Stores the currently active page:
+   // Boolean to show which page should be shown (tasks/repeatables)
+   const [isRepeatables, setIsRepeatables] = useState(0);
+
+   // Stores the currently active tasks page:
    // (0) All Quests
    // (1) Requested
    // (2) Confirmed
    // (3) Overdue
+   // (4) Repeatables
    const [page, setPage] = useState(0);
+
+   // Stores the currently active repeatables page
+   // (0) All Repeatables
+   const [repPage, setRepPage] = useState(0);
+
+   // function to return array that contains only tasks where the player's completions is less than the max completions
+   const filterMaxedOutRepeatables = (repeatables) => {
+      let filteredArray = []
+      repeatables.forEach(async (repeatable) => {
+         const ref = doc(db, `classrooms/${classroom.id}/repeatables/${repeatable.id}/completions/${player.id}`);
+         const snapshot = await getDoc(ref);
+         if(snapshot.exists()) 
+         {
+            if(snapshot.data().completions < repeatable.maxCompletions)
+            {
+               filteredArray.push(repeatable);
+            }
+         }
+      })
+      return filteredArray;
+   }
 
    useEffect(() => {
       // fetch task information
@@ -57,11 +96,34 @@ export default function Main({classroom, player}) {
          }
          taskFetch().catch(console.error)
       })
+
+      const repeatableQuery = query(collection(db, `classrooms/${classroom.id}/repeatables`));
+      onSnapshot(repeatableQuery, (snapshot)=> {
+         const repeatablesFetch = async () => {
+            const repeatable = []
+            snapshot.forEach(doc => {
+               if(doc.data().assigned?.includes(player.id)) {
+                  repeatable.push(Object.assign({id: doc.id}, doc.data()))
+               }
+            })
+            setRepeatables(filterMaxedOutRepeatables(repeatable));
+         }
+         repeatablesFetch().catch(console.error);
+      })
+
    }, [classroom.id, player.id])
 
-   const handleComplete = (task) => {
+   const handleTaskComplete = (task) => {
       if(window.confirm("Are you sure you want to mark this task as complete?")) {
          completeTask(classroom.id, task.id, player.id)
+      }
+   }
+
+   const handleRepeatableComplete = (repeatable) => {
+      if(window.confirm("Are you sure you want to complete this repeatable task?"))
+      {
+         console.log(repeatable.id);
+         completeRepeatable(classroom.id, repeatable.id, player.id);
       }
    }
 
@@ -82,74 +144,85 @@ export default function Main({classroom, player}) {
    }
    
    // create a list of tasks to display based on the current page
-   const QuestCard = ({task}) => {   
-      return(
-         <Box sx={{
-            width: '100%',
-            height: '154px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '35px',
-            backgroundColor: '#D9D9D9',
-            borderRadius: '20px',
-            marginBottom: '18px',
-         }}
-         >
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
-               <Box
-                  component="img"
-                  sx={{
-                     width: '104px',
-                     height: '100px',
-                     marginRight: '40px'
-                  }}
-                  alt="User's avatar"
-                  src={placeholderAvatar}
-               />
-               <Typography>{task && task.description}</Typography>
-            </Box>
-            <Box sx={{display: 'flex', flexDirection: confirmed.includes(task) ? 'column' : 'row', alignItems: 'center'}}>
-               <Typography>${task && task.reward} Reward</Typography>
-               <TaskModalStudent task={task} classroom={classroom} player={player} />
-               {includesTask(task,confirmed) ? 
-                  <Box 
-                     sx={{
-                        marginTop: '10px', 
-                        backgroundColor:'#545454', 
-                        color:'white', 
-                        borderRadius: '2px', 
-                        paddingLeft: '30px', paddingRight:'30px', paddingTop: '3px', paddingBottom: '3px'
-                     }}
-                  > 
-                     Finished!
-                  </Box> : 
+   // const QuestCard = ({task}) => {   
+   //    return(
+   //       <Box sx={{
+   //          width: '100%',
+   //          height: '154px',
+   //          display: 'flex',
+   //          alignItems: 'center',
+   //          justifyContent: 'space-between',
+   //          padding: '35px',
+   //          backgroundColor: '#D9D9D9',
+   //          borderRadius: '20px',
+   //          marginBottom: '18px',
+   //       }}
+   //       >
+   //          <Box sx={{display: 'flex', alignItems: 'center'}}>
+   //             <Box
+   //                component="img"
+   //                sx={{
+   //                   width: '104px',
+   //                   height: '100px',
+   //                   marginRight: '40px'
+   //                }}
+   //                alt="User's avatar"
+   //                src={placeholderAvatar}
+   //             />
+   //             <Typography>{task && task.description}</Typography>
+   //          </Box>
+   //          <Box sx={{display: 'flex', flexDirection: confirmed.includes(task) ? 'column' : 'row', alignItems: 'center'}}>
+   //             <Typography>${task && task.reward} Reward</Typography>
+   //             <TaskModalStudent task={task} classroom={classroom} player={player} />
+   //             {includesTask(task,confirmed) ? 
+   //                <Box 
+   //                   sx={{
+   //                      marginTop: '10px', 
+   //                      backgroundColor:'#545454', 
+   //                      color:'white', 
+   //                      borderRadius: '2px', 
+   //                      paddingLeft: '30px', paddingRight:'30px', paddingTop: '3px', paddingBottom: '3px'
+   //                   }}
+   //                > 
+   //                   Finished!
+   //                </Box> : 
                
-                  <Box component="img" 
-                     onClick={() => handleComplete(task)}
-                     sx={{ height: '30px', marginLeft: '20px'}} 
-                     src={includesTask(task,completed) ? checkboxChecked : checkboxEmpty}
-                  />
-               }
-            </Box>
-         </Box>
-   )}
+   //                <Box component="img" 
+   //                   onClick={() => handleComplete(task)}
+   //                   sx={{ height: '30px', marginLeft: '20px'}} 
+   //                   src={includesTask(task,completed) ? checkboxChecked : checkboxEmpty}
+   //                />
+   //             }
+   //          </Box>
+   //       </Box>
+   // )}
 
    // Returns the quests that should be displayed on the page
    // NOTE: Overdue tasks are still in the "assigned", "completed", or "confirmed" lists, but they are *also* in the "overdue" list.
    
    const getQuests = () => {
-      switch(page) {
-         case 0:
-            return assigned.concat(completed).concat(confirmed);
-         case 1:
-            return [];
-         case 2:
-            return confirmed;
-         case 3:
-            return overdue;
-         default:
-            return [];
+      if(isRepeatables == 0)
+      {
+         switch(page) {
+            case 0:
+               return assigned.concat(completed).concat(confirmed);
+            case 1:
+               return [];
+            case 2:
+               return confirmed;
+            case 3:
+               return overdue;
+
+            default:
+               return [];
+         }
+      } else if (isRepeatables == 1)
+      {
+         switch(repPage)
+         {
+            case 0:
+               return repeatables;
+         }
       }
    }
 
@@ -157,18 +230,106 @@ export default function Main({classroom, player}) {
       setPage(newTabIndex);
     };
 
+    const handleIsRepChange = (event, newTabIndex) => {
+      setIsRepeatables(newTabIndex);
+    }
+    const handleRepPageChange = (event, newTabIndex) => {
+      setRepPage(newTabIndex);
+    }
+
+    const completeTaskButton = (task) => {
+      return (
+         (includesTask(task, completed)) ?
+         <IconButton><CheckBoxIcon /></IconButton> :
+         <IconButton onClick={() => handleTaskComplete(task)}><CheckBoxOutlineBlankIcon /></IconButton>
+      )
+    }
+
+    const completeRepeatableButton = (repeatable) => {
+      return <IconButton onClick={()=>{handleRepeatableComplete(repeatable)}}><DoneIcon /></IconButton>
+    }
+
    return (
       <div style={{marginLeft: '36px'}}>
+         <Tabs value={isRepeatables} onChange={handleIsRepChange}>
+            <Tab label="Tasks" />
+            <Tab label="Repeatables" />
+         </Tabs>
+
+         {(isRepeatables == 0) ?
+
          <Tabs value={page} onChange={handleTabChange}>
             <Tab label="All Quests" />
             <Tab label="Requested"  />
             <Tab label="Confirmed" />
             <Tab label="Overdue"  />
          </Tabs>
+         :
+         <Tabs value={repPage} onChange={handleRepPageChange}>
+            <Tab label="All Repeatables" />
+         </Tabs>
+
+         } 
          
-         {getQuests().map((task) => (
+         <TableContainer component={Paper}>
+         <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+               {
+               (isRepeatables == 0) ? 
+               <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Reward</TableCell>
+                  <TableCell>Deadline</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell></TableCell>
+               </TableRow> :
+               <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Reward</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell></TableCell>
+               </TableRow>
+               }
+            </TableHead>
+            <TableBody>
+               {getQuests().map((task) => (
+                  (isRepeatables == 0) ?
+                  <TableRow
+                     key={task.id}
+                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                     <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0, width: .01 }} align="left">
+                              <TaskModalStudent task={task} classroom={classroom}/>
+                        </TableCell>
+                     <TableCell component="th" scope="row">{task.name}</TableCell>
+                     <TableCell align="left">{task.reward}</TableCell>
+                     <TableCell alight="left">{task.due}</TableCell>
+                     <TableCell aligh="left">{truncate(task.description)}</TableCell>
+                     <TableCell align="left">{completeTaskButton(task)}</TableCell>
+                  </TableRow>
+                  :
+                  <TableRow
+                  key={task.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                     <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0, width: .01 }} align="left">
+                        <TaskModalStudent task={task} classroom={classroom}/>
+                     </TableCell>
+                     <TableCell component="th" scope="row">{task.name}</TableCell>
+                     <TableCell align="left">{task.reward}</TableCell>
+                     <TableCell align="left">{truncate(task.description)}</TableCell>
+                     <TableCell align="left">{completeRepeatableButton(task)}</TableCell>
+                  </TableRow>
+               ))}
+            </TableBody>
+         </Table>
+         </TableContainer>
+
+         {/* {getQuests().map((task) => (
             <QuestCard task={task} />
-         ))}
+         ))} */}
 
       </div>
    )

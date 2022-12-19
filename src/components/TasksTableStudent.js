@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Grid';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+import {Table} from '@mui/material';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -12,36 +13,19 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react'
 import Paper from '@mui/material/Paper';
 
-export default function TasksTableStudent({ player, classroom }) {
-   //Create a state variable to hold the tasks assigned to the student.
-   const [tasks, setTasks] = useState([]);
-   useEffect(() => {
-      // Create a reference to the tasks collection & filter for tasks that are assigned to the student.
-      const tasksRef = collection(db, `classrooms/${classroom.id}/tasks`);
-      const q = query(tasksRef, where("assigned", "array-contains", player.id));
-
-      // Attach a listener to the tasks collection
-      onSnapshot(q, (snapshot) => {
-         const taskFetch = async () => {
-            const assigned = []
-            snapshot.forEach(doc => {
-               assigned.push(Object.assign({ id: doc.id }, doc.data()))
-            })
-            setTasks(assigned)
-         }
-         taskFetch().catch(console.error)
-      })
-   }, [classroom, player])
-
+export default function TasksTableStudent({tasks, classroom, player}) 
+{
    return (
       <Grid item xs={12}>
-         <Typography variant="h4">Assigned Tasks</Typography>
          <TableContainer component={Paper}>
+         <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
                <TableRow>
                   <TableCell>Name</TableCell>
                   <TableCell>Reward</TableCell>
                   <TableCell>Due</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell></TableCell>
                </TableRow>
             </TableHead>
             <TableBody>
@@ -59,6 +43,7 @@ export default function TasksTableStudent({ player, classroom }) {
                   </TableRow>
                ))}
             </TableBody>
+         </Table>
          </TableContainer>
       </Grid>
    )
