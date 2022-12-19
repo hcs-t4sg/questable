@@ -13,6 +13,7 @@ import { collection, onSnapshot, query, getDocs, getDoc } from "firebase/firesto
 import { db } from '../utils/firebase';
 import { denyTask, confirmTask, completeRepeatable, denyRepeatable, confirmRepeatable } from '../utils/mutations'
 import {Tabs, Tab} from '@mui/material';
+import { getUnixTime, formatDistanceToNow, format } from 'date-fns';
 
 function truncate(description){
    if(description.length > 40){
@@ -24,11 +25,12 @@ function truncate(description){
 export default function ConfirmTasksTable({ classroom }) {
    const [completedTasks, setCompletedTasks] = useState([])
    const [completedRepeatables, setCompletedRepeatables] = useState([]);
-
+   const [completionTimes, setCompletionTimes] = useState([]);
    const [playerData, setPlayerData] = useState(null)
 
    const[page, setPage] = useState(0);
 
+   
    useEffect(() => {
       // fetch player information
       const q = query(collection(db, `classrooms/${classroom.id}/players`))
@@ -50,7 +52,15 @@ export default function ConfirmTasksTable({ classroom }) {
          const cTaskFetch = async () => {
             const queryRes = []
             snapshot.forEach(doc => {
-               queryRes.push(Object.assign({ id: doc.id }, doc.data()))
+               // append completion times to each task
+               const completionTimes = [];
+               const completionsQuery = query(collection(db, `classrooms/${classroom.id}/tasks/${doc.id}/completionTimes`));
+               onSnapshot(completionsQuery, completion => {
+                  completion.forEach(async item => {
+                     completionTimes.push({id: item.id, ...item.data()})
+                  })
+               });
+               queryRes.push(Object.assign({ id: doc.id }, {...doc.data(), completionTimes: completionTimes}))
             })
             setCompletedTasks(queryRes)
          }
@@ -95,6 +105,25 @@ export default function ConfirmTasksTable({ classroom }) {
       return player[0].name;
     }
 
+    const formatStatus = (task, playerID) => {
+      task.completionTimes.forEach(async time => {
+         if(time.id == playerID)
+         {
+            // if overdue, return "___ days late"
+            if(time.time.seconds > task.dueDate)
+            {
+               return formatDistanceToNow(time.time.seconds) + " late";
+            }
+            else{
+               return "On time";
+            }
+         }
+      })
+      // console.log(task.completionTimes);
+      // console.log(playerID);
+      return "Player not found";      
+    }
+
    return (
       <Grid item xs={12}>
          <Typography variant="h4">Tasks Awaiting Confirmation</Typography>
@@ -112,7 +141,7 @@ export default function ConfirmTasksTable({ classroom }) {
                   <TableRow>
                      <TableCell align="center">Task</TableCell>
                      <TableCell align="center">Description</TableCell>
-                     <TableCell align="center">Deadline</TableCell>
+                     <TableCell align="center">Status</TableCell>
                      <TableCell align="center">Reward</TableCell>
                      <TableCell align="center">Student</TableCell>
                      <TableCell align="center">Confirm?</TableCell>
@@ -127,7 +156,7 @@ export default function ConfirmTasksTable({ classroom }) {
                            <TableRow key={'test'} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                               <TableCell align="center">{task.name}</TableCell>
                               <TableCell align="center">{truncate(task.description)}</TableCell>
-                              <TableCell align="center">{task.deadline}</TableCell>
+                              <TableCell align="center">{formatStatus(task, player.id)}</TableCell>
                               <TableCell align="center">{task.reward}</TableCell>
                               <TableCell align="center" component="th" scope="row">{player.name}</TableCell>
                               <TableCell align="center">

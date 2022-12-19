@@ -184,11 +184,11 @@ export async function completeTask(classroomID, taskID, playerID) {
    // Add `playerID` to completed array
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
 
-   // // Add completion timestamp
-   // await addDoc(collection(db,`classrooms/${classroomID}/tasks/${taskID}/completionTimes`), {
-   //    playerID: playerID,
-   //    time: serverTimestamp
-   // })
+   const docRef = doc(db, `classrooms/${classroomID}/tasks/${taskID}/completionTimes/${playerID}`);
+   // Add completion timestamp
+   await setDoc(docRef, {
+      time: serverTimestamp()
+   })
 }
 
 export async function completeRepeatable(classroomID, repeatableID, playerID) 
