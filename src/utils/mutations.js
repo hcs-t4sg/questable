@@ -363,5 +363,41 @@ export async function confirmRepeatable(classroomID, playerID, repeatableID) {
             money: parseInt(playerSnap.data().money + repeatableSnap.data().reward)
          })
       }
+
+      // increment streaks
+      const streaksRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/streaks/${playerID}`);
+      const streaksSnap = await getDoc(streaksRef);
+      if (!streaksSnap.exists()) {
+         await setDoc(streaksRef, {
+            streak: 1
+         })
+      }else{
+         updateDoc(streaksRef, {
+            streak: increment(1)
+         })
+      }
+   }
+}
+
+
+// Mutation to refresh repeatable
+// TODO: ADD THIS FUNCTION
+export async function refreshRepeatable(classroomID, playerID, repeatableID) {
+   const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
+   const repeatableSnap = await getDoc(repeatableRef)
+   if (repeatableSnap.exists()) {
+      const lastRefreshRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/lastRefresh/${playerID}`);
+      const lastRefreshSnap = await getDoc(lastRefreshRef);
+      if(!lastRefreshSnap.exists()){
+         await setDoc(lastRefreshRef, {
+            lastRefresh: getUnixTime(new Date())
+         })
+      }
+      if (lastRefreshSnap.exists()) {
+         updateDoc(lastRefreshRef, {
+            lastRefresh: getUnixTime(new Date())
+         })
+      }
+
    }
 }
