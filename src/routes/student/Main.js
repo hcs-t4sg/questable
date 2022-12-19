@@ -15,6 +15,7 @@ import Paper from '@mui/material/Paper';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import DoneIcon from '@mui/icons-material/Done';
+import {format, fromUnixTime} from 'date-fns';
 
 function truncate(description) {
    if (description.length > 50) {
@@ -50,11 +51,12 @@ export default function Main({ classroom, player }) {
    const filterMaxedOutRepeatables = (repeatables) => {
       let filteredArray = []
       repeatables.forEach(async (repeatable) => {
-         const ref = doc(db, `classrooms/${classroom.id}/repeatables/${repeatable.id}/completions/${player.id}`);
-         const snapshot = await getDoc(ref);
-         if (snapshot.exists()) {
-            if (snapshot.data().completions < repeatable.maxCompletions)
-            // TODO If completions plus confirmations < maxCompletions
+         const compRef = doc(db, `classrooms/${classroom.id}/repeatables/${repeatable.id}/completions/${player.id}`);
+         const compSnap = await getDoc(compRef);
+         const confRef = doc(db, `classrooms/${classroom.id}/repeatables/${repeatable.id}/confirmations/${player.id}`);
+         const confSnap = await getDoc(confRef);
+         if (compSnap.exists() || confSnap.exists()) {
+            if (compSnap.data().completions + confSnap.data().confirmations < repeatable.maxCompletions)
             {
                filteredArray.push(repeatable);
             }
@@ -141,59 +143,6 @@ export default function Main({ classroom, player }) {
       return false;
    }
 
-   // create a list of tasks to display based on the current page
-   // const QuestCard = ({task}) => {   
-   //    return(
-   //       <Box sx={{
-   //          width: '100%',
-   //          height: '154px',
-   //          display: 'flex',
-   //          alignItems: 'center',
-   //          justifyContent: 'space-between',
-   //          padding: '35px',
-   //          backgroundColor: '#D9D9D9',
-   //          borderRadius: '20px',
-   //          marginBottom: '18px',
-   //       }}
-   //       >
-   //          <Box sx={{display: 'flex', alignItems: 'center'}}>
-   //             <Box
-   //                component="img"
-   //                sx={{
-   //                   width: '104px',
-   //                   height: '100px',
-   //                   marginRight: '40px'
-   //                }}
-   //                alt="User's avatar"
-   //                src={placeholderAvatar}
-   //             />
-   //             <Typography>{task && task.description}</Typography>
-   //          </Box>
-   //          <Box sx={{display: 'flex', flexDirection: confirmed.includes(task) ? 'column' : 'row', alignItems: 'center'}}>
-   //             <Typography>${task && task.reward} Reward</Typography>
-   //             <TaskModalStudent task={task} classroom={classroom} player={player} />
-   //             {includesTask(task,confirmed) ? 
-   //                <Box 
-   //                   sx={{
-   //                      marginTop: '10px', 
-   //                      backgroundColor:'#545454', 
-   //                      color:'white', 
-   //                      borderRadius: '2px', 
-   //                      paddingLeft: '30px', paddingRight:'30px', paddingTop: '3px', paddingBottom: '3px'
-   //                   }}
-   //                > 
-   //                   Finished!
-   //                </Box> : 
-
-   //                <Box component="img" 
-   //                   onClick={() => handleComplete(task)}
-   //                   sx={{ height: '30px', marginLeft: '20px'}} 
-   //                   src={includesTask(task,completed) ? checkboxChecked : checkboxEmpty}
-   //                />
-   //             }
-   //          </Box>
-   //       </Box>
-   // )}
 
    // Returns the quests that should be displayed on the page
    // NOTE: Overdue tasks are still in the "assigned", "completed", or "confirmed" lists, but they are *also* in the "overdue" list.
@@ -300,7 +249,7 @@ export default function Main({ classroom, player }) {
                            </TableCell>
                            <TableCell component="th" scope="row">{task.name}</TableCell>
                            <TableCell align="left">{task.reward}</TableCell>
-                           <TableCell alight="left">{task.due}</TableCell>
+                           <TableCell align="left">{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
                            <TableCell aligh="left">{truncate(task.description)}</TableCell>
                            <TableCell align="left">{completeTaskButton(task)}</TableCell>
                         </TableRow>

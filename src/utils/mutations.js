@@ -257,8 +257,8 @@ export async function addRepeatable(classID, task, teacherID) {
    task.classSnap.data().playerList.filter((id) => (id !== teacherID)).forEach(async (element) => {
       await addDoc(collection(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/lastRefresh`), {
          id: element.id,
-         // TODO Set lastRefresh to most recent Sunday Midnight instead
-         lastRefresh: getUnixTime(new Date())
+         // Set lastRefresh to most recent Sunday Midnight instead
+         lastRefresh: getSunday()
       });
       await addDoc(collection(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/completions`), {
          id: element.id,
@@ -334,8 +334,6 @@ export async function confirmRepeatable(classroomID, playerID, repeatableID) {
    const repeatableSnap = await getDoc(repeatableRef)
    if (repeatableSnap.exists()) {
 
-      // TODO check that confirmations is less than MaxCompletions. If not satisfied, just return
-
       // increment confirmations
       const confirmationsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/confirmations/${playerID}`);
       const confirmationsSnap = await getDoc(confirmationsRef);
@@ -382,10 +380,32 @@ export async function confirmRepeatable(classroomID, playerID, repeatableID) {
    }
 }
 
+// Helper function to get last sunday
+function getSunday() {
+   const today = new Date();
+   const day = today.getDay();
+   const diff = today.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+   return new Date(today.setDate(diff));
+}
+
+// Mutation to refresh all repeatables for given classroom
+export async function refreshAllRepeatables(classroomID, playerID) {
+   const classroomRef = doc(db, 'classrooms', classroomID)
+   const classroomSnap = await getDoc(classroomRef)
+   if (!classroomSnap.exists()) {
+      return "Could not find classroom"
+   }
+   // refresh all repeatables
+   const repeatablesRef = collection(db, `classrooms/${classroomID}/repeatables`)
+   const repeatablesSnap = await getDocs(repeatablesRef)
+   repeatablesSnap.forEach(async (repeatable) => {
+      await refreshRepeatable(classroomID, playerID, repeatable.id)
+   })
+}
+
 
 // Mutation to refresh repeatable
-// TODO: ADD THIS FUNCTION
-export async function refreshRepeatable(classroomID, playerID, repeatableID) {
+async function refreshRepeatable(classroomID, playerID, repeatableID) {
    const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
    const repeatableSnap = await getDoc(repeatableRef)
 
@@ -393,25 +413,26 @@ export async function refreshRepeatable(classroomID, playerID, repeatableID) {
       const lastRefreshRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/lastRefresh/${playerID}`);
       const lastRefreshSnap = await getDoc(lastRefreshRef);
 
-      // TODO If more than a week has passed since last refresh (the most recent sunday is not the last refresh), then:
-      // 1. Set the player completions to 0
-      // 2. Set the confirmations to 0
+      // If more than a week has passed since last refresh
+      if(!lastRefreshSnap.data().lastRefresh < getSunday()) {
 
+         // 1. Set the player completions to 0
+         const completionsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
+         const completionsSnap = await getDoc(completionsRef);
+         if (completionsSnap.exists()) {
+            updateDoc(completionsRef, {
+               completions: 0
+            })
+         }
 
-
-
-
-      // if (!lastRefreshSnap.exists()) {
-      //    await setDoc(lastRefreshRef, {
-      //       lastRefresh: getUnixTime(new Date())
-      //    })
-      // }
-
-      // if (lastRefreshSnap.exists()) {
-      //    updateDoc(lastRefreshRef, {
-      //       lastRefresh: getUnixTime(new Date())
-      //    })
-      // }
-
+         // 2. Set the confirmations to 0
+         const confirmationsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/confirmations/${playerID}`);
+         const confirmationsSnap = await getDoc(confirmationsRef);
+         if (confirmationsSnap.exists()) {
+            updateDoc(confirmationsRef, {
+               confirmations: 0
+            })
+         }
+      }
    }
 }
