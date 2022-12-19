@@ -1,4 +1,4 @@
-import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion, serverTimestamp, increment} from "firebase/firestore";
+import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion, serverTimestamp, increment } from "firebase/firestore";
 import { db } from './firebase';
 import { getUnixTime } from 'date-fns';
 
@@ -174,13 +174,13 @@ export async function deleteTask(classroomID, taskID) {
    await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`));
 }
 // Mutation to delete repeatable
-export async function deleteRepeatable(classroomID, repeatableID){
+export async function deleteRepeatable(classroomID, repeatableID) {
    await deleteDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`));
 }
 
 export async function completeTask(classroomID, taskID, playerID) {
    // Remove `playerID` from assigned array
-   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) }); 
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) });
    // Add `playerID` to completed array
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
 
@@ -191,12 +191,10 @@ export async function completeTask(classroomID, taskID, playerID) {
    })
 }
 
-export async function completeRepeatable(classroomID, repeatableID, playerID) 
-{
+export async function completeRepeatable(classroomID, repeatableID, playerID) {
    const completionsDocRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
    const docSnap = await getDoc(completionsDocRef);
-   if(!docSnap.exists())
-   {
+   if (!docSnap.exists()) {
       await setDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`), {
          completions: 0
       });
@@ -256,12 +254,13 @@ export async function addRepeatable(classID, task, teacherID) {
    });
 
    // add subcollections
-   task.classSnap.data().playerList.filter((id) => (id !== teacherID)).forEach( async (element) => {
+   task.classSnap.data().playerList.filter((id) => (id !== teacherID)).forEach(async (element) => {
       await addDoc(collection(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/lastRefresh`), {
          id: element.id,
+         // TODO Set lastRefresh to most recent Sunday Midnight instead
          lastRefresh: getUnixTime(new Date())
       });
-      await addDoc(collection(db,`classrooms/${classID}/repeatables/${repeatableRef.id}/completions`), {
+      await addDoc(collection(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/completions`), {
          id: element.id,
          completions: 0
       });
@@ -317,7 +316,7 @@ export async function denyRepeatable(classroomID, playerID, repeatableID) {
    const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
    const repeatableSnap = await getDoc(repeatableRef)
    if (repeatableSnap.exists()) {
-      
+
       const completionsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
       const completionsSnap = await getDoc(completionsRef);
       if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
@@ -334,6 +333,9 @@ export async function confirmRepeatable(classroomID, playerID, repeatableID) {
    const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
    const repeatableSnap = await getDoc(repeatableRef)
    if (repeatableSnap.exists()) {
+
+      // TODO check that confirmations is less than MaxCompletions. If not satisfied, just return
+
       // increment confirmations
       const confirmationsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/confirmations/${playerID}`);
       const confirmationsSnap = await getDoc(confirmationsRef);
@@ -341,10 +343,10 @@ export async function confirmRepeatable(classroomID, playerID, repeatableID) {
          await setDoc(confirmationsRef, {
             confirmations: 1
          })
-      }else{
-      updateDoc(confirmationsRef, {
-         confirmations: increment(1)
-      })
+      } else {
+         updateDoc(confirmationsRef, {
+            confirmations: increment(1)
+         })
       }
 
       // decrement completions
@@ -372,7 +374,7 @@ export async function confirmRepeatable(classroomID, playerID, repeatableID) {
          await setDoc(streaksRef, {
             streak: 1
          })
-      }else{
+      } else {
          updateDoc(streaksRef, {
             streak: increment(1)
          })
@@ -386,19 +388,30 @@ export async function confirmRepeatable(classroomID, playerID, repeatableID) {
 export async function refreshRepeatable(classroomID, playerID, repeatableID) {
    const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
    const repeatableSnap = await getDoc(repeatableRef)
+
    if (repeatableSnap.exists()) {
       const lastRefreshRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/lastRefresh/${playerID}`);
       const lastRefreshSnap = await getDoc(lastRefreshRef);
-      if(!lastRefreshSnap.exists()){
-         await setDoc(lastRefreshRef, {
-            lastRefresh: getUnixTime(new Date())
-         })
-      }
-      if (lastRefreshSnap.exists()) {
-         updateDoc(lastRefreshRef, {
-            lastRefresh: getUnixTime(new Date())
-         })
-      }
+
+      // TODO If more than a week has passed since last refresh (the most recent sunday is not the last refresh), then:
+      // 1. Set the player completions to 0
+      // 2. Set the confirmations to 0
+
+
+
+
+
+      // if (!lastRefreshSnap.exists()) {
+      //    await setDoc(lastRefreshRef, {
+      //       lastRefresh: getUnixTime(new Date())
+      //    })
+      // }
+
+      // if (lastRefreshSnap.exists()) {
+      //    updateDoc(lastRefreshRef, {
+      //       lastRefresh: getUnixTime(new Date())
+      //    })
+      // }
 
    }
 }
