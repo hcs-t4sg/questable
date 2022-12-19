@@ -13,7 +13,7 @@ import { collection, onSnapshot, query, getDocs, getDoc } from "firebase/firesto
 import { db } from '../utils/firebase';
 import { denyTask, confirmTask, completeRepeatable, denyRepeatable, confirmRepeatable } from '../utils/mutations'
 import { Tabs, Tab } from '@mui/material';
-import { getUnixTime, formatDistanceToNow, format } from 'date-fns';
+import { getUnixTime, formatDistance, format } from 'date-fns';
 
 function truncate(description) {
    if (description.length > 40) {
@@ -63,11 +63,6 @@ export default function ConfirmTasksTable({ classroom }) {
                   completionTimes.push({ id: item.id, ...item.data() })
                })
 
-               // onSnapshot(completionsQuery, completion => {
-               //    completion.forEach(async item => {
-               //       completionTimes.push({ id: item.id, ...item.data() })
-               //    })
-               // });
                queryRes.push(Object.assign({ id: doc.id }, { ...doc.data(), completionTimes: completionTimes }))
             })
             setCompletedTasks(queryRes)
@@ -122,45 +117,19 @@ export default function ConfirmTasksTable({ classroom }) {
       const completionTimes = task.completionTimes;
 
       const playerCompletion = completionTimes.filter(completion => completion.id === playerID);
-      console.log(playerCompletion);
 
-      // TODO fix late day time
-      console.log(task);
-      console.log(playerCompletion[0].time.seconds);
-      console.log(task.dueDate);
+      if(playerCompletion.length <= 0) {
+         return "Player not found";
+      }
+
       if (playerCompletion[0].time.seconds > task.due) {
-         return formatDistanceToNow(playerCompletion[0].time.seconds) + " late";
+         return (formatDistance(
+            new Date(playerCompletion[0].time.seconds*1000), 
+            new Date(task.due*1000)
+         ) + " late");
       } else {
          return "On time";
       }
-
-
-
-      // console.log(task);
-      // console.log(playerID);
-      // console.log(task.completionTimes);
-      // console.log("length");
-      // console.log(task.completionTimes.length);
-      // console.log(task.completionTimes[0]);
-      // task.completionTimes.forEach(time => {
-      //    console.log("124");
-      //    console.log(time.id);
-      //    console.log(playerID);
-      //    if (time.id === playerID) {
-      //       console.log("true");
-      //       // if overdue, return "___ days late"
-      //       if (time.time.seconds > task.dueDate) {
-      //          return formatDistanceToNow(time.time.seconds) + " late";
-      //       }
-      //       else {
-      //          return "On time";
-      //       }
-      //    }
-      // })
-      // console.log("136");
-      // console.log(task.completionTimes);
-      // console.log(playerID);
-      // return "Player not found";
    }
 
    return (
