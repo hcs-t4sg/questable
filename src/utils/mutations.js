@@ -384,7 +384,7 @@ export async function confirmRepeatable(classroomID, playerID, repeatableID) {
 function getSunday() {
    const today = new Date();
    const day = today.getDay();
-   const diff = today.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+   const diff = today.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
    return new Date(today.setDate(diff));
 }
 
@@ -414,7 +414,7 @@ async function refreshRepeatable(classroomID, playerID, repeatableID) {
       const lastRefreshSnap = await getDoc(lastRefreshRef);
 
       // If more than a week has passed since last refresh
-      if(!lastRefreshSnap.data().lastRefresh < getSunday()) {
+      if (!lastRefreshSnap.data().lastRefresh < getSunday()) {
 
          // 1. Set the player completions to 0
          const completionsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
