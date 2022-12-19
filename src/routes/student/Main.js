@@ -239,7 +239,7 @@ export default function Main({classroom, player}) {
 
     const completeTaskButton = (task) => {
       return (
-         (includesTask(task, completed)) ?
+         (includesTask(task, completed) || includesTask(task, confirmed)) ?
          <IconButton><CheckBoxIcon /></IconButton> :
          <IconButton onClick={() => handleTaskComplete(task)}><CheckBoxOutlineBlankIcon /></IconButton>
       )
