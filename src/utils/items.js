@@ -137,8 +137,8 @@ export class Shirt {
 
    constructor(id, subtype) {
       this.id = id;
-      this.name = capitalize(clothingColors[id]) + "shirt";
-      this.description = "A " + capitalize(clothingColors[id]) + " shirt for your avatar!";
+      this.name = capitalize(clothingColors[id]) + " shirt";
+      this.description = "A " + clothingColors[id] + " shirt for your avatar!";
       this.#spriteStart = 8 * id + 1;
       this.subtype = subtype;
    }
@@ -161,8 +161,8 @@ export class Pants {
 
    constructor(id) {
       this.id = id;
-      this.name = capitalize(clothingColors[id]) + "pants";
-      this.description = capitalize(clothingColors[id]) + "pants for your avatar!";
+      this.name = capitalize(clothingColors[id]) + " pants";
+      this.description = capitalize(clothingColors[id]) + " pants for your avatar!";
       this.#spriteStart = 8 * id + 1;
    }
 
@@ -184,8 +184,8 @@ export class Shoes {
 
    constructor(id) {
       this.id = id;
-      this.name = capitalize(clothingColors[id]) + "shoes";
-      this.description = capitalize(clothingColors[id]) + "shoes for your avatar!";
+      this.name = capitalize(clothingColors[id]) + " shoes";
+      this.description = capitalize(clothingColors[id]) + " shoes for your avatar!";
       this.#spriteStart = 8 * id + 1;
    }
 

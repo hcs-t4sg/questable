@@ -8,7 +8,8 @@ import * as React from 'react';
 import { Link } from "react-router-dom";
 import Box from '@mui/material/Box'
 import { purchaseItem } from '../utils/mutations';
-import { useState } from 'react'
+import { useState } from 'react';
+import { capitalize } from 'lodash';
 
 export default function ShopItemCard({ item, itemPrice, classID, playerID }) {
    const [text, setText] = useState('')
@@ -24,7 +25,7 @@ export default function ShopItemCard({ item, itemPrice, classID, playerID }) {
       setText(res)
    }
    return (
-      <Card sx={{maxWidth: '282px'}}>
+      <Card sx={{ maxWidth: '282px' }}>
          {/* <CardMedia
             component="img"
             height="140"
@@ -36,16 +37,16 @@ export default function ShopItemCard({ item, itemPrice, classID, playerID }) {
          </Box>
          <CardContent>
             <Typography variant="h7" sx={{fontWeight: 'medium', color: 'green'}}component="div">
-               {item.type}
+               {capitalize(item.type)}
             </Typography>
             <Typography sx={{marginTop: '15px'}} variant="h6" component="div">
-               Item Name: {item.name}
+               {item.name}
             </Typography>
             <Typography sx={{marginTop: '15px', color: '#5c5c5c'}} variant="h7" component="div">
                Price: {itemPrice}
             </Typography>
             <Typography sx={{marginTop: '20px', color: '#5c5c5c'}} variant="h7" component="div">
-               Description: {item.description}
+               {item.description}
             </Typography>
          </CardContent>
          <CardActions sx={{marginBottom: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
