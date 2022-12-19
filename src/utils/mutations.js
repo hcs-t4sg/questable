@@ -251,8 +251,9 @@ export async function denyTask(classID, studentID, taskID) {
    }
 }
 
-export async function purchaseItem(classID, studentID, itemID, isCustom) {
+export async function purchaseItem(classID, studentID, item, isCustom) {
    // isCustom should be a boolean denoting whether the item being purchased is an item created for a particular classroom.
+   const prices = {body: 0, hair: 100, shoes: 100, shirt: 150, pants: 150}
    const classroomRef = doc(db, 'classrooms', classID)
    const classroomSnap = await getDoc(classroomRef)
    if (!classroomSnap.exists()){
@@ -260,25 +261,34 @@ export async function purchaseItem(classID, studentID, itemID, isCustom) {
    }
    const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
    const playerSnap = await getDoc(playerRef)
+   const bal = playerSnap.data().money
 
-   const itemRef = doc(db, isCustom ? `classrooms/${classID}/customShopItems/${itemID}` : `shopItems/${itemID}`)
-   const itemSnap = await getDoc(itemRef)
-   if (itemSnap.exists() && playerSnap.exists()){
-      if (itemSnap.data().cost > playerSnap.data().money){
-         return "Not enough money!"
+   const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
+   const invSnapshot = (await getDocs(inv)).docs;
+
+   for (var i in invSnapshot){
+      if (invSnapshot[i].data().item_id === item.id && invSnapshot[i].data().type === item.type && (!invSnapshot[i].data().subtype || invSnapshot[i].data().subtype === item.subtype)){
+         return 'Already owned!'
       }
-
-      const newItem = {
-         item_id: itemID,
-         type: isCustom ? itemSnap.data().type : 'custom'
-      }
-
-      await addDoc(collection(db, `classrooms/${classID}/players/${studentID}/inventory`), newItem);
-
-      await updateDoc(playerRef, {
-         money: playerSnap.data().money - itemSnap.data().cost
-      })
    }
+
+   if (bal < prices[item.type]){
+      return "Not enough money!"
+   }
+
+   const newItem = {
+      item_id: item.id,
+      type: isCustom ? 'custom' : item.type,
+      subtype: item.subtype || null
+   }
+
+   await addDoc(inv, newItem);
+
+   await updateDoc(playerRef, {
+      money: playerSnap.data().money - prices[item.type]
+   })
+
+   return 'Success!'
 }
 
 //Mutation to add Pin

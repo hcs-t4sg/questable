@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useContext, useReducer } from "react"
+// import React, { useState, useEffect, useContext, useReducer } from "react"
+import React from 'react'
 import Spritesheet from "react-responsive-spritesheet"
-import { Box, ThemeProvider, createTheme, zIndex } from '@mui/system';
+// import { Box, ThemeProvider, createTheme, zIndex } from '@mui/system';
 import { capitalize } from 'lodash';
 
 import body from '../assets/spriteSheets/characters/char_all.png';
