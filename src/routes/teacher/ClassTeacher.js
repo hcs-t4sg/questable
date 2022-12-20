@@ -15,6 +15,8 @@ import { getUserData } from '../../utils/mutations';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
+import Avatar from '../../components/Avatar';
+import { currentAvatar } from '../../utils/items';
 
 export default function ClassTeacher({ player, classroom, user }) {
 
@@ -80,14 +82,13 @@ export default function ClassTeacher({ player, classroom, user }) {
                 <Card sx={{ width: 0.22, m: 2 }}>
                     <CardContent>
                         <Box
-                            component="img"
                             sx={{
-                                height: 50,
-                                width: 50,
+                                height: 200,
+                                width: 200,
                             }}
-                            alt={`Avatar ${student.avatar}`}
-                            src={`../../static/${student.avatar}.png`}
-                        />
+                        >
+                            <Avatar outfit={currentAvatar(student)} />
+                        </Box>
                         <Typography variant="body1">Name: {student.name}</Typography>
                         <Typography variant="body1">Account Balance: {student.money}</Typography>
                         <Typography variant="body1">{student.email}</Typography>
