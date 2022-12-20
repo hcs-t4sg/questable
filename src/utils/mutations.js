@@ -356,10 +356,14 @@ export async function purchaseItem(classID, studentID, item, isCustom) {
 
 //Mutation to add Pin
 export async function addPin(userID, classID) {
+   console.log(userID);
+   console.log(classID);
    const userRef = doc(db, `users/${userID}`)
    const pinnedSnap = await getDoc(userRef)
    let pinnedClassrooms = pinnedSnap.data().pinned;
    if (pinnedClassrooms) {
+      pinnedClassrooms.push(classID);
+      console.log(pinnedClassrooms);
       updateDoc(userRef, {
          pinned: pinnedClassrooms
       })
