@@ -19,6 +19,7 @@ export default function Classrooms({ user }) {
    const [classrooms, setClassrooms] = React.useState([]);
    useEffect(() => {
       const q = query(collection(db, "classrooms"), where("playerList", "array-contains", user?.uid));
+      console.log(q)
 
       onSnapshot(q, (snapshot) => {
          const classroomsList = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));

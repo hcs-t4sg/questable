@@ -35,7 +35,7 @@ const hairColors = ['black', 'blonde', 'dark brown', 'light brown', 'ginger', 'd
 
 
 // Render function to generate item sprites
-function render(file, spriteStart, doAnimation) {
+export default function render(file, spriteStart, doAnimation) {
    // Import object to allow the correct image import based on the subtype string.
    const imports = { bob, braids, buzzcut, curly, emo, extra_long_skirt, extra_long, french_curl, gentleman, long_straight_skirt, long_straight, midiwave, ponytail, spacebuns, wavy, body, shirt, pants, shoes }
 
