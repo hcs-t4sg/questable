@@ -1,128 +1,128 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { FormControlLabel, MenuItem, Select, InputLabel, FormControl, Box, Modal} from '@mui/material';
+import { FormControlLabel, Radio, RadioGroup, Modal, Select, MenuItem, FormControl, InputLabel} from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { doc, onSnapshot } from "firebase/firestore";
 import * as React from 'react';
 import { useState } from 'react';
 import { db } from '../utils/firebase';
-import { addRepeatable, deleteTask, getPlayerData, updateTask } from '../utils/mutations';
+import { deleteTask, getPlayerData, updateTask } from '../utils/mutations';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import PropTypes from 'prop-types';
+
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { fromUnixTime } from 'date-fns';
 import { getUnixTime } from 'date-fns';
+import EditIcon from '@mui/icons-material/Edit';
 
-import {Tabs, Tab} from '@mui/material';
+export default function TaskModalTeacher({ task, classroom }) {
+    //State variables
+    const [open, setOpen] = useState(false);
+    const [name, setName] = useState(task.name);
+    const [reward, setReward] = useState(task.reward);
+    const [description, setDescription] = useState(task.description);
+    const [maxCompletions, setMaxCompletions] = useState(task.maxCompletions);
 
-import { addTask } from '../utils/mutations';
-import Grid from '@mui/material/Grid';
+    // Open the task modal
+    const handleClickOpen = () => {
+        setOpen(true);
+        setName(task.name);
+        setMaxCompletions(task.maxCompletions);
+        setReward(task.reward);
+    };
+    // Close the task modal
+    const handleClose = () => {
+        setOpen(false);
+    };
+    // Handle the click of an edit button
+    const handleEdit = () => {
+        const updatedTask = {
+            name: name,
+            maxCompletions: maxCompletions,
+            reward: reward,
+            id: task.id,
+        }
+        // Call the `updateTask` mutation
+        updateTask(classroom.id, updatedTask);
+        handleClose();
+    };
 
-export default function CreateTaskModal({ classroom, player }) {
 
-   const [open, setOpen] = useState(false);
-   const [name, setName] = useState("");
-   const [description, setDescription] = useState("");
-   const [reward, setReward] = React.useState("10");
-   const [dueDate, setDueDate] = React.useState(null);
+    const openButton = <IconButton onClick={handleClickOpen}>
+        <EditIcon />
+    </IconButton>;
 
-   const[isRepeatable, setIsRepeatable] = useState(false);
-   const[maxCompletions, setMaxCompletions] = useState(1);
+    
+    const saveButton = <Button onClick={handleEdit} variant="contained">Save Changes</Button>;
+    const closeButton = <IconButton onClick={handleClose}><CloseIcon /></IconButton>;
 
-   const handleOpen = () => {
-      setOpen(true);
-      setName("");
-      setDueDate(new Date());
-      setDescription("");
-      setReward("10");
-      setMaxCompletions(1);
-      setIsRepeatable(false);
-   };
+    const [completed, setCompleted] = React.useState([]);
 
-   const handleClose = () => {
-      setOpen(false);
-   };
+    const [chartData, setChartData] = React.useState([]);
 
-   // Mutation handlers
+    React.useEffect(() => {
 
-   const handleAdd = () => {
-      if(isRepeatable)
-      {
-         // check the max completions input
-         console.log("maxCompletions: " + maxCompletions);
-         if(maxCompletions < 1)
-         {
-            setMaxCompletions(1);
-            alert("Max completions must be greater than 0");
-            return;
-         }
-         // else if(!Number.isInteger(maxCompletions))
-         // {
-         //    setMaxCompletions(1);
-         //    alert("Max completions must be an integer");
-         //    return;
-         // }
+        const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
 
-         const newTask = {
-            name,
-            description,
-            reward,
-            maxCompletions
-         }
+        // Attach a listener to the tasks collection
+        onSnapshot(taskRef, (snapshot) => {
 
-         addRepeatable(classroom.id, newTask, player.id).catch(console.error);         
-
+            const numCompleted = snapshot.data()?.completed.length;
+            const numAssigned = snapshot.data()?.assigned.length;
+            const numConfirmed = snapshot.data()?.confirmed.length;
+            const total = numAssigned+numCompleted+numConfirmed;
+            // check if values are definied then check if there will not be a divide by 0 error
+            if (!(numCompleted === undefined || numAssigned === undefined || numConfirmed === undefined || total === 0)) {
+                setChartData(numConfirmed/total);
+            }else{
+                setChartData(0);
+            }
+        })
+    });
+    function CircularProgressWithLabel(props) {
+        return (
+          <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+            <CircularProgress variant="determinate" {...props} />
+            <Box
+              sx={{
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                position: 'absolute',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography variant="caption" component="div" color="text.secondary">
+                {`${Math.round(props.value)}%`}
+              </Typography>
+            </Box>
+          </Box>
+        );
       }
-      else
-      {
-         const newTask = {
-            name,
-            description,
-            reward,
-            due: getUnixTime(dueDate),
-         };
-   
-         addTask(classroom.id, newTask, player.id).catch(console.error);
-      }
+      
+      CircularProgressWithLabel.propTypes = {
+        /**
+         * The value of the progress indicator for the determinate variant.
+         * Value between 0 and 100.
+         * @default 0
+         */
+        value: PropTypes.number.isRequired,
+      };
 
-      handleClose();
-   };
-
-   // function to handle the date change
-   const handleDateChange = (date) => {
-      setDueDate(date);
-      console.log(date);
-   };
-
-   const openButton = <Button sx={{ width: 1 }} onClick={handleOpen} startIcon={<AddCircleOutlineIcon />}>Create Manually</Button>
-
-   const handleTabChange = (event, newValue) => {
-      setIsRepeatable(newValue === 1);
-   }
-
-   const repeatableButton = 
-      <Tabs value={isRepeatable ? 1 : 0} onChange={handleTabChange}>
-         <Tab label="One Time" />
-         <Tab label="Repeatable" />
-      </Tabs>
-
-
-
-   const actionButtons =
-      <DialogActions>
-         <Button variant="contained" onClick={handleAdd}>Add Task</Button>
-      </DialogActions>
-
-
-
-   return (
-      <div>
+    return (
+        <div>
             {openButton}
             <Modal sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} open={open} onClose={handleClose}>
             <Box sx={{
@@ -138,10 +138,9 @@ export default function CreateTaskModal({ classroom, player }) {
                 }}
             >
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-            <Typography fontWeight='light' variant="h5">Create Task</Typography>
+            <Typography fontWeight='light' variant="h5">Overview</Typography>
             <IconButton onClick={handleClose}><CloseIcon /></IconButton>
             </Box>
-            
             <hr 
               style={{
                 backgroundColor: '#D9D9D9',
@@ -151,10 +150,7 @@ export default function CreateTaskModal({ classroom, player }) {
                 width: '100%',
                 marginBottom: '10px'
               }}
-            />  
-
-            {repeatableButton}
-    
+            />          
             <TextField
                 margin="normal"
                 id="name"
@@ -176,17 +172,8 @@ export default function CreateTaskModal({ classroom, player }) {
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
             />
+
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: 2}}>
-            {/* either show a due date option or max completions based on if task is repeatable */}
-            {!isRepeatable ? 
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-                label="Due Date"
-                value={dueDate}
-                onChange={handleDateChange}
-                renderInput={(params) => <TextField {...params} />}
-            />
-            </LocalizationProvider> :
             <TextField
             margin="normal"
             id="description"
@@ -199,7 +186,7 @@ export default function CreateTaskModal({ classroom, player }) {
             value={maxCompletions}
             onChange={(event) => setMaxCompletions(event.target.value)}
             />
-            }  
+            
             </Box>
             <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: 2}}>
                 
@@ -211,6 +198,7 @@ export default function CreateTaskModal({ classroom, player }) {
                 value={reward}
                 label="Reward"
                 onChange={(event) => setReward(event.target.value)}
+                disabled = {true}
             >
                 <MenuItem value={10}>10</MenuItem>
                 <MenuItem value={20}>20</MenuItem>
@@ -222,10 +210,10 @@ export default function CreateTaskModal({ classroom, player }) {
             <br />
             {/* center the save button */}
             <Grid container justifyContent="center">
-                {actionButtons}
+                {saveButton}
             </Grid>
             </Box>
         </Modal>
-      </div>
-   )
+        </div>
+    );
 }

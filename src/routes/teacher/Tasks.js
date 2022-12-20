@@ -16,6 +16,8 @@ import { db } from '../../utils/firebase';
 import { collection, query, where } from "firebase/firestore";
 import { getUserData } from '../../utils/mutations';
 
+import {Tabs, Tab} from '@mui/material';
+import RepeatableTableTeacher from '../../components/RepeatableTableTeacher';
 
 export default function Tasks({ player, classroom, user }) {
 
@@ -23,9 +25,14 @@ export default function Tasks({ player, classroom, user }) {
 
     const classroomRef = doc(db, `classrooms/${classroom.id}`);
     onSnapshot(classroomRef, (doc) => {
-        setNumStudents(doc.data().playerList.length - 1);
+        setNumStudents(doc.data().playerList.length);
     })
     const [teacher, setTeacher] = React.useState()
+
+    const [page, setPage] = React.useState(0);
+    // Pages:
+    // (0): Tasks
+    // (1): Repeatables
 
     React.useEffect(() => {
 
@@ -49,6 +56,18 @@ export default function Tasks({ player, classroom, user }) {
         })
     }, []);
 
+    const handleTabChange = (event, newTabIndex) => {
+        setPage(newTabIndex);
+      };
+
+    const getTable = () => {
+        if (page === 0) {
+            return <TasksTableTeacher classroom={classroom} />
+        } else if (page === 1) {
+            return <RepeatableTableTeacher classroom={classroom} />
+        }
+    }
+
     return (
         <Grid container spacing={3} sx={{ p: 5 }}>
             <Grid item xs={12}>
@@ -70,7 +89,11 @@ export default function Tasks({ player, classroom, user }) {
 
             <Grid item xs={12}>
                 <Typography variant="h5">View and Edit Tasks</Typography>
-                <TasksTableTeacher classroom={classroom} />
+                <Tabs value={page} onChange={handleTabChange}>
+                    <Tab label="One Time"/>
+                    <Tab label="Repeatable"/>
+                </Tabs>
+                {getTable()}
             </Grid>
         </Grid>
     )

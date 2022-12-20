@@ -8,6 +8,7 @@ import { collection, doc, onSnapshot } from "firebase/firestore";
 import * as React from 'react';
 import { db } from '../utils/firebase';
 import TaskModalTeacher from './TaskModalTeacher.js';
+import RepeatableModalTeacher from './RepeatableModalTeacher.js';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
@@ -15,7 +16,7 @@ import { query, where } from "firebase/firestore";
 import { useEffect } from 'react'
 import { LinearProgress } from '@mui/material';
 import { format, fromUnixTime } from 'date-fns';
-import {deleteTask} from '../utils/mutations'
+import {deleteRepeatable} from '../utils/mutations'
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import PropTypes from 'prop-types';
@@ -28,52 +29,30 @@ function truncate(description) {
    return description;
 }
 
-function percentDone(task) {
-   const numCompleted = task.completed?.length;
-   const numAssigned = task.assigned?.length;
-   const numConfirmed = task.confirmed?.length;
-   return ((numConfirmed) / (numCompleted + numConfirmed + numAssigned)) * 100;
-}
 
-function LinearProgressWithLabel({task}) {
-   console.log(task);
-   return (
-     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ minWidth: 100 }}>
-         <Typography variant="body2" color="text.secondary">{`${task.confirmed?.length}/${task.completed?.length + task.assigned?.length + task.confirmed?.length} students`}</Typography>
-       </Box>
-       <Box sx={{ minWidth: '50%', mr: 1 }} align="right">
-         <LinearProgress variant="determinate" value={percentDone(task)} />
-       </Box>
-     </Box>
-   );
- };
-
-
-export default function TasksTableTeacher({ classroom }) {
+export default function RepeatableTableTeacher({ classroom }) {
    //Create a state variable to hold the tasks
-   const [tasks, setTasks] = React.useState([]);
+   const [repeatables, setRepeatables] = React.useState([]);
    React.useEffect(() => {
-      const mapTasks = async () => {
+      const mapRepeatables = async () => {
          //Create a reference to the tasks collection
-         const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`);
+         const repeatableCollectionRef = collection(db, `classrooms/${classroom.id}/repeatables`);
          //Attach a listener to the tasks collection
-         onSnapshot(taskCollectionRef, (snapshot) => {
+         onSnapshot(repeatableCollectionRef, (snapshot) => {
             //Store the tasks in the `tasks` state variable
-            setTasks(snapshot.docs.map((doc) => (
+            setRepeatables(snapshot.docs.map((doc) => (
                { ...doc.data(), id: doc.id }
             )));
          })
       }
-      mapTasks();
-      console.log(tasks);
+      mapRepeatables();
    }, []);
 
 
    const handleDelete = (task) => {
       // message box to confirm deletion
-      if (window.confirm("Are you sure you want to delete this task?")) {
-         deleteTask(classroom.id, task.id).catch(console.error);
+      if (window.confirm("Are you sure you want to delete this repeatable task?")) {
+         deleteRepeatable(classroom.id, task.id).catch(console.error);
       }
    }
 
@@ -86,30 +65,28 @@ export default function TasksTableTeacher({ classroom }) {
                      <TableCell sx={{m:'1%', p:'1%'}}></TableCell>
                      <TableCell>Task</TableCell>
                      <TableCell>Description</TableCell>
-                     <TableCell>Deadline</TableCell>
+                     <TableCell>Max Completions</TableCell>
                      <TableCell>Reward </TableCell>
-                     <TableCell>Students Confirmed</TableCell>
                   </TableRow>
                </TableHead>
                <TableBody>
-                  {tasks?.map((task) => (
+                  {repeatables?.map((repeatable) => (
                      <TableRow
-                        key={task.id}
+                        key={repeatable.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
                      >
 
                         <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0, width: .01 }} align="left">
-                              <TaskModalTeacher task={task} classroom={classroom}/>
+                           <RepeatableModalTeacher task={repeatable} classroom={classroom} />
                         </TableCell>
 
-                        <TableCell component="th" scope="row">{task.name}</TableCell>
-                        <TableCell align="left">{truncate(task.description)}</TableCell>
-                        <TableCell align="left">{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
-                        <TableCell alight="left">{task.reward}</TableCell>
-                        <TableCell align="left"><LinearProgressWithLabel variant="determinate" task={task} /></TableCell>
+                        <TableCell component="th" scope="row">{repeatable.name}</TableCell>
+                        <TableCell align="left">{truncate(repeatable.description)}</TableCell>
+                        <TableCell align="left">{repeatable.maxCompletions}</TableCell>
+                        <TableCell alight="left">{repeatable.reward}</TableCell>
 
                         <TableCell align="right" sx={{width:.01}}>
-                           <IconButton onClick={() => handleDelete(task)}><DeleteIcon /></IconButton>
+                           <IconButton onClick={() => handleDelete(repeatable)}><DeleteIcon /></IconButton>
                         </TableCell>
 
                      </TableRow>

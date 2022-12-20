@@ -41,7 +41,7 @@ export default function Classrooms({ user }) {
    const pinnedClassrooms = []
    const studentClassrooms = []
    const teacherClassrooms = []
-   classrooms.forEach( classroom => {
+   classrooms.forEach(classroom => {
       if (pinned.includes(classroom.id)) {
          pinnedClassrooms.push(classroom);
       }
@@ -52,6 +52,7 @@ export default function Classrooms({ user }) {
          studentClassrooms.push(classroom);
       }
    })
+
 
    return (
       <Layout>
@@ -79,7 +80,7 @@ export default function Classrooms({ user }) {
             </Grid>
             {pinnedClassrooms?.map((classroom) => (
                <Grid item xs={12} sm={6} md={4} key={classroom.id}>
-                     <ClassroomCard className={classroom.name} classID={classroom.id} pinned={true} userid = {user?.uid}/>
+                  <ClassroomCard className={classroom.name} classID={classroom.id} pinned={true} userid={user?.uid} />
                </Grid>
             ))}
             <Grid item xs={12}>
@@ -87,7 +88,7 @@ export default function Classrooms({ user }) {
             </Grid>
             {studentClassrooms.map((classroom) => (
                <Grid item xs={12} sm={6} md={4} key={classroom.id}>
-                  <ClassroomCard className={classroom.name} classID={classroom.id} pinned={false} userid = {user?.uid}/>
+                  <ClassroomCard className={classroom.name} classID={classroom.id} pinned={false} userid={user?.uid} />
                </Grid>
             ))}
             <Grid item xs={12}>
@@ -95,7 +96,7 @@ export default function Classrooms({ user }) {
             </Grid>
             {teacherClassrooms.map((classroom) => (
                <Grid item xs={12} sm={6} md={4} key={classroom.id}>
-                  <ClassroomCard className={classroom.name} classID={classroom.id} pinned={false} userid = {user?.uid}/>
+                  <ClassroomCard className={classroom.name} classID={classroom.id} pinned={false} userid={user?.uid} />
                </Grid>
             ))}
 

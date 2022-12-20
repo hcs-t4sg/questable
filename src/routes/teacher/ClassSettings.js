@@ -23,7 +23,7 @@ export default function ClassSettings({ player, classroom, user }) {
 
     const classroomRef = doc(db, `classrooms/${classroom.id}`);
     onSnapshot(classroomRef, (doc) => {
-        setNumStudents(doc.data().playerList.length - 1);
+        setNumStudents(doc.data().playerList.length);
     })
     const [teacher, setTeacher] = React.useState()
 

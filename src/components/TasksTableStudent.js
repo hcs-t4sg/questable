@@ -12,8 +12,8 @@ import TaskModalStudent from './TaskModalStudent';
 export default function TasksTableStudent({ tasks, classroom, player }) {
    return (
       <Grid item xs={12}>
-         <TableContainer sx={{backgroundColor: 'white'}}>
-            <Table aria-label="simple table" sx={{border: 'none'}}>
+         <TableContainer sx={{ backgroundColor: 'white' }}>
+            <Table aria-label="simple table" sx={{ border: 'none' }}>
                <TableHead>
                   <TableRow>
                      <TableCell>Avatar</TableCell>
@@ -22,7 +22,7 @@ export default function TasksTableStudent({ tasks, classroom, player }) {
                      <TableCell>Deadline</TableCell>
                      <TableCell align="center">Reward Amount</TableCell>
                      <TableCell align="center">Status</TableCell>
-                     <TableCell align="center"/>
+                     <TableCell align="center" />
                   </TableRow>
                </TableHead>
                <TableBody>
