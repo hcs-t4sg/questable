@@ -6,12 +6,13 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
-// import { Link } from "react-router-dom";
-// import avatar from '../../src/assets/spriteSheets/current/char4.png'
-
+import Avatar from './Avatar';
 
 // The display for an inventory card 
 export default function InventoryItemCard({item}) {
+  // const selectItem = a
+  console.log("item");
+  console.log(item);
   return (
     <Card sx={{ maxWidth: 345 }}>
         <Box sx={{top: -20, left: '18%', position: 'relative', width: '150px', height: '120px'}}>
@@ -31,7 +32,7 @@ export default function InventoryItemCard({item}) {
       </CardContent>
 
       <CardActions>
-        <Button size="small">Select</Button>
+        <Button variant='contained' color='success' size="small" onClick={Avatar}>Select</Button>      
       </CardActions>
     </Card>
   );

@@ -88,7 +88,7 @@ export class Body {
 
    constructor(id) {
       this.id = id;
-      this.name = "Body" + id.toString();
+      this.name = "Body " + id.toString();
       this.description = "A skin tone for your avatar!";
       this.#spriteStart = 8 * id + 1;
    }
@@ -134,12 +134,11 @@ export class Shirt {
    #spriteStart;
    type = "shirt";
 
-   constructor(id, subtype) {
+   constructor(id) {
       this.id = id;
-      this.name = capitalize(clothingColors[id]) + "shirt";
+      this.name = capitalize(clothingColors[id]) + " shirt";
       this.description = "A " + capitalize(clothingColors[id]) + " shirt for your avatar!";
       this.#spriteStart = 8 * id + 1;
-      this.subtype = subtype;
    }
 
    renderStatic() {
@@ -160,7 +159,7 @@ export class Pants {
 
    constructor(id) {
       this.id = id;
-      this.name = capitalize(clothingColors[id]) + "pants";
+      this.name = capitalize(clothingColors[id]) + " pants";
       this.description = capitalize(clothingColors[id]) + "pants for your avatar!";
       this.#spriteStart = 8 * id + 1;
    }
@@ -183,8 +182,8 @@ export class Shoes {
 
    constructor(id) {
       this.id = id;
-      this.name = capitalize(clothingColors[id]) + "shoes";
-      this.description = capitalize(clothingColors[id]) + "shoes for your avatar!";
+      this.name = capitalize(clothingColors[id]) + " shoes";
+      this.description = capitalize(clothingColors[id]) + " shoes for your avatar!";
       this.#spriteStart = 8 * id + 1;
    }
 
