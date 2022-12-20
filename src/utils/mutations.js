@@ -1,4 +1,4 @@
-import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion } from "firebase/firestore";
+import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where, arrayUnion, serverTimestamp, increment } from "firebase/firestore";
 import { db } from './firebase';
 import { getUnixTime } from 'date-fns';
 
@@ -20,6 +20,10 @@ export async function addClassroom(name, user) {
       teacherList: [user.uid],
       //studentList: [],
    }
+   // NOTE: I made a slight change here. Instead of storing the teacher in the playersList,
+   // I'm storing it in a separate field called teacher. This is because I want to be able to differntiate the classes
+   // owned by each user easily when displaying "created classrooms."
+
    const classroomRef = await addDoc(collection(db, "classrooms"), newClassroom);
 
    // Update created classroom with new player
@@ -69,7 +73,6 @@ export async function joinClassroom(classID, user) {
    // Check if student already in class
    const classroomData = classroomSnap.data();
    let playerList = classroomData.playerList;
-   let studentList = classroomData.studentList;
 
    if (playerList.includes(user.uid)) {
       return "You are already in this class!"
@@ -173,14 +176,40 @@ export async function updatePlayer(userID, classroomID, newPlayer) {
 export async function deleteTask(classroomID, taskID) {
    await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`));
 }
+// Mutation to delete repeatable
+export async function deleteRepeatable(classroomID, repeatableID) {
+   await deleteDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`));
+}
 
 export async function completeTask(classroomID, taskID, playerID) {
-   // Add `playerID` to completed array
-   console.log(taskID)
-   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
    // Remove `playerID` from assigned array
    await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { assigned: arrayRemove(playerID) });
+   // Add `playerID` to completed array
+   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), { completed: arrayUnion(playerID) });
+
+   const docRef = doc(db, `classrooms/${classroomID}/tasks/${taskID}/completionTimes/${playerID}`);
+   // Add completion timestamp
+   await setDoc(docRef, {
+      time: serverTimestamp()
+   })
 }
+
+export async function completeRepeatable(classroomID, repeatableID, playerID) {
+   const completionsDocRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
+   const docSnap = await getDoc(completionsDocRef);
+   if (!docSnap.exists()) {
+      await setDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`), {
+         completions: 0
+      });
+   }
+   // increment completions
+   let prev = await docSnap.data();
+   console.log(prev);
+   updateDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`), {
+      completions: increment(1)
+   })
+}
+
 
 export async function addTask(classID, task, teacherID) {
    // Update assignedTasks collection for every member in class except teacher
@@ -191,8 +220,6 @@ export async function addTask(classID, task, teacherID) {
       // doc.data() will be undefined in this case
       return "No such document!"
    }
-
-   console.log(task);
 
    // Update tasks collection
    await addDoc(collection(db, `classrooms/${classID}/tasks`), {
@@ -206,6 +233,41 @@ export async function addTask(classID, task, teacherID) {
       confirmed: []
    });
 
+}
+
+export async function addRepeatable(classID, task, teacherID) {
+   // Update assignedTasks collection for every member in class except teacher
+   const classRef = doc(db, "classrooms", classID);
+   const classSnap = await getDoc(classRef);
+
+   if (!classSnap.exists()) {
+      // doc.data() will be undefined in this case
+      return "No such document!"
+   }
+
+
+   // Update tasks collection
+   const repeatableRef = await addDoc(collection(db, `classrooms/${classID}/repeatables`), {
+      name: task.name,
+      description: task.description,
+      reward: parseInt(task.reward),
+      created: getUnixTime(new Date()),
+      maxCompletions: task.maxCompletions,
+      assigned: classSnap.data().playerList.filter((id) => (id !== teacherID)), // filter out the teacher's id
+   });
+
+   // add subcollections
+   task.classSnap.data().playerList.filter((id) => (id !== teacherID)).forEach(async (element) => {
+      await addDoc(collection(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/lastRefresh`), {
+         id: element.id,
+         // Set lastRefresh to most recent Sunday Midnight instead
+         lastRefresh: getSunday()
+      });
+      await addDoc(collection(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/completions`), {
+         id: element.id,
+         completions: 0
+      });
+   });
 }
 
 // Remove player ID from completed array and add to confirmed array.
@@ -252,42 +314,56 @@ export async function denyTask(classID, studentID, taskID) {
    }
 }
 
-export async function purchaseItem(classID, studentID, itemID, isCustom) {
+export async function purchaseItem(classID, studentID, item, isCustom) {
    // isCustom should be a boolean denoting whether the item being purchased is an item created for a particular classroom.
+   const prices = { body: 0, hair: 100, shoes: 100, shirt: 150, pants: 150 }
    const classroomRef = doc(db, 'classrooms', classID)
    const classroomSnap = await getDoc(classroomRef)
-   if (!classroomSnap.exists()){
+   if (!classroomSnap.exists()) {
       return "Could not find classroom"
    }
    const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
    const playerSnap = await getDoc(playerRef)
+   const bal = playerSnap.data().money
 
-   const itemRef = doc(db, isCustom ? `classrooms/${classID}/customShopItems/${itemID}` : `shopItems/${itemID}`)
-   const itemSnap = await getDoc(itemRef)
-   if (itemSnap.exists() && playerSnap.exists()){
-      if (itemSnap.data().cost > playerSnap.data().money){
-         return "Not enough money!"
+   const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
+   const invSnapshot = (await getDocs(inv)).docs;
+
+   for (var i in invSnapshot) {
+      if (invSnapshot[i].data().item_id === item.id && invSnapshot[i].data().type === item.type && (!invSnapshot[i].data().subtype || invSnapshot[i].data().subtype === item.subtype)) {
+         return 'Already owned!'
       }
-
-      const newItem = {
-         item_id: itemSnap.data().id,
-         type: isCustom ? itemSnap.data().type : 'custom'
-      }
-
-      await addDoc(collection(db, `classrooms/${classID}/players/${studentID}/inventory`), newItem);
-
-      await updateDoc(playerRef, {
-         money: playerSnap.data().money - itemSnap.data().cost
-      })
    }
+
+   if (bal < prices[item.type]) {
+      return "Not enough money!"
+   }
+
+   const newItem = {
+      item_id: item.id,
+      type: isCustom ? 'custom' : item.type,
+      subtype: item.subtype || null
+   }
+
+   await addDoc(inv, newItem);
+
+   await updateDoc(playerRef, {
+      money: playerSnap.data().money - prices[item.type]
+   })
+
+   return 'Success!'
 }
 
 //Mutation to add Pin
 export async function addPin(userID, classID) {
+   console.log(userID);
+   console.log(classID);
    const userRef = doc(db, `users/${userID}`)
    const pinnedSnap = await getDoc(userRef)
    let pinnedClassrooms = pinnedSnap.data().pinned;
    if (pinnedClassrooms) {
+      pinnedClassrooms.push(classID);
+      console.log(pinnedClassrooms);
       updateDoc(userRef, {
          pinned: pinnedClassrooms
       })
@@ -311,5 +387,131 @@ export async function deletePin(userID, classID) {
       updateDoc(userRef, {
          pinned: pinned
       })
+   }
+}
+
+// Mutation to deny repeatable completion
+export async function denyRepeatable(classroomID, playerID, repeatableID) {
+   const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
+   const repeatableSnap = await getDoc(repeatableRef)
+   if (repeatableSnap.exists()) {
+
+      const completionsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
+      const completionsSnap = await getDoc(completionsRef);
+      if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
+         updateDoc(completionsRef, {
+            completions: increment(-1)
+         })
+      }
+   }
+}
+
+// Mutation to confirm repeatable completion
+export async function confirmRepeatable(classroomID, playerID, repeatableID) {
+   console.log("confirming repeatable")
+   const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
+   const repeatableSnap = await getDoc(repeatableRef)
+   if (repeatableSnap.exists()) {
+
+      // increment confirmations
+      const confirmationsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/confirmations/${playerID}`);
+      const confirmationsSnap = await getDoc(confirmationsRef);
+      if (!confirmationsSnap.exists()) {
+         await setDoc(confirmationsRef, {
+            confirmations: 1
+         })
+      } else {
+         updateDoc(confirmationsRef, {
+            confirmations: increment(1)
+         })
+      }
+
+      // decrement completions
+      const completionsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
+      const completionsSnap = await getDoc(completionsRef);
+      if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
+         updateDoc(completionsRef, {
+            completions: increment(-1)
+         })
+      }
+
+      // increment money
+      const playerRef = doc(db, `classrooms/${classroomID}/players/${playerID}`)
+      const playerSnap = await getDoc(playerRef)
+      if (playerSnap.exists()) {
+         updateDoc(playerRef, {
+            money: parseInt(playerSnap.data().money + repeatableSnap.data().reward)
+         })
+      }
+
+      // increment streaks
+      const streaksRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/streaks/${playerID}`);
+      const streaksSnap = await getDoc(streaksRef);
+      if (!streaksSnap.exists()) {
+         await setDoc(streaksRef, {
+            streak: 1
+         })
+      } else {
+         updateDoc(streaksRef, {
+            streak: increment(1)
+         })
+      }
+   }
+}
+
+// Helper function to get last sunday
+function getSunday() {
+   const today = new Date();
+   const day = today.getDay();
+   const diff = today.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+   return new Date(today.setDate(diff));
+}
+
+// Mutation to refresh all repeatables for given classroom
+export async function refreshAllRepeatables(classroomID, playerID) {
+   const classroomRef = doc(db, 'classrooms', classroomID)
+   const classroomSnap = await getDoc(classroomRef)
+   if (!classroomSnap.exists()) {
+      return "Could not find classroom"
+   }
+   // refresh all repeatables
+   const repeatablesRef = collection(db, `classrooms/${classroomID}/repeatables`)
+   const repeatablesSnap = await getDocs(repeatablesRef)
+   repeatablesSnap.forEach(async (repeatable) => {
+      await refreshRepeatable(classroomID, playerID, repeatable.id)
+   })
+}
+
+
+// Mutation to refresh repeatable
+async function refreshRepeatable(classroomID, playerID, repeatableID) {
+   const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
+   const repeatableSnap = await getDoc(repeatableRef)
+
+   if (repeatableSnap.exists()) {
+      const lastRefreshRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/lastRefresh/${playerID}`);
+      const lastRefreshSnap = await getDoc(lastRefreshRef);
+
+      // If more than a week has passed since last refresh
+      if (!lastRefreshSnap.data().lastRefresh < getSunday()) {
+
+         // 1. Set the player completions to 0
+         const completionsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`);
+         const completionsSnap = await getDoc(completionsRef);
+         if (completionsSnap.exists()) {
+            updateDoc(completionsRef, {
+               completions: 0
+            })
+         }
+
+         // 2. Set the confirmations to 0
+         const confirmationsRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}/confirmations/${playerID}`);
+         const confirmationsSnap = await getDoc(confirmationsRef);
+         if (confirmationsSnap.exists()) {
+            updateDoc(confirmationsRef, {
+               confirmations: 0
+            })
+         }
+      }
    }
 }

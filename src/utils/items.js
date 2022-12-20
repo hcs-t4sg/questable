@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useContext, useReducer } from "react"
+// import React, { useState, useEffect, useContext, useReducer } from "react"
+import React from 'react'
 import Spritesheet from "react-responsive-spritesheet"
-import { Box, ThemeProvider, createTheme, zIndex } from '@mui/system';
+// import { Box, ThemeProvider, createTheme, zIndex } from '@mui/system';
 import { capitalize } from 'lodash';
 
 import body from '../assets/spriteSheets/characters/char_all.png';
@@ -137,7 +138,7 @@ export class Shirt {
    constructor(id) {
       this.id = id;
       this.name = capitalize(clothingColors[id]) + " shirt";
-      this.description = "A " + capitalize(clothingColors[id]) + " shirt for your avatar!";
+      this.description = "A " + clothingColors[id] + " shirt for your avatar!";
       this.#spriteStart = 8 * id + 1;
    }
 
@@ -160,7 +161,7 @@ export class Pants {
    constructor(id) {
       this.id = id;
       this.name = capitalize(clothingColors[id]) + " pants";
-      this.description = capitalize(clothingColors[id]) + "pants for your avatar!";
+      this.description = capitalize(clothingColors[id]) + " pants for your avatar!";
       this.#spriteStart = 8 * id + 1;
    }
 

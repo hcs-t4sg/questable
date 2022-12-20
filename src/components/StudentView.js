@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Layout from './Layout.js';
 import { Typography, Box } from '@mui/material';
@@ -12,6 +12,7 @@ import Avatar from '../components/Avatar';
 import { Body, Hair, Shirt, Pants, Shoes, getBodyItems, getHairItems, getShirtItems, getPantsItems, getShoesItems } from '../utils/items';
 
 // import x from '../../public/static/'
+import { refreshAllRepeatables } from "../utils/mutations.js";
 
 export default function StudentView({ player, classroom }) {
 
@@ -51,6 +52,9 @@ export default function StudentView({ player, classroom }) {
       shoes: new Shoes(3),
    }
 
+   useEffect(() => {
+      refreshAllRepeatables(classroom.id, player.id)
+   }, [player, classroom])
 
    return (
       <Layout classroom role={player?.role}>
@@ -92,7 +96,7 @@ export default function StudentView({ player, classroom }) {
          <Routes>
             <Route path="/" element={<Navigate to="main" />} />
             <Route path="main" element={<Main classroom={classroom} player={player} />} />
-            <Route path="shop" element={<Shop player={player} />} />
+            <Route path="shop" element={<Shop classroom={classroom} player={player} />} />
             <Route path="class-student" element={<ClassStudent />} />
             <Route path="inventory" element={<Inventory player={player} classroom={classroom} />} />
             <Route

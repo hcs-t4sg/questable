@@ -23,7 +23,7 @@ export default function Requests({ player, classroom, user }) {
 
     const classroomRef = doc(db, `classrooms/${classroom.id}`);
     onSnapshot(classroomRef, (doc) => {
-        setNumStudents(doc.data().playerList.length - 1);
+        setNumStudents(doc.data().playerList.length);
     })
 
     return (

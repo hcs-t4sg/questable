@@ -6,6 +6,13 @@ import Requests from '../routes/teacher/Requests';
 import Tasks from '../routes/teacher/Tasks';
 import Layout from './Layout.js';
 
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from '../utils/firebase';
+
+import { collection, query, where } from "firebase/firestore";
+import { getUserData } from '../utils/mutations';
+
+
 export default function TeacherView({ player, classroom, user }) {
 
     return (

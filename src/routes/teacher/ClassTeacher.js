@@ -25,7 +25,7 @@ export default function ClassTeacher({ player, classroom, user }) {
 
     const classroomRef = doc(db, `classrooms/${classroom.id}`);
     onSnapshot(classroomRef, (doc) => {
-        setNumStudents(doc.data().playerList.length - 1);
+        setNumStudents(doc.data().playerList.length);
     })
 
     React.useEffect(() => {
@@ -46,6 +46,8 @@ export default function ClassTeacher({ player, classroom, user }) {
                 // Await the resolution of all promises in the returned array
                 // and then store them in the `students` state variable
                 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+
+                // remove hte teacher from the playersList
                 for (let i = 0; i < players.length; i++) {
                     if (players[i].role == "teacher") {
                         setTeacher(players[i]);
