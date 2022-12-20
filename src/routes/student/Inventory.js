@@ -100,7 +100,7 @@ export default function Inventory({player, classroom}) {
 
             {inventoryObjects.map((item, index) => (
                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <InventoryItemCard item={item}/>
+                  <InventoryItemCard item={item} player={player} classroom={classroom}/>
                </Grid>
             ))}
         </Grid>
@@ -110,7 +110,7 @@ export default function Inventory({player, classroom}) {
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
               {getBodyItems().map((item, index) => (
                 <Grid item xs={2} sm={3} md={3} key={index}>
-                  <InventoryItemCard item={item}/>
+                  <InventoryItemCard item={item} player={player} classroom={classroom}/>
                 </Grid>
               ))}
           </Grid>
@@ -119,7 +119,7 @@ export default function Inventory({player, classroom}) {
         <TabPanel value={value} index={2}>
             {inventoryObjects.filter(item => item.type === "hair").map((item, index) => 
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <InventoryItemCard item={item}/>
+                <InventoryItemCard item={item} player={player} classroom={classroom}/>
               </Grid>
             )}
         </TabPanel>
@@ -127,7 +127,7 @@ export default function Inventory({player, classroom}) {
         <TabPanel value={value} index={3}>
             {inventoryObjects.filter(item => item.type === "shirt").map((item, index) => 
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <InventoryItemCard item={item}/>
+                <InventoryItemCard item={item} player={player} classroom={classroom}/>
               </Grid>
             )}
         </TabPanel>
@@ -135,7 +135,7 @@ export default function Inventory({player, classroom}) {
         <TabPanel value={value} index={4}>
             {inventoryObjects.filter(item => item.type === "pants").map((item, index) => 
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <InventoryItemCard item={item}/>
+              <InventoryItemCard item={item} player={player} classroom={classroom}/>
             </Grid>
             )}
         </TabPanel>
@@ -143,7 +143,7 @@ export default function Inventory({player, classroom}) {
         <TabPanel value={value} index={5}>
           {inventoryObjects.filter(item => item.type === "shoes").map((item, index) => 
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <InventoryItemCard item={item}/>
+                <InventoryItemCard item={item} player={player} classroom={classroom}/>
               </Grid>
             )}
         </TabPanel>

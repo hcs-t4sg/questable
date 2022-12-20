@@ -7,9 +7,17 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
 import Avatar from './Avatar';
+import { updateAvatar } from '../utils/mutations';
 
 // The display for an inventory card 
-export default function InventoryItemCard({item}) {
+export default function InventoryItemCard({item, player, classroom}) {
+
+  const handleEquip = async () => {
+    const res = await updateAvatar(player, item, classroom);
+    window.alert(res);
+    window.location.reload();
+  }
+
   // const selectItem = a
   console.log("item");
   console.log(item);
@@ -32,7 +40,7 @@ export default function InventoryItemCard({item}) {
       </CardContent>
 
       <CardActions>
-        <Button variant='contained' color='success' size="small" onClick={Avatar}>Select</Button>      
+        <Button variant='contained' color='success' size="small" onClick={handleEquip}>Equip</Button>      
       </CardActions>
     </Card>
   );
@@ -41,24 +49,5 @@ export default function InventoryItemCard({item}) {
 
 
 
-
-// export default function ShopItemCard({image, itemID, itemType, itemDescription }) {
-//    return (
-//       <Card>
-//          <CardContent>
-
-//             <Typography variant="h5" component="div">
-//                {itemType}
-//             </Typography>
-//             <Typography variant="h4" component="div">
-//                Amount: {itemDescription}
-//             </Typography>
-//          </CardContent>
-//          <CardActions>
-//             {/* <Button size="small" component={Link} to={`/class/${classID}`}>Purchase</Button> */}
-//          </CardActions>
-//       </Card>
-//    );
-// }
 
 

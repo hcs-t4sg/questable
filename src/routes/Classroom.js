@@ -43,7 +43,7 @@ export default function Classroom({ user }) {
    if (player?.role === "teacher") {
       return <TeacherView player={player} classroom={classroom} user={user} />
    } else if (player?.role === "student") {
-      return <StudentView player={player} classroom={classroom} />
+      return <StudentView player={player} classroom={classroom} user={user} />
    } else {
       return null
    }

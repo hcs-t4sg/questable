@@ -9,12 +9,14 @@ import Main from '../routes/student/Main';
 import Shop from '../routes/student/Shop';
 import Inventory from '../routes/student/Inventory';
 import Avatar from '../components/Avatar';
-import { Body, Hair, Shirt, Pants, Shoes, getBodyItems, getHairItems, getShirtItems, getPantsItems, getShoesItems } from '../utils/items';
+import { Body, Hair, Shirt, Pants, Shoes, getBodyItems, getHairItems, getShirtItems, getPantsItems, getShoesItems, currentAvatar } from '../utils/items';
+import { collection, onSnapshot, query, getDocs, getDoc } from "firebase/firestore";
+
 
 // import x from '../../public/static/'
 import { refreshAllRepeatables } from "../utils/mutations.js";
 
-export default function StudentView({ player, classroom }) {
+export default function StudentView({ player, classroom, user }) {
 
    const ThickProgress = styled(LinearProgress)(() => ({
       height: 20,
@@ -29,28 +31,8 @@ export default function StudentView({ player, classroom }) {
       },
    }));
 
-   const bodyItems = getBodyItems();
-   console.log(bodyItems);
-
-   const hairItems = getHairItems();
-   console.log(hairItems);
-
-   const shirtItems = getShirtItems();
-   console.log(shirtItems);
-
-   const pantsItems = getPantsItems();
-   console.log(pantsItems);
-   const shoesItems = getShoesItems();
-   console.log(shoesItems);
-
    // Given the IDs for the outfit fetched from Firebase (and the hair subtype), you can designate the avatar outfit like so.
-   const testOutfit = {
-      body: new Body(2),
-      shirt: new Shirt(3),
-      hair: new Hair(4, 'emo'),
-      pants: new Pants(5),
-      shoes: new Shoes(3),
-   }
+   const playerOutfit = currentAvatar(player);
 
    useEffect(() => {
       refreshAllRepeatables(classroom.id, player.id)
@@ -81,7 +63,7 @@ export default function StudentView({ player, classroom }) {
                   maxHeight: '312px',
                   maxWidth: '313px',
                }}>
-                  <Avatar outfit={testOutfit} />
+                  <Avatar outfit={playerOutfit} />
                </Box>
                <Box sx={{ width: '350px', display: 'flex', flexDirection: 'column', marginLeft: '160px' }}>
                   <ThickProgress variant="determinate" value={30} />
@@ -97,7 +79,7 @@ export default function StudentView({ player, classroom }) {
             <Route path="/" element={<Navigate to="main" />} />
             <Route path="main" element={<Main classroom={classroom} player={player} />} />
             <Route path="shop" element={<Shop classroom={classroom} player={player} />} />
-            <Route path="class-student" element={<ClassStudent />} />
+            <Route path="class-student" element={<ClassStudent player={player} classroom={classroom} user={user} />} />
             <Route path="inventory" element={<Inventory player={player} classroom={classroom} />} />
             <Route
                path="*"

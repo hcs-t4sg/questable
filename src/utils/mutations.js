@@ -515,3 +515,30 @@ async function refreshRepeatable(classroomID, playerID, repeatableID) {
       }
    }
 }
+
+export async function updateAvatar(player, newItem, classroom) {
+   const playerRef = doc(db, `classrooms/${classroom.id}/players/${player.id}`);
+   console.log(newItem);
+   
+   const newEquip = newItem.type === "body" ? {
+      ava_body: newItem.id
+   } 
+   : newItem.type === "hair" ? {
+      ava_hair: newItem.id,
+      ava_hair_subtype: newItem.subtype,
+   }
+   : newItem.type === "shirt" ? {
+      ava_shirt: newItem.id
+   }
+   : newItem.type === "pants" ? {
+      ava_pants: newItem.id
+   }
+   : newItem.type === "shoes" ? {
+      ava_shoes: newItem.id
+   } : null;
+   if (newEquip) {
+      await updateDoc(playerRef, newEquip);
+      return `Successfully equipped ${newItem.name}!`
+   }
+   return 'There was an error equipping.';
+}

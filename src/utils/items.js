@@ -246,3 +246,15 @@ export function getShoesItems() {
 
    return shoesItems;
 }
+
+export function currentAvatar (player) {
+   const playerOutfit = {
+      body: player.ava_body ? new Body(player.ava_body) : new Body(0),
+      shirt: player.ava_shirt ? new Shirt(player.ava_shirt) : new Shirt(0),
+      hair: player.ava_hair && player.ava_hair_subtype ? new Hair(player.ava_hair, player.ava_hair_subtype) : new Hair(0, 'bob'),
+      pants: player.ava_pants ? new Pants(player.ava_pants) : new Pants(0),
+      shoes: player.ava_shoes ? new Shoes(player.ava_shoes) : new Shoes(0),
+   };
+
+   return playerOutfit
+}
