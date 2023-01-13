@@ -1,70 +1,107 @@
-# Getting Started with Create React App
+# HUDS 2.0 Wintersession Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the HUDS 2.0 project! Created by T4SG Wintersession 2023 Team 2.
 
-## Available Scripts
+## Setup
 
-In the project directory, you can run:
+### Clone repository
 
-### `npm start`
+`cd` into a desired destination folder, then clone the repo (preferably using SSH):
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```shell
+git clone git@github.com:hcs-t4sg/wintersession-huds.git
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Package installation and initial testing
 
-### `npm test`
+1. Open the project folder in VSCode.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. You should see a popup in the bottom right prompting you to install recommended extensions. Please install these, they'll be helpful for code formatting and developing the webapp. You can also view the recommended extensions in the extensions sidebar (`cmd + shift + X`.)
 
-### `npm run build`
+3. Open a terminal in the project folder by dragging up from the bottom of the code window or by going to `Terminal > New Terminal` in the menu bar.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Run: `npm install` (`npm i` for short)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   * You might get some sort of `ERESOLVE... dependency conflict` error. That's fine, just run `npm install -force` (`npm i -f` for short).
+   * If you get something like "command not found", you might not have `npm` installed.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   * If successful you should see something like:
 
-### `npm run eject`
+   ```bash
+   added 1588 packages, and audited 1589 packages in 28s
+   
+   241 packages are looking for funding
+     run `npm fund` for details
+   
+   6 high severity vulnerabilities
+   
+   To address all issues (including breaking changes), run:
+     npm audit fix --force
+   
+   Run `npm audit` for details.
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   * You don't have to do anything else with the output. Ignore the security vulnerabilities, they're not severe and usually just caused by poor maintenance by package developers.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+5. Run `npm start` to start the webapp. You should be able to open and view the app in `localhost` without any bugs.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Starter Pack
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+This is mostly just reading to help you get familiar with the tech stack we'll be using. You can skim through it briefly to get a sense of what's going on, and I'd recommend getting through at least the Javascript, React, and MUI sections and the very first entry in the HUDS API section. I'll try to explain most of this in team meetings, and certainly let me know if you have any questions!
 
-## Learn More
+#### Javascript
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+You should already have a basic understanding of Javascript, so just make sure you understand the following concepts:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* What a Javascript function looks like
+* What a Javascript arrow function looks like
+* The difference between `let` and `const`, when to use them, and why you shouldn't use `var`
+* `For` loops, conditionals (`if`, `else`, ternary operator), booleans and logical operators (`&&`, `!`, `===`, `!==`)
+* Indexing into and iterating over arrays and objects (`.map`, `.forEach`, chaining with `.`, optional chaining with `?.` )
+* The spread operator (`...`)
 
-### Code Splitting
+#### React
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Read through this basic [React tutorial](https://reactjs.org/docs/hello-world.html) through part 7: Conditional rendering.
 
-### Analyzing the Bundle Size
+Read through this explanation of [React hooks](https://reactjs.org/docs/hooks-intro.html) through part 4: Using the Effect Hook.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+#### MUI (Material UI)
 
-### Making a Progressive Web App
+* Skim this [quick overview](https://mui.com/material-ui/getting-started/overview/) of MUI to get a sense of what it is.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+* On the MUI website, browse through the list of components in the sidebar just to get a sense of what's available. You can do quite a lot with MUI!
+  * Also note that you can click the `<>` icon to view example code for all components. That's why MUI is so helpful!
 
-### Advanced Configuration
+* Understanding how to define layout and positioning of page elements is one of the trickiest parts to frontend development, but will be extremely helpful far into the future if you learn it well now. Read through the documentation for the [MUI Grid v2 system](https://mui.com/material-ui/react-grid2/) to get a basic understanding of how MUI-designed webpages are laid out, and also take a look at this guide to [CSS flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/), which we can use in conjunction with MUI to easily align/position our page components.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+#### HUDS API (and other REST API information)
 
-### Deployment
+* Read through this [overview/spec](overview/spec) of the HUDS API. The left sidebar lists the different endpoints you can hit and the kind of information that can be obtained. This will be helpful in deciding what specific information you want to display on the webapp.
+* Helpful YouTube [video](https://www.youtube.com/watch?v=7YcW25PHnAA) explaining what REST APIs are (the HUDS API is one of them)
+* [Tutorial from HUIT](https://portal.apis.huit.harvard.edu/using-postman#top) on how to access and test its APIs using Postman
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+#### Firebase
 
-### `npm run build` fails to minify
+Our app will use a [Cloud Firestore database](https://firebase.google.com/docs/firestore). You can take a brief look through the documentation; the most important sections we'll certainly be using are:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* Data model
+* Add data
+* Delete data
+* Get data
+
+Additionally, ideas from these two sections are used in the webapp, but I've already taken care of those parts. You can look through them if you want some deeper understanding (also helpful for T4SG applications!).
+
+* Get real-time updates
+* Perform simple and compound queries
+
+## Development Tips and Helpful Commands
+
+Here are some helpful tips you should keep in mind when programming!
+
+* You can use VSCode LiveShare (recommended extension) to work together/pair-program on the same files.
+* Whenever you reach a good, non-buggy milestone in your work, make a commit and push your work! This is not only a good habit to keep track of your development timeline, but also so that if you mess up the code super badly you can `git reset` to a stable commit (just be careful when using `git reset` and ask me first)
+* `npm install` installs necessary and/or new packages (you should have already done this). `npm start` starts the webapp, you can kill it with `Ctrl + C`. Whenever you save your work, the webapp should automatically update (React is awesome like that), so you don't need to kill the webapp to see your changes. Personally I prefer turning off autosave in VS Code as it gives me greater control/understanding of what's happening in the `localhost` webapp.
+* Make sure you know how to use your developer tools to inspect the frontend HTML components. You can use them to get a visual understanding of how your components are arranged and important properties like margin, padding, height, etc.
+* Errors can show up in two places: your VSCode terminal and the browser console (accessed through devtools). Make sure check both places when you get a bug. Reading error messages thoroughly generally gives you a good idea of what went wrong, but you can always ask me for help!
+* When bugfixing, resist the urge to copy-paste solutions from Google or StackOverflow without taking the time to understand them. Doing that just opens you up to even worse bugs down the road. Having the patience to read and understand the documentation is also how you grow as a SWE! :)
