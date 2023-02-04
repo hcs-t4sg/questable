@@ -53,15 +53,20 @@ export default function Main({ classroom, player }) {
          const compSnap = await getDoc(compRef);
          const confRef = doc(db, `classrooms/${classroom.id}/repeatables/${repeatable.id}/confirmations/${player.id}`);
          const confSnap = await getDoc(confRef);
+
          if (compSnap.exists() || confSnap.exists()) {
             if (compSnap.data().completions + confSnap.data().confirmations < repeatable.maxCompletions) {
                filteredArray.push(repeatable);
             }
          }
+         else {
+            filteredArray.push(repeatable);
+         }
       })
       return filteredArray;
    }
 
+   // useEffect to fetch task information
    useEffect(() => {
       // fetch task information
       const q = query(collection(db, `classrooms/${classroom.id}/tasks`))
@@ -96,6 +101,10 @@ export default function Main({ classroom, player }) {
          taskFetch().catch(console.error)
       })
 
+   }, [classroom.id, player.id])
+
+   // useEffect to fetch repeatable information
+   useEffect(() => {
       const repeatableQuery = query(collection(db, `classrooms/${classroom.id}/repeatables`));
       onSnapshot(repeatableQuery, (snapshot) => {
          const repeatablesFetch = async () => {
@@ -109,8 +118,8 @@ export default function Main({ classroom, player }) {
          }
          repeatablesFetch().catch(console.error);
       })
+   }, [classroom.id, player.id]);
 
-   }, [classroom.id, player.id])
 
    const handleTaskComplete = (task) => {
       if (window.confirm("Are you sure you want to mark this task as complete?")) {
@@ -160,6 +169,7 @@ export default function Main({ classroom, player }) {
                return [];
          }
       } else if (isRepeatables == 1) {
+         console.log(repeatables)
          switch (repPage) {
             case 0:
                return repeatables;
@@ -290,11 +300,6 @@ export default function Main({ classroom, player }) {
                </TableBody>
             </Table>
          </TableContainer>
-
-         {/* {getQuests().map((task) => (
-            <QuestCard task={task} />
-         ))} */}
-
       </div>
    )
 
