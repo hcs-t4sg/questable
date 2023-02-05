@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import Layout from './Layout.js';
+import Layout from './Layout';
 import { Typography, Box } from '@mui/material';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import ClassStudent from '../routes/student/ClassStudent';
@@ -14,7 +14,7 @@ import { collection, onSnapshot, query, getDocs, getDoc } from "firebase/firesto
 
 
 // import x from '../../public/static/'
-import { refreshAllRepeatables } from "../utils/mutations.js";
+import { refreshAllRepeatables } from "../utils/mutations";
 
 export default function StudentView({ player, classroom, user }) {
 

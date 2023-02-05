@@ -1,33 +1,37 @@
-import MuiAppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import firebase from 'firebase/compat/app';
+import MuiAppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import firebase from "firebase/compat/app";
 import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
-import './App.css';
-import Classroom from "./routes/Classroom";
+import "./App.css";
+import ClassroomPage from "./routes/ClassroomPage";
 import Home from "./routes/Home";
 import Settings from "./routes/Settings";
-import { SignInScreen } from './utils/firebase';
+import { SignInScreen } from "./utils/firebase";
 import { syncUsers } from "./utils/mutations";
+import { auth } from "./utils/firebase";
+import { useState, useEffect } from "react";
+// make alias for greater readability
+import { User as FirebaseUser } from "firebase/auth";
 
 // MUI styling constants
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 1
+  zIndex: theme.zIndex.drawer + 1,
 }));
 
 const mdTheme = createTheme({
   palette: {
     primary: {
-      main: '#5299f0',
+      main: "#5299f0",
     },
     secondary: {
-      main: '#94a7ff',
+      main: "#94a7ff",
     },
   },
 });
@@ -35,31 +39,26 @@ const mdTheme = createTheme({
 // App.js is the homepage and handles top-level functions like user auth.
 
 export default function App() {
-
   // User authentication functionality.
-  const [isSignedIn, setIsSignedIn] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState(null);
+  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   // Listen to the Firebase Auth state and set the local state.
-  React.useEffect(() => {
-    const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
-      setIsSignedIn(!!user);
-      if (!!user) {
+  useEffect(() => {
+    const unregisterAuthObserver = auth.onAuthStateChanged((user) => {
+      if (user) {
         setCurrentUser(user);
-        syncUsers(user);
       }
     });
-    return () => unregisterAuthObserver();
-    // Make sure we un-register Firebase observers when the component unmounts.
+    return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
   }, []);
 
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="absolute">
           <Toolbar
             sx={{
-              pr: '24px', // keep right padding when drawer closed
+              pr: "24px", // keep right padding when drawer closed
             }}
           >
             <Typography
@@ -78,38 +77,40 @@ export default function App() {
               color="inherit"
               noWrap
               sx={{
-                marginRight: '20px',
-                display: isSignedIn ? 'inline' : 'none'
+                marginRight: "20px",
+                display: currentUser ? "inline" : "none",
               }}
             >
-              Signed in as {firebase.auth().currentUser?.displayName}
+              Signed in as {auth.currentUser?.displayName}
             </Typography>
             <Button
               variant="contained"
               size="small"
               sx={{
-                marginTop: '5px',
-                marginBottom: '5px',
-                marginRight: '20px',
+                marginTop: "5px",
+                marginBottom: "5px",
+                marginRight: "20px",
               }}
               component={Link}
               to={`/settings`}
             >
               Settings
             </Button>
-            <Button variant="contained" size="small"
+            <Button
+              variant="contained"
+              size="small"
               sx={{
-                marginTop: '5px',
-                marginBottom: '5px',
-                display: isSignedIn ? 'inline' : 'none'
+                marginTop: "5px",
+                marginBottom: "5px",
+                display: currentUser ? "inline" : "none",
               }}
-              onClick={() => firebase.auth().signOut()}
+              onClick={() => auth.signOut()}
             >
               Log out
             </Button>
           </Toolbar>
         </AppBar>
-        {isSignedIn ?
+        {currentUser ? (
           /* Navigation routes set by react router. This is placed in
           app.js rather than index.js so we can pass relevant top-level
           props to the elements */
@@ -117,7 +118,10 @@ export default function App() {
             <Route path="/" element={<Home user={currentUser} />} />
             <Route path="settings" element={<Settings />} />
             <Route path="class">
-              <Route path=":classID/*" element={<Classroom user={currentUser} />} />
+              <Route
+                path=":classID/*"
+                element={<ClassroomPage user={currentUser} />}
+              />
             </Route>
             {/* Catch-all route for any URLs that don't match an existing route */}
             <Route
@@ -129,7 +133,9 @@ export default function App() {
               }
             />
           </Routes>
-          : <SignInScreen></SignInScreen>}
+        ) : (
+          <SignInScreen></SignInScreen>
+        )}
       </Box>
     </ThemeProvider>
   );

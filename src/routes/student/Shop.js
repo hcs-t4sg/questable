@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
-import Layout from '../../components/Layout.js';
+import Layout from '../../components/Layout';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -10,57 +10,57 @@ import ShopItemCard from '../../components/ShopItemCard.js';
 import { getBodyItems, getHairItems, getShirtItems, getPantsItems, getShoesItems } from '../../utils/items'
 
 function TabPanel(props) {
-   const { children, value, index, ...other } = props;
- 
-   return (
-     <div
-       role="tabpanel"
-       hidden={value !== index}
-       id={`simple-tabpanel-${index}`}
-       aria-labelledby={`simple-tab-${index}`}
-       {...other}
-     >
-       {value === index && (
-         <Box sx={{ p: 3 }}>
-           <Typography>{children}</Typography>
-         </Box>
-       )}
-     </div>
-   );
- }
+  const { children, value, index, ...other } = props;
 
- TabPanel.propTypes = {
-   children: PropTypes.node,
-   index: PropTypes.number.isRequired,
-   value: PropTypes.number.isRequired,
- };
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 
- function a11yProps(index) {
-   return {
-     id: `simple-tab-${index}`,
-     'aria-controls': `simple-tabpanel-${index}`,
-   };
- }
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
- const bodies = getBodyItems()
- const hairs = getHairItems()
- const shirts = getShirtItems()
- const pants = getPantsItems()
- const shoes = getShoesItems()
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+const bodies = getBodyItems()
+const hairs = getHairItems()
+const shirts = getShirtItems()
+const pants = getPantsItems()
+const shoes = getShoesItems()
 //  const all = bodies.concat(hairs, shirts, pants, shoes)
 
 export default function Shop({ player, classroom }) {
-   const [value, setValue] = React.useState(0);
-   const handleChange = (event, newValue) => {
-      setValue(newValue);
-   };
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-   return (
+  return (
     <Layout>
-      <Grid sx={{display: 'flex', flexDirection: 'column'}} container spacing={3}>
+      <Grid sx={{ display: 'flex', flexDirection: 'column' }} container spacing={3}>
         <Grid item xs={12}>
-        <h3>Shop</h3>
-        <h5>Purchase avatars, accessories, and special rewards from the shop!</h5>
+          <h3>Shop</h3>
+          <h5>Purchase avatars, accessories, and special rewards from the shop!</h5>
         </Grid>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -75,10 +75,10 @@ export default function Shop({ player, classroom }) {
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             {Array.from(bodies).map((item, index) => (
               <Grid item xs={2} sm={3} md={3} key={index}>
-                <ShopItemCard 
-                  playerID={player.id} 
-                  classID={classroom.id} 
-                  itemPrice="Free" 
+                <ShopItemCard
+                  playerID={player.id}
+                  classID={classroom.id}
+                  itemPrice="Free"
                   item={item}
                 />
               </Grid>
@@ -89,11 +89,11 @@ export default function Shop({ player, classroom }) {
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             {Array.from(hairs).map((item, index) => (
               <Grid item xs={2} sm={3} md={3} key={index}>
-                <ShopItemCard 
-                  playerID={player.id} 
-                  classID={classroom.id} 
+                <ShopItemCard
+                  playerID={player.id}
+                  classID={classroom.id}
                   item={item}
-                  itemPrice="$100" 
+                  itemPrice="$100"
                 />
               </Grid>
             ))}
@@ -103,11 +103,11 @@ export default function Shop({ player, classroom }) {
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             {Array.from(shirts).map((item, index) => (
               <Grid item xs={2} sm={3} md={3} key={index}>
-                <ShopItemCard 
-                  playerID={player.id} 
-                  classID={classroom.id} 
+                <ShopItemCard
+                  playerID={player.id}
+                  classID={classroom.id}
                   item={item}
-                  itemPrice="$150" 
+                  itemPrice="$150"
                 />
               </Grid>
             ))}
@@ -117,11 +117,11 @@ export default function Shop({ player, classroom }) {
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             {Array.from(pants).map((item, index) => (
               <Grid item xs={2} sm={3} md={3} key={index}>
-                <ShopItemCard 
-                  playerID={player.id} 
-                  classID={classroom.id} 
+                <ShopItemCard
+                  playerID={player.id}
+                  classID={classroom.id}
                   item={item}
-                  itemPrice="$150" 
+                  itemPrice="$150"
                 />
               </Grid>
             ))}
@@ -131,12 +131,12 @@ export default function Shop({ player, classroom }) {
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             {Array.from(shoes).map((item, index) => (
               <Grid item xs={2} sm={3} md={3} key={index}>
-                <ShopItemCard 
-                  playerID={player.id} 
-                  classID={classroom.id} 
-                  image={item.renderStatic()} 
+                <ShopItemCard
+                  playerID={player.id}
+                  classID={classroom.id}
+                  image={item.renderStatic()}
                   item={item}
-                  itemPrice="$100" 
+                  itemPrice="$100"
                 />
               </Grid>
             ))}
@@ -144,6 +144,6 @@ export default function Shop({ player, classroom }) {
         </TabPanel>
       </Grid>
     </Layout>
-   )
-   
+  )
+
 }

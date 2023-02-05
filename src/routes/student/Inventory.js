@@ -1,7 +1,7 @@
-import React, { useState, useEffect} from "react"
+import React, { useState, useEffect } from "react"
 import { doc, collection, collectionGroup, onSnapshot, query, whereEqualTo, where } from "firebase/firestore";
 import Grid from '@mui/material/Grid';
-import Layout from '../../components/Layout.js';
+import Layout from '../../components/Layout';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -45,7 +45,7 @@ function a11yProps(index) {
   };
 }
 
-export default function Inventory({player, classroom}) {
+export default function Inventory({ player, classroom }) {
   const [value, setValue] = React.useState(0);
   const [inventoryItems, setInventoryItems] = React.useState([]);
 
@@ -54,15 +54,15 @@ export default function Inventory({player, classroom}) {
     const q = query(collection(db, `classrooms/${classroom.id}/players/${player.id}/inventory`));
 
     onSnapshot(q, (snapshot) => {
-       const inventoryList = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-       setInventoryItems(inventoryList);
+      const inventoryList = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      setInventoryItems(inventoryList);
     })
- }, [player, classroom])
+  }, [player, classroom])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  
+
   let inventoryObjects = [];
 
   console.log(inventoryItems);
@@ -82,72 +82,72 @@ export default function Inventory({player, classroom}) {
   console.log(inventoryObjects);
   console.log(getBodyItems());
 
-   return (
-   <Layout>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider'}}>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                <Tab label="All" {...a11yProps(0)} />
-                <Tab label="Bodies" {...a11yProps(1)} />
-                <Tab label="Hair" {...a11yProps(2)} />
-                <Tab label="Shirts" {...a11yProps(3)} />
-                <Tab label="Pants" {...a11yProps(4)} />
-                <Tab label="Shoes" {...a11yProps(5)} /> 
-            </Tabs>
-        </Box>
+  return (
+    <Layout>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab label="All" {...a11yProps(0)} />
+          <Tab label="Bodies" {...a11yProps(1)} />
+          <Tab label="Hair" {...a11yProps(2)} />
+          <Tab label="Shirts" {...a11yProps(3)} />
+          <Tab label="Pants" {...a11yProps(4)} />
+          <Tab label="Shoes" {...a11yProps(5)} />
+        </Tabs>
+      </Box>
 
-        <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={0}>
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 
-            {inventoryObjects.map((item, index) => (
-               <Grid item xs={12} sm={6} md={4} key={index}>
-                  <InventoryItemCard item={item} player={player} classroom={classroom}/>
-               </Grid>
-            ))}
-        </Grid>
-        </TabPanel>
-
-        <TabPanel value={value} index={1}>
-          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-              {getBodyItems().map((item, index) => (
-                <Grid item xs={2} sm={3} md={3} key={index}>
-                  <InventoryItemCard item={item} player={player} classroom={classroom}/>
-                </Grid>
-              ))}
-          </Grid>
-        </TabPanel>
-
-        <TabPanel value={value} index={2}>
-            {inventoryObjects.filter(item => item.type === "hair").map((item, index) => 
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <InventoryItemCard item={item} player={player} classroom={classroom}/>
-              </Grid>
-            )}
-        </TabPanel>
-
-        <TabPanel value={value} index={3}>
-            {inventoryObjects.filter(item => item.type === "shirt").map((item, index) => 
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <InventoryItemCard item={item} player={player} classroom={classroom}/>
-              </Grid>
-            )}
-        </TabPanel>
-
-        <TabPanel value={value} index={4}>
-            {inventoryObjects.filter(item => item.type === "pants").map((item, index) => 
+          {inventoryObjects.map((item, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <InventoryItemCard item={item} player={player} classroom={classroom}/>
+              <InventoryItemCard item={item} player={player} classroom={classroom} />
             </Grid>
-            )}
-        </TabPanel>
+          ))}
+        </Grid>
+      </TabPanel>
 
-        <TabPanel value={value} index={5}>
-          {inventoryObjects.filter(item => item.type === "shoes").map((item, index) => 
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <InventoryItemCard item={item} player={player} classroom={classroom}/>
-              </Grid>
-            )}
-        </TabPanel>
-        
+      <TabPanel value={value} index={1}>
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          {getBodyItems().map((item, index) => (
+            <Grid item xs={2} sm={3} md={3} key={index}>
+              <InventoryItemCard item={item} player={player} classroom={classroom} />
+            </Grid>
+          ))}
+        </Grid>
+      </TabPanel>
+
+      <TabPanel value={value} index={2}>
+        {inventoryObjects.filter(item => item.type === "hair").map((item, index) =>
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <InventoryItemCard item={item} player={player} classroom={classroom} />
+          </Grid>
+        )}
+      </TabPanel>
+
+      <TabPanel value={value} index={3}>
+        {inventoryObjects.filter(item => item.type === "shirt").map((item, index) =>
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <InventoryItemCard item={item} player={player} classroom={classroom} />
+          </Grid>
+        )}
+      </TabPanel>
+
+      <TabPanel value={value} index={4}>
+        {inventoryObjects.filter(item => item.type === "pants").map((item, index) =>
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <InventoryItemCard item={item} player={player} classroom={classroom} />
+          </Grid>
+        )}
+      </TabPanel>
+
+      <TabPanel value={value} index={5}>
+        {inventoryObjects.filter(item => item.type === "shoes").map((item, index) =>
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <InventoryItemCard item={item} player={player} classroom={classroom} />
+          </Grid>
+        )}
+      </TabPanel>
+
     </Layout>
   )
 }
