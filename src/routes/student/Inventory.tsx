@@ -1,31 +1,16 @@
-import React, { useState, useEffect } from "react";
-import {
-  doc,
-  collection,
-  collectionGroup,
-  onSnapshot,
-  query,
-} from "firebase/firestore";
 import Grid from "@mui/material/Grid";
-import Layout from "../../components/Layout";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import React, { useEffect } from "react";
+import Layout from "../../components/Layout";
 import { db } from "../../utils/firebase";
 // import ReactDOM from "react-dom"
 import { Box } from "@mui/system";
-import InventoryItemCard from "../../components/InventoryItemCard.js";
-import {
-  getBodyItems,
-  getShirtItems,
-  Body,
-  Hair,
-  Shirt,
-  Pants,
-  Shoes,
-} from "../../utils/items";
+import InventoryItemCard from "../../components/InventoryItemCard";
 import { Classroom, DatabaseInventoryItem, Item, Player } from "../../types";
+import { getBodyItems, Hair, Pants, Shirt, Shoes } from "../../utils/items";
 
 interface TabPanelProps {
   children?: React.ReactNode;

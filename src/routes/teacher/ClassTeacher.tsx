@@ -90,7 +90,7 @@ export default function ClassTeacher({
       // Call the async `mapTeacher` function
       mapTeacher().catch(console.error);
     });
-  }, []);
+  });
 
   return (
     <Grid container spacing={3}>

@@ -10,21 +10,15 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { formatDistance } from "date-fns";
-import {
-  collection,
-  getDocs,
-  onSnapshot,
-  query,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, getDocs, onSnapshot, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   Classroom,
-  TaskCompletionTime,
   Player,
-  TaskWithCompletionTimes,
-  RepeatableWithPlayerCompletions,
   RepeatablePlayerCompletions,
+  RepeatableWithPlayerCompletions,
+  TaskCompletionTime,
+  TaskWithCompletionTimes,
 } from "../types";
 import { db } from "../utils/firebase";
 import {
@@ -52,7 +46,7 @@ export default function ConfirmTasksTable({
   const [completedRepeatables, setCompletedRepeatables] = useState<
     RepeatableWithPlayerCompletions[]
   >([]);
-  const [completionTimes, setCompletionTimes] = useState([]);
+  // const [completionTimes, setCompletionTimes] = useState([]);
   const [playerData, setPlayerData] = useState<Player[]>([]);
 
   const [page, setPage] = useState(0);
@@ -202,7 +196,7 @@ export default function ConfirmTasksTable({
         <Tab label="Repeatable" />
       </Tabs>
 
-      {page == 0 ? (
+      {page === 0 ? (
         // One Time Tasks
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">

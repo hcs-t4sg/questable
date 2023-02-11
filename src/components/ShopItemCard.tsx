@@ -1,16 +1,13 @@
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
-import { Link } from "react-router-dom";
-import Box from "@mui/material/Box";
-import { purchaseItem } from "../utils/mutations";
-import { useState } from "react";
 import { capitalize } from "lodash";
+import { useState } from "react";
 import { Classroom, Item, Player } from "../types";
+import { purchaseItem } from "../utils/mutations";
 
 export default function ShopItemCard({
   item,

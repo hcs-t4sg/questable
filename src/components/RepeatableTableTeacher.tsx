@@ -9,12 +9,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { collection, onSnapshot } from "firebase/firestore";
-import { String } from "lodash";
 import * as React from "react";
+import { useState } from "react";
 import { Classroom, Repeatable } from "../types";
 import { db } from "../utils/firebase";
 import { deleteRepeatable } from "../utils/mutations";
-import { useState } from "react";
 
 function truncate(description: string) {
   if (description.length > 50) {
@@ -48,7 +47,7 @@ export default function RepeatableTableTeacher({
       });
     };
     mapRepeatables();
-  }, []);
+  });
 
   const handleDelete = (repeatable: Repeatable) => {
     // message box to confirm deletion

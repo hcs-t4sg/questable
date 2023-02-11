@@ -1,21 +1,16 @@
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import * as React from "react";
-import TextField from "@mui/material/TextField";
-import { useState } from "react";
-import { updatePlayer } from "../utils/mutations";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import { Classroom, Player } from "../types";
+import TextField from "@mui/material/TextField";
 import { User } from "firebase/auth";
+import { useState } from "react";
+import { Classroom, Player } from "../types";
+import { updatePlayer } from "../utils/mutations";
 
 export default function PlayerModal({
   player,

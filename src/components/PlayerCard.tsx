@@ -1,17 +1,14 @@
-import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import * as React from "react";
-import { useState } from "react";
 import Typography from "@mui/material/Typography";
-import PlayerModal from "./PlayerModal.js";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "../utils/firebase";
-import Box from "@mui/material/Box";
-import { Classroom, Player } from "../types.js";
 import { User } from "firebase/auth";
-import { useEffect } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { Classroom, Player } from "../types";
+import { db } from "../utils/firebase";
+import PlayerModal from "./PlayerModal";
 
 export default function PlayerCard({
   player,
@@ -24,8 +21,8 @@ export default function PlayerCard({
 }) {
   const [name, setName] = useState(player.name);
   const [avatar, setAvatar] = useState(player.avatar);
-  const [money, setMoney] = useState(player.money);
-  const [role, setRole] = useState(player.role);
+  // const [money, setMoney] = useState(player.money);
+  // const [role, setRole] = useState(player.role);
 
   useEffect(() => {
     const playerRef = doc(
@@ -58,7 +55,7 @@ export default function PlayerCard({
           Email: {user.email}
         </Typography>
         <Typography variant="h6" component="div">
-          Money: {money}
+          Money: {player.money}
         </Typography>
       </CardContent>
       <CardActions>

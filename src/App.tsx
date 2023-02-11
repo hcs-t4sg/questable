@@ -5,17 +5,13 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import firebase from "firebase/compat/app";
-import React from "react";
+import { useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
 import ClassroomPage from "./routes/ClassroomPage";
 import Home from "./routes/Home";
 import Settings from "./routes/Settings";
-import { SignInScreen } from "./utils/firebase";
-import { syncUsers } from "./utils/mutations";
-import { auth } from "./utils/firebase";
-import { useState, useEffect } from "react";
+import { auth, SignInScreen } from "./utils/firebase";
 // make alias for greater readability
 import { User } from "firebase/auth";
 

@@ -1,19 +1,15 @@
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { doc, collection, onSnapshot, query, where } from "firebase/firestore";
-import React, { Component } from "react";
-import ClassroomCard from "../components/ClassroomCard";
-import { db } from "../utils/firebase";
-import { useEffect, useState } from "react";
-import Layout from "../components/Layout";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import { User } from "firebase/auth";
+import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import ClassroomCard from "../components/ClassroomCard";
 import CreateClassroomModal from "../components/CreateClassroomModal";
 import JoinClassroomModal from "../components/JoinClassroomModal";
+import Layout from "../components/Layout";
 import { Classroom } from "../types";
-import { User } from "firebase/auth";
+import { db } from "../utils/firebase";
 
 export default function Classrooms({ user }: { user: User }) {
   // Listen to user's classrooms and maintain a corresponding state variable

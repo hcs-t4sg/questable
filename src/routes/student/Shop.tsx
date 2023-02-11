@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
-import ShopItemCard from "../../components/ShopItemCard.js";
+import ShopItemCard from "../../components/ShopItemCard";
 import {
   getBodyItems,
   getHairItems,

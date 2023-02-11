@@ -78,7 +78,7 @@ export default function ClassStudent({
       // Call the async `mapTeacher` function
       mapTeacher().catch(console.error);
     });
-  }, []);
+  });
 
   console.log(students);
 

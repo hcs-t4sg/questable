@@ -1,26 +1,23 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import { LinearProgress } from "@mui/material";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Table from "@mui/material/Table";
-import { collection, doc, onSnapshot } from "firebase/firestore";
-import * as React from "react";
-import { db } from "../utils/firebase";
-import TaskModalTeacher from "./TaskModalTeacher.js";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import { query, where } from "firebase/firestore";
-import { useEffect } from "react";
-import { LinearProgress } from "@mui/material";
 import { format, fromUnixTime } from "date-fns";
-import { deleteTask } from "../utils/mutations";
-import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
-import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
+import { collection, onSnapshot } from "firebase/firestore";
+import * as React from "react";
 import { Classroom, Task } from "../types";
+import { db } from "../utils/firebase";
+import { deleteTask } from "../utils/mutations";
+import TaskModalTeacher from "./TaskModalTeacher";
 
 function truncate(description: string) {
   if (description.length > 50) {
@@ -80,7 +77,7 @@ export default function TasksTableTeacher({
     };
     mapTasks();
     console.log(tasks);
-  }, []);
+  });
 
   const handleDelete = (task: Task) => {
     // message box to confirm deletion

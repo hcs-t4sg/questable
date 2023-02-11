@@ -1,27 +1,26 @@
-import * as React from "react";
-import { Typography, Box, Button, IconButton, Icon } from "@mui/material";
-import { completeTask, completeRepeatable } from "../../utils/mutations";
-import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, getDoc, doc } from "firebase/firestore";
-import { db } from "../../utils/firebase";
-import TasksTableStudent from "../../components/TasksTableStudent";
-import { set } from "date-fns";
-import { Tabs, Tab } from "@mui/material";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import DoneIcon from "@mui/icons-material/Done";
 import {
+  IconButton,
+  Tab,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
-  TableRow,
-  TableBody,
   TableHead,
+  TableRow,
+  Tabs,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import DoneIcon from "@mui/icons-material/Done";
 import { format, fromUnixTime } from "date-fns";
+import { collection, doc, getDoc, onSnapshot, query } from "firebase/firestore";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import TaskModalStudent from "../../components/TaskModalStudent";
 import { Classroom, Player, Repeatable, TaskWithStatus } from "../../types";
+import { db } from "../../utils/firebase";
+import { completeRepeatable, completeTask } from "../../utils/mutations";
 
 // TODO Rewrite this component, it's very inefficient and unmaintainable
 
@@ -60,37 +59,6 @@ export default function Main({ classroom, player }: ComponentProps) {
   // Stores the currently active repeatables page
   // (0) All Repeatables
   const [repPage, setRepPage] = useState<0>(0);
-
-  // function to return array that contains only tasks where the player's completions is less than the max completions
-  const filterMaxedOutRepeatables = (repeatables: Repeatable[]) => {
-    let filteredArray: Repeatable[] = [];
-
-    repeatables.forEach(async (repeatable: Repeatable) => {
-      const compRef = doc(
-        db,
-        `classrooms/${classroom.id}/repeatables/${repeatable.id}/playerCompletions/${player.id}`
-      );
-      const compSnap = await getDoc(compRef);
-      const confRef = doc(
-        db,
-        `classrooms/${classroom.id}/repeatables/${repeatable.id}/playerConfirmations/${player.id}`
-      );
-      const confSnap = await getDoc(confRef);
-
-      // ! I changed the || to an && below during typescript migration. This might affect functionality
-      if (compSnap.exists() && confSnap.exists()) {
-        if (
-          compSnap.data().completions + confSnap.data().confirmations <
-          repeatable.maxCompletions
-        ) {
-          filteredArray.push(repeatable);
-        }
-      } else {
-        filteredArray.push(repeatable);
-      }
-    });
-    return filteredArray;
-  };
 
   // useEffect to fetch task information
   useEffect(() => {
@@ -147,6 +115,37 @@ export default function Main({ classroom, player }: ComponentProps) {
 
   // useEffect to fetch repeatable information
   useEffect(() => {
+    // function to return array that contains only tasks where the player's completions is less than the max completions
+    const filterMaxedOutRepeatables = (repeatables: Repeatable[]) => {
+      let filteredArray: Repeatable[] = [];
+
+      repeatables.forEach(async (repeatable: Repeatable) => {
+        const compRef = doc(
+          db,
+          `classrooms/${classroom.id}/repeatables/${repeatable.id}/playerCompletions/${player.id}`
+        );
+        const compSnap = await getDoc(compRef);
+        const confRef = doc(
+          db,
+          `classrooms/${classroom.id}/repeatables/${repeatable.id}/playerConfirmations/${player.id}`
+        );
+        const confSnap = await getDoc(confRef);
+
+        // ! I changed the || to an && below during typescript migration. This might affect functionality
+        if (compSnap.exists() && confSnap.exists()) {
+          if (
+            compSnap.data().completions + confSnap.data().confirmations <
+            repeatable.maxCompletions
+          ) {
+            filteredArray.push(repeatable);
+          }
+        } else {
+          filteredArray.push(repeatable);
+        }
+      });
+      return filteredArray;
+    };
+
     const repeatableQuery = query(
       collection(db, `classrooms/${classroom.id}/repeatables`)
     );
@@ -363,11 +362,11 @@ export default function Main({ classroom, player }: ComponentProps) {
                       sx={{ paddingTop: 0, paddingBottom: 0, width: 0.01 }}
                       align="left"
                     >
-                      <TaskModalStudent
+                      {/* <TaskModalStudent
                         task={repeatable}
                         classroom={classroom}
                         player={player}
-                      />
+                      /> */}
                     </TableCell>
                     <TableCell component="th" scope="row">
                       {repeatable.name}

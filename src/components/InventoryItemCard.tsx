@@ -1,14 +1,11 @@
-import * as React from "react";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
-import { CardMedia } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Avatar from "./Avatar";
-import { updateAvatar } from "../utils/mutations";
 import { Classroom, Item, Player } from "../types";
+import { updateAvatar } from "../utils/mutations";
 
 // The display for an inventory card
 export default function InventoryItemCard({
