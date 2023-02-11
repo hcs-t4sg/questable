@@ -11,9 +11,9 @@ import TableRow from "@mui/material/TableRow";
 import { collection, onSnapshot } from "firebase/firestore";
 import * as React from "react";
 import { useState } from "react";
-import { Classroom, Repeatable } from "../types";
-import { db } from "../utils/firebase";
-import { deleteRepeatable } from "../utils/mutations";
+import { Classroom, Repeatable } from "../../types";
+import { db } from "../../utils/firebase";
+import { deleteRepeatable } from "../../utils/mutations";
 
 function truncate(description: string) {
   if (description.length > 50) {

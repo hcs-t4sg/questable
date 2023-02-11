@@ -1,8 +1,8 @@
 import { getAuth, User } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useParams } from "react-router-dom";
-import StudentView from "../components/StudentView";
-import TeacherView from "../components/TeacherView";
+import StudentView from "../components/student/StudentView";
+import TeacherView from "../components/teacher/TeacherView";
 import { db } from "../utils/firebase";
 import { getPlayerData, syncUsers } from "../utils/mutations";
 import { Player, Classroom } from "../types";

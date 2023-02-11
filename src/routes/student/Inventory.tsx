@@ -4,11 +4,11 @@ import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import React, { useEffect } from "react";
-import Layout from "../../components/Layout";
+import Layout from "../../components/global/Layout";
 import { db } from "../../utils/firebase";
 // import ReactDOM from "react-dom"
 import { Box } from "@mui/system";
-import InventoryItemCard from "../../components/InventoryItemCard";
+import InventoryItemCard from "../../components/student/InventoryItemCard";
 import { Classroom, DatabaseInventoryItem, Item, Player } from "../../types";
 import { getBodyItems, Hair, Pants, Shirt, Shoes } from "../../utils/items";
 

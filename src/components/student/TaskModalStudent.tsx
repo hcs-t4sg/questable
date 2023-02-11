@@ -2,9 +2,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import { useState } from "react";
-import sprite1 from "../assets/tempAssets/sprite1.svg";
-import { Classroom, Player, TaskWithStatus } from "../types";
-import { completeTask } from "../utils/mutations";
+import sprite1 from "../../assets/tempAssets/sprite1.svg";
+import { Classroom, Player, TaskWithStatus } from "../../types";
+import { completeTask } from "../../utils/mutations";
 
 export default function TaskModalStudent({
   classroom,

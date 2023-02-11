@@ -5,18 +5,18 @@ import LinearProgress, {
 import { styled } from "@mui/material/styles";
 import { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import ClassStudent from "../routes/student/ClassStudent";
-import Inventory from "../routes/student/Inventory";
-import Main from "../routes/student/Main";
-import Shop from "../routes/student/Shop";
-import { currentAvatar } from "../utils/items";
-import Avatar from "./Avatar";
-import Layout from "./Layout";
+import ClassStudent from "../../routes/student/ClassStudent";
+import Inventory from "../../routes/student/Inventory";
+import Main from "../../routes/student/Main";
+import Shop from "../../routes/student/Shop";
+import { currentAvatar } from "../../utils/items";
+import Avatar from "../global/Avatar";
+import Layout from "../global/Layout";
 
 // import x from '../../public/static/'
 import { User } from "firebase/auth";
-import { Classroom, Player } from "../types";
-import { refreshAllRepeatables } from "../utils/mutations";
+import { Classroom, Player } from "../../types";
+import { refreshAllRepeatables } from "../../utils/mutations";
 
 export default function StudentView({
   player,

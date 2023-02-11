@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Layout from "../components/Layout";
+import Layout from "../components/global/Layout";
 
 export default function Settings() {
   return (

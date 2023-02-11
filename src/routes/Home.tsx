@@ -4,10 +4,10 @@ import Typography from "@mui/material/Typography";
 import { User } from "firebase/auth";
 import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import ClassroomCard from "../components/ClassroomCard";
-import CreateClassroomModal from "../components/CreateClassroomModal";
-import JoinClassroomModal from "../components/JoinClassroomModal";
-import Layout from "../components/Layout";
+import ClassroomCard from "../components/global/ClassroomCard";
+import CreateClassroomModal from "../components/global/CreateClassroomModal";
+import JoinClassroomModal from "../components/global/JoinClassroomModal";
+import Layout from "../components/global/Layout";
 import { Classroom } from "../types";
 import { db } from "../utils/firebase";
 

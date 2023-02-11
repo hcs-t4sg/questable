@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import React from "react";
 import ClassroomSidebar from "./ClassroomSidebar";
 import Toolbar from "@mui/material/Toolbar";
-import { UserRole } from "../types";
+import { UserRole } from "../../types";
 
 interface ComponentProps {
   classroom?: boolean;

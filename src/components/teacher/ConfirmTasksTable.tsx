@@ -19,14 +19,14 @@ import {
   RepeatableWithPlayerCompletions,
   TaskCompletionTime,
   TaskWithCompletionTimes,
-} from "../types";
-import { db } from "../utils/firebase";
+} from "../../types";
+import { db } from "../../utils/firebase";
 import {
   confirmRepeatable,
   confirmTask,
   denyRepeatable,
   denyTask,
-} from "../utils/mutations";
+} from "../../utils/mutations";
 
 function truncate(description: string) {
   if (description.length > 40) {

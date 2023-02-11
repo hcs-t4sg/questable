@@ -7,8 +7,8 @@ import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
-import "../App.css";
-import { UserRole } from "../types";
+import "../../App.css";
+import { UserRole } from "../../types";
 import { mainListItemsStudent, mainListItemsTeacher } from "./listItems";
 
 const drawerWidth = 240;

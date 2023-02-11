@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import { Outfit } from "../types";
+import { Outfit } from "../../types";
 
 /* Renders the player's avatar sprite. 
 

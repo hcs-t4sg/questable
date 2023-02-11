@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { User } from "firebase/auth";
-import Avatar from "../../components/Avatar";
+import Avatar from "../../components/global/Avatar";
 import { Classroom, Player, PlayerWithEmail } from "../../types";
 import { currentAvatar } from "../../utils/items";
 

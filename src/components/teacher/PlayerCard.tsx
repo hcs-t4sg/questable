@@ -6,8 +6,8 @@ import Typography from "@mui/material/Typography";
 import { User } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Classroom, Player } from "../types";
-import { db } from "../utils/firebase";
+import { Classroom, Player } from "../../types";
+import { db } from "../../utils/firebase";
 import PlayerModal from "./PlayerModal";
 
 export default function PlayerCard({

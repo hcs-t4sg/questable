@@ -1,12 +1,12 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import ClassSettings from "../routes/teacher/ClassSettings";
-import ClassTeacher from "../routes/teacher/ClassTeacher";
-import Requests from "../routes/teacher/Requests";
-import Tasks from "../routes/teacher/Tasks";
-import Layout from "./Layout";
+import ClassSettings from "../../routes/teacher/ClassSettings";
+import ClassTeacher from "../../routes/teacher/ClassTeacher";
+import Requests from "../../routes/teacher/Requests";
+import Tasks from "../../routes/teacher/Tasks";
+import Layout from "../global/Layout";
 
 import { User } from "firebase/auth";
-import { Classroom, Player } from "../types";
+import { Classroom, Player } from "../../types";
 
 export default function TeacherView({
   player,

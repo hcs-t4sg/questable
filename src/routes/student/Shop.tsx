@@ -1,12 +1,12 @@
 import * as React from "react";
 import Grid from "@mui/material/Grid";
-import Layout from "../../components/Layout";
+import Layout from "../../components/global/Layout";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
-import ShopItemCard from "../../components/ShopItemCard";
+import ShopItemCard from "../../components/student/ShopItemCard";
 import {
   getBodyItems,
   getHairItems,

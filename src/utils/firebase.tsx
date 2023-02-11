@@ -3,8 +3,8 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { getFirestore } from "firebase/firestore";
-import StyledFirebaseAuth from "../components/StyledFirebaseAuth";
-import Layout from "../components/Layout";
+import StyledFirebaseAuth from "../components/global/StyledFirebaseAuth";
+import Layout from "../components/global/Layout";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 

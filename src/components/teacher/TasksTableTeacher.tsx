@@ -14,9 +14,9 @@ import Typography from "@mui/material/Typography";
 import { format, fromUnixTime } from "date-fns";
 import { collection, onSnapshot } from "firebase/firestore";
 import * as React from "react";
-import { Classroom, Task } from "../types";
-import { db } from "../utils/firebase";
-import { deleteTask } from "../utils/mutations";
+import { Classroom, Task } from "../../types";
+import { db } from "../../utils/firebase";
+import { deleteTask } from "../../utils/mutations";
 import TaskModalTeacher from "./TaskModalTeacher";
 
 function truncate(description: string) {

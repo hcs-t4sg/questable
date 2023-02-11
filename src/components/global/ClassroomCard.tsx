@@ -6,8 +6,8 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { addPin, deletePin } from "../utils/mutations";
-import { Classroom } from "../types";
+import { addPin, deletePin } from "../../utils/mutations";
+import { Classroom } from "../../types";
 import { User } from "firebase/auth";
 
 interface ComponentProps {

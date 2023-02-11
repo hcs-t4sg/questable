@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import PlayerCard from "../../components/PlayerCard";
+import PlayerCard from "../../components/teacher/PlayerCard";
 
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../utils/firebase";

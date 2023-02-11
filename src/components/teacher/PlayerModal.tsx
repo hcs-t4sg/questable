@@ -9,8 +9,8 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import { User } from "firebase/auth";
 import { useState } from "react";
-import { Classroom, Player } from "../types";
-import { updatePlayer } from "../utils/mutations";
+import { Classroom, Player } from "../../types";
+import { updatePlayer } from "../../utils/mutations";
 
 export default function PlayerModal({
   player,

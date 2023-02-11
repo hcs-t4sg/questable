@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import * as React from "react";
-import ConfirmTasksTable from "../../components/ConfirmTasksTable";
+import ConfirmTasksTable from "../../components/teacher/ConfirmTasksTable";
 
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../utils/firebase";

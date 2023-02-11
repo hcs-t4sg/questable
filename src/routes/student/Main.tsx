@@ -17,7 +17,7 @@ import { format, fromUnixTime } from "date-fns";
 import { collection, doc, getDoc, onSnapshot, query } from "firebase/firestore";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import TaskModalStudent from "../../components/TaskModalStudent";
+import TaskModalStudent from "../../components/student/TaskModalStudent";
 import { Classroom, Player, Repeatable, TaskWithStatus } from "../../types";
 import { db } from "../../utils/firebase";
 import { completeRepeatable, completeTask } from "../../utils/mutations";

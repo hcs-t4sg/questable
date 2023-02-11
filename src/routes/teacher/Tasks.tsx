@@ -4,15 +4,15 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import * as React from "react";
-import CreateTaskModal from "../../components/CreateTaskModal";
-import TasksTableTeacher from "../../components/TasksTableTeacher";
+import CreateTaskModal from "../../components/teacher/CreateTaskModal";
+import TasksTableTeacher from "../../components/teacher/TasksTableTeacher";
 
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../utils/firebase";
 
 import { Tab, Tabs } from "@mui/material";
 import { User } from "firebase/auth";
-import RepeatableTableTeacher from "../../components/RepeatableTableTeacher";
+import RepeatableTableTeacher from "../../components/teacher/RepeatableTableTeacher";
 import { Classroom, Player } from "../../types";
 
 export default function Tasks({

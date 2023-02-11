@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Chip from "@mui/material/Chip";
 import React from "react";
 import TaskModalStudent from "./TaskModalStudent";
-import { Classroom, Player, TaskWithStatus } from "../types";
+import { Classroom, Player, TaskWithStatus } from "../../types";
 
 export default function TasksTableStudent({
   tasks,

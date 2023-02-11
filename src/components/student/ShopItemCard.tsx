@@ -6,8 +6,8 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { capitalize } from "lodash";
 import { useState } from "react";
-import { Classroom, Item, Player } from "../types";
-import { purchaseItem } from "../utils/mutations";
+import { Classroom, Item, Player } from "../../types";
+import { purchaseItem } from "../../utils/mutations";
 
 export default function ShopItemCard({
   item,

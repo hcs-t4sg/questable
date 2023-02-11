@@ -7,7 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import { useState } from "react";
-import { Classroom, Player } from "../types";
+import { Classroom, Player } from "../../types";
 
 export default function ClassTeacherModal({
   classroom,
