@@ -25,7 +25,7 @@ import wavy from "../assets/spriteSheets/hair/wavy.png";
 import shirt from "../assets/spriteSheets/clothes/basic.png";
 import pants from "../assets/spriteSheets/clothes/pants.png";
 import shoes from "../assets/spriteSheets/clothes/shoes.png";
-import { Player } from "../types";
+import { Item, Player } from "../types";
 
 // Guide to classes in Javascript: https://dmitripavlutin.com/javascript-classes-complete-guide/#32-private-instance-fields
 
@@ -132,12 +132,12 @@ Class description for Hair:
 Same as above, but there is an additional 'subtype' field. This corresponds to the hairstyle. Again, items with different 'subtype' fields can have the same 'id'
 */
 
-export class Body {
+export class Body implements Item {
   id;
   name;
   description;
   #spriteStart;
-  type = "body";
+  type = "body" as const;
   price = 0;
 
   constructor(id: number) {
@@ -156,12 +156,12 @@ export class Body {
   }
 }
 
-export class Hair {
+export class Hair implements Item {
   id;
   name;
   description;
   #spriteStart;
-  type = "hair";
+  type = "hair" as const;
   subtype;
   price = 100;
 
@@ -187,12 +187,12 @@ export class Hair {
   }
 }
 
-export class Shirt {
+export class Shirt implements Item {
   id;
   name;
   description;
   #spriteStart;
-  type = "shirt";
+  type = "shirt" as const;
   price = 150;
 
   constructor(id: number) {
@@ -211,12 +211,12 @@ export class Shirt {
   }
 }
 
-export class Pants {
+export class Pants implements Item {
   id;
   name;
   description;
   #spriteStart;
-  type = "pants";
+  type = "pants" as const;
   price = 150;
 
   constructor(id: number) {
@@ -236,12 +236,12 @@ export class Pants {
   }
 }
 
-export class Shoes {
+export class Shoes implements Item {
   id;
   name;
   description;
   #spriteStart;
-  type = "shoes";
+  type = "shoes" as const;
   price = 100;
 
   constructor(id: number) {

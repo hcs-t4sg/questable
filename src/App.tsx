@@ -17,7 +17,7 @@ import { syncUsers } from "./utils/mutations";
 import { auth } from "./utils/firebase";
 import { useState, useEffect } from "react";
 // make alias for greater readability
-import { User as FirebaseUser } from "firebase/auth";
+import { User } from "firebase/auth";
 
 // MUI styling constants
 
@@ -40,7 +40,7 @@ const mdTheme = createTheme({
 
 export default function App() {
   // User authentication functionality.
-  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   // Listen to the Firebase Auth state and set the local state.
   useEffect(() => {
     const unregisterAuthObserver = auth.onAuthStateChanged((user) => {

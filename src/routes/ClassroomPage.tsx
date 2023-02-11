@@ -1,19 +1,14 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, User } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import StudentView from "../components/StudentView";
 import TeacherView from "../components/TeacherView";
 import { db } from "../utils/firebase";
 import { getPlayerData, syncUsers } from "../utils/mutations";
-import { User as FirebaseUser } from "firebase/auth";
 import { Player, Classroom } from "../types";
 import { useState, useEffect } from "react";
 
-interface ComponentProps {
-  user: FirebaseUser;
-}
-
-export default function ClassroomPage({ user }: ComponentProps) {
+export default function ClassroomPage({ user }: { user: User }) {
   // Use react router to fetch class ID from URL params
   let params = useParams();
   const classID = params.classID;

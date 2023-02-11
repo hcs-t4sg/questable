@@ -22,7 +22,7 @@ export default function Layout({
         width: "100%",
       }}
     >
-      {classroom && <ClassroomSidebar role={role} />}
+      {classroom && role && <ClassroomSidebar role={role} />}
       <Box
         component="main"
         sx={{

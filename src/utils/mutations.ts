@@ -1,25 +1,25 @@
+import { getUnixTime } from "date-fns";
+import { User } from "firebase/auth";
 import {
   addDoc,
   arrayRemove,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
+  increment,
   query,
+  serverTimestamp,
   setDoc,
   updateDoc,
   where,
-  arrayUnion,
-  serverTimestamp,
-  increment,
 } from "firebase/firestore";
+import { Classroom, Item, Player } from "../types";
 import { db } from "./firebase";
-import { getUnixTime } from "date-fns";
-import { User as FirebaseUser } from "firebase/auth";
-import { Task, Repeatable, Classroom, Player, Item } from "../types";
 
-export async function syncUsers(user: FirebaseUser) {
+export async function syncUsers(user: User) {
   const userRef = doc(db, "users", user.uid);
   const data = {
     email: user.email,
@@ -28,7 +28,7 @@ export async function syncUsers(user: FirebaseUser) {
 }
 
 // Create new classroom with user as teacher
-export async function addClassroom(name: string, user: FirebaseUser) {
+export async function addClassroom(name: string, user: User) {
   // Update classrooms collection with new classroom
   const newClassroom = {
     name: name,
@@ -63,7 +63,7 @@ export async function addClassroom(name: string, user: FirebaseUser) {
 }
 
 // Get classrooms that the current user is in
-export async function getClassrooms(user: FirebaseUser) {
+export async function getClassrooms(user: User) {
   const q = query(
     collection(db, "classrooms"),
     where("playerList", "array-contains", user.uid)
@@ -80,7 +80,7 @@ export async function getClassrooms(user: FirebaseUser) {
 }
 
 // Add user to existing classroom and set as student
-export async function joinClassroom(classID: string, user: FirebaseUser) {
+export async function joinClassroom(classID: string, user: User) {
   const classroomRef = doc(db, "classrooms", classID);
   const classroomSnap = await getDoc(classroomRef);
 
@@ -175,7 +175,15 @@ export async function getTaskData(classID: string, taskID: string) {
 }
 
 //Mutation to handle task update
-export async function updateTask(classroomID: string, task: Task) {
+export async function updateTask(
+  classroomID: string,
+  task: {
+    name: string;
+    due: number;
+    reward: number;
+    id: string;
+  }
+) {
   await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${task.id}`), {
     name: task.name,
     due: task.due,
@@ -186,7 +194,10 @@ export async function updateTask(classroomID: string, task: Task) {
 export async function updatePlayer(
   userID: string,
   classroomID: string,
-  newPlayer: Player
+  newPlayer: {
+    name: string;
+    avatar: number;
+  }
 ) {
   const playerRef = doc(db, `classrooms/${classroomID}/players/${userID}`);
 
@@ -241,14 +252,14 @@ export async function completeRepeatable(
 ) {
   const completionsDocRef = doc(
     db,
-    `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`
+    `classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`
   );
   const docSnap = await getDoc(completionsDocRef);
   if (!docSnap.exists()) {
     await setDoc(
       doc(
         db,
-        `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`
+        `classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`
       ),
       {
         completions: 0,
@@ -261,7 +272,7 @@ export async function completeRepeatable(
   updateDoc(
     doc(
       db,
-      `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`
+      `classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`
     ),
     {
       completions: increment(1),
@@ -269,7 +280,16 @@ export async function completeRepeatable(
   );
 }
 
-export async function addTask(classID: string, task: Task, teacherID: string) {
+export async function addTask(
+  classID: string,
+  task: {
+    name: string;
+    description: string;
+    reward: number;
+    due: number;
+  },
+  teacherID: string
+) {
   // Update assignedTasks collection for every member in class except teacher
   const classRef = doc(db, "classrooms", classID);
   const classSnap = await getDoc(classRef);
@@ -296,7 +316,12 @@ export async function addTask(classID: string, task: Task, teacherID: string) {
 
 export async function addRepeatable(
   classID: string,
-  repeatable: Repeatable,
+  repeatable: {
+    name: string;
+    description: string;
+    reward: number;
+    maxCompletions: number;
+  },
   teacherID: string
 ) {
   // Update assignedTasks collection for every member in class except teacher
@@ -343,7 +368,7 @@ export async function addRepeatable(
       await addDoc(
         collection(
           db,
-          `classrooms/${classID}/repeatables/${repeatableRef.id}/completions`
+          `classrooms/${classID}/repeatables/${repeatableRef.id}/playerCompletions`
         ),
         {
           id: playerID,
@@ -408,8 +433,7 @@ export async function denyTask(
 export async function purchaseItem(
   classID: string,
   studentID: string,
-  item: Item,
-  isCustom: boolean
+  item: Item
 ) {
   // isCustom should be a boolean denoting whether the item being purchased is an item created for a particular classroom/
   const classroomRef = doc(db, "classrooms", classID);
@@ -445,7 +469,7 @@ export async function purchaseItem(
 
     const newItem = {
       item_id: item.id,
-      type: isCustom ? "custom" : item.type,
+      type: item.type,
       subtype: item.subtype || null,
     };
 
@@ -513,7 +537,7 @@ export async function denyRepeatable(
   if (repeatableSnap.exists()) {
     const completionsRef = doc(
       db,
-      `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`
+      `classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`
     );
     const completionsSnap = await getDoc(completionsRef);
     if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
@@ -540,7 +564,7 @@ export async function confirmRepeatable(
     // increment confirmations
     const confirmationsRef = doc(
       db,
-      `classrooms/${classroomID}/repeatables/${repeatableID}/confirmations/${playerID}`
+      `classrooms/${classroomID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`
     );
     const confirmationsSnap = await getDoc(confirmationsRef);
     if (!confirmationsSnap.exists()) {
@@ -556,7 +580,7 @@ export async function confirmRepeatable(
     // decrement completions
     const completionsRef = doc(
       db,
-      `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`
+      `classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`
     );
     const completionsSnap = await getDoc(completionsRef);
     if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
@@ -645,7 +669,7 @@ async function refreshRepeatable(
         // 1. Set the player completions to 0
         const completionsRef = doc(
           db,
-          `classrooms/${classroomID}/repeatables/${repeatableID}/completions/${playerID}`
+          `classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`
         );
         const completionsSnap = await getDoc(completionsRef);
         if (completionsSnap.exists()) {
@@ -657,7 +681,7 @@ async function refreshRepeatable(
         // 2. Set the confirmations to 0
         const confirmationsRef = doc(
           db,
-          `classrooms/${classroomID}/repeatables/${repeatableID}/confirmations/${playerID}`
+          `classrooms/${classroomID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`
         );
         const confirmationsSnap = await getDoc(confirmationsRef);
         if (confirmationsSnap.exists()) {

@@ -13,13 +13,9 @@ import Box from "@mui/material/Box";
 import CreateClassroomModal from "../components/CreateClassroomModal";
 import JoinClassroomModal from "../components/JoinClassroomModal";
 import { Classroom } from "../types";
-import { User as FirebaseUser } from "firebase/auth";
+import { User } from "firebase/auth";
 
-interface ComponentProps {
-  user: FirebaseUser;
-}
-
-export default function Classrooms({ user }: ComponentProps) {
+export default function Classrooms({ user }: { user: User }) {
   // Listen to user's classrooms and maintain a corresponding state variable
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   useEffect(() => {
@@ -96,14 +92,9 @@ export default function Classrooms({ user }: ComponentProps) {
             Pinned Classrooms
           </Typography>
         </Grid>
-        {pinnedClassrooms?.map((classroom) => (
+        {pinnedClassrooms.map((classroom) => (
           <Grid item xs={12} sm={6} md={4} key={classroom.id}>
-            <ClassroomCard
-              className={classroom.name}
-              classID={classroom.id}
-              pinned={true}
-              userid={user?.uid}
-            />
+            <ClassroomCard classroom={classroom} pinned={true} user={user} />
           </Grid>
         ))}
         <Grid item xs={12}>
@@ -113,12 +104,7 @@ export default function Classrooms({ user }: ComponentProps) {
         </Grid>
         {studentClassrooms.map((classroom) => (
           <Grid item xs={12} sm={6} md={4} key={classroom.id}>
-            <ClassroomCard
-              className={classroom.name}
-              classID={classroom.id}
-              pinned={false}
-              userid={user?.uid}
-            />
+            <ClassroomCard classroom={classroom} pinned={false} user={user} />
           </Grid>
         ))}
         <Grid item xs={12}>
@@ -128,12 +114,7 @@ export default function Classrooms({ user }: ComponentProps) {
         </Grid>
         {teacherClassrooms.map((classroom) => (
           <Grid item xs={12} sm={6} md={4} key={classroom.id}>
-            <ClassroomCard
-              className={classroom.name}
-              classID={classroom.id}
-              pinned={false}
-              userid={user?.uid}
-            />
+            <ClassroomCard classroom={classroom} pinned={false} user={user} />
           </Grid>
         ))}
       </Grid>
