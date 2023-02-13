@@ -41,8 +41,8 @@ export default function App() {
 	// Listen to the Firebase Auth state and set the local state.
 	useEffect(() => {
 		const unregisterAuthObserver = auth.onAuthStateChanged((user) => {
+			setCurrentUser(user)
 			if (user) {
-				setCurrentUser(user)
 				syncUsers(user)
 			}
 		})
