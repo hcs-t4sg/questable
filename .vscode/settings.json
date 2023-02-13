@@ -1,0 +1,14 @@
+{
+  "eslint.workingDirectories": [
+    "./reactApp"
+  ],
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "ms-vsliveshare.vsliveshare"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "ms-vsliveshare.vsliveshare"
+  }
+}

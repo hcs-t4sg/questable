@@ -1,0 +1,11 @@
+{
+	"recommendations": [
+		"dbaeumer.vscode-eslint",
+		"ms-vsliveshare.vsliveshare",
+		"aaron-bond.better-comments",
+		"waderyan.gitblame",
+		"vscodeshift.mui-snippets",
+		"esbenp.prettier-vscode",
+		"editorconfig.editorconfig"
+	]
+}
