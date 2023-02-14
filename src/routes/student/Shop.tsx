@@ -62,12 +62,7 @@ const pants = getPantsItems()
 const shoes = getShoesItems()
 //  const all = bodies.concat(hairs, shirts, pants, shoes)
 
-interface ComponentProps {
-	player: Player
-	classroom: Classroom
-}
-
-export default function Shop({ player, classroom }: ComponentProps) {
+export default function Shop({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [value, setValue] = React.useState(0)
 	const handleChange = (event: React.SyntheticEvent, newValue: 0 | 1 | 2 | 3 | 4) => {
 		setValue(newValue)

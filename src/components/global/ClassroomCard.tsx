@@ -10,13 +10,15 @@ import { addPin, deletePin } from '../../utils/mutations'
 import { Classroom } from '../../types'
 import { User } from 'firebase/auth'
 
-interface ComponentProps {
+export default function ClassroomCard({
+	classroom,
+	user,
+	pinned,
+}: {
 	classroom: Classroom
 	user: User
 	pinned: boolean
-}
-
-export default function ClassroomCard({ classroom, user, pinned }: ComponentProps) {
+}) {
 	return (
 		<Card>
 			<CardActionArea component={Link} to={`/class/${classroom.id}`}>

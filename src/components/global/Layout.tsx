@@ -5,16 +5,11 @@ import ClassroomSidebar from './ClassroomSidebar'
 import Toolbar from '@mui/material/Toolbar'
 import { UserRole } from '../../types'
 
-interface ComponentProps {
-	classroom?: boolean
-	role?: UserRole
-}
-
 export default function Layout({
 	children,
 	classroom,
 	role,
-}: React.PropsWithChildren<ComponentProps>) {
+}: React.PropsWithChildren<{ classroom?: boolean; role?: UserRole }>) {
 	return (
 		<Box
 			sx={{

@@ -45,12 +45,7 @@ function a11yProps(index: number) {
 	}
 }
 
-interface ComponentProps {
-	player: Player
-	classroom: Classroom
-}
-
-export default function Inventory({ player, classroom }: ComponentProps) {
+export default function Inventory({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [value, setValue] = React.useState(0)
 	const [inventoryItems, setInventoryItems] = React.useState<DatabaseInventoryItem[]>([])
 

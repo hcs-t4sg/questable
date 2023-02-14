@@ -31,12 +31,7 @@ function truncate(description: string) {
 	return description
 }
 
-interface ComponentProps {
-	classroom: Classroom
-	player: Player
-}
-
-export default function Main({ classroom, player }: ComponentProps) {
+export default function Main({ classroom, player }: { classroom: Classroom; player: Player }) {
 	const [assigned, setAssigned] = useState<TaskWithStatus[]>([])
 	const [completed, setCompleted] = useState<TaskWithStatus[]>([])
 	const [confirmed, setConfirmed] = useState<TaskWithStatus[]>([])

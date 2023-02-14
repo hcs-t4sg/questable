@@ -5,7 +5,7 @@
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-	"prettier.configPath": ".prettierrc.js",
+	"prettier.configPath": ".prettierrc",
   "[javascript]": {
     "editor.defaultFormatter": "ms-vsliveshare.vsliveshare"
   },
