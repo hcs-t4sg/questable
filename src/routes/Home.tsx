@@ -11,7 +11,7 @@ import Layout from '../components/global/Layout'
 import { Classroom } from '../types'
 import { db } from '../utils/firebase'
 
-export default function Classrooms({ user }: { user: User }) {
+export default function Home({ user }: { user: User }) {
 	// Listen to user's classrooms and maintain a corresponding state variable
 	const [classrooms, setClassrooms] = useState<Classroom[]>([])
 	useEffect(() => {
