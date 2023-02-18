@@ -29,35 +29,6 @@ export default function ClassSettings({
 			setNumStudents(doc.data().playerList.length)
 		}
 	})
-	//   const [teacher, setTeacher] = React.useState();
-
-	//   useEffect(() => {
-	//     // If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
-	//     const playersRef = collection(db, `classrooms/${classroom.id}/players`);
-	//     const teacherQuery = query(playersRef, where("role", "==", "teacher"));
-
-	//     //Attach a listener to the teacher document
-	//     onSnapshot(teacherQuery, (snapshot) => {
-	//       const mapTeacher = async () => {
-	//         let teachers = await Promise.all(
-	//           snapshot.docs.map(async (player) => {
-	//             const email = (await getUserData(player.id)).email;
-	//             return { ...player.data(), id: player.id, email: email };
-	//           })
-	//         );
-
-	//         // Await the resolution of all promises in the returned array
-	//         // and then store them in the `students` state variable
-	//         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
-	//         console.log("yeet");
-	//         console.log(teachers);
-	//         setTeacher(teachers[0]);
-	//       };
-
-	//       // Call the async `mapTeacher` function
-	//       mapTeacher().catch(console.error);
-	//     });
-	//   }, []);
 
 	return (
 		<Grid container spacing={3} sx={{ p: 5 }}>
