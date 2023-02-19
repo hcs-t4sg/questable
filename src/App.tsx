@@ -42,6 +42,7 @@ export default function App() {
 		},
 		onError(error) {
 			console.error('Failed to subscribe to users authentication state!')
+			console.log(error)
 		},
 	})
 	// // User authentication functionality.

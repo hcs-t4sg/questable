@@ -215,7 +215,8 @@ export default function TaskModalTeacher({
 							<DatePicker
 								label='Due Date'
 								value={date}
-								onChange={(newValue) => setDate(date)}
+								// TODO this is probably a bug with date setting. Fix!
+								onChange={(_newValue) => setDate(date)}
 								renderInput={(params) => <TextField {...params} />}
 							/>
 						</LocalizationProvider>

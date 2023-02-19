@@ -11,19 +11,10 @@ import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 
 import { Tab, Tabs } from '@mui/material'
-import { User } from 'firebase/auth'
 import RepeatableTableTeacher from '../../components/teacher/RepeatableTableTeacher'
 import { Classroom, Player } from '../../types'
 
-export default function Tasks({
-	player,
-	classroom,
-	user,
-}: {
-	player: Player
-	classroom: Classroom
-	user: User
-}) {
+export default function Tasks({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [numStudents, setNumStudents] = React.useState()
 
 	const classroomRef = doc(db, `classrooms/${classroom.id}`)
