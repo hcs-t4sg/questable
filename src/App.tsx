@@ -5,7 +5,6 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import { useEffect, useState } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import './App.css'
 import ClassroomPage from './routes/ClassroomPage'
@@ -13,10 +12,6 @@ import Home from './routes/Home'
 import Settings from './routes/Settings'
 import { auth, SignInScreen } from './utils/firebase'
 // make alias for greater readability
-import { User } from 'firebase/auth'
-import { syncUsers } from './utils/mutations'
-import { QueryClient, QueryClientProvider, useQueryClient } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
 import { useAuthUser } from '@react-query-firebase/auth'
 
 // MUI styling constants
