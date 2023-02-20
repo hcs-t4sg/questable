@@ -12,7 +12,8 @@ import Home from './routes/Home'
 import Settings from './routes/Settings'
 import { auth, SignInScreen } from './utils/firebase'
 // make alias for greater readability
-import { useAuthUser } from '@react-query-firebase/auth'
+// import { useAuthUser } from '@react-query-firebase/auth'
+import { useCurrentUser } from './utils/mutations'
 
 // MUI styling constants
 
@@ -34,33 +35,7 @@ const mdTheme = createTheme({
 // App.js is the homepage and handles top-level functions like user auth.
 
 export default function App() {
-	const currentUser = useAuthUser(['user'], auth, {
-		onSuccess(user) {
-			if (user) {
-				console.log('User is authenticated!', user)
-			}
-		},
-		onError(error) {
-			console.error('Failed to subscribe to users authentication state!')
-			console.log(error)
-		},
-	})
-	// // User authentication functionality.
-	// const [currentUser, setCurrentUser] = useState<User | null>(null)
-	// // Listen to the Firebase Auth state and set the local state.
-	// useEffect(() => {
-	// 	const unregisterAuthObserver = auth.onAuthStateChanged((user) => {
-	// 		setCurrentUser(user)
-	// 		if (user) {
-	// 			syncUsers(user)
-	// 		}
-	// 	})
-	// 	return () => unregisterAuthObserver() // Make sure we un-register Firebase observers when the component unmounts.
-	// }, [])
-
-	// useEffect(() => {
-	// 	console.log(currentUser)
-	// }, [currentUser])
+	const currentUser = useCurrentUser()
 
 	return (
 		<ThemeProvider theme={mdTheme}>
@@ -113,7 +88,7 @@ export default function App() {
 							sx={{
 								marginTop: '5px',
 								marginBottom: '5px',
-								display: currentUser ? 'inline' : 'none',
+								display: currentUser.data ? 'inline' : 'none',
 							}}
 							onClick={() => auth.signOut()}
 						>

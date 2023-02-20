@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
@@ -20,7 +19,6 @@ export default function PlayerCard({
 	classroom: Classroom
 }) {
 	const [name, setName] = useState(player.name)
-	const [avatar, setAvatar] = useState(player.avatar)
 	// const [money, setMoney] = useState(player.money);
 	// const [role, setRole] = useState(player.role);
 
@@ -29,22 +27,12 @@ export default function PlayerCard({
 		onSnapshot(playerRef, (doc) => {
 			if (doc.exists()) {
 				setName(doc.data().name)
-				setAvatar(doc.data().avatar)
 			}
 		})
 	})
 	return (
 		<Card sx={{ width: 1 }}>
 			<CardContent>
-				<Box
-					component='img'
-					sx={{
-						height: 50,
-						width: 50,
-					}}
-					alt={`Avatar ${avatar}`}
-					src={`../../static/${avatar}.png`}
-				/>
 				<Typography variant='h5' component='div'>
 					{name}
 				</Typography>

@@ -55,7 +55,6 @@ export interface Player {
 	name: string
 	role: UserRole
 	money: number
-	avatar: number
 	avaBody?: number
 	avaHair?: number
 	avaShirt?: number
