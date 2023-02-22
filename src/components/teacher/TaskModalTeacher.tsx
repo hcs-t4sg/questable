@@ -1,11 +1,11 @@
-import CloseIcon from '@mui/icons-material/Close'
+// import CloseIcon from '@mui/icons-material/Close'
 import { FormControl, InputLabel, MenuItem, Modal, Select } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+// import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { updateTask } from '../../utils/mutations'
 
@@ -15,6 +15,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { fromUnixTime, getUnixTime } from 'date-fns'
 import { Classroom, Task } from '../../types'
+
+import { TaskModalBox, OverviewTitle } from '../global/TaskModalStyles'
 
 export default function TaskModalTeacher({
 	task,
@@ -142,7 +144,7 @@ export default function TaskModalTeacher({
 				open={open}
 				onClose={handleClose}
 			>
-				<Box
+				{/* <Box
 					sx={{
 						width: '40%',
 						display: 'flex',
@@ -154,8 +156,9 @@ export default function TaskModalTeacher({
 						backgroundColor: 'white',
 						marginBottom: '18px',
 					}}
-				>
-					<Box
+				> */}
+				<TaskModalBox>
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -179,7 +182,8 @@ export default function TaskModalTeacher({
 							width: '100%',
 							marginBottom: '10px',
 						}}
-					/>
+					/> */}
+					<OverviewTitle onClick={handleClose} />
 					<TextField
 						margin='normal'
 						id='name'
@@ -251,7 +255,8 @@ export default function TaskModalTeacher({
 					<Grid container justifyContent='center'>
 						{saveButton}
 					</Grid>
-				</Box>
+				</TaskModalBox>
+				{/* </Box> */}
 			</Modal>
 		</div>
 	)
