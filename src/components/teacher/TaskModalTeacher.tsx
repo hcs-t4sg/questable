@@ -1,6 +1,6 @@
 // import CloseIcon from '@mui/icons-material/Close'
 import { FormControl, InputLabel, MenuItem, Modal, Select } from '@mui/material'
-import Box from '@mui/material/Box'
+// import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
@@ -16,7 +16,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { fromUnixTime, getUnixTime } from 'date-fns'
 import { Classroom, Task } from '../../types'
 
-import { TaskModalBox, OverviewTitle } from '../global/TaskModalStyles'
+import { TaskModalBox, ModalTitle, BoxInModal } from '../global/TaskModalStyles'
 
 export default function TaskModalTeacher({
 	task,
@@ -183,7 +183,7 @@ export default function TaskModalTeacher({
 							marginBottom: '10px',
 						}}
 					/> */}
-					<OverviewTitle onClick={handleClose} />
+					<ModalTitle onClick={handleClose} text='Overview' />
 					<TextField
 						margin='normal'
 						id='name'
@@ -206,7 +206,7 @@ export default function TaskModalTeacher({
 						onChange={(event) => setDescription(event.target.value)}
 					/>
 
-					<Box
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -214,7 +214,8 @@ export default function TaskModalTeacher({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
+					<BoxInModal>
 						<LocalizationProvider dateAdapter={AdapterDateFns}>
 							<DatePicker
 								label='Due Date'
@@ -224,8 +225,9 @@ export default function TaskModalTeacher({
 								renderInput={(params) => <TextField {...params} />}
 							/>
 						</LocalizationProvider>
-					</Box>
-					<Box
+						{/* </Box> */}
+					</BoxInModal>
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -233,7 +235,8 @@ export default function TaskModalTeacher({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
+					<BoxInModal>
 						<FormControl fullWidth>
 							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
 							<Select
@@ -249,7 +252,8 @@ export default function TaskModalTeacher({
 								<MenuItem value={40}>40</MenuItem>
 							</Select>
 						</FormControl>
-					</Box>
+						{/* </Box> */}
+					</BoxInModal>
 					<br />
 					{/* center the save button */}
 					<Grid container justifyContent='center'>

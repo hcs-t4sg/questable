@@ -1,11 +1,11 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import CloseIcon from '@mui/icons-material/Close'
-import { Box, FormControl, InputLabel, MenuItem, Modal, Select, Tabs, Tab } from '@mui/material'
+// import CloseIcon from '@mui/icons-material/Close'
+import { FormControl, InputLabel, MenuItem, Modal, Select, Tabs, Tab } from '@mui/material'
 import Button from '@mui/material/Button'
 import DialogActions from '@mui/material/DialogActions'
-import IconButton from '@mui/material/IconButton'
+// import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+// import Typography from '@mui/material/Typography'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -15,6 +15,8 @@ import { useState } from 'react'
 import { addRepeatable, addTask } from '../../utils/mutations'
 import Grid from '@mui/material/Grid'
 import { Classroom, Player } from '../../types'
+
+import { TaskModalBox, ModalTitle, BoxInModal } from '../global/TaskModalStyles'
 
 export default function CreateTaskModal({
 	classroom,
@@ -124,7 +126,7 @@ export default function CreateTaskModal({
 				open={open}
 				onClose={handleClose}
 			>
-				<Box
+				{/* <Box
 					sx={{
 						width: '40%',
 						display: 'flex',
@@ -136,8 +138,10 @@ export default function CreateTaskModal({
 						backgroundColor: 'white',
 						marginBottom: '18px',
 					}}
-				>
-					<Box
+				> */}
+				<TaskModalBox>
+					<ModalTitle onClick={handleClose} text='Create Task' />
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -162,7 +166,7 @@ export default function CreateTaskModal({
 							width: '100%',
 							marginBottom: '10px',
 						}}
-					/>
+					/> */}
 
 					{repeatableButton}
 
@@ -187,7 +191,8 @@ export default function CreateTaskModal({
 						value={description}
 						onChange={(event) => setDescription(event.target.value)}
 					/>
-					<Box
+					<BoxInModal>
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -195,7 +200,7 @@ export default function CreateTaskModal({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
 						{/* either show a due date option or max completions based on if task is repeatable */}
 						{!isRepeatable ? (
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -221,8 +226,9 @@ export default function CreateTaskModal({
 								onChange={(event) => setMaxCompletions(parseInt(event.target.value))}
 							/>
 						)}
-					</Box>
-					<Box
+					</BoxInModal>
+					{/* </Box> */}
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -230,7 +236,8 @@ export default function CreateTaskModal({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
+					<BoxInModal>
 						<FormControl fullWidth>
 							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
 							<Select
@@ -246,13 +253,15 @@ export default function CreateTaskModal({
 								<MenuItem value={40}>40</MenuItem>
 							</Select>
 						</FormControl>
-					</Box>
+						{/* </Box> */}
+					</BoxInModal>
 					<br />
 					{/* center the save button */}
 					<Grid container justifyContent='center'>
 						{actionButtons}
 					</Grid>
-				</Box>
+					{/* </Box> */}
+				</TaskModalBox>
 			</Modal>
 		</div>
 	)

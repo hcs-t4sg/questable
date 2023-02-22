@@ -17,12 +17,13 @@ export const TaskModalBox = styled(Box)({
 	marginBottom: '18px',
 })
 
-const OverviewBox = styled(Box)({
+export const BoxInModal = styled(Box)(({ theme }) => ({
 	width: '100%',
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'space-between',
-})
+	margin: theme.spacing(2),
+}))
 
 const TaskHr = styled('hr')({
 	backgroundColor: '#D9D9D9',
@@ -35,20 +36,21 @@ const TaskHr = styled('hr')({
 
 interface Props {
 	onClick: () => void
+	text: string
 }
 
-export function OverviewTitle(props: Props) {
+export function ModalTitle(props: Props) {
 	return (
-		<div>
-			<OverviewBox>
+		<>
+			<BoxInModal>
 				<Typography fontWeight='light' variant='h5'>
-					Overview
+					{props.text}
 				</Typography>
 				<IconButton onClick={props.onClick}>
 					<CloseIcon />
 				</IconButton>
-				<TaskHr />
-			</OverviewBox>
-		</div>
+			</BoxInModal>
+			<TaskHr />
+		</>
 	)
 }

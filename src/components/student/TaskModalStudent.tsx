@@ -1,10 +1,12 @@
-import CloseIcon from '@mui/icons-material/Close'
+// import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
 import { useState } from 'react'
 import sprite1 from '../../assets/tempAssets/sprite1.svg'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
+
+import { ModalTitle } from '../global/TaskModalStyles'
 
 export default function TaskModalStudent({
 	classroom,
@@ -73,7 +75,7 @@ export default function TaskModalStudent({
 						marginBottom: '18px',
 					}}
 				>
-					<Box
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -98,7 +100,8 @@ export default function TaskModalStudent({
 							width: '100%',
 							marginBottom: '35px',
 						}}
-					/>
+					/> */}
+					<ModalTitle onClick={handleClose} text='Overview' />
 					<Box
 						component='img'
 						sx={{
