@@ -13,7 +13,7 @@ import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import { format, fromUnixTime } from 'date-fns'
 import { collection, onSnapshot } from 'firebase/firestore'
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 import { Classroom, Task } from '../../types'
 import { db } from '../../utils/firebase'
 import { deleteTask } from '../../utils/mutations'
@@ -51,20 +51,15 @@ function LinearProgressWithLabel({ task }: { task: Task }) {
 
 export default function TasksTableTeacher({ classroom }: { classroom: Classroom }) {
 	// Create a state variable to hold the tasks
-	const [tasks, setTasks] = React.useState<Task[]>([])
-	React.useEffect(() => {
-		const mapTasks = async () => {
-			// Create a reference to the tasks collection
-			const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`)
-			// Attach a listener to the tasks collection
-			onSnapshot(taskCollectionRef, (snapshot) => {
-				// Store the tasks in the `tasks` state variable
-				setTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Task)))
-			})
-		}
-		mapTasks()
-		console.log(tasks)
-	})
+	const [tasks, setTasks] = useState<Task[]>([])
+	useEffect(() => {
+		const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`)
+		const unsub = onSnapshot(taskCollectionRef, (snapshot) => {
+			// Store the tasks in the `tasks` state variable
+			setTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Task)))
+		})
+		return unsub
+	}, [classroom])
 
 	const handleDelete = (task: Task) => {
 		// message box to confirm deletion
@@ -72,7 +67,6 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 			deleteTask(classroom.id, task.id).catch(console.error)
 		}
 	}
-
 	return (
 		<Grid item xs={12}>
 			<TableContainer component={Paper}>

@@ -126,7 +126,7 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 			unsubTasks()
 			unsubRepeatables()
 		}
-	}, [classroom.id])
+	}, [classroom])
 
 	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
 		setPage(newTabIndex)

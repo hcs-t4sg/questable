@@ -6,17 +6,17 @@ interface Assignment {
 	description: string
 	reward: number
 	created: number
-	due: number
 	assigned: string[]
 }
 
 export interface Task extends Assignment {
 	completed: string[]
 	confirmed: string[]
+	due: number
 }
 
 export interface TaskWithStatus extends Task {
-	status: string
+	status: 0 | 1 | 2 | 3
 }
 
 export interface TaskCompletionTime {

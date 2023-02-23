@@ -24,12 +24,14 @@ export default function PlayerCard({
 
 	useEffect(() => {
 		const playerRef = doc(db, `classrooms/${classroom.id}/players/${player.id}`)
-		onSnapshot(playerRef, (doc) => {
+		const unsub = onSnapshot(playerRef, (doc) => {
 			if (doc.exists()) {
 				setName(doc.data().name)
 			}
 		})
-	})
+		return unsub
+	}, [classroom, player])
+
 	return (
 		<Card sx={{ width: 1 }}>
 			<CardContent>
