@@ -11,13 +11,16 @@ import {
 	TableHead,
 	TableRow,
 	Tabs,
+	Typography,
 } from '@mui/material'
 import Paper from '@mui/material/Paper'
+import { Box } from '@mui/system'
 import { format, fromUnixTime } from 'date-fns'
 import { collection, doc, getDoc, onSnapshot, query } from 'firebase/firestore'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import TaskModalStudent from '../../components/student/TaskModalStudent'
+import TasksTableStudent from '../../components/student/TasksTableStudent'
 import { Classroom, Player, Repeatable, TaskWithStatus } from '../../types'
 import { db } from '../../utils/firebase'
 import { completeRepeatable, completeTask } from '../../utils/mutations'
@@ -29,6 +32,39 @@ function truncate(description: string) {
 		return description.slice(0, 50) + '...'
 	}
 	return description
+}
+
+interface TabPanelProps {
+	children?: React.ReactNode
+	index: number
+	value: number
+}
+
+function TabPanel(props: TabPanelProps) {
+	const { children, value, index, ...other } = props
+
+	return (
+		<div
+			role='tabpanel'
+			hidden={value !== index}
+			id={`simple-tabpanel-${index}`}
+			aria-labelledby={`simple-tab-${index}`}
+			{...other}
+		>
+			{value === index && (
+				<Box sx={{ p: 3 }}>
+					<Typography>{children}</Typography>
+				</Box>
+			)}
+		</div>
+	)
+}
+
+function a11yProps(index: number) {
+	return {
+		id: `simple-tab-${index}`,
+		'aria-controls': `simple-tabpanel-${index}`,
+	}
 }
 
 export default function Main({ classroom, player }: { classroom: Classroom; player: Player }) {
@@ -55,49 +91,42 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 	// (0) All Repeatables
 	const [repPage, setRepPage] = useState<0>(0)
 
+	const [taskRepTab, setTaskRepTab] = useState<0 | 1>(0)
+	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
+		setTaskRepTab(newValue)
+	}
+
 	// useEffect to fetch task information
 	useEffect(() => {
 		// fetch task information
 		const q = query(collection(db, `classrooms/${classroom.id}/tasks`))
 		const unsub = onSnapshot(q, (snapshot) => {
-			const taskFetch = async () => {
-				const assigned: TaskWithStatus[] = []
-				const completed: TaskWithStatus[] = []
-				const confirmed: TaskWithStatus[] = []
-				const overdue: TaskWithStatus[] = []
+			const assigned: TaskWithStatus[] = []
+			const completed: TaskWithStatus[] = []
+			const confirmed: TaskWithStatus[] = []
+			const overdue: TaskWithStatus[] = []
 
-				// TODO rewrite using Promise.all
-				snapshot.forEach((doc) => {
-					// Find assigned, completed, and confirmed tasks using player's id.
-					if (doc.data().assigned?.includes(player.id)) {
-						assigned.push(
-							Object.assign({ id: doc.id, status: 'Not Done' }, doc.data()) as TaskWithStatus,
-						)
-					}
-					if (doc.data().completed?.includes(player.id)) {
-						completed.push(
-							Object.assign(
-								{ id: doc.id, status: 'Confirmation Requested' },
-								doc.data(),
-							) as TaskWithStatus,
-						)
-					}
-					if (doc.data().confirmed?.includes(player.id)) {
-						confirmed.push(
-							Object.assign({ id: doc.id, status: 'Confirmed' }, doc.data()) as TaskWithStatus,
-						)
-					}
-					// if task is overdue, add to overdue list
-					if (doc.data().due < Date.now() / 1000) {
-						overdue.push(Object.assign({ id: doc.id }, doc.data()) as TaskWithStatus)
-					}
-				})
-				setAssigned(assigned)
-				setCompleted(completed)
-				setConfirmed(confirmed)
-				setOverdue(overdue)
-			}
-			taskFetch().catch(console.error)
+			// TODO rewrite using Promise.all
+			snapshot.forEach((doc) => {
+				// Find assigned, completed, and confirmed tasks using player's id.
+				if (doc.data().assigned?.includes(player.id)) {
+					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
+				}
+				if (doc.data().completed?.includes(player.id)) {
+					completed.push(Object.assign({ id: doc.id, status: 1 }, doc.data()) as TaskWithStatus)
+				}
+				if (doc.data().confirmed?.includes(player.id)) {
+					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
+				}
+				// if task is overdue, add to overdue list
+				if (doc.data().due < Date.now() / 1000) {
+					overdue.push(Object.assign({ id: doc.id, status: 3 }, doc.data()) as TaskWithStatus)
+				}
+			})
+			setAssigned(assigned)
+			setCompleted(completed)
+			setConfirmed(confirmed)
+			setOverdue(overdue)
 		})
 		return unsub
 	}, [classroom.id, player.id])
@@ -256,6 +285,30 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 	//   }
 
 	return (
+		<Box>
+			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+				<Tabs value={taskRepTab} onChange={handleChangeTaskRep} aria-label='Task/repeatable tabs'>
+					<Tab label='Tasks' {...a11yProps(0)} />
+					<Tab label='Repeatables' {...a11yProps(1)} />
+				</Tabs>
+			</Box>
+			<TabPanel value={taskRepTab} index={0}>
+				<TasksTableStudent
+					assigned={assigned}
+					completed={completed}
+					confirmed={confirmed}
+					overdue={overdue}
+					classroom={classroom}
+					player={player}
+				/>
+			</TabPanel>
+			<TabPanel value={taskRepTab} index={1}>
+				Item Two
+			</TabPanel>
+		</Box>
+	)
+
+	return (
 		<div style={{ marginLeft: '36px' }}>
 			<Tabs value={isRepeatables} onChange={handleIsRepChange}>
 				<Tab label='Tasks' />
@@ -325,10 +378,10 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 									>
 										<TableCell sx={{ paddingTop: 0, paddingBottom: 0, width: 0.01 }} align='left'>
 											{/* <TaskModalStudent
-                        task={repeatable}
-                        classroom={classroom}
-                        player={player}
-                      /> */}
+	                      task={repeatable}
+	                      classroom={classroom}
+	                      player={player}
+	                    /> */}
 										</TableCell>
 										<TableCell component='th' scope='row'>
 											{repeatable.name}
