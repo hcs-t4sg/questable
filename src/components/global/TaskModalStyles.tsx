@@ -39,6 +39,10 @@ interface Props {
 	text: string
 }
 
+// eventually - composition??
+
+// export const StyledModal = styled(Modal)()...
+
 export function ModalTitle(props: Props) {
 	return (
 		<>
