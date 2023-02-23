@@ -9,8 +9,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { collection, onSnapshot } from 'firebase/firestore'
-import * as React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Classroom, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
 import { deleteRepeatable } from '../../utils/mutations'
@@ -25,18 +24,16 @@ function truncate(description: string) {
 export default function RepeatableTableTeacher({ classroom }: { classroom: Classroom }) {
 	// Create a state variable to hold the tasks
 	const [repeatables, setRepeatables] = useState<Repeatable[]>([])
-	React.useEffect(() => {
-		const mapRepeatables = async () => {
-			// Create a reference to the tasks collection
-			const repeatableCollectionRef = collection(db, `classrooms/${classroom.id}/repeatables`)
-			// Attach a listener to the tasks collection
-			onSnapshot(repeatableCollectionRef, (snapshot) => {
-				// Store the tasks in the `tasks` state variable
-				setRepeatables(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Repeatable)))
-			})
-		}
-		mapRepeatables()
-	})
+	useEffect(() => {
+		// Create a reference to the tasks collection
+		const repeatableCollectionRef = collection(db, `classrooms/${classroom.id}/repeatables`)
+		// Attach a listener to the tasks collection
+		const unsub = onSnapshot(repeatableCollectionRef, (snapshot) => {
+			// Store the tasks in the `tasks` state variable
+			setRepeatables(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Repeatable)))
+		})
+		return unsub
+	}, [classroom])
 
 	const handleDelete = (repeatable: Repeatable) => {
 		// message box to confirm deletion

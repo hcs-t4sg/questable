@@ -6,13 +6,13 @@ interface Assignment {
 	description: string
 	reward: number
 	created: number
-	due: number
 	assigned: string[]
 }
 
 export interface Task extends Assignment {
 	completed: string[]
 	confirmed: string[]
+	due: number
 }
 
 export interface TaskWithStatus extends Task {
@@ -55,7 +55,6 @@ export interface Player {
 	name: string
 	role: UserRole
 	money: number
-	avatar: number
 	avaBody?: number
 	avaHair?: number
 	avaShirt?: number

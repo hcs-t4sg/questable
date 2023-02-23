@@ -316,13 +316,25 @@ export function getShoesItems() {
 }
 
 export function currentAvatar(player: Player) {
+	let playerHair
+	if (player.avaHairSubtype) {
+		if (player.avaHair) {
+			playerHair = new Hair(player.avaHair, player.avaHairSubtype)
+		} else {
+			playerHair = new Hair(0, player.avaHairSubtype)
+		}
+	} else {
+		if (player.avaHair) {
+			playerHair = new Hair(player.avaHair, 'bob')
+		} else {
+			playerHair = new Hair(0, 'bob')
+		}
+	}
+
 	const playerOutfit = {
 		body: player.avaBody ? new Body(player.avaBody) : new Body(0),
 		shirt: player.avaShirt ? new Shirt(player.avaShirt) : new Shirt(0),
-		hair:
-			player.avaHair && player.avaHairSubtype
-				? new Hair(player.avaHair, player.avaHairSubtype)
-				: new Hair(0, 'bob'),
+		hair: playerHair,
 		pants: player.avaPants ? new Pants(player.avaPants) : new Pants(0),
 		shoes: player.avaShoes ? new Shoes(player.avaShoes) : new Shoes(0),
 	}

@@ -17,7 +17,22 @@ import {
 	where,
 } from 'firebase/firestore'
 import { Classroom, Item, Player } from '../types'
-import { db } from './firebase'
+import { db, auth } from './firebase'
+import { useAuthUser } from '@react-query-firebase/auth'
+
+export const useCurrentUser = () => {
+	return useAuthUser(['user'], auth, {
+		onSuccess(user) {
+			if (user) {
+				console.log('User is authenticated!', user)
+			}
+		},
+		onError(error) {
+			console.error('Failed to subscribe to users authentication state!')
+			console.log(error)
+		},
+	})
+}
 
 export async function syncUsers(user: User) {
 	const userRef = doc(db, 'users', user.uid)
@@ -52,7 +67,7 @@ export async function addClassroom(name: string, user: User) {
 		id: user.uid,
 	})
 
-	/* Update user's classrooms list. Not useful at the moment but we may keep 
+	/* Update user's classrooms list. Not useful at the moment but we may keep
    for later. Don't delete for now */
 	// const userRef = doc(db, 'users', user.uid);
 	// await updateDoc(userRef, {
@@ -190,14 +205,12 @@ export async function updatePlayer(
 	classroomID: string,
 	newPlayer: {
 		name: string
-		avatar: number
 	},
 ) {
 	const playerRef = doc(db, `classrooms/${classroomID}/players/${userID}`)
 
 	await updateDoc(playerRef, {
 		name: newPlayer.name,
-		avatar: newPlayer.avatar,
 	})
 }
 

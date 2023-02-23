@@ -100,7 +100,7 @@ export default function TaskModalStudent({
 							width: '100%',
 						}}
 					/> */}
-					<ModalTitle onClick={handleClose} text='Overview' />
+					<ModalTitle onClick={handleClose} text='Task Overview' />
 
 					{/* <Box
 						sx={{
@@ -136,8 +136,8 @@ export default function TaskModalStudent({
 								}
 							/>
 						)}
-						{/* </Box> */}
 					</BoxInModal>
+					{/* </Box> */}
 				</Box>
 			</Modal>
 		</div>

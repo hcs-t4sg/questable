@@ -53,10 +53,11 @@ export default function Inventory({ player, classroom }: { player: Player; class
 	useEffect(() => {
 		const q = query(collection(db, `classrooms/${classroom.id}/players/${player.id}/inventory`))
 
-		onSnapshot(q, (snapshot) => {
+		const unsub = onSnapshot(q, (snapshot) => {
 			const inventoryList = snapshot.docs.map((doc) => doc.data())
 			setInventoryItems(inventoryList as DatabaseInventoryItem[])
 		})
+		return unsub
 	}, [player, classroom])
 
 	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
