@@ -16,7 +16,7 @@ export interface Task extends Assignment {
 }
 
 export interface TaskWithStatus extends Task {
-	status: string
+	status: 0 | 1 | 2 | 3
 }
 
 export interface TaskCompletionTime {

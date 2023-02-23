@@ -1,12 +1,12 @@
 // import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
+import { format, fromUnixTime } from 'date-fns'
 import { useState } from 'react'
-import sprite1 from '../../assets/tempAssets/sprite1.svg'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
 
-import { ModalTitle } from '../global/TaskModalStyles'
+import { ModalTitle, BoxInModal } from '../global/TaskModalStyles'
 
 export default function TaskModalStudent({
 	classroom,
@@ -84,7 +84,7 @@ export default function TaskModalStudent({
 						}}
 					>
 						<Typography fontWeight='light' variant='h5'>
-							Overview
+							Task Overview
 						</Typography>
 						<IconButton onClick={handleClose}>
 							<CloseIcon />
@@ -98,42 +98,24 @@ export default function TaskModalStudent({
 							borderWidth: '0px',
 							borderRadius: '5px',
 							width: '100%',
-							marginBottom: '35px',
 						}}
 					/> */}
 					<ModalTitle onClick={handleClose} text='Overview' />
-					<Box
-						component='img'
-						sx={{
-							width: '15%',
-							// height: '30%',
-							maxHeight: '200px',
-							maxWidth: '200px',
-							marginBottom: '24px',
-						}}
-						alt="User's avatar"
-						src={sprite1}
-					/>
-					<Typography
-						sx={{ textAlign: 'center', maxWidth: '400px' }}
-						fontWeight='light'
-						variant='h6'
-					>
-						Flavored Text: Strawberry Vanilla Chocolate!
-					</Typography>
-					<Box
+
+					{/* <Box
 						sx={{
 							width: '100%',
 							flexDirection: 'column',
 							display: 'flex',
 							justifyContent: 'left',
 						}}
-					>
+					> */}
+					<BoxInModal>
 						<Cluster title='Task Name' data={task.name} />
 						<Cluster title='Description' data={task.description} />
-						<Cluster title='Deadline' data={task.due} />
+						<Cluster title='Deadline' data={format(fromUnixTime(task.due), 'MM/dd/yyyy')} />
 						<Cluster title='Reward Amount' data={`$${task.reward}`} />
-						{task.status === 'assigned' ? (
+						{task.status === 0 ? (
 							<Cluster
 								title='Completion'
 								data={
@@ -146,15 +128,16 @@ export default function TaskModalStudent({
 							<Cluster
 								title='Completion'
 								data={
-									task.status === 'completed'
+									task.status === 1
 										? 'Marked as completed!'
-										: task.status === 'confirmed'
+										: task.status === 2
 										? 'Confirmed!'
 										: 'Unavailable'
 								}
 							/>
 						)}
-					</Box>
+						{/* </Box> */}
+					</BoxInModal>
 				</Box>
 			</Modal>
 		</div>
