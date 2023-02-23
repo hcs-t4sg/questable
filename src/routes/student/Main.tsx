@@ -59,13 +59,14 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 	useEffect(() => {
 		// fetch task information
 		const q = query(collection(db, `classrooms/${classroom.id}/tasks`))
-		onSnapshot(q, (snapshot) => {
+		const unsub = onSnapshot(q, (snapshot) => {
 			const taskFetch = async () => {
 				const assigned: TaskWithStatus[] = []
 				const completed: TaskWithStatus[] = []
 				const confirmed: TaskWithStatus[] = []
 				const overdue: TaskWithStatus[] = []
 
+				// TODO rewrite using Promise.all
 				snapshot.forEach((doc) => {
 					// Find assigned, completed, and confirmed tasks using player's id.
 					if (doc.data().assigned?.includes(player.id)) {
@@ -98,6 +99,7 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 			}
 			taskFetch().catch(console.error)
 		})
+		return unsub
 	}, [classroom.id, player.id])
 
 	// useEffect to fetch repeatable information
@@ -134,7 +136,7 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 		}
 
 		const repeatableQuery = query(collection(db, `classrooms/${classroom.id}/repeatables`))
-		onSnapshot(repeatableQuery, (snapshot) => {
+		const unsub = onSnapshot(repeatableQuery, (snapshot) => {
 			const repeatablesFetch = async () => {
 				const repeatable: Repeatable[] = []
 				snapshot.forEach((doc) => {
@@ -146,6 +148,7 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 			}
 			repeatablesFetch().catch(console.error)
 		})
+		return unsub
 	}, [classroom.id, player.id])
 
 	const handleTaskComplete = (task: TaskWithStatus) => {
@@ -250,7 +253,7 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 	//     } else if (newValue === "confirmed") {
 	//       setFilteredTasks(confirmed);
 	//     }
-	//   };
+	//   }
 
 	return (
 		<div style={{ marginLeft: '36px' }}>

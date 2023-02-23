@@ -1,10 +1,9 @@
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
-import * as React from 'react'
 import ClassTeacherModal from '../../components/teacher/ClassTeacherModal'
 
-import { collection, doc, onSnapshot, query } from 'firebase/firestore'
+import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 import { getUserData } from '../../utils/mutations'
 
@@ -14,6 +13,7 @@ import CardContent from '@mui/material/CardContent'
 import Avatar from '../../components/global/Avatar'
 import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { currentAvatar } from '../../utils/items'
+import { useEffect, useState } from 'react'
 
 export default function ClassTeacher({
 	player,
@@ -22,25 +22,16 @@ export default function ClassTeacher({
 	player: Player
 	classroom: Classroom
 }) {
-	const [students, setStudents] = React.useState<PlayerWithEmail[]>([])
+	const [students, setStudents] = useState<PlayerWithEmail[]>([])
 	//   const [teacher, setTeacher] = React.useState();
 
-	const [numStudents, setNumStudents] = React.useState()
-
-	const classroomRef = doc(db, `classrooms/${classroom.id}`)
-	onSnapshot(classroomRef, (doc) => {
-		if (doc.exists()) {
-			setNumStudents(doc.data().playerList.length)
-		}
-	})
-
-	React.useEffect(() => {
+	useEffect(() => {
 		// If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
 		const playersRef = collection(db, `classrooms/${classroom.id}/players`)
 		const playerQuery = query(playersRef)
 
 		// Attach a listener to the teacher document
-		onSnapshot(playerQuery, (snapshot) => {
+		const unsub = onSnapshot(playerQuery, (snapshot) => {
 			const mapTeacher = async () => {
 				// * Rewritten from a forEach call. old code commented
 				const players = await Promise.all(
@@ -85,7 +76,8 @@ export default function ClassTeacher({
 			// Call the async `mapTeacher` function
 			mapTeacher().catch(console.error)
 		})
-	})
+		return unsub
+	}, [classroom, player])
 
 	return (
 		<Grid container spacing={3}>
@@ -102,7 +94,7 @@ export default function ClassTeacher({
 						</Typography>{' '}
 						{/* Do we want a separate user name?*/}
 						<Typography variant='h5' component='div'>
-							{numStudents} Total Students
+							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
 				</Card>
