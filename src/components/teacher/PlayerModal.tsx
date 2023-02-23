@@ -1,5 +1,4 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
-import { FormControlLabel, Radio, RadioGroup } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -24,14 +23,12 @@ export default function PlayerModal({
 	const [open, setOpen] = useState(false)
 
 	const [name, setName] = useState(player.name)
-	const [avatar, setAvatar] = useState(player.avatar)
 	const [money, setMoney] = useState(player.money)
 	const [role, setRole] = useState(player.role)
 
 	const handleEdit = () => {
 		const newPlayer = {
 			name: name,
-			avatar: avatar,
 		}
 
 		updatePlayer(user.uid, classroom.id, newPlayer).catch(console.error)
@@ -41,7 +38,6 @@ export default function PlayerModal({
 	const handleClickOpen = () => {
 		setOpen(true)
 		setName(name)
-		setAvatar(avatar)
 		setMoney(money)
 		setRole(role)
 	}
@@ -92,33 +88,6 @@ export default function PlayerModal({
 						value={player.money}
 						disabled={true}
 					/>
-
-					<RadioGroup
-						row
-						id='avatar'
-						name='Player Avatar'
-						onChange={(event) => {
-							setAvatar(parseInt(event.target.value))
-						}}
-						value={avatar}
-						defaultValue={player.avatar}
-					>
-						<FormControlLabel
-							label={<img src='../../static/0.png' alt='Avatar 0' width='50' height='50' />}
-							value='0'
-							control={<Radio />}
-						/>
-						<FormControlLabel
-							label={<img src='../../static/1.png' alt='Avatar 1' width='50' height='50' />}
-							value='1'
-							control={<Radio />}
-						/>
-						<FormControlLabel
-							label={<img src='../../static/2.png' alt='Avatar 2' width='50' height='50' />}
-							value='2'
-							control={<Radio />}
-						/>
-					</RadioGroup>
 
 					<DialogActions>
 						<Button onClick={handleClose}>Cancel</Button>
