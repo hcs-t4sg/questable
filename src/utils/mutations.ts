@@ -17,22 +17,7 @@ import {
 	where,
 } from 'firebase/firestore'
 import { Classroom, Item, Player } from '../types'
-import { db, auth } from './firebase'
-import { useAuthUser } from '@react-query-firebase/auth'
-
-export const useCurrentUser = () => {
-	return useAuthUser(['user'], auth, {
-		onSuccess(user) {
-			if (user) {
-				console.log('User is authenticated!', user)
-			}
-		},
-		onError(error) {
-			console.error('Failed to subscribe to users authentication state!')
-			console.log(error)
-		},
-	})
-}
+import { db } from './firebase'
 
 export async function syncUsers(user: User) {
 	const userRef = doc(db, 'users', user.uid)

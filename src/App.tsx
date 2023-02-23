@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import { useAuthUser } from '@react-query-firebase/auth'
 import { Link, Route, Routes } from 'react-router-dom'
 import './App.css'
 import ClassroomPage from './routes/ClassroomPage'
@@ -12,8 +13,6 @@ import Home from './routes/Home'
 import Settings from './routes/Settings'
 import { auth, SignInScreen } from './utils/firebase'
 // make alias for greater readability
-// import { useAuthUser } from '@react-query-firebase/auth'
-import { useCurrentUser } from './utils/mutations'
 
 // MUI styling constants
 
@@ -35,7 +34,7 @@ const mdTheme = createTheme({
 // App.js is the homepage and handles top-level functions like user auth.
 
 export default function App() {
-	const currentUser = useCurrentUser()
+	const currentUser = useAuthUser(['user'], auth)
 
 	return (
 		<ThemeProvider theme={mdTheme}>
