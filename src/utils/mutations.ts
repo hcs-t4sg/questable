@@ -183,31 +183,32 @@ export async function getTaskData(classID: string, taskID: string) {
 	}
 }
 
-export async function getRepeatableCompletionCount(
-	classID: string,
-	repeatableID: string,
-	playerID: string,
-) {
-	console.log(classID)
-	console.log(repeatableID)
-	console.log(playerID)
-	const completionsRef = doc(
-		db,
-		`classrooms/${classID}/repeatables/${repeatableID}/playerCompletions`,
-		playerID,
-	)
-	const completionsSnap = await getDoc(completionsRef)
-	console.log('snap')
-	console.log(completionsSnap)
-	if (completionsSnap.exists()) {
-		console.log('yeet')
-		console.log(completionsSnap.data())
-		const completionsData = completionsSnap.data().completions
-		return completionsData
-	} else {
-		return null
-	}
-}
+// * Deprecated for now but may need later
+// export async function getRepeatableCompletionCount(
+// 	classID: string,
+// 	repeatableID: string,
+// 	playerID: string,
+// ) {
+// 	console.log(classID)
+// 	console.log(repeatableID)
+// 	console.log(playerID)
+// 	const completionsRef = doc(
+// 		db,
+// 		`classrooms/${classID}/repeatables/${repeatableID}/playerCompletions`,
+// 		playerID,
+// 	)
+// 	const completionsSnap = await getDoc(completionsRef)
+// 	console.log('snap')
+// 	console.log(completionsSnap)
+// 	if (completionsSnap.exists()) {
+// 		console.log('yeet')
+// 		console.log(completionsSnap.data())
+// 		const completionsData = completionsSnap.data().completions
+// 		return completionsData
+// 	} else {
+// 		return null
+// 	}
+// }
 
 // Mutation to handle task update
 export async function updateTask(

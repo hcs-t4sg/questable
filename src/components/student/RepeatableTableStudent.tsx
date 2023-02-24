@@ -6,11 +6,10 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { Classroom, Player, RepeatableWithCompletionCount } from '../../types'
+import { Classroom, Player, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
-import { getRepeatableCompletionCount } from '../../utils/mutations'
 import RepeatableModalStudent from './RepeatableModalStudent'
 
 function truncate(description: string) {
@@ -18,6 +17,57 @@ function truncate(description: string) {
 		return description.slice(0, 50) + '...'
 	}
 	return description
+}
+
+function RepeatableTableRow({
+	repeatable,
+	classroom,
+	player,
+}: {
+	repeatable: Repeatable
+	classroom: Classroom
+	player: Player
+}) {
+	const [completions, setCompletions] = useState<number | null>(null)
+
+	useEffect(() => {
+		const completionsRef = doc(
+			db,
+			`classrooms/${classroom.id}/repeatables/${repeatable.id}/playerCompletions`,
+			player.id,
+		)
+		const unsub = onSnapshot(completionsRef, (doc) => {
+			if (doc.exists()) {
+				setCompletions(doc.data().completions)
+			}
+		})
+		return unsub
+	}, [repeatable, classroom, player])
+
+	const repeatableWithCompletions = { ...repeatable, completions: completions ?? 0 }
+
+	return (
+		<TableRow key={repeatable.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+			<TableCell component='th' scope='row'>
+				{repeatable.name}
+			</TableCell>
+			<TableCell align='left'>{truncate(repeatable.description)}</TableCell>
+			<TableCell align='left'>
+				{completions || completions === 0
+					? `${completions}/${repeatable.maxCompletions}`
+					: 'Loading'}
+			</TableCell>
+			<TableCell align='left'>{repeatable.reward}</TableCell>
+
+			<TableCell align='right' sx={{ width: 0.01 }}>
+				<RepeatableModalStudent
+					classroom={classroom}
+					repeatable={repeatableWithCompletions}
+					player={player}
+				/>
+			</TableCell>
+		</TableRow>
+	)
 }
 
 export default function RepeatableTableStudent({
@@ -28,7 +78,7 @@ export default function RepeatableTableStudent({
 	player: Player
 }) {
 	// Create a state variable to hold the tasks
-	const [repeatables, setRepeatables] = useState<RepeatableWithCompletionCount[]>([])
+	const [repeatables, setRepeatables] = useState<Repeatable[]>([])
 	useEffect(() => {
 		// Create a reference to the tasks collection
 		const repeatableCollectionRef = query(
@@ -37,32 +87,15 @@ export default function RepeatableTableStudent({
 		)
 		// Attach a listener to the tasks collection
 		const unsub = onSnapshot(repeatableCollectionRef, (snapshot) => {
-			const mapRepeatables = async () => {
-				const repeatables = await Promise.all(
-					snapshot.docs.map(async (repeatableDoc) => {
-						const completionCount = await getRepeatableCompletionCount(
-							classroom.id,
-							repeatableDoc.id,
-							player.id,
-						)
-						console.log(completionCount)
-						if (!(completionCount || completionCount === 0)) {
-							throw new Error('Completion count does not exist')
-						}
-						return {
-							...repeatableDoc.data(),
-							id: repeatableDoc.id,
-							completions: completionCount,
-						} as RepeatableWithCompletionCount
-					}),
-				)
+			const repeatablesList = snapshot.docs.map(
+				(doc) =>
+					({
+						...doc.data(),
+						id: doc.id,
+					} as Repeatable),
+			)
 
-				setRepeatables(repeatables)
-			}
-
-			// // Store the tasks in the `tasks` state variable
-			// setRepeatables(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Repeatable)))
-			mapRepeatables().catch(console.error)
+			setRepeatables(repeatablesList)
 		})
 		return unsub
 	}, [classroom, player])
@@ -82,25 +115,12 @@ export default function RepeatableTableStudent({
 					</TableHead>
 					<TableBody>
 						{repeatables?.map((repeatable) => (
-							<TableRow
+							<RepeatableTableRow
 								key={repeatable.id}
-								sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-							>
-								<TableCell component='th' scope='row'>
-									{repeatable.name}
-								</TableCell>
-								<TableCell align='left'>{truncate(repeatable.description)}</TableCell>
-								<TableCell align='left'>{`${repeatable.completions}/${repeatable.maxCompletions}`}</TableCell>
-								<TableCell align='left'>{repeatable.reward}</TableCell>
-
-								<TableCell align='right' sx={{ width: 0.01 }}>
-									<RepeatableModalStudent
-										classroom={classroom}
-										repeatable={repeatable}
-										player={player}
-									/>
-								</TableCell>
-							</TableRow>
+								repeatable={repeatable}
+								classroom={classroom}
+								player={player}
+							/>
 						))}
 					</TableBody>
 				</Table>
