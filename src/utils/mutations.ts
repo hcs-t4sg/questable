@@ -183,6 +183,32 @@ export async function getTaskData(classID: string, taskID: string) {
 	}
 }
 
+export async function getRepeatableCompletionCount(
+	classID: string,
+	repeatableID: string,
+	playerID: string,
+) {
+	console.log(classID)
+	console.log(repeatableID)
+	console.log(playerID)
+	const completionsRef = doc(
+		db,
+		`classrooms/${classID}/repeatables/${repeatableID}/playerCompletions`,
+		playerID,
+	)
+	const completionsSnap = await getDoc(completionsRef)
+	console.log('snap')
+	console.log(completionsSnap)
+	if (completionsSnap.exists()) {
+		console.log('yeet')
+		console.log(completionsSnap.data())
+		const completionsData = completionsSnap.data().completions
+		return completionsData
+	} else {
+		return null
+	}
+}
+
 // Mutation to handle task update
 export async function updateTask(
 	classroomID: string,
@@ -199,6 +225,24 @@ export async function updateTask(
 		reward: task.reward,
 	})
 }
+
+// Mutation to handle repeatable update
+export async function updateRepeatable(
+	classroomID: string,
+	repeatable: {
+		name: string
+		maxCompletions: number
+		description: string
+		id: string
+	},
+) {
+	await updateDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatable.id}`), {
+		name: repeatable.name,
+		maxCompletions: repeatable.maxCompletions,
+		description: repeatable.description,
+	}).catch(console.error)
+}
+
 // Mutation to update player data
 export async function updatePlayer(
 	userID: string,
@@ -339,18 +383,20 @@ export async function addRepeatable(
 		.data()
 		.playerList.filter((playerID: string) => playerID !== teacherID)
 		.forEach(async (playerID: string) => {
-			await addDoc(
-				collection(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/lastRefresh`),
+			await setDoc(
+				doc(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/lastRefresh`, playerID),
 				{
-					id: playerID,
 					// Set lastRefresh to most recent Sunday Midnight instead
 					lastRefresh: getSunday(),
 				},
 			)
-			await addDoc(
-				collection(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/playerCompletions`),
+			await setDoc(
+				doc(
+					db,
+					`classrooms/${classID}/repeatables/${repeatableRef.id}/playerCompletions`,
+					playerID,
+				),
 				{
-					id: playerID,
 					completions: 0,
 				},
 			)

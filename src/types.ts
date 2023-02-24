@@ -29,16 +29,20 @@ export interface TaskWithCompletionTimes extends Task {
 }
 
 export interface Repeatable extends Assignment {
-	maxCompletions: string
+	maxCompletions: number
 }
 
-export interface RepeatablePlayerCompletions {
+export interface RepeatablePlayerCompletionsArray {
 	id: string
 	completions: number
 }
 
-export interface RepeatableWithPlayerCompletions extends Repeatable {
-	playerCompletions: RepeatablePlayerCompletions[]
+export interface RepeatableWithPlayerCompletionsArray extends Repeatable {
+	playerCompletions: RepeatablePlayerCompletionsArray[]
+}
+
+export interface RepeatableWithCompletionCount extends Repeatable {
+	completions: number
 }
 
 // export interface RepeatableCompletion
