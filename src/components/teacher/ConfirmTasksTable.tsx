@@ -15,8 +15,8 @@ import { useEffect, useState } from 'react'
 import {
 	Classroom,
 	Player,
-	RepeatablePlayerCompletions,
-	RepeatableWithPlayerCompletions,
+	RepeatablePlayerCompletionsArray,
+	RepeatableWithPlayerCompletionsArray,
 	TaskCompletionTime,
 	TaskWithCompletionTimes,
 } from '../../types'
@@ -33,7 +33,7 @@ function truncate(description: string) {
 export default function ConfirmTasksTable({ classroom }: { classroom: Classroom }) {
 	const [completedTasks, setCompletedTasks] = useState<TaskWithCompletionTimes[]>([])
 	const [completedRepeatables, setCompletedRepeatables] = useState<
-		RepeatableWithPlayerCompletions[]
+		RepeatableWithPlayerCompletionsArray[]
 	>([])
 	// const [completionTimes, setCompletionTimes] = useState([]);
 	const [playerData, setPlayerData] = useState<Player[]>([])
@@ -92,10 +92,10 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 		const qr = query(collection(db, `classrooms/${classroom.id}/repeatables`))
 		const unsubRepeatables = onSnapshot(qr, (snapshot) => {
 			const cRepeatablesFetch = async () => {
-				const queryRes: RepeatableWithPlayerCompletions[] = []
+				const queryRes: RepeatableWithPlayerCompletionsArray[] = []
 				snapshot.forEach(async (doc) => {
 					// Query the completions collection for each repeatable and store that data in an array.
-					const completions: RepeatablePlayerCompletions[] = []
+					const completions: RepeatablePlayerCompletionsArray[] = []
 					const completionsQuery = query(
 						collection(db, `classrooms/${classroom.id}/repeatables/${doc.id}/playerCompletions`),
 					)
@@ -104,7 +104,7 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 							completions.push({
 								id: item.id,
 								...item.data(),
-							} as RepeatablePlayerCompletions)
+							} as RepeatablePlayerCompletionsArray)
 						})
 					})
 
@@ -112,7 +112,7 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 						Object.assign(
 							{ id: doc.id },
 							{ ...doc.data(), playerCompletions: completions },
-						) as RepeatableWithPlayerCompletions,
+						) as RepeatableWithPlayerCompletionsArray,
 					)
 				})
 
