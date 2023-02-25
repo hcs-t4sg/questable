@@ -86,7 +86,6 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 
 		return function cleanup() {
 			unsubPlayers()
-			unsubTasks()
 			unsubRepeatables()
 		}
 	}, [classroom])
