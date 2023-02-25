@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { format, fromUnixTime } from 'date-fns'
 import { useState } from 'react'
-import { Classroom, Player, TaskWithStatus } from '../../types'
+import { Classroom, Player, Task, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
 import TaskModalStudent from './TaskModalStudent'
 
@@ -53,7 +53,7 @@ export default function TasksTableStudent({
 	}
 
 	// Handle task completion
-	const handleTaskComplete = (task) => {
+	const handleTaskComplete = (task: Task) => {
 		// Call the `completeTask` mutation
 		if (window.confirm('Are you sure you want to mark this task as complete?')) {
 			completeTask(classroom.id, task.id, player.id)
