@@ -183,6 +183,21 @@ export async function getTaskData(classID: string, taskID: string) {
 	}
 }
 
+export async function getPlayerTaskCompletion(classID: string, taskID: string, playerID: string) {
+	const completionTimeRef = doc(
+		db,
+		`classrooms/${classID}/tasks/${taskID}/completionTimes`,
+		playerID,
+	)
+	const completionTimeSnap = await getDoc(completionTimeRef)
+	if (completionTimeSnap.exists()) {
+		const completionTime = completionTimeSnap.data().time
+		return completionTime
+	} else {
+		return null
+	}
+}
+
 // * Deprecated for now but may need later
 // export async function getRepeatableCompletionCount(
 // 	classID: string,

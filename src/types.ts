@@ -28,6 +28,11 @@ export interface TaskWithCompletionTimes extends Task {
 	completionTimes: TaskCompletionTime[]
 }
 
+export interface CompletedTask extends Task {
+	player: Player
+	completionTime: Timestamp
+}
+
 export interface Repeatable extends Assignment {
 	maxCompletions: number
 }
