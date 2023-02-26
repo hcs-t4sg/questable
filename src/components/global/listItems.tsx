@@ -8,6 +8,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
+import ForumIcon from '@mui/icons-material/Forum'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -39,6 +40,12 @@ export const mainListItemsTeacher = (
 			</ListItemIcon>
 			<ListItemText primary='Class Settings' />
 		</ListItemButton>
+		<ListItemButton component={Link} to='forum'>
+			<ListItemIcon>
+				<ForumIcon />
+			</ListItemIcon>
+			<ListItemText primary='Forum' />
+		</ListItemButton>
 	</React.Fragment>
 )
 
@@ -67,6 +74,12 @@ export const mainListItemsStudent = (
 				<InventoryIcon />
 			</ListItemIcon>
 			<ListItemText primary='Inventory' />
+		</ListItemButton>
+		<ListItemButton component={Link} to='forum'>
+			<ListItemIcon>
+				<ForumIcon />
+			</ListItemIcon>
+			<ListItemText primary='Forum' />
 		</ListItemButton>
 	</React.Fragment>
 )

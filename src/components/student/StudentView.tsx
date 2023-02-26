@@ -10,6 +10,7 @@ import Shop from '../../routes/student/Shop'
 import { currentAvatar } from '../../utils/items'
 import Avatar from '../global/Avatar'
 import Layout from '../global/Layout'
+import ForumView from '../forum/ForumView'
 
 // import x from '../../public/static/'
 import { Classroom, Player } from '../../types'
@@ -104,8 +105,14 @@ export default function StudentView({
 				<Route
 					path='class-student'
 					element={<ClassStudent player={player} classroom={classroom} />}
-				/>
+				>
+					<Route
+						path={`${classroom.id}/forum`}
+						element={<ForumView player={player} classroom={classroom} />}
+					/>
+				</Route>
 				<Route path='inventory' element={<Inventory player={player} classroom={classroom} />} />
+				{/* <Route path='forum' element={<ForumView player={player} classroom={classroom} />} /> */}
 				<Route
 					path='*'
 					element={
