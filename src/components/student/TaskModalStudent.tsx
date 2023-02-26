@@ -108,7 +108,6 @@ export default function TaskModalStudent({
 							flexDirection: 'column',
 							display: 'flex',
 							justifyContent: 'left',
-							m: 2,
 						}}
 					>
 						{/* <BoxInModal> */}
