@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
 import { styled } from '@mui/material/styles'
-import { useEffect } from 'react'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import ClassStudent from '../../routes/student/ClassStudent'
 import Inventory from '../../routes/student/Inventory'
@@ -13,6 +12,7 @@ import Layout from '../global/Layout'
 
 // import x from '../../public/static/'
 import { Classroom, Player } from '../../types'
+import { useEffect } from 'react'
 import { refreshAllRepeatables } from '../../utils/mutations'
 
 export default function StudentView({
@@ -38,9 +38,10 @@ export default function StudentView({
 	// Given the IDs for the outfit fetched from Firebase (and the hair subtype), you can designate the avatar outfit like so.
 	const playerOutfit = currentAvatar(player)
 
+	// ! Will need to reinsert refresh repeatables here
 	useEffect(() => {
 		refreshAllRepeatables(classroom.id, player.id)
-	}, [player, classroom])
+	})
 
 	return (
 		<Layout classroom role={player.role}>

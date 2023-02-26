@@ -2,7 +2,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
 import { useState } from 'react'
-import { Classroom, Player, RepeatableWithCompletionCount } from '../../types'
+import { Classroom, Player, RepeatableWithPlayerData } from '../../types'
 import { completeRepeatable } from '../../utils/mutations'
 
 export default function RepeatableModalStudent({
@@ -12,7 +12,7 @@ export default function RepeatableModalStudent({
 }: {
 	classroom: Classroom
 	player: Player
-	repeatable: RepeatableWithCompletionCount
+	repeatable: RepeatableWithPlayerData
 }) {
 	// State variables
 	const [open, setOpen] = useState(false)

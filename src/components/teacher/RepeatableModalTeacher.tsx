@@ -13,22 +13,22 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Classroom, Repeatable } from '../../types'
 import { deleteRepeatable, updateRepeatable } from '../../utils/mutations'
 
-function containsOnlyNumbers(str: string) {
-	return /^\d+$/.test(str)
-}
+// function containsOnlyNumbers(str: string) {
+// 	return /^\d+$/.test(str)
+// }
 
-function maxCompletionsIsInvalid(maxCompletions: string) {
-	if (!containsOnlyNumbers(maxCompletions)) {
-		return true
-	}
-	if (maxCompletions === '') {
-		return true
-	}
-	if (parseInt(maxCompletions) <= 0) {
-		return true
-	}
-	return false
-}
+// function maxCompletionsIsInvalid(maxCompletions: string) {
+// 	if (!containsOnlyNumbers(maxCompletions)) {
+// 		return true
+// 	}
+// 	if (maxCompletions === '') {
+// 		return true
+// 	}
+// 	if (parseInt(maxCompletions) <= 0) {
+// 		return true
+// 	}
+// 	return false
+// }
 
 export default function RepeatableModalTeacher({
 	repeatable,
@@ -40,7 +40,7 @@ export default function RepeatableModalTeacher({
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState(repeatable.name)
 	const [description, setDescription] = useState(repeatable.description)
-	const [maxCompletions, setMaxCompletions] = useState<string>(repeatable.maxCompletions.toString())
+	// const [maxCompletions, setMaxCompletions] = useState<string>(repeatable.maxCompletions.toString())
 
 	const [isEditing, setIsEditing] = useState<boolean>(false)
 
@@ -48,13 +48,13 @@ export default function RepeatableModalTeacher({
 	const handleClickOpen = () => {
 		setOpen(true)
 		setName(repeatable.name)
-		setMaxCompletions(repeatable.maxCompletions.toString())
+		// setMaxCompletions(repeatable.maxCompletions.toString())
 		setDescription(repeatable.description)
 	}
 
 	const handleCancel = () => {
 		setName(repeatable.name)
-		setMaxCompletions(repeatable.maxCompletions.toString())
+		// setMaxCompletions(repeatable.maxCompletions.toString())
 		setDescription(repeatable.description)
 		setIsEditing(false)
 	}
@@ -65,14 +65,14 @@ export default function RepeatableModalTeacher({
 	}
 	// Handle the click of an edit button
 	const handleEdit = () => {
-		if (maxCompletionsIsInvalid(maxCompletions)) {
-			window.alert('Max completions must be an integer greater than 0')
-			return
-		}
+		// if (maxCompletionsIsInvalid(maxCompletions)) {
+		// 	window.alert('Max completions must be an integer greater than 0')
+		// 	return
+		// }
 
 		const updatedRepeatable = {
 			name: name,
-			maxCompletions: parseInt(maxCompletions),
+			// maxCompletions: parseInt(maxCompletions),
 			description: description,
 			id: repeatable.id,
 		}
@@ -170,7 +170,7 @@ export default function RepeatableModalTeacher({
 						onChange={(event) => setDescription(event.target.value)}
 					/>
 
-					<Box
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -199,7 +199,7 @@ export default function RepeatableModalTeacher({
 							}
 							onChange={(event) => setMaxCompletions(event.target.value)}
 						/>
-					</Box>
+					</Box> */}
 					<Box
 						sx={{
 							width: '100%',
@@ -210,6 +210,17 @@ export default function RepeatableModalTeacher({
 						}}
 					>
 						<Typography variant='body1'>{`Reward: ${repeatable.reward} (cannot be edited)`}</Typography>
+					</Box>
+					<Box
+						sx={{
+							width: '100%',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'space-between',
+							m: 2,
+						}}
+					>
+						<Typography variant='body1'>{`Max completions: ${repeatable.maxCompletions} (cannot be edited)`}</Typography>
 					</Box>
 					<br />
 					<Grid container justifyContent='right'>
