@@ -29,7 +29,7 @@ function RepeatableTableRow({
 	player: Player
 }) {
 	const [completions, setCompletions] = useState<number | null>(null)
-
+	const [confirmations, setConfirmations] = useState<number | null>(null)
 	useEffect(() => {
 		const completionsRef = doc(
 			db,
@@ -44,7 +44,25 @@ function RepeatableTableRow({
 		return unsub
 	}, [repeatable, classroom, player])
 
-	const repeatableWithCompletions = { ...repeatable, completions: completions ?? 0 }
+	useEffect(() => {
+		const confirmationsRef = doc(
+			db,
+			`classrooms/${classroom.id}/repeatables/${repeatable.id}/playerConfirmations`,
+			player.id,
+		)
+		const unsub = onSnapshot(confirmationsRef, (doc) => {
+			if (doc.exists()) {
+				setConfirmations(doc.data().confirmations)
+			}
+		})
+		return unsub
+	}, [repeatable, classroom, player])
+
+	const repeatableWithPlayerData = {
+		...repeatable,
+		completions: completions ?? 0,
+		confirmations: confirmations ?? 0,
+	}
 
 	return (
 		<TableRow key={repeatable.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -53,16 +71,17 @@ function RepeatableTableRow({
 			</TableCell>
 			<TableCell align='left'>{truncate(repeatable.description)}</TableCell>
 			<TableCell align='left'>
-				{completions || completions === 0
-					? `${completions}/${repeatable.maxCompletions}`
-					: 'Loading'}
+				{completions || completions === 0 ? `${completions}` : 'Loading'}
+			</TableCell>
+			<TableCell align='left'>
+				{confirmations || confirmations === 0 ? `${confirmations}` : 'Loading'}
 			</TableCell>
 			<TableCell align='left'>{repeatable.reward}</TableCell>
 
 			<TableCell align='right' sx={{ width: 0.01 }}>
 				<RepeatableModalStudent
 					classroom={classroom}
-					repeatable={repeatableWithCompletions}
+					repeatable={repeatableWithPlayerData}
 					player={player}
 				/>
 			</TableCell>
@@ -108,7 +127,8 @@ export default function RepeatableTableStudent({
 						<TableRow>
 							<TableCell>Task</TableCell>
 							<TableCell>Description</TableCell>
-							<TableCell>Completions</TableCell>
+							<TableCell>Pending Completions</TableCell>
+							<TableCell>Confirmed Completions</TableCell>
 							<TableCell>Reward </TableCell>
 							<TableCell sx={{ m: '1%', p: '1%' }}></TableCell>
 						</TableRow>

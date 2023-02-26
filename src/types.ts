@@ -35,6 +35,7 @@ export interface CompletedTask extends Task {
 
 export interface Repeatable extends Assignment {
 	maxCompletions: number
+	requestCount: number
 }
 
 export interface RepeatablePlayerCompletionsArray {
@@ -46,11 +47,23 @@ export interface RepeatableWithPlayerCompletionsArray extends Repeatable {
 	playerCompletions: RepeatablePlayerCompletionsArray[]
 }
 
-export interface RepeatableWithCompletionCount extends Repeatable {
+export interface RepeatableWithPlayerData extends Repeatable {
 	completions: number
+	confirmations: number
 }
 
-// export interface RepeatableCompletion
+export interface CompletionTime {
+	id: string
+	playerID: string
+	time: Timestamp
+}
+
+export interface RepeatableCompletion {
+	id: string
+	repeatable: Repeatable
+	player: Player
+	time: Timestamp
+}
 
 export interface Classroom {
 	id: string

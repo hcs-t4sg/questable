@@ -41,11 +41,11 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 	const [completedTasks, setCompletedTasks] = useState<CompletedTask[]>([])
 
 	useEffect(() => {
-		const completedTasksRef = query(
+		const completedTasksQuery = query(
 			collection(db, `classrooms/${classroom.id}/tasks`),
 			where('completed', '!=', []),
 		)
-		const unsub = onSnapshot(completedTasksRef, (snapshot) => {
+		const unsub = onSnapshot(completedTasksQuery, (snapshot) => {
 			const fetchCompletedTasks = async () => {
 				const completedTasksList: CompletedTask[] = []
 

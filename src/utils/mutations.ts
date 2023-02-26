@@ -1,3 +1,4 @@
+import { useAuthUser } from '@react-query-firebase/auth'
 import { getUnixTime } from 'date-fns'
 import { User } from 'firebase/auth'
 import {
@@ -16,9 +17,8 @@ import {
 	updateDoc,
 	where,
 } from 'firebase/firestore'
-import { Classroom, Item, Player } from '../types'
-import { db, auth } from './firebase'
-import { useAuthUser } from '@react-query-firebase/auth'
+import { Classroom, CompletionTime, Item, Player } from '../types'
+import { auth, db } from './firebase'
 
 export const useCurrentUser = () => {
 	return useAuthUser(['user'], auth, {
@@ -225,6 +225,20 @@ export async function getPlayerTaskCompletion(classID: string, taskID: string, p
 // 	}
 // }
 
+export async function getRepeatableCompletionTimes(classroomID: string, repeatableID: string) {
+	const completionTimesQuery = query(
+		collection(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completionTimes`),
+	)
+	const completionTimesSnap = await getDocs(completionTimesQuery)
+
+	const completionTimes = completionTimesSnap.docs.map((doc) => ({
+		...doc.data(),
+		id: doc.id,
+	}))
+
+	return completionTimes as CompletionTime[]
+}
+
 // Mutation to handle task update
 export async function updateTask(
 	classroomID: string,
@@ -247,14 +261,12 @@ export async function updateRepeatable(
 	classroomID: string,
 	repeatable: {
 		name: string
-		maxCompletions: number
 		description: string
 		id: string
 	},
 ) {
 	await updateDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatable.id}`), {
 		name: repeatable.name,
-		maxCompletions: repeatable.maxCompletions,
 		description: repeatable.description,
 	}).catch(console.error)
 }
@@ -361,8 +373,13 @@ export async function completeRepeatable(
 		`classrooms/${classroomID}/repeatables/${repeatableID}/completionTimes`,
 	)
 	addDoc(completionTimesRef, {
-		player: playerID,
+		playerID,
 		time: serverTimestamp(),
+	})
+
+	// Increment the requestCount
+	updateDoc(repeatableRef, {
+		requestCount: increment(1),
 	})
 }
 
@@ -425,6 +442,7 @@ export async function addRepeatable(
 		created: getUnixTime(new Date()),
 		maxCompletions: repeatable.maxCompletions,
 		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
+		requestCount: 0,
 	})
 
 	// add subcollections
@@ -630,6 +648,11 @@ export async function denyRepeatable(
 
 	// Delete the corresponding completion time
 	deleteDoc(completionTimeRef)
+
+	// Decrement the requestCount
+	updateDoc(repeatableRef, {
+		requestCount: increment(-1),
+	})
 }
 
 // Mutation to confirm repeatable completion
@@ -716,13 +739,18 @@ export async function confirmRepeatable(
 
 	// Remove the corresponding completion time
 	deleteDoc(completionTimeRef)
+
+	// Decrement the requestCount variable
+	updateDoc(repeatableRef, {
+		requestCount: increment(-1),
+	})
 }
 
 // Helper function to get last sunday 11:59 in current timezone
 function lastSunday() {
 	const date = new Date()
 	date.setDate(date.getDate() - date.getDay())
-	date.setHours(23, 59, 59)
+	date.setHours(0, 0, 0, 0)
 	return date
 }
 
