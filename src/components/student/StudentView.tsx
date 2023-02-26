@@ -12,6 +12,8 @@ import Layout from '../global/Layout'
 
 // import x from '../../public/static/'
 import { Classroom, Player } from '../../types'
+import { useEffect } from 'react'
+import { refreshAllRepeatables } from '../../utils/mutations'
 
 export default function StudentView({
 	player,
@@ -37,9 +39,9 @@ export default function StudentView({
 	const playerOutfit = currentAvatar(player)
 
 	// ! Will need to reinsert refresh repeatables here
-	// useEffect(() => {
-	// 	refreshAllRepeatables(classroom.id, player.id)
-	// }, [player, classroom])
+	useEffect(() => {
+		refreshAllRepeatables(classroom.id, player.id)
+	})
 
 	return (
 		<Layout classroom role={player.role}>

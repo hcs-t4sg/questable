@@ -655,6 +655,7 @@ export async function denyRepeatable(
 	})
 }
 
+// TODO Rewrite confirm and deny repeatable so that they don't have to refetch the completion time, as it should already be passed in in the confirmation table
 // Mutation to confirm repeatable completion
 export async function confirmRepeatable(
 	classroomID: string,
@@ -682,6 +683,7 @@ export async function confirmRepeatable(
 
 	// ! Time checking may not be accurate if lastSunday has not been rewritten
 	// Confirmation and completion augmentation should only occur for repeatable completions in the current refresh cycle
+	// ! Potential for confirmations and completions to fall out of sync here if completion is made at the exact moment of the refresh cycle turnover. Add a failsafe to maintain confirmations and completions? Or think more deeply about this logic?
 	if (completionTimeSnap.data().time.toDate() > lastSunday()) {
 		// increment confirmations
 		const confirmationsRef = doc(
@@ -762,16 +764,18 @@ export async function refreshAllRepeatables(classroomID: string, playerID: strin
 		return 'Could not find classroom'
 	}
 	// refresh all repeatables to which player has been assigned
-	const repeatablesRef = query(
+	const repeatablesQuery = query(
 		collection(db, `classrooms/${classroomID}/repeatables`),
 		where('assigned', 'array-contains', playerID),
 	)
-	const repeatablesSnap = await getDocs(repeatablesRef)
+	const repeatablesSnap = await getDocs(repeatablesQuery)
 
 	// TODO see if you can rewrite these calls to run in parallel
-	repeatablesSnap.forEach(async (repeatable) => {
-		await refreshRepeatable(classroomID, playerID, repeatable.id)
-	})
+	await Promise.all(
+		repeatablesSnap.docs.map(async (doc) => {
+			await refreshRepeatable(classroomID, playerID, doc.id)
+		}),
+	)
 }
 
 // Mutation to refresh repeatable
@@ -792,38 +796,24 @@ async function refreshRepeatable(classroomID: string, playerID: string, repeatab
 
 		// If more than a week has passed since last refresh
 		// ! will need to check if this equality holds (account for imprecisions)
-		if (lastRefreshSnap.data().lastRefresh >= lastSunday()) {
+		if (lastRefreshSnap.data().lastRefresh.toDate() >= lastSunday()) {
 			// 1. Set the player completions to 0
 			const completionsRef = doc(
 				db,
 				`classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`,
 			)
-			const completionsSnap = await getDoc(completionsRef)
-			if (completionsSnap.exists()) {
-				updateDoc(completionsRef, {
-					completions: 0,
-				})
-			} else {
-				setDoc(completionsRef, {
-					completions: 0,
-				})
-			}
+			setDoc(completionsRef, {
+				completions: 0,
+			})
 
 			// 2. Set the confirmations to 0
 			const confirmationsRef = doc(
 				db,
 				`classrooms/${classroomID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`,
 			)
-			const confirmationsSnap = await getDoc(confirmationsRef)
-			if (confirmationsSnap.exists()) {
-				updateDoc(confirmationsRef, {
-					confirmations: 0,
-				})
-			} else {
-				setDoc(confirmationsRef, {
-					confirmations: 0,
-				})
-			}
+			setDoc(confirmationsRef, {
+				confirmations: 0,
+			})
 		}
 	}
 }
