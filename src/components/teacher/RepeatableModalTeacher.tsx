@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import CloseIcon from '@mui/icons-material/Close'
+// import CloseIcon from '@mui/icons-material/Close'
 import { Modal } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -12,6 +12,8 @@ import { useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import { Classroom, Repeatable } from '../../types'
 import { deleteRepeatable, updateRepeatable } from '../../utils/mutations'
+
+import { TaskModalBox, ModalTitle, BoxInModal } from '../global/TaskModalStyles'
 
 function containsOnlyNumbers(str: string) {
 	return /^\d+$/.test(str)
@@ -104,7 +106,7 @@ export default function RepeatableModalTeacher({
 				open={open}
 				onClose={handleClose}
 			>
-				<Box
+				{/* <Box
 					sx={{
 						width: '60%',
 						display: 'flex',
@@ -116,8 +118,9 @@ export default function RepeatableModalTeacher({
 						backgroundColor: 'white',
 						marginBottom: '18px',
 					}}
-				>
-					<Box
+				> */}
+				<TaskModalBox>
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -141,7 +144,8 @@ export default function RepeatableModalTeacher({
 							width: '100%',
 							marginBottom: '10px',
 						}}
-					/>
+					/> */}
+					<ModalTitle onClick={handleClose} text='Overview' />
 					<TextField
 						margin='normal'
 						id='name'
@@ -170,7 +174,7 @@ export default function RepeatableModalTeacher({
 						onChange={(event) => setDescription(event.target.value)}
 					/>
 
-					<Box
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -178,7 +182,8 @@ export default function RepeatableModalTeacher({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
+					<BoxInModal>
 						<TextField
 							type='number'
 							margin='normal'
@@ -199,8 +204,9 @@ export default function RepeatableModalTeacher({
 							}
 							onChange={(event) => setMaxCompletions(event.target.value)}
 						/>
-					</Box>
-					<Box
+						{/* </Box> */}
+					</BoxInModal>
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -208,9 +214,11 @@ export default function RepeatableModalTeacher({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
+					<BoxInModal>
 						<Typography variant='body1'>{`Reward: ${repeatable.reward} (cannot be edited)`}</Typography>
-					</Box>
+						{/* </Box> */}
+					</BoxInModal>
 					<br />
 					<Grid container justifyContent='right'>
 						<Button
@@ -243,7 +251,8 @@ export default function RepeatableModalTeacher({
 							Save Changes
 						</Button>
 					</Grid>
-				</Box>
+					{/* </Box> */}
+				</TaskModalBox>
 			</Modal>
 		</Box>
 	)

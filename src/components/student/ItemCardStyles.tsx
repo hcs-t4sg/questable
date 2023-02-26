@@ -15,8 +15,8 @@ interface Props {
 	classroom: Classroom
 	itemPrice: string
 	handleFunction: () => Promise<void>
-	button: any
-	typography: any
+	button: JSX.Element
+	typography: JSX.Element
 }
 
 // The display for a card

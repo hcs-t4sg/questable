@@ -17,6 +17,22 @@ export const TaskModalBox = styled(Box)({
 	marginBottom: '18px',
 })
 
+export const StudentTaskModalBox = styled(Box)({
+	position: 'absolute',
+	top: '50%',
+	left: '50%',
+	transform: 'translate(-50%, -50%)',
+	width: '70%',
+	display: 'flex',
+	flexDirection: 'column',
+	alignItems: 'center',
+	justifyContent: 'center',
+	padding: '35px',
+	paddingTop: '25px',
+	backgroundColor: 'white',
+	marginBottom: '18px',
+})
+
 export const BoxInModal = styled(Box)(({ theme }) => ({
 	width: '100%',
 	display: 'flex',
@@ -40,6 +56,16 @@ interface Props {
 }
 
 // eventually - composition??
+/* Similarities between TaskModalTeacher and CreateTaskModal:
+	- same state variables
+	- same styled components (in this document)
+	- modal part is same
+	..
+	BUT:
+	- props slightly different
+	- TaskModalStudent slightly different - uses Clusters
+
+*/
 
 // export const StyledModal = styled(Modal)()...
 

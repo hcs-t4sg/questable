@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
 
-import { ModalTitle, BoxInModal } from '../global/TaskModalStyles'
+import { ModalTitle } from '../global/TaskModalStyles'
 
 export default function TaskModalStudent({
 	classroom,
@@ -102,15 +102,16 @@ export default function TaskModalStudent({
 					/> */}
 					<ModalTitle onClick={handleClose} text='Task Overview' />
 
-					{/* <Box
+					<Box
 						sx={{
 							width: '100%',
 							flexDirection: 'column',
 							display: 'flex',
 							justifyContent: 'left',
+							m: 2,
 						}}
-					> */}
-					<BoxInModal>
+					>
+						{/* <BoxInModal> */}
 						<Cluster title='Task Name' data={task.name} />
 						<Cluster title='Description' data={task.description} />
 						<Cluster title='Deadline' data={format(fromUnixTime(task.due), 'MM/dd/yyyy')} />
@@ -136,8 +137,8 @@ export default function TaskModalStudent({
 								}
 							/>
 						)}
-					</BoxInModal>
-					{/* </Box> */}
+						{/* </BoxInModal> */}
+					</Box>
 				</Box>
 			</Modal>
 		</div>
