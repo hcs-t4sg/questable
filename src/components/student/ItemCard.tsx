@@ -92,7 +92,9 @@ export function ItemCard(props: Props) {
 				<Typography sx={{ marginTop: '15px' }} variant='h6' component='div'>
 					{props.item.name}
 				</Typography>
-				<ItemTypography variant='h6'>Price: {props.itemPrice}</ItemTypography>
+				{props.type === 'shop' ? (
+					<ItemTypography variant='h6'>Price: {props.itemPrice}</ItemTypography>
+				) : null}
 				<ItemTypography variant='h6'>{props.item.description}</ItemTypography>
 			</CardContent>
 			<CardActions>{confirmActions}</CardActions>

@@ -41,6 +41,13 @@ export const BoxInModal = styled(Box)(({ theme }) => ({
 	margin: theme.spacing(2),
 }))
 
+export const StudentBoxInModal = styled(Box)({
+	width: '100%',
+	flexDirection: 'column',
+	display: 'flex',
+	justifyContent: 'left',
+})
+
 const TaskHr = styled('hr')({
 	backgroundColor: '#D9D9D9',
 	height: '1px',

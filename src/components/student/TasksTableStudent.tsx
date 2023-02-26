@@ -12,7 +12,8 @@ import { format, fromUnixTime } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
-import TaskModalStudent from './TaskModalStudent'
+// import TaskModalStudent from './TaskModalStudent'
+import ModalsStudent from '../global/ModalsStudent'
 
 function a11yProps(index: number) {
 	return {
@@ -112,7 +113,13 @@ export default function TasksTableStudent({
 											/>
 										</TableCell>
 										<TableCell align='center'>
-											<TaskModalStudent task={task} classroom={classroom} player={player} />
+											{/* <TaskModalStudent task={task} classroom={classroom} player={player} /> */}
+											<ModalsStudent
+												task={task}
+												classroom={classroom}
+												player={player}
+												type='task'
+											/>
 										</TableCell>
 										{taskCategory === 0 ? (
 											<TableCell align='center'>

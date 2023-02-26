@@ -6,7 +6,7 @@ import Box from '@mui/material/Box'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
-import ShopItemCard from '../../components/student/ShopItemCard'
+// import ShopItemCard from '../../components/student/ShopItemCard'
 import {
 	getBodyItems,
 	getHairItems,
@@ -14,6 +14,7 @@ import {
 	getPantsItems,
 	getShoesItems,
 } from '../../utils/items'
+import { ItemCard } from '../../components/student/ItemCard'
 import { Classroom, Player } from '../../types'
 
 interface TabPanelProps {
@@ -88,7 +89,14 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(bodies).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} itemPrice='Free' item={item} />
+								{/* <ShopItemCard player={player} classroom={classroom} itemPrice='Free' item={item} /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='Free'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>
@@ -97,7 +105,14 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(hairs).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' />
+								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='$100'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>
@@ -106,7 +121,14 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(shirts).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' />
+								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='$150'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>
@@ -115,7 +137,14 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(pants).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' />
+								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='$150'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>
@@ -124,7 +153,14 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(shoes).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' />
+								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='$100'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>

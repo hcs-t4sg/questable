@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { Classroom, Player, RepeatableWithCompletionCount, TaskWithStatus } from '../../types'
 import { completeRepeatable, completeTask } from '../../utils/mutations'
 import { format, fromUnixTime } from 'date-fns'
-import { StudentTaskModalBox, ModalTitle, BoxInModal } from '../global/TaskModalStyles'
+import { StudentTaskModalBox, ModalTitle, StudentBoxInModal } from '../global/TaskModalStyles'
 
 interface PropsTask {
 	classroom: Classroom
@@ -78,7 +78,7 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 						onClick={handleClose}
 						text={props.type === 'task' ? 'Task Overview' : 'Repeatable Overview'}
 					/>
-					<BoxInModal>
+					<StudentBoxInModal>
 						<Cluster title='Task Name' data={props.task.name} />
 						<Cluster title='Description' data={props.task.description} />
 						<Cluster title='Reward Amount' data={`$${props.task.reward}`} />
@@ -91,7 +91,7 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 								</Button>
 							}
 						/>
-					</BoxInModal>
+					</StudentBoxInModal>
 				</StudentTaskModalBox>
 			</Modal>
 		</Box>
