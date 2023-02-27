@@ -12,14 +12,24 @@ import { getAuth } from 'firebase/auth'
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// const firebaseConfig = {
+// 	apiKey: 'AIzaSyD3v0oikzBtnyz7DHcDool2gtvRw48Z_kk',
+// 	authDomain: 'questable-34d85.firebaseapp.com',
+// 	projectId: 'questable-34d85',
+// 	storageBucket: 'questable-34d85.appspot.com',
+// 	messagingSenderId: '904433822725',
+// 	appId: '1:904433822725:web:fe9f5fd649a9f5d2bb806c',
+// 	measurementId: 'G-DRESZ3V18Q',
+// }
+
 const firebaseConfig = {
-	apiKey: 'AIzaSyD3v0oikzBtnyz7DHcDool2gtvRw48Z_kk',
-	authDomain: 'questable-34d85.firebaseapp.com',
-	projectId: 'questable-34d85',
-	storageBucket: 'questable-34d85.appspot.com',
-	messagingSenderId: '904433822725',
-	appId: '1:904433822725:web:fe9f5fd649a9f5d2bb806c',
-	measurementId: 'G-DRESZ3V18Q',
+	apiKey: 'AIzaSyAr_TVfp5az2Msf-hEruUAOJ-DJkuZkwzc',
+	authDomain: 'questable-backup-two.firebaseapp.com',
+	projectId: 'questable-backup-two',
+	storageBucket: 'questable-backup-two.appspot.com',
+	messagingSenderId: '1014342570095',
+	appId: '1:1014342570095:web:10ffc692772ec15fc53d9a',
+	measurementId: 'G-QC9L76ZHRY',
 }
 
 // Configure FirebaseUI.
