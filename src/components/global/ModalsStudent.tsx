@@ -2,7 +2,7 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
 import { useState } from 'react'
-import { Classroom, Player, RepeatableWithCompletionCount, TaskWithStatus } from '../../types'
+import { Classroom, Player, Repeatable, TaskWithStatus } from '../../types'
 import { completeRepeatable, completeTask } from '../../utils/mutations'
 import { format, fromUnixTime } from 'date-fns'
 import { StudentTaskModalBox, ModalTitle, StudentBoxInModal } from '../global/TaskModalStyles'
@@ -17,7 +17,7 @@ interface PropsTask {
 interface PropsRepeatables {
 	classroom: Classroom
 	player: Player
-	task: RepeatableWithCompletionCount
+	task: Repeatable
 	type: 'repeatables'
 }
 
@@ -66,7 +66,7 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 		props.type === 'task' ? (
 			<Cluster title='Deadline' data={format(fromUnixTime(props.task.due), 'MM/dd/yyyy')} />
 		) : (
-			<Cluster title='Completions' data={props.task.completions} />
+			<Cluster title='Completions' data={props.task.requestCount} />
 		)
 
 	return (

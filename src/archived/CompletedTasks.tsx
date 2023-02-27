@@ -25,7 +25,7 @@ export default function CompletedTasks({
 	useEffect(() => {
 		// fetch task information
 		const q = query(collection(db, `classrooms/${classroom.id}/tasks`))
-		onSnapshot(q, (snapshot) => {
+		const unsub = onSnapshot(q, (snapshot) => {
 			const taskFetch = async () => {
 				const completed: Task[] = []
 				const confirmed: Task[] = []
@@ -43,6 +43,7 @@ export default function CompletedTasks({
 			}
 			taskFetch().catch(console.error)
 		})
+		return unsub
 	}, [classroom.id, player.id])
 
 	return (

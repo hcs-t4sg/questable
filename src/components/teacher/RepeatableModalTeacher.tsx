@@ -50,13 +50,13 @@ export default function RepeatableModalTeacher({
 	const handleClickOpen = () => {
 		setOpen(true)
 		setName(repeatable.name)
-		setMaxCompletions(repeatable.maxCompletions.toString())
+		// setMaxCompletions(repeatable.maxCompletions.toString())
 		setDescription(repeatable.description)
 	}
 
 	const handleCancel = () => {
 		setName(repeatable.name)
-		setMaxCompletions(repeatable.maxCompletions.toString())
+		// setMaxCompletions(repeatable.maxCompletions.toString())
 		setDescription(repeatable.description)
 		setIsEditing(false)
 	}
@@ -67,14 +67,14 @@ export default function RepeatableModalTeacher({
 	}
 	// Handle the click of an edit button
 	const handleEdit = () => {
-		if (maxCompletionsIsInvalid(maxCompletions)) {
-			window.alert('Max completions must be an integer greater than 0')
-			return
-		}
+		// if (maxCompletionsIsInvalid(maxCompletions)) {
+		// 	window.alert('Max completions must be an integer greater than 0')
+		// 	return
+		// }
 
 		const updatedRepeatable = {
 			name: name,
-			maxCompletions: parseInt(maxCompletions),
+			// maxCompletions: parseInt(maxCompletions),
 			description: description,
 			id: repeatable.id,
 		}

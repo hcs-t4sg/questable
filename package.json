@@ -34,7 +34,7 @@
 		"start": "vite",
 		"build": "tsc && vite build",
 		"serve": "vite preview",
-		"lint": "eslint 'src/**/*.{js,ts,tsx}'",
+		"lint": "tsc --noEmit && eslint 'src/**/*.{js,ts,tsx}'",
 		"lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
 		"format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
 		"postinstall": "husky install"

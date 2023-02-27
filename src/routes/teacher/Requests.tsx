@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography'
 
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import ConfirmTasksTable from '../../components/teacher/ConfirmTasksTable'
+import ConfirmationTables from '../../components/teacher/ConfirmationTables'
 
 import { Classroom, Player } from '../../types'
 
@@ -29,7 +29,7 @@ export default function Requests({ player, classroom }: { player: Player; classr
 				</Card>
 			</Grid>
 
-			<ConfirmTasksTable classroom={classroom} />
+			<ConfirmationTables classroom={classroom} />
 		</Grid>
 	)
 }
