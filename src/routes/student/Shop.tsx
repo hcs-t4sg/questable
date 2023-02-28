@@ -1,20 +1,19 @@
-import * as React from 'react'
-import Grid from '@mui/material/Grid'
-import Layout from '../../components/global/Layout'
-import PropTypes from 'prop-types'
 import Box from '@mui/material/Box'
-import Tabs from '@mui/material/Tabs'
+import Grid from '@mui/material/Grid'
 import Tab from '@mui/material/Tab'
-import Typography from '@mui/material/Typography'
+import Tabs from '@mui/material/Tabs'
+import PropTypes from 'prop-types'
+import * as React from 'react'
+import Layout from '../../components/global/Layout'
 import ShopItemCard from '../../components/student/ShopItemCard'
+import { Classroom, Player } from '../../types'
 import {
 	getBodyItems,
 	getHairItems,
-	getShirtItems,
 	getPantsItems,
+	getShirtItems,
 	getShoesItems,
 } from '../../utils/items'
-import { Classroom, Player } from '../../types'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -33,11 +32,7 @@ function TabPanel(props: TabPanelProps) {
 			aria-labelledby={`simple-tab-${index}`}
 			{...other}
 		>
-			{value === index && (
-				<Box sx={{ p: 3 }}>
-					<Typography>{children}</Typography>
-				</Box>
-			)}
+			{value === index && <Box sx={{ p: 3 }}>{children}</Box>}
 		</div>
 	)
 }

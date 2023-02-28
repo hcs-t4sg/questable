@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Grid'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
-import Typography from '@mui/material/Typography'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import React, { useEffect } from 'react'
 import Layout from '../../components/global/Layout'
@@ -29,11 +28,7 @@ function TabPanel(props: TabPanelProps) {
 			aria-labelledby={`simple-tab-${index}`}
 			{...other}
 		>
-			{value === index && (
-				<Box sx={{ p: 3 }}>
-					<Typography>{children}</Typography>
-				</Box>
-			)}
+			{value === index && <Box sx={{ p: 3 }}>{children}</Box>}
 		</div>
 	)
 }
