@@ -33,7 +33,7 @@
             "single"
         ],
         "no-duplicate-imports": "error",
-				"no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+				"no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
     },
     "settings": {
         "import/resolver": {
