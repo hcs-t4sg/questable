@@ -12,6 +12,7 @@ import ClassroomPage from './routes/ClassroomPage'
 import Home from './routes/Home'
 import Settings from './routes/Settings'
 import { auth, SignInScreen } from './utils/firebase'
+import Error from './components/global/Error'
 // make alias for greater readability
 
 // MUI styling constants
@@ -102,18 +103,9 @@ export default function App() {
 					<Routes>
 						<Route path='/' element={<Home user={currentUser.data} />} />
 						<Route path='settings' element={<Settings />} />
-						<Route path='class'>
-							<Route path=':classID/*' element={<ClassroomPage user={currentUser.data} />} />
-						</Route>
+						<Route path='class/:classID/*' element={<ClassroomPage user={currentUser.data} />} />
 						{/* Catch-all route for any URLs that don't match an existing route */}
-						<Route
-							path='*'
-							element={
-								<main style={{ padding: '1rem' }}>
-									<p>There&apos;s nothing here!</p>
-								</main>
-							}
-						/>
+						<Route path='*' element={<Error message={'This page does not exist.'} />} />
 					</Routes>
 				) : (
 					<SignInScreen></SignInScreen>
