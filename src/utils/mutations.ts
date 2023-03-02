@@ -602,6 +602,9 @@ export async function denyRepeatable(
 	repeatableID: string,
 	completionTimeID: string,
 ) {
+	// First refresh repeatable to obtain its most up to date version
+	await refreshRepeatable(classroomID, playerID, repeatableID)
+
 	const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
 	const repeatableSnap = await getDoc(repeatableRef)
 
@@ -625,7 +628,11 @@ export async function denyRepeatable(
 		`classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`,
 	)
 	const completionsSnap = await getDoc(completionsRef)
-	if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
+	if (
+		completionsSnap.exists() &&
+		completionsSnap.data().completions > 0 &&
+		completionTimeSnap.data().time.toDate() >= lastSunday()
+	) {
 		updateDoc(completionsRef, {
 			completions: increment(-1),
 		})
@@ -648,6 +655,9 @@ export async function confirmRepeatable(
 	repeatableID: string,
 	completionTimeID: string,
 ) {
+	// First refresh repeatable to obtain its most up to date version
+	await refreshRepeatable(classroomID, playerID, repeatableID)
+
 	console.log('confirming repeatable')
 	const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
 	const repeatableSnap = await getDoc(repeatableRef)
@@ -669,7 +679,7 @@ export async function confirmRepeatable(
 	// ! Time checking may not be accurate if lastSunday has not been rewritten
 	// Confirmation and completion augmentation should only occur for repeatable completions in the current refresh cycle
 	// ! Potential for confirmations and completions to fall out of sync here if completion is made at the exact moment of the refresh cycle turnover. Add a failsafe to maintain confirmations and completions? Or think more deeply about this logic?
-	if (completionTimeSnap.data().time.toDate() > lastSunday()) {
+	if (completionTimeSnap.data().time.toDate() >= lastSunday()) {
 		// increment confirmations
 		const confirmationsRef = doc(
 			db,
@@ -781,7 +791,8 @@ async function refreshRepeatable(classroomID: string, playerID: string, repeatab
 
 		// If more than a week has passed since last refresh
 		// ! will need to check if this equality holds (account for imprecisions)
-		if (lastRefreshSnap.data().lastRefresh.toDate() >= lastSunday()) {
+		// Should be < because if it's <=, then refresh will trigger every time (which is not desired)
+		if (lastRefreshSnap.data().lastRefresh.toDate() < lastSunday()) {
 			// 1. Set the player completions to 0
 			const completionsRef = doc(
 				db,
@@ -798,6 +809,11 @@ async function refreshRepeatable(classroomID: string, playerID: string, repeatab
 			)
 			setDoc(confirmationsRef, {
 				confirmations: 0,
+			})
+
+			// Update the last refresh
+			setDoc(lastRefreshRef, {
+				lastRefresh: lastSunday(),
 			})
 		}
 	}

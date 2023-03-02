@@ -1,21 +1,21 @@
-import * as React from 'react'
+import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Layout from '../../components/global/Layout'
 import PropTypes from 'prop-types'
-import Box from '@mui/material/Box'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import Typography from '@mui/material/Typography'
+// import Typography from '@mui/material/Typography'
 // import ShopItemCard from '../../components/student/ShopItemCard'
 import {
 	getBodyItems,
 	getHairItems,
-	getShirtItems,
 	getPantsItems,
+	getShirtItems,
 	getShoesItems,
 } from '../../utils/items'
 import { ItemCard } from '../../components/student/ItemCard'
 import { Classroom, Player } from '../../types'
+import { useState } from 'react'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -34,11 +34,7 @@ function TabPanel(props: TabPanelProps) {
 			aria-labelledby={`simple-tab-${index}`}
 			{...other}
 		>
-			{value === index && (
-				<Box sx={{ p: 3 }}>
-					<Typography>{children}</Typography>
-				</Box>
-			)}
+			{value === index && <Box sx={{ p: 3 }}>{children}</Box>}
 		</div>
 	)
 }
@@ -64,7 +60,7 @@ const shoes = getShoesItems()
 //  const all = bodies.concat(hairs, shirts, pants, shoes)
 
 export default function Shop({ player, classroom }: { player: Player; classroom: Classroom }) {
-	const [value, setValue] = React.useState(0)
+	const [value, setValue] = useState(0)
 	const handleChange = (event: React.SyntheticEvent, newValue: 0 | 1 | 2 | 3 | 4) => {
 		setValue(newValue)
 	}
