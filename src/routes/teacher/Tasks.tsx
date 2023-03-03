@@ -7,22 +7,11 @@ import * as React from 'react'
 import CreateTaskModal from '../../components/teacher/CreateTaskModal'
 import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
 
-import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '../../utils/firebase'
-
 import { Tab, Tabs } from '@mui/material'
 import RepeatableTableTeacher from '../../components/teacher/RepeatableTableTeacher'
 import { Classroom, Player } from '../../types'
 
 export default function Tasks({ player, classroom }: { player: Player; classroom: Classroom }) {
-	const [numStudents, setNumStudents] = React.useState()
-
-	const classroomRef = doc(db, `classrooms/${classroom.id}`)
-	onSnapshot(classroomRef, (doc) => {
-		if (doc.exists()) {
-			setNumStudents(doc.data().playerList.length)
-		}
-	})
 	//   const [teacher, setTeacher] = React.useState();
 
 	const [page, setPage] = React.useState(0)
@@ -79,7 +68,7 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 						</Typography>{' '}
 						{/* Do we want a separate user name?*/}
 						<Typography variant='h5' component='div'>
-							{numStudents} Total Students
+							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
 				</Card>

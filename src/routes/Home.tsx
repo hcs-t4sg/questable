@@ -15,10 +15,10 @@ export default function Home({ user }: { user: User }) {
 	// Listen to user's classrooms and maintain a corresponding state variable
 	const [classrooms, setClassrooms] = useState<Classroom[]>([])
 	useEffect(() => {
-		const q = query(collection(db, 'classrooms'), where('playerList', 'array-contains', user?.uid))
+		const q = query(collection(db, 'classrooms'), where('playerList', 'array-contains', user.uid))
 		console.log(q)
 
-		onSnapshot(q, (snapshot) => {
+		const unsub = onSnapshot(q, (snapshot) => {
 			const classroomsList = snapshot.docs.map(
 				(doc): Classroom =>
 					({
@@ -28,12 +28,13 @@ export default function Home({ user }: { user: User }) {
 			)
 			setClassrooms(classroomsList)
 		})
-	}, [user])
+		return unsub
+	}, [])
 
 	// Listen to user's pinned list and maintain a corresponding state variable
-	const [pinned, setPinned] = React.useState<string[]>([])
+	const [pinned, setPinned] = useState<string[]>([])
 	useEffect(() => {
-		onSnapshot(doc(db, `users/${user.uid}`), (user) => {
+		const unsub = onSnapshot(doc(db, `users/${user.uid}`), (user) => {
 			if (user.exists()) {
 				const pinnedList = user.data().pinned
 				if (pinnedList) {
@@ -41,7 +42,8 @@ export default function Home({ user }: { user: User }) {
 				}
 			}
 		})
-	})
+		return unsub
+	}, [])
 
 	// Construct the pinned, student, and teacher classroom arrays based on the "classrooms" and "pinned" state variables
 	const pinnedClassrooms: Classroom[] = []
@@ -50,7 +52,7 @@ export default function Home({ user }: { user: User }) {
 	classrooms.forEach((classroom: Classroom) => {
 		if (pinned.includes(classroom.id)) {
 			pinnedClassrooms.push(classroom)
-		} else if (classroom.teacherList.includes(user?.uid)) {
+		} else if (classroom.teacherList.includes(user.uid)) {
 			teacherClassrooms.push(classroom)
 		} else {
 			studentClassrooms.push(classroom)

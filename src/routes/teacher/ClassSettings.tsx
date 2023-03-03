@@ -5,11 +5,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import PlayerCard from '../../components/teacher/PlayerCard'
 
-import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '../../utils/firebase'
-
 import { User } from 'firebase/auth'
-import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 
 export default function ClassSettings({
@@ -21,15 +17,6 @@ export default function ClassSettings({
 	classroom: Classroom
 	user: User
 }) {
-	const [numStudents, setNumStudents] = useState<number | null>(null)
-
-	const classroomRef = doc(db, `classrooms/${classroom.id}`)
-	onSnapshot(classroomRef, (doc) => {
-		if (doc.exists()) {
-			setNumStudents(doc.data().playerList.length)
-		}
-	})
-
 	return (
 		<Grid container spacing={3} sx={{ p: 5 }}>
 			<Grid item xs={12}>
@@ -45,7 +32,7 @@ export default function ClassSettings({
 						</Typography>{' '}
 						{/* Do we want a separate user name?*/}
 						<Typography variant='h5' component='div'>
-							{numStudents} Total Students
+							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
 				</Card>

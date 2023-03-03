@@ -1,19 +1,18 @@
 import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
-import { format, fromUnixTime } from 'date-fns'
 import { useState } from 'react'
-import { Classroom, Player, TaskWithStatus } from '../../types'
-import { completeTask } from '../../utils/mutations'
+import { Classroom, Player, RepeatableWithPlayerData } from '../../types'
+import { completeRepeatable } from '../../utils/mutations'
 
-export default function TaskModalStudent({
+export default function RepeatableModalStudent({
 	classroom,
 	player,
-	task,
+	repeatable,
 }: {
 	classroom: Classroom
 	player: Player
-	task: TaskWithStatus
+	repeatable: RepeatableWithPlayerData
 }) {
 	// State variables
 	const [open, setOpen] = useState(false)
@@ -31,7 +30,8 @@ export default function TaskModalStudent({
 	const handleComplete = () => {
 		// Call the `completeTask` mutation
 		if (window.confirm('Are you sure you want to mark this task as complete?')) {
-			completeTask(classroom.id, task.id, player.id)
+			completeRepeatable(classroom.id, repeatable.id, player.id)
+			handleClose()
 		}
 	}
 
@@ -53,7 +53,7 @@ export default function TaskModalStudent({
 	)
 
 	return (
-		<div>
+		<Box>
 			{openButton}
 			<Modal sx={{ overflow: 'scroll' }} open={open} onClose={handleClose}>
 				<Box
@@ -82,7 +82,7 @@ export default function TaskModalStudent({
 						}}
 					>
 						<Typography fontWeight='light' variant='h5'>
-							Task Overview
+							Repeatable Overview
 						</Typography>
 						<IconButton onClick={handleClose}>
 							<CloseIcon />
@@ -107,34 +107,21 @@ export default function TaskModalStudent({
 							justifyContent: 'left',
 						}}
 					>
-						<Cluster title='Task Name' data={task.name} />
-						<Cluster title='Description' data={task.description} />
-						<Cluster title='Deadline' data={format(fromUnixTime(task.due), 'MM/dd/yyyy')} />
-						<Cluster title='Reward Amount' data={`$${task.reward}`} />
-						{task.status === 0 ? (
-							<Cluster
-								title='Completion'
-								data={
-									<Button onClick={handleComplete} variant='contained'>
-										Mark as complete
-									</Button>
-								}
-							/>
-						) : (
-							<Cluster
-								title='Completion'
-								data={
-									task.status === 1
-										? 'Marked as completed!'
-										: task.status === 2
-										? 'Confirmed!'
-										: 'Unavailable'
-								}
-							/>
-						)}
+						<Cluster title='Task Name' data={repeatable.name} />
+						<Cluster title='Description' data={repeatable.description} />
+						<Cluster title='Reward Amount' data={`$${repeatable.reward}`} />
+						<Cluster title='Completions' data={repeatable.completions} />
+						<Cluster
+							title='Completion'
+							data={
+								<Button onClick={handleComplete} variant='contained'>
+									Mark as complete
+								</Button>
+							}
+						/>
 					</Box>
 				</Box>
 			</Modal>
-		</div>
+		</Box>
 	)
 }

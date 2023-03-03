@@ -3,23 +3,11 @@ import Typography from '@mui/material/Typography'
 
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import * as React from 'react'
-import ConfirmTasksTable from '../../components/teacher/ConfirmTasksTable'
+import ConfirmationTables from '../../components/teacher/ConfirmationTables'
 
-import { doc, onSnapshot } from 'firebase/firestore'
 import { Classroom, Player } from '../../types'
-import { db } from '../../utils/firebase'
 
 export default function Requests({ player, classroom }: { player: Player; classroom: Classroom }) {
-	const [numStudents, setNumStudents] = React.useState()
-
-	const classroomRef = doc(db, `classrooms/${classroom.id}`)
-	onSnapshot(classroomRef, (doc) => {
-		if (doc.exists()) {
-			setNumStudents(doc.data().playerList.length)
-		}
-	})
-
 	return (
 		<Grid container spacing={3} sx={{ p: 5 }}>
 			<Grid item xs={12}>
@@ -35,13 +23,13 @@ export default function Requests({ player, classroom }: { player: Player; classr
 						</Typography>{' '}
 						{/* Do we want a separate user name?*/}
 						<Typography variant='h5' component='div'>
-							{numStudents} Total Students
+							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
 				</Card>
 			</Grid>
 
-			<ConfirmTasksTable classroom={classroom} />
+			<ConfirmationTables classroom={classroom} />
 		</Grid>
 	)
 }

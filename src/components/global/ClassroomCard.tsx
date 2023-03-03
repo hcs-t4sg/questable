@@ -1,14 +1,15 @@
+import { Divider } from '@mui/material'
 import Button from '@mui/material/Button'
-import CardActionArea from '@mui/material/CardActionArea'
 import Card from '@mui/material/Card'
+import CardActionArea from '@mui/material/CardActionArea'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import * as React from 'react'
-import { Link } from 'react-router-dom'
-import { addPin, deletePin } from '../../utils/mutations'
-import { Classroom } from '../../types'
 import { User } from 'firebase/auth'
+import { useSnackbar } from 'notistack'
+import { Link } from 'react-router-dom'
+import { Classroom } from '../../types'
+import { addPin, deletePin } from '../../utils/mutations'
 
 export default function ClassroomCard({
 	classroom,
@@ -19,6 +20,32 @@ export default function ClassroomCard({
 	user: User
 	pinned: boolean
 }) {
+	const { enqueueSnackbar } = useSnackbar()
+
+	const handleCopyCode = () => {
+		const copyTextToClipboard = async (text: string) => {
+			if ('clipboard' in navigator) {
+				await navigator.clipboard.writeText(text)
+			} else {
+				return document.execCommand('copy', true, text)
+			}
+		}
+
+		copyTextToClipboard(classroom.id)
+			.then(() => {
+				// If successful
+				enqueueSnackbar('Copied join code to clipboard!', {
+					variant: 'success',
+				})
+			})
+			.catch((err) => {
+				console.log(err)
+				enqueueSnackbar('There was an error copying.', {
+					variant: 'error',
+				})
+			})
+	}
+
 	return (
 		<Card>
 			<CardActionArea component={Link} to={`/class/${classroom.id}`}>
@@ -39,6 +66,16 @@ export default function ClassroomCard({
 						Pin Classroom
 					</Button>
 				)}
+				<Divider
+					orientation='vertical'
+					flexItem
+					sx={{
+						margin: '0px 5px 0px 5px',
+					}}
+				/>
+				<Button size='small' sx={{ marginLeft: '0px' }} onClick={handleCopyCode}>
+					Copy join code
+				</Button>
 			</CardActions>
 		</Card>
 	)
