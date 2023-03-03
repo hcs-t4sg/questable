@@ -1,28 +1,78 @@
 import { Classroom, Player } from '../../types'
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import Layout from '../global/Layout'
-import General from './General'
+import { Button, Grid, List, ListItem, ListItemButton } from '@mui/material'
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import { useState } from 'react'
+import ForumPostsModal from './ForumPostsModal'
 
 export default function ForumView({ player, classroom }: { player: Player; classroom: Classroom }) {
+	const [open, setOpen] = useState(false)
+	const [selected, setSelected] = useState('general')
+
+	const handleClickNT = () => {
+		setOpen(true)
+	}
+
+	const isSelected = (str: string) => {
+		return selected == str
+	}
+
 	return (
 		<Layout>
-			<Routes>
-				<Route path='/' element={<Navigate to='general' />} />
-				<Route path='general' element={<General player={player} classroom={classroom} />} />
-				{/* <Route path='assignments' element={<Assignments player={player} classroom={classroom} />} /> */}
-				{/* <Route path='classdiscussion' element={<ClassDiscussion player={player} classroom={classroom} />} />
-				<Route path='forfun' element={<ForFun player={player} classroom={classroom} />} />
-				<Route path='starredposts' element={<StarredPosts player={player} classroom={classroom} />} /> */}
-				{/* <Route
-					path='class-teacher'
-					element={<ClassTeacher player={player} classroom={classroom} />}
+			<Grid>
+				<Button onClick={handleClickNT} variant='contained' disableElevation>
+					<EditOutlinedIcon />
+					New Thread
+				</Button>
+				<h1>Categories</h1>
+				<Grid container>
+					<Grid item sm={3} sx={{ width: '100%' }}>
+						<List>
+							<ListItem>
+								<ListItemButton
+									onClick={() => setSelected('General')}
+									selected={isSelected('General')}
+								>
+									General
+								</ListItemButton>
+							</ListItem>
+							<ListItem>
+								<ListItemButton
+									onClick={() => setSelected('Assignment')}
+									selected={isSelected('Assignment')}
+								>
+									Assignment
+								</ListItemButton>
+							</ListItem>
+							<ListItem>
+								<ListItemButton
+									onClick={() => setSelected('For Fun')}
+									selected={isSelected('For Fun')}
+								>
+									For Fun
+								</ListItemButton>
+							</ListItem>
+							<ListItem>
+								<ListItemButton
+									onClick={() => setSelected('Starred')}
+									selected={isSelected('Starred')}
+								>
+									Starred
+								</ListItemButton>
+							</ListItem>
+						</List>
+					</Grid>
+				</Grid>
+			</Grid>
+			<Grid>
+				{/* Forum Posts Displayed Here */}
+				<ForumPostsModal
+					player={player}
+					classroom={classroom}
+					onClose={() => setOpen(false)}
+					isOpen={open}
 				/>
-				<Route
-					path='class-settings'
-					element={<ClassSettings player={player} user={user} classroom={classroom} />}
-				/> */}
-			</Routes>
-			<Outlet />
+			</Grid>
 		</Layout>
 	)
 }

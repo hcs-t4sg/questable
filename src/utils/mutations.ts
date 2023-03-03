@@ -852,3 +852,16 @@ export async function updateAvatar(player: Player, newItem: Item, classroom: Cla
 	}
 	return 'There was an error equipping.'
 }
+
+export async function addThread(thread: any, classroom: Classroom) {
+	const classRef = collection(db, `classrooms/${classroom.id}/forumPosts}`)
+	await addDoc(classRef, {
+		title: thread.title,
+		postType: thread.postType,
+		content: thread.content,
+		author: thread.author,
+
+		postTime: thread.postTime,
+	})
+	console.log('Successfully Added Thread')
+}

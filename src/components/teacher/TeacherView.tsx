@@ -5,6 +5,7 @@ import Requests from '../../routes/teacher/Requests'
 import Tasks from '../../routes/teacher/Tasks'
 import Layout from '../global/Layout'
 import ForumView from '../forum/ForumView'
+import ForumPost from '../forum/ForumPost'
 
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
@@ -27,17 +28,19 @@ export default function TeacherView({
 				<Route
 					path='class-teacher'
 					element={<ClassTeacher player={player} classroom={classroom} />}
-				>
-					<Route
+				/>
+				{/* <Route
 						path={`${classroom.id}/forum`}
 						element={<ForumView player={player} classroom={classroom} />}
-					/>
-				</Route>
+					/> */}
 				<Route
 					path='class-settings'
 					element={<ClassSettings player={player} user={user} classroom={classroom} />}
 				/>
-				{/* <Route path='forum' element={<ForumView player={player} classroom={classroom} />} /> */}
+
+				<Route path='forum' element={<ForumView player={player} classroom={classroom} />}>
+					<Route path=':postID/*' element={<ForumPost player={player} classroom={classroom} />} />
+				</Route>
 				<Route
 					path='*'
 					element={
