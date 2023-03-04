@@ -106,6 +106,7 @@ export async function joinClassroom(classID: string, user: User) {
 
 	// Update classroom with new player
 	const newPlayerRef = doc(db, `classrooms/${classID}/players`, user.uid)
+	// TODO remove useless avatar field
 	await setDoc(newPlayerRef, {
 		avatar: 0,
 		money: 0,
