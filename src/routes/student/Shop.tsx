@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Layout from '../../components/global/Layout'
-import PropTypes from 'prop-types'
-import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-// import Typography from '@mui/material/Typography'
+import Tabs from '@mui/material/Tabs'
+import PropTypes from 'prop-types'
+import * as React from 'react'
 // import ShopItemCard from '../../components/student/ShopItemCard'
+import { Classroom, Player } from '../../types'
 import {
 	getBodyItems,
 	getHairItems,
@@ -14,7 +14,7 @@ import {
 	getShoesItems,
 } from '../../utils/items'
 import { ItemCard } from '../../components/student/ItemCard'
-import { Classroom, Player } from '../../types'
+// import { Classroom, Player } from '../../types'
 import { useState } from 'react'
 
 interface TabPanelProps {
@@ -66,7 +66,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 	}
 
 	return (
-		<Layout>
+		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container spacing={3}>
 				<Grid item xs={12}>
 					<h3>Shop</h3>
@@ -162,6 +162,6 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					</Grid>
 				</TabPanel>
 			</Grid>
-		</Layout>
+		</Grid>
 	)
 }

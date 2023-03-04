@@ -9,7 +9,7 @@ import { Classroom, Player } from '../../types'
 
 export default function Requests({ player, classroom }: { player: Player; classroom: Classroom }) {
 	return (
-		<Grid container spacing={3} sx={{ p: 5 }}>
+		<>
 			<Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
@@ -30,6 +30,6 @@ export default function Requests({ player, classroom }: { player: Player; classr
 			</Grid>
 
 			<ConfirmationTables classroom={classroom} />
-		</Grid>
+		</>
 	)
 }

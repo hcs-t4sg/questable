@@ -80,7 +80,7 @@ export default function ClassTeacher({
 	}, [classroom, player])
 
 	return (
-		<Grid container spacing={3} sx={{ p: 5 }}>
+		<>
 			<Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
@@ -118,6 +118,6 @@ export default function ClassTeacher({
 					</CardContent>
 				</Card>
 			))}
-		</Grid>
+		</>
 	)
 }

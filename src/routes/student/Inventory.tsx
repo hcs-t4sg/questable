@@ -3,7 +3,6 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import React, { useEffect } from 'react'
-import Layout from '../../components/global/Layout'
 import { db } from '../../utils/firebase'
 // import ReactDOM from "react-dom"
 import { Box } from '@mui/system'
@@ -82,7 +81,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 	console.log(getBodyItems())
 
 	return (
-		<Layout>
+		<Grid item xs={12}>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 				<Tabs value={value} onChange={handleChange} aria-label='basic tabs example'>
 					<Tab label='All' {...a11yProps(0)} />
@@ -195,7 +194,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 						</Grid>
 					))}
 			</TabPanel>
-		</Layout>
+		</Grid>
 	)
 }
 
