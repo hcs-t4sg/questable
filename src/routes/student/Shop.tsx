@@ -4,7 +4,6 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import PropTypes from 'prop-types'
 import * as React from 'react'
-import Layout from '../../components/global/Layout'
 import ShopItemCard from '../../components/student/ShopItemCard'
 import { Classroom, Player } from '../../types'
 import {
@@ -64,7 +63,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 	}
 
 	return (
-		<Layout>
+		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container spacing={3}>
 				<Grid item xs={12}>
 					<h3>Shop</h3>
@@ -125,6 +124,6 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					</Grid>
 				</TabPanel>
 			</Grid>
-		</Layout>
+		</Grid>
 	)
 }

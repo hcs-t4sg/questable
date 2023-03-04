@@ -18,7 +18,7 @@ export default function ClassSettings({
 	user: User
 }) {
 	return (
-		<Grid container spacing={3} sx={{ p: 5 }}>
+		<>
 			<Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
@@ -41,6 +41,6 @@ export default function ClassSettings({
 				<Typography variant='h5'>Teacher Profile</Typography>
 				<PlayerCard player={player} user={user} classroom={classroom} />
 			</Grid>
-		</Grid>
+		</>
 	)
 }

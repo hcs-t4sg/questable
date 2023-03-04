@@ -1,4 +1,4 @@
-import { Tab, Tabs } from '@mui/material'
+import { Grid, Tab, Tabs } from '@mui/material'
 import { Box } from '@mui/system'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import * as React from 'react'
@@ -87,7 +87,7 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 	}, [classroom.id, player.id])
 
 	return (
-		<Box>
+		<Grid item xs={12}>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 				<Tabs value={taskRepTab} onChange={handleChangeTaskRep} aria-label='Task/repeatable tabs'>
 					<Tab label='Tasks' {...a11yProps(0)} />
@@ -107,6 +107,6 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 			<TabPanel value={taskRepTab} index={1}>
 				<RepeatableTableStudent classroom={classroom} player={player} />
 			</TabPanel>
-		</Box>
+		</Grid>
 	)
 }
