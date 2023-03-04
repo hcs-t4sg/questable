@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 // import CloseIcon from '@mui/icons-material/Close'
-import { Modal } from '@mui/material'
+import { Modal, ThemeProvider } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Classroom, Repeatable } from '../../types'
 import { deleteRepeatable, updateRepeatable } from '../../utils/mutations'
 
-import { TaskModalBox, ModalTitle, BoxInModal } from '../global/TaskModalStyles'
+import { TaskModalBox, ModalTitle, BoxInModal, teacherModalTheme } from '../global/TaskModalStyles'
 
 function containsOnlyNumbers(str: string) {
 	return /^\d+$/.test(str)
@@ -101,12 +101,13 @@ export default function RepeatableModalTeacher({
 			<IconButton onClick={handleClickOpen}>
 				<EditIcon />
 			</IconButton>
-			<Modal
-				sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-				open={open}
-				onClose={handleClose}
-			>
-				{/* <Box
+			<ThemeProvider theme={teacherModalTheme}>
+				<Modal
+					// sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+					open={open}
+					onClose={handleClose}
+				>
+					{/* <Box
 					sx={{
 						width: '60%',
 						display: 'flex',
@@ -119,8 +120,8 @@ export default function RepeatableModalTeacher({
 						marginBottom: '18px',
 					}}
 				> */}
-				<TaskModalBox>
-					{/* <Box
+					<TaskModalBox>
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -145,68 +146,36 @@ export default function RepeatableModalTeacher({
 							marginBottom: '10px',
 						}}
 					/> */}
-					<ModalTitle onClick={handleClose} text='Overview' />
-					<TextField
-						margin='normal'
-						id='name'
-						label='Task Name'
-						fullWidth
-						variant='standard'
-						value={name}
-						InputProps={{
-							readOnly: !isEditing,
-						}}
-						onChange={(event) => setName(event.target.value)}
-					/>
-					<TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						placeholder=''
-						multiline
-						maxRows={8}
-						value={description}
-						InputProps={{
-							readOnly: !isEditing,
-						}}
-						onChange={(event) => setDescription(event.target.value)}
-					/>
-
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
-					<BoxInModal>
+						<ModalTitle onClick={handleClose} text='Overview' />
 						<TextField
-							type='number'
 							margin='normal'
-							id='maxcompletions'
-							label='Max Completions'
+							id='name'
+							label='Task Name'
 							fullWidth
 							variant='standard'
-							placeholder=''
-							value={maxCompletions}
+							value={name}
 							InputProps={{
 								readOnly: !isEditing,
 							}}
-							error={maxCompletionsIsInvalid(maxCompletions)}
-							helperText={
-								maxCompletionsIsInvalid(maxCompletions)
-									? 'Max completions must be an integer greater than 0'
-									: null
-							}
-							onChange={(event) => setMaxCompletions(event.target.value)}
+							onChange={(event) => setName(event.target.value)}
 						/>
-						{/* </Box> */}
-					</BoxInModal>
-					{/* <Box
+						<TextField
+							margin='normal'
+							id='description'
+							label='Description'
+							fullWidth
+							variant='standard'
+							placeholder=''
+							multiline
+							maxRows={8}
+							value={description}
+							InputProps={{
+								readOnly: !isEditing,
+							}}
+							onChange={(event) => setDescription(event.target.value)}
+						/>
+
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -215,45 +184,78 @@ export default function RepeatableModalTeacher({
 							m: 2,
 						}}
 					> */}
-					<BoxInModal>
-						<Typography variant='body1'>{`Reward: ${repeatable.reward} (cannot be edited)`}</Typography>
+						<BoxInModal>
+							<TextField
+								type='number'
+								margin='normal'
+								id='maxcompletions'
+								label='Max Completions'
+								fullWidth
+								variant='standard'
+								placeholder=''
+								value={maxCompletions}
+								InputProps={{
+									readOnly: !isEditing,
+								}}
+								error={maxCompletionsIsInvalid(maxCompletions)}
+								helperText={
+									maxCompletionsIsInvalid(maxCompletions)
+										? 'Max completions must be an integer greater than 0'
+										: null
+								}
+								onChange={(event) => setMaxCompletions(event.target.value)}
+							/>
+							{/* </Box> */}
+						</BoxInModal>
+						{/* <Box
+						sx={{
+							width: '100%',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'space-between',
+							m: 2,
+						}}
+					> */}
+						<BoxInModal>
+							<Typography variant='body1'>{`Reward: ${repeatable.reward} (cannot be edited)`}</Typography>
+							{/* </Box> */}
+						</BoxInModal>
+						<br />
+						<Grid container justifyContent='right'>
+							<Button
+								onClick={toggleIsEditing}
+								sx={{ display: isEditing ? 'none' : 'block' }}
+								// variant='contained'
+							>
+								Edit Repeatable
+							</Button>
+							<Button
+								onClick={handleDelete}
+								sx={{ display: isEditing ? 'block' : 'none' }}
+								// variant='contained'
+								color='error'
+							>
+								Delete
+							</Button>
+							<Button
+								onClick={handleCancel}
+								sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
+								// variant='contained'
+							>
+								Cancel
+							</Button>
+							<Button
+								onClick={handleEdit}
+								sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
+								// variant='contained'
+							>
+								Save Changes
+							</Button>
+						</Grid>
 						{/* </Box> */}
-					</BoxInModal>
-					<br />
-					<Grid container justifyContent='right'>
-						<Button
-							onClick={toggleIsEditing}
-							sx={{ display: isEditing ? 'none' : 'block' }}
-							variant='contained'
-						>
-							Edit Repeatable
-						</Button>
-						<Button
-							onClick={handleDelete}
-							sx={{ display: isEditing ? 'block' : 'none' }}
-							variant='contained'
-							color='error'
-						>
-							Delete
-						</Button>
-						<Button
-							onClick={handleCancel}
-							sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
-							variant='contained'
-						>
-							Cancel
-						</Button>
-						<Button
-							onClick={handleEdit}
-							sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
-							variant='contained'
-						>
-							Save Changes
-						</Button>
-					</Grid>
-					{/* </Box> */}
-				</TaskModalBox>
-			</Modal>
+					</TaskModalBox>
+				</Modal>
+			</ThemeProvider>
 		</Box>
 	)
 }

@@ -1,5 +1,5 @@
 // import CloseIcon from '@mui/icons-material/Close'
-import { FormControl, InputLabel, MenuItem, Modal, Select } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Modal, Select, ThemeProvider } from '@mui/material'
 // import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -15,8 +15,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { fromUnixTime, getUnixTime } from 'date-fns'
 import { Classroom, Task } from '../../types'
-
-import { TaskModalBox, ModalTitle, BoxInModal } from '../global/TaskModalStyles'
+import { TaskModalBox, ModalTitle, BoxInModal, teacherModalTheme } from '../global/TaskModalStyles'
 
 export default function TaskModalTeacher({
 	task,
@@ -139,12 +138,13 @@ export default function TaskModalTeacher({
 	return (
 		<div>
 			{openButton}
-			<Modal
-				sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-				open={open}
-				onClose={handleClose}
-			>
-				{/* <Box
+			<ThemeProvider theme={teacherModalTheme}>
+				<Modal
+					// sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+					open={open}
+					onClose={handleClose}
+				>
+					{/* <Box
 					sx={{
 						width: '40%',
 						display: 'flex',
@@ -157,8 +157,8 @@ export default function TaskModalTeacher({
 						marginBottom: '18px',
 					}}
 				> */}
-				<TaskModalBox>
-					{/* <Box
+					<TaskModalBox>
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -183,30 +183,30 @@ export default function TaskModalTeacher({
 							marginBottom: '10px',
 						}}
 					/> */}
-					<ModalTitle onClick={handleClose} text='Overview' />
-					<TextField
-						margin='normal'
-						id='name'
-						label='Task Name'
-						fullWidth
-						variant='standard'
-						value={name}
-						onChange={(event) => setName(event.target.value)}
-					/>
-					<TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						placeholder=''
-						multiline
-						maxRows={8}
-						value={description}
-						onChange={(event) => setDescription(event.target.value)}
-					/>
+						<ModalTitle onClick={handleClose} text='Overview' />
+						<TextField
+							margin='normal'
+							id='name'
+							label='Task Name'
+							fullWidth
+							variant='standard'
+							value={name}
+							onChange={(event) => setName(event.target.value)}
+						/>
+						<TextField
+							margin='normal'
+							id='description'
+							label='Description'
+							fullWidth
+							variant='standard'
+							placeholder=''
+							multiline
+							maxRows={8}
+							value={description}
+							onChange={(event) => setDescription(event.target.value)}
+						/>
 
-					{/* <Box
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -215,19 +215,19 @@ export default function TaskModalTeacher({
 							m: 2,
 						}}
 					> */}
-					<BoxInModal>
-						<LocalizationProvider dateAdapter={AdapterDateFns}>
-							<DatePicker
-								label='Due Date'
-								value={date}
-								// TODO this is probably a bug with date setting. Fix!
-								onChange={() => setDate(date)}
-								renderInput={(params) => <TextField {...params} />}
-							/>
-						</LocalizationProvider>
-						{/* </Box> */}
-					</BoxInModal>
-					{/* <Box
+						<BoxInModal>
+							<LocalizationProvider dateAdapter={AdapterDateFns}>
+								<DatePicker
+									label='Due Date'
+									value={date}
+									// TODO this is probably a bug with date setting. Fix!
+									onChange={() => setDate(date)}
+									renderInput={(params) => <TextField {...params} />}
+								/>
+							</LocalizationProvider>
+							{/* </Box> */}
+						</BoxInModal>
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -236,32 +236,33 @@ export default function TaskModalTeacher({
 							m: 2,
 						}}
 					> */}
-					<BoxInModal>
-						<FormControl fullWidth>
-							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
-							<Select
-								labelId='reward-dropdown'
-								id='reward-dropdown'
-								value={reward}
-								label='Reward'
-								onChange={(event) => setReward(event.target.value as number)}
-							>
-								<MenuItem value={10}>10</MenuItem>
-								<MenuItem value={20}>20</MenuItem>
-								<MenuItem value={30}>30</MenuItem>
-								<MenuItem value={40}>40</MenuItem>
-							</Select>
-						</FormControl>
-						{/* </Box> */}
-					</BoxInModal>
-					<br />
-					{/* center the save button */}
-					<Grid container justifyContent='center'>
-						{saveButton}
-					</Grid>
-				</TaskModalBox>
-				{/* </Box> */}
-			</Modal>
+						<BoxInModal>
+							<FormControl fullWidth>
+								<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
+								<Select
+									labelId='reward-dropdown'
+									id='reward-dropdown'
+									value={reward}
+									label='Reward'
+									onChange={(event) => setReward(event.target.value as number)}
+								>
+									<MenuItem value={10}>10</MenuItem>
+									<MenuItem value={20}>20</MenuItem>
+									<MenuItem value={30}>30</MenuItem>
+									<MenuItem value={40}>40</MenuItem>
+								</Select>
+							</FormControl>
+							{/* </Box> */}
+						</BoxInModal>
+						<br />
+						{/* center the save button */}
+						<Grid container justifyContent='center'>
+							{saveButton}
+						</Grid>
+					</TaskModalBox>
+					{/* </Box> */}
+				</Modal>
+			</ThemeProvider>
 		</div>
 	)
 }

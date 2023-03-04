@@ -9,7 +9,29 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 // import Grid from '@mui/material/Grid'
 
-import { styled } from '@mui/material/styles'
+import { createTheme, styled } from '@mui/material/styles'
+
+export const teacherModalTheme = createTheme({
+	components: {
+		MuiModal: {
+			styleOverrides: {
+				root: {
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
+				},
+			},
+		},
+		MuiButton: {
+			defaultProps: {
+				variant: 'contained',
+			},
+			styleOverrides: {
+				// root: (isEditing) => ({ display: isEditing ? 'block' : 'none', marginLeft: '5px' }),
+			},
+		},
+	},
+})
 
 export const TaskModalBox = styled(Box)({
 	width: '40%',
@@ -79,8 +101,6 @@ interface Props {
 	- TaskModalStudent slightly different - uses Clusters
 
 */
-
-// export const StyledModal = styled(Modal)()...
 
 export function ModalTitle(props: Props) {
 	return (

@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-// import Paper from '@mui/material/Paper'
+import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -16,7 +16,7 @@ import { IconButton } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { deleteRepeatable } from '../../utils/mutations'
 
-import { tableTheme, BlankTableCell } from '../global/TaskTableStyles'
+import { tableTheme, BlankTableCell, StyledTableRow } from '../global/TaskTableStyles'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -49,7 +49,7 @@ export default function RepeatableTableTeacher({ classroom }: { classroom: Class
 	return (
 		<Grid item xs={12}>
 			<ThemeProvider theme={tableTheme}>
-				<TableContainer>
+				<TableContainer component={Paper}>
 					<Table aria-label='simple table'>
 						<TableHead>
 							<TableRow>
@@ -63,11 +63,9 @@ export default function RepeatableTableTeacher({ classroom }: { classroom: Class
 						</TableHead>
 						<TableBody>
 							{repeatables?.map((repeatable) => (
-								<TableRow
-									key={repeatable.id}
-									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-								>
-									<TableCell sx={{ width: 0.01 }}>
+								// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+								<StyledTableRow key={repeatable.id}>
+									<TableCell>
 										<RepeatableModalTeacher classroom={classroom} repeatable={repeatable} />
 									</TableCell>
 									{/* <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0, width: .01 }} align="left">
@@ -80,12 +78,13 @@ export default function RepeatableTableTeacher({ classroom }: { classroom: Class
 									<TableCell>{truncate(repeatable.description)}</TableCell>
 									<TableCell>{repeatable.maxCompletions}</TableCell>
 									<TableCell>{repeatable.reward}</TableCell>
-									<TableCell align='right' sx={{ width: 0.01 }}>
+									<TableCell align='right'>
 										<IconButton onClick={() => handleDelete(repeatable)}>
 											<DeleteIcon />
 										</IconButton>
 									</TableCell>
-								</TableRow>
+								</StyledTableRow>
+								// </TableRow>
 							))}
 						</TableBody>
 					</Table>
