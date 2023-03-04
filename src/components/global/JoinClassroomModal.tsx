@@ -1,15 +1,15 @@
 import Button from '@mui/material/Button'
-// import Dialog from '@mui/material/Dialog'
+import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
-// import DialogContent from '@mui/material/DialogContent'
-// import DialogTitle from '@mui/material/DialogTitle'
-// import TextField from '@mui/material/TextField'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import TextField from '@mui/material/TextField'
 import * as React from 'react'
 import { useState } from 'react'
-// import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid'
 import { joinClassroom } from '../../utils/mutations'
 import { User } from 'firebase/auth'
-import ClassroomModalContent from './ClassroomModalContent'
+// import ClassroomModalContent from './ClassroomModalContent'
 
 export default function JoinClassroomModal({ user }: { user: User }) {
 	const [open, setOpen] = useState(false)
@@ -50,31 +50,31 @@ export default function JoinClassroomModal({ user }: { user: User }) {
 	)
 
 	return (
-		// <Grid item xs={12}>
-		// 	{openButton}
-		// 	<Dialog open={open} onClose={handleClose}>
-		// 		<DialogTitle>{'Join Classroom'}</DialogTitle>
-		// 		<DialogContent>
-		// 			{/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
-		// 			<TextField
-		// 				id='classroom-name'
-		// 				label='Classroom ID'
-		// 				variant='standard'
-		// 				onChange={(event) => setSignupCode(event.target.value)}
-		// 				value={signupCode}
-		// 			/>
-		// 		</DialogContent>
-		// 		{actionButtons}
-		// 	</Dialog>
-		// </Grid>
-		<ClassroomModalContent
-			type='join'
-			openButton={openButton}
-			open={open}
-			handleClose={handleClose}
-			setNew={setSignupCode}
-			newClass={signupCode}
-			actionButtons={actionButtons}
-		/>
+		<Grid item xs={12}>
+			{openButton}
+			<Dialog open={open} onClose={handleClose}>
+				<DialogTitle>{'Join Classroom'}</DialogTitle>
+				<DialogContent>
+					{/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
+					<TextField
+						id='classroom-name'
+						label='Classroom ID'
+						variant='standard'
+						onChange={(event) => setSignupCode(event.target.value)}
+						value={signupCode}
+					/>
+				</DialogContent>
+				{actionButtons}
+			</Dialog>
+		</Grid>
+		// <ClassroomModalContent
+		// 	type='join'
+		// 	openButton={openButton}
+		// 	open={open}
+		// 	handleClose={handleClose}
+		// 	setNew={setSignupCode}
+		// 	newClass={signupCode}
+		// 	actionButtons={actionButtons}
+		// />
 	)
 }
