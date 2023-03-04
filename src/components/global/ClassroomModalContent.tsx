@@ -7,7 +7,6 @@ import Grid from '@mui/material/Grid'
 
 interface Props {
 	type: string
-
 	openButton: JSX.Element
 	open: boolean
 	handleClose: () => void
@@ -24,8 +23,8 @@ export default function ClassroomModalContent(props: Props) {
 				<DialogTitle>{props.type === 'create' ? 'Create Classroom' : 'Join Classroom'}</DialogTitle>
 				<DialogContent>
 					<TextField
-						id='classroom-name'
-						label='Classroom Name'
+						id='classroom'
+						label={props.type === 'create' ? 'Classroom Name' : 'Classroom ID'}
 						variant='standard'
 						onChange={(event) => props.setNew(event.target.value)}
 						value={props.newClass}
