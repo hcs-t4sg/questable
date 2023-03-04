@@ -1,6 +1,4 @@
 import { Box, Typography } from '@mui/material'
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
-import { styled } from '@mui/material/styles'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import ClassStudent from '../../routes/student/ClassStudent'
 import Inventory from '../../routes/student/Inventory'
@@ -11,8 +9,8 @@ import Avatar from '../global/Avatar'
 import Layout from '../global/Layout'
 
 // import x from '../../public/static/'
-import { Classroom, Player } from '../../types'
 import { useEffect } from 'react'
+import { Classroom, Player } from '../../types'
 import { refreshAllRepeatables } from '../../utils/mutations'
 
 export default function StudentView({
@@ -22,19 +20,6 @@ export default function StudentView({
 	player: Player
 	classroom: Classroom
 }) {
-	const ThickProgress = styled(LinearProgress)(() => ({
-		height: 20,
-		borderRadius: 0,
-		marginTop: 50,
-		[`&.${linearProgressClasses.colorPrimary}`]: {
-			backgroundColor: 'rgba(102, 187, 106, .5)',
-		},
-		[`& .${linearProgressClasses.bar}`]: {
-			borderRadius: 0,
-			backgroundColor: '#1B710D',
-		},
-	}))
-
 	// Given the IDs for the outfit fetched from Firebase (and the hair subtype), you can designate the avatar outfit like so.
 	const playerOutfit = currentAvatar(player)
 
@@ -73,17 +58,6 @@ export default function StudentView({
 						}}
 					>
 						<Avatar outfit={playerOutfit} />
-					</Box>
-					<Box
-						sx={{
-							width: '350px',
-							display: 'flex',
-							flexDirection: 'column',
-							marginLeft: '160px',
-						}}
-					>
-						<ThickProgress variant='determinate' value={30} />
-						<ThickProgress variant='determinate' value={60} />
 					</Box>
 					<Box
 						sx={{
