@@ -74,10 +74,10 @@ export default function App() {
 								noWrap
 								sx={{
 									marginRight: '20px',
-									display: currentUser ? 'inline' : 'none',
+									display: currentUser.data ? 'inline' : 'none',
 								}}
 							>
-								Signed in as {auth.currentUser?.displayName}
+								Signed in as {currentUser.data?.displayName ?? ''}
 							</Typography>
 							<Button
 								variant='contained'
@@ -98,7 +98,7 @@ export default function App() {
 								sx={{
 									marginTop: '5px',
 									marginBottom: '5px',
-									display: currentUser ? 'inline' : 'none',
+									display: currentUser.data ? 'inline' : 'none',
 								}}
 								onClick={() => auth.signOut()}
 							>
