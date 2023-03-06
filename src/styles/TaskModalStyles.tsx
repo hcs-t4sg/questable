@@ -1,5 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close'
-// import { FormControl, InputLabel, MenuItem, Modal, Select, Tabs, Tab } from '@mui/material'
+import { Modal } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 // import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -9,28 +9,12 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 // import Grid from '@mui/material/Grid'
 
-import { createTheme, styled } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
-export const teacherModalTheme = createTheme({
-	components: {
-		MuiModal: {
-			styleOverrides: {
-				root: {
-					display: 'flex',
-					justifyContent: 'center',
-					alignItems: 'center',
-				},
-			},
-		},
-		MuiButton: {
-			defaultProps: {
-				variant: 'contained',
-			},
-			styleOverrides: {
-				// root: (isEditing) => ({ display: isEditing ? 'block' : 'none', marginLeft: '5px' }),
-			},
-		},
-	},
+export const TeacherModalStyled = styled(Modal)({
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
 })
 
 export const TaskModalBox = styled(Box)({

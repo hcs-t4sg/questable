@@ -18,9 +18,8 @@ import { Classroom, Task } from '../../types'
 import { db } from '../../utils/firebase'
 import { deleteTask } from '../../utils/mutations'
 import TaskModalTeacher from './TaskModalTeacher'
-import { ThemeProvider } from '@mui/material/styles'
 
-import { tableTheme, BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
+import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -72,50 +71,48 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 	}
 	return (
 		<Grid item xs={12}>
-			<ThemeProvider theme={tableTheme}>
-				<TableContainer component={Paper}>
-					<Table aria-label='simple table'>
-						<TableHead>
-							<TableRow>
-								<BlankTableCell />
-								<TableCell>Task</TableCell>
-								<TableCell>Description</TableCell>
-								<TableCell>Deadline</TableCell>
-								<TableCell>Reward </TableCell>
-								<TableCell>Students Confirmed</TableCell>
-								<BlankTableCell />
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{tasks?.map((task) => (
-								// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-								<StyledTableRow key={task.id}>
-									<TableCell>
-										<TaskModalTeacher task={task} classroom={classroom} />
-									</TableCell>
+			<TableContainer component={Paper}>
+				<Table aria-label='simple table'>
+					<TableHead>
+						<TableRow>
+							<BlankTableCell />
+							<TableCell>Task</TableCell>
+							<TableCell>Description</TableCell>
+							<TableCell>Deadline</TableCell>
+							<TableCell>Reward </TableCell>
+							<TableCell>Students Confirmed</TableCell>
+							<BlankTableCell />
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{tasks?.map((task) => (
+							// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+							<StyledTableRow key={task.id}>
+								<TableCell>
+									<TaskModalTeacher task={task} classroom={classroom} />
+								</TableCell>
 
-									<TableCell component='th' scope='row'>
-										{task.name}
-									</TableCell>
-									<TableCell>{truncate(task.description)}</TableCell>
-									<TableCell>{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
-									<TableCell>{task.reward}</TableCell>
-									<TableCell>
-										<LinearProgressWithLabel task={task} />
-									</TableCell>
+								<TableCell component='th' scope='row'>
+									{task.name}
+								</TableCell>
+								<TableCell>{truncate(task.description)}</TableCell>
+								<TableCell>{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
+								<TableCell>{task.reward}</TableCell>
+								<TableCell>
+									<LinearProgressWithLabel task={task} />
+								</TableCell>
 
-									<TableCell align='right'>
-										<IconButton onClick={() => handleDelete(task)}>
-											<DeleteIcon />
-										</IconButton>
-									</TableCell>
-								</StyledTableRow>
-								// </TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</TableContainer>
-			</ThemeProvider>
+								<TableCell align='right'>
+									<IconButton onClick={() => handleDelete(task)}>
+										<DeleteIcon />
+									</IconButton>
+								</TableCell>
+							</StyledTableRow>
+							// </TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
 		</Grid>
 	)
 }

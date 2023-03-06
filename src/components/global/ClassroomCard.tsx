@@ -57,12 +57,12 @@ export default function ClassroomCard({
 			</CardActionArea>
 			<CardActions>
 				{pinned && (
-					<Button size='small' onClick={() => deletePin(user.uid, classroom.id)}>
+					<Button variant='text' size='small' onClick={() => deletePin(user.uid, classroom.id)}>
 						Unpin Classroom
 					</Button>
 				)}
 				{!pinned && (
-					<Button size='small' onClick={() => addPin(user.uid, classroom.id)}>
+					<Button variant='text' size='small' onClick={() => addPin(user.uid, classroom.id)}>
 						Pin Classroom
 					</Button>
 				)}
@@ -73,7 +73,7 @@ export default function ClassroomCard({
 						margin: '0px 5px 0px 5px',
 					}}
 				/>
-				<Button size='small' sx={{ marginLeft: '0px' }} onClick={handleCopyCode}>
+				<Button variant='text' size='small' sx={{ marginLeft: '0px' }} onClick={handleCopyCode}>
 					Copy join code
 				</Button>
 			</CardActions>

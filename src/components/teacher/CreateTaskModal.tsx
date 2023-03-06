@@ -1,6 +1,6 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 // import CloseIcon from '@mui/icons-material/Close'
-import { FormControl, InputLabel, MenuItem, Modal, Select, Tabs, Tab } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Tabs, Tab } from '@mui/material'
 import Button from '@mui/material/Button'
 import DialogActions from '@mui/material/DialogActions'
 // import IconButton from '@mui/material/IconButton'
@@ -16,7 +16,12 @@ import { addRepeatable, addTask } from '../../utils/mutations'
 import Grid from '@mui/material/Grid'
 import { Classroom, Player } from '../../types'
 
-import { TaskModalBox, ModalTitle, BoxInModal } from '../../styles/TaskModalStyles'
+import {
+	TaskModalBox,
+	ModalTitle,
+	BoxInModal,
+	TeacherModalStyled,
+} from '../../styles/TaskModalStyles'
 
 export default function CreateTaskModal({
 	classroom,
@@ -94,7 +99,12 @@ export default function CreateTaskModal({
 	}
 
 	const openButton = (
-		<Button sx={{ width: 1 }} onClick={handleOpen} startIcon={<AddCircleOutlineIcon />}>
+		<Button
+			variant='text'
+			sx={{ width: 1 }}
+			onClick={handleOpen}
+			startIcon={<AddCircleOutlineIcon />}
+		>
 			Create Manually
 		</Button>
 	)
@@ -121,11 +131,7 @@ export default function CreateTaskModal({
 	return (
 		<div>
 			{openButton}
-			<Modal
-				sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-				open={open}
-				onClose={handleClose}
-			>
+			<TeacherModalStyled open={open} onClose={handleClose}>
 				{/* <Box
 					sx={{
 						width: '40%',
@@ -262,7 +268,7 @@ export default function CreateTaskModal({
 					</Grid>
 					{/* </Box> */}
 				</TaskModalBox>
-			</Modal>
+			</TeacherModalStyled>
 		</div>
 	)
 }

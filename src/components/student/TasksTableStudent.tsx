@@ -93,11 +93,9 @@ export default function TasksTableStudent({
 										key={task.id}
 										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 									>
-										<TableCell align='left'>{task.name}</TableCell>
-										<TableCell align='left'>{task.description || 'None'}</TableCell>
-										<TableCell align='left'>
-											{format(fromUnixTime(task.due), 'MM/dd/yyyy')}
-										</TableCell>
+										<TableCell>{task.name}</TableCell>
+										<TableCell>{task.description || 'None'}</TableCell>
+										<TableCell>{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
 										<TableCell align='center'>${task.reward}</TableCell>
 										<TableCell align='center'>
 											<Chip

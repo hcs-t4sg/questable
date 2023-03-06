@@ -1,4 +1,3 @@
-import { ThemeProvider } from '@mui/material'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
@@ -18,7 +17,7 @@ import {
 	getPlayerData,
 	getPlayerTaskCompletion,
 } from '../../utils/mutations'
-import { tableTheme, StyledTableRow } from '../../styles/TaskTableStyles'
+import { StyledTableRow } from '../../styles/TaskTableStyles'
 
 function truncate(description: string) {
 	if (description.length > 40) {
@@ -83,57 +82,53 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 	}, [classroom])
 
 	return (
-		<ThemeProvider theme={tableTheme}>
-			<TableContainer component={Paper}>
-				<Table aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							<TableCell>Task</TableCell>
-							<TableCell>Description</TableCell>
-							<TableCell>Status</TableCell>
-							<TableCell>Reward</TableCell>
-							<TableCell>Student</TableCell>
-							<TableCell>Confirm?</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
-						{completedTasks.map((completedTask) => (
-							<StyledTableRow
-								key={'test'}
-								// sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-							>
-								<TableCell>{completedTask.name}</TableCell>
-								<TableCell>{truncate(completedTask.description)}</TableCell>
-								<TableCell>{formatStatus(completedTask)}</TableCell>
-								<TableCell>{completedTask.reward}</TableCell>
-								<TableCell component='th' scope='row'>
-									{completedTask.player.name}
-								</TableCell>
-								<TableCell align='center'>
-									<Button
-										onClick={() =>
-											confirmTask(classroom.id, completedTask.player.id, completedTask.id)
-										}
-										// variant='contained'
-									>
-										Confirm
-									</Button>
-									<Button
-										onClick={() =>
-											denyTask(classroom.id, completedTask.player.id, completedTask.id)
-										}
-										// variant='contained'
-										color='error'
-									>
-										Deny
-									</Button>
-								</TableCell>
-							</StyledTableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
-		</ThemeProvider>
+		<TableContainer component={Paper}>
+			<Table aria-label='simple table'>
+				<TableHead>
+					<TableRow>
+						<TableCell>Task</TableCell>
+						<TableCell>Description</TableCell>
+						<TableCell>Status</TableCell>
+						<TableCell>Reward</TableCell>
+						<TableCell>Student</TableCell>
+						<TableCell>Confirm?</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
+					{completedTasks.map((completedTask) => (
+						<StyledTableRow
+							key={'test'}
+							// sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell>{completedTask.name}</TableCell>
+							<TableCell>{truncate(completedTask.description)}</TableCell>
+							<TableCell>{formatStatus(completedTask)}</TableCell>
+							<TableCell>{completedTask.reward}</TableCell>
+							<TableCell component='th' scope='row'>
+								{completedTask.player.name}
+							</TableCell>
+							<TableCell align='center'>
+								<Button
+									onClick={() =>
+										confirmTask(classroom.id, completedTask.player.id, completedTask.id)
+									}
+									// variant='contained'
+								>
+									Confirm
+								</Button>
+								<Button
+									onClick={() => denyTask(classroom.id, completedTask.player.id, completedTask.id)}
+									// variant='contained'
+									color='error'
+								>
+									Deny
+								</Button>
+							</TableCell>
+						</StyledTableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
 	)
 }
