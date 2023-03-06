@@ -11,7 +11,6 @@ import { useState } from 'react'
 
 import { styled } from '@mui/system'
 
-// Props
 interface Props {
 	item: Item
 	player: Player
@@ -20,14 +19,12 @@ interface Props {
 	type: 'shop' | 'inventory'
 }
 
-// The display for a card
 export function ItemCard(props: Props) {
 	const [text, setText] = useState('')
 
 	console.log('item')
 	console.log(props.item)
 
-	// Styled box
 	const ItemBox = styled(Box)({
 		top: -20,
 		left: '18%',
@@ -36,13 +33,11 @@ export function ItemCard(props: Props) {
 		height: '120px',
 	})
 
-	// Styled typography
 	const ItemTypography = styled(Typography)({
 		marginTop: '15px',
 		color: '#5c5c5c',
 	})
 
-	// Purchasing
 	const handlePurchase = async () => {
 		const res = (await purchaseItem(props.classroom.id, props.player.id, props.item)) || null
 		console.log(res)
@@ -52,14 +47,12 @@ export function ItemCard(props: Props) {
 		}
 	}
 
-	// Equipping
 	const handleEquip = async () => {
 		const res = await updateAvatar(props.player, props.item, props.classroom)
 		window.alert(res)
 		window.location.reload()
 	}
 
-	// Confirmation Actions
 	const confirmActions =
 		props.type === 'shop' ? (
 			<>

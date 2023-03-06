@@ -13,7 +13,12 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Classroom, Repeatable } from '../../types'
 import { deleteRepeatable, updateRepeatable } from '../../utils/mutations'
 
-import { TaskModalBox, ModalTitle, BoxInModal, teacherModalTheme } from '../global/TaskModalStyles'
+import {
+	TaskModalBox,
+	ModalTitle,
+	BoxInModal,
+	teacherModalTheme,
+} from '../../styles/TaskModalStyles'
 
 function containsOnlyNumbers(str: string) {
 	return /^\d+$/.test(str)

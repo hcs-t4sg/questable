@@ -15,7 +15,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { fromUnixTime, getUnixTime } from 'date-fns'
 import { Classroom, Task } from '../../types'
-import { TaskModalBox, ModalTitle, BoxInModal, teacherModalTheme } from '../global/TaskModalStyles'
+import {
+	TaskModalBox,
+	ModalTitle,
+	BoxInModal,
+	teacherModalTheme,
+} from '../../styles/TaskModalStyles'
 
 export default function TaskModalTeacher({
 	task,

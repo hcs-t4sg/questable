@@ -13,7 +13,7 @@ import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
-import ModalsStudent from '../global/ModalsStudent'
+import ModalsStudent from './ModalsStudent'
 
 function a11yProps(index: number) {
 	return {
@@ -115,7 +115,7 @@ export default function TasksTableStudent({
 										<TableCell align='center'>
 											{/* <TaskModalStudent task={task} classroom={classroom} player={player} /> */}
 											<ModalsStudent
-												task={task}
+												taskOrRepeatable={task}
 												classroom={classroom}
 												player={player}
 												type='task'

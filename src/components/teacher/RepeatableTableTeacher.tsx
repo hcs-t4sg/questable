@@ -16,7 +16,7 @@ import { IconButton } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { deleteRepeatable } from '../../utils/mutations'
 
-import { tableTheme, BlankTableCell, StyledTableRow } from '../global/TaskTableStyles'
+import { tableTheme, BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 
 function truncate(description: string) {
 	if (description.length > 50) {

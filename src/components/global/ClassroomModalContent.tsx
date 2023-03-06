@@ -6,7 +6,7 @@ import * as React from 'react'
 import Grid from '@mui/material/Grid'
 
 interface Props {
-	type: string
+	type: 'create' | 'join'
 	openButton: JSX.Element
 	open: boolean
 	handleClose: () => void

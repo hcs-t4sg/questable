@@ -1,3 +1,4 @@
+// ! DEPRECATED
 // import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
@@ -6,7 +7,7 @@ import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
 
-import { ModalTitle } from '../global/TaskModalStyles'
+import { ModalTitle } from '../../styles/TaskModalStyles'
 
 export default function TaskModalStudent({
 	classroom,

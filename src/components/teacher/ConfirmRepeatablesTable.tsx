@@ -18,7 +18,7 @@ import {
 	getPlayerData,
 	getRepeatableCompletionTimes,
 } from '../../utils/mutations'
-import { tableTheme, StyledTableRow } from '../global/TaskTableStyles'
+import { tableTheme, StyledTableRow } from '../../styles/TaskTableStyles'
 
 function truncate(description: string) {
 	if (description.length > 40) {

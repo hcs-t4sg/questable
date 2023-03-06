@@ -20,7 +20,7 @@ import { deleteTask } from '../../utils/mutations'
 import TaskModalTeacher from './TaskModalTeacher'
 import { ThemeProvider } from '@mui/material/styles'
 
-import { tableTheme, BlankTableCell, StyledTableRow } from '../global/TaskTableStyles'
+import { tableTheme, BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 
 function truncate(description: string) {
 	if (description.length > 50) {

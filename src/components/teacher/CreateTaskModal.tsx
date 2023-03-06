@@ -16,7 +16,7 @@ import { addRepeatable, addTask } from '../../utils/mutations'
 import Grid from '@mui/material/Grid'
 import { Classroom, Player } from '../../types'
 
-import { TaskModalBox, ModalTitle, BoxInModal } from '../global/TaskModalStyles'
+import { TaskModalBox, ModalTitle, BoxInModal } from '../../styles/TaskModalStyles'
 
 export default function CreateTaskModal({
 	classroom,
