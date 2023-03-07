@@ -12,18 +12,15 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Avatar from '../../components/global/Avatar'
-import { currentAvatar } from '../../utils/items'
 import { Classroom, Player, PlayerWithEmail } from '../../types'
-import { User } from 'firebase/auth'
+import { currentAvatar } from '../../utils/items'
 
 export default function ClassTeacher({
 	player,
 	classroom,
-	user,
 }: {
 	player: Player
 	classroom: Classroom
-	user: User
 }) {
 	const [students, setStudents] = React.useState<PlayerWithEmail[]>([])
 	//   const [teacher, setTeacher] = React.useState();
@@ -125,7 +122,7 @@ export default function ClassTeacher({
 						<Typography variant='body1'>Name: {student.name}</Typography>
 						<Typography variant='body1'>Account Balance: {student.money}</Typography>
 						<Typography variant='body1'>{student.email}</Typography>
-						<ClassTeacherModal classroom={classroom} student={student} />
+						<ClassTeacherModal student={student} />
 					</CardContent>
 				</Card>
 			))}

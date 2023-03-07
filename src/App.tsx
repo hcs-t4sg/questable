@@ -5,7 +5,6 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import { useEffect, useState } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import './App.css'
 import ClassroomPage from './routes/ClassroomPage'
@@ -13,8 +12,7 @@ import Home from './routes/Home'
 import Settings from './routes/Settings'
 import { auth, SignInScreen } from './utils/firebase'
 // make alias for greater readability
-import { User } from 'firebase/auth'
-import { syncUsers } from './utils/mutations'
+import { useAuthUser } from '@react-query-firebase/auth'
 
 // MUI styling constants
 
@@ -36,22 +34,33 @@ const mdTheme = createTheme({
 // App.js is the homepage and handles top-level functions like user auth.
 
 export default function App() {
-	// User authentication functionality.
-	const [currentUser, setCurrentUser] = useState<User | null>(null)
-	// Listen to the Firebase Auth state and set the local state.
-	useEffect(() => {
-		const unregisterAuthObserver = auth.onAuthStateChanged((user) => {
-			setCurrentUser(user)
+	const currentUser = useAuthUser(['user'], auth, {
+		onSuccess(user) {
 			if (user) {
-				syncUsers(user)
+				console.log('User is authenticated!', user)
 			}
-		})
-		return () => unregisterAuthObserver() // Make sure we un-register Firebase observers when the component unmounts.
-	}, [])
+		},
+		onError(error) {
+			console.error('Failed to subscribe to users authentication state!')
+			console.log(error)
+		},
+	})
+	// // User authentication functionality.
+	// const [currentUser, setCurrentUser] = useState<User | null>(null)
+	// // Listen to the Firebase Auth state and set the local state.
+	// useEffect(() => {
+	// 	const unregisterAuthObserver = auth.onAuthStateChanged((user) => {
+	// 		setCurrentUser(user)
+	// 		if (user) {
+	// 			syncUsers(user)
+	// 		}
+	// 	})
+	// 	return () => unregisterAuthObserver() // Make sure we un-register Firebase observers when the component unmounts.
+	// }, [])
 
-	useEffect(() => {
-		console.log(currentUser)
-	}, [currentUser])
+	// useEffect(() => {
+	// 	console.log(currentUser)
+	// }, [currentUser])
 
 	return (
 		<ThemeProvider theme={mdTheme}>
@@ -112,15 +121,15 @@ export default function App() {
 						</Button>
 					</Toolbar>
 				</AppBar>
-				{currentUser ? (
+				{currentUser.data ? (
 					/* Navigation routes set by react router. This is placed in
           app.js rather than index.js so we can pass relevant top-level
           props to the elements */
 					<Routes>
-						<Route path='/' element={<Home user={currentUser} />} />
+						<Route path='/' element={<Home user={currentUser.data} />} />
 						<Route path='settings' element={<Settings />} />
 						<Route path='class'>
-							<Route path=':classID/*' element={<ClassroomPage user={currentUser} />} />
+							<Route path=':classID/*' element={<ClassroomPage user={currentUser.data} />} />
 						</Route>
 						{/* Catch-all route for any URLs that don't match an existing route */}
 						<Route
@@ -132,6 +141,8 @@ export default function App() {
 							}
 						/>
 					</Routes>
+				) : currentUser.isLoading ? (
+					<div />
 				) : (
 					<SignInScreen></SignInScreen>
 				)}

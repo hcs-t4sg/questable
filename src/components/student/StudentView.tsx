@@ -12,18 +12,15 @@ import Avatar from '../global/Avatar'
 import Layout from '../global/Layout'
 
 // import x from '../../public/static/'
-import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
 import { refreshAllRepeatables } from '../../utils/mutations'
 
 export default function StudentView({
 	player,
 	classroom,
-	user,
 }: {
 	player: Player
 	classroom: Classroom
-	user: User
 }) {
 	const ThickProgress = styled(LinearProgress)(() => ({
 		height: 20,
@@ -106,7 +103,7 @@ export default function StudentView({
 				<Route path='shop' element={<Shop classroom={classroom} player={player} />} />
 				<Route
 					path='class-student'
-					element={<ClassStudent player={player} classroom={classroom} user={user} />}
+					element={<ClassStudent player={player} classroom={classroom} />}
 				/>
 				<Route path='inventory' element={<Inventory player={player} classroom={classroom} />} />
 				<Route

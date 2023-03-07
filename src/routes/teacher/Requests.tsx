@@ -7,19 +7,10 @@ import * as React from 'react'
 import ConfirmTasksTable from '../../components/teacher/ConfirmTasksTable'
 
 import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '../../utils/firebase'
 import { Classroom, Player } from '../../types'
-import { User } from 'firebase/auth'
+import { db } from '../../utils/firebase'
 
-export default function Requests({
-	player,
-	classroom,
-	user,
-}: {
-	player: Player
-	classroom: Classroom
-	user: User
-}) {
+export default function Requests({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [numStudents, setNumStudents] = React.useState()
 
 	const classroomRef = doc(db, `classrooms/${classroom.id}`)

@@ -15,7 +15,7 @@ interface Props {
 	// Callback that will be passed the FirebaseUi instance before it is
 	// started. This allows access to certain configuration options such as
 	// disableAutoSignIn().
-	uiCallback?(ui: firebaseui.auth.AuthUI): void
+	uiCallback?(_ui: firebaseui.auth.AuthUI): void
 	// The Firebase App auth instance to use.
 	firebaseAuth: any // As firebaseui-web
 	className?: string

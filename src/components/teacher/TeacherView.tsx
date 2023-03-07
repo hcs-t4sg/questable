@@ -21,14 +21,11 @@ export default function TeacherView({
 		<Layout classroom role={player?.role}>
 			<Routes>
 				<Route path='/' element={<Navigate to='tasks' />} />
-				<Route path='tasks' element={<Tasks player={player} user={user} classroom={classroom} />} />
-				<Route
-					path='requests'
-					element={<Requests player={player} user={user} classroom={classroom} />}
-				/>
+				<Route path='tasks' element={<Tasks player={player} classroom={classroom} />} />
+				<Route path='requests' element={<Requests player={player} classroom={classroom} />} />
 				<Route
 					path='class-teacher'
-					element={<ClassTeacher player={player} user={user} classroom={classroom} />}
+					element={<ClassTeacher player={player} classroom={classroom} />}
 				/>
 				<Route
 					path='class-settings'
