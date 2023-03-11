@@ -16,7 +16,7 @@ import {
 	updateDoc,
 	where,
 } from 'firebase/firestore'
-import { Classroom, CompletionTime, Item, Player } from '../types'
+import { Classroom, CompletionTime, ForumPost, Item, Player } from '../types'
 import { db } from './firebase'
 
 export async function syncUsers(user: User) {
@@ -854,7 +854,7 @@ export async function updateAvatar(player: Player, newItem: Item, classroom: Cla
 }
 
 export async function addThread(thread: any, classroom: Classroom) {
-	const classRef = collection(db, `classrooms/${classroom.id}/forumPosts}`)
+	const classRef = collection(db, `classrooms/${classroom.id}/forumPosts`)
 	await addDoc(classRef, {
 		title: thread.title,
 		postType: thread.postType,
@@ -864,4 +864,19 @@ export async function addThread(thread: any, classroom: Classroom) {
 		postTime: thread.postTime,
 	})
 	console.log('Successfully Added Thread')
+}
+
+export async function addComment(comment: any, classroom: Classroom, forumPost: ForumPost) {
+	const commentRef = collection(
+		db,
+		`classrooms/${classroom.id}/forumPosts/${forumPost.id}/comments`,
+	)
+	console.log('POST TIME:', comment.postTime)
+	await addDoc(commentRef, {
+		author: comment.author,
+		content: comment.content,
+		likes: comment.likes,
+		postTime: comment.postTime,
+		parent: comment.parent,
+	})
 }

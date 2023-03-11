@@ -9,12 +9,13 @@ import Shop from '../../routes/student/Shop'
 import { currentAvatar } from '../../utils/items'
 import Avatar from '../global/Avatar'
 import Layout from '../global/Layout'
-import ForumView from '../forum/ForumView'
 
 // import x from '../../public/static/'
 import { Classroom, Player } from '../../types'
 import { useEffect } from 'react'
 import { refreshAllRepeatables } from '../../utils/mutations'
+import ForumHome from '../forum/ForumHome'
+import ForumPost from '../forum/ForumPost'
 
 export default function StudentView({
 	player,
@@ -107,13 +108,11 @@ export default function StudentView({
 					path='class-student'
 					element={<ClassStudent player={player} classroom={classroom} />}
 				>
-					<Route
-						path={`${classroom.id}/forum`}
-						element={<ForumView player={player} classroom={classroom} />}
-					/>
+					<Route path='forum' element={<ForumHome player={player} classroom={classroom} />}>
+						<Route path=':postID/*' element={<ForumPost player={player} classroom={classroom} />} />
+					</Route>
 				</Route>
 				<Route path='inventory' element={<Inventory player={player} classroom={classroom} />} />
-				{/* <Route path='forum' element={<ForumView player={player} classroom={classroom} />} /> */}
 				<Route
 					path='*'
 					element={

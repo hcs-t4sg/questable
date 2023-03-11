@@ -1,4 +1,4 @@
-import { Button, DialogActions } from '@mui/material'
+import { Button, DialogActions, InputLabel, MenuItem, Select } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -37,7 +37,7 @@ export default function ForumPostsModal({
 	// TODO: For editing, you may have to add and manage another state variable to check if the entry is being edited.
 
 	const [subject, setSubject] = useState('')
-	const [category, setCategory] = useState('')
+	const [category, setCategory] = useState(-1)
 	const [description, setDescription] = useState('')
 
 	// Modal visibility handlers
@@ -52,6 +52,17 @@ export default function ForumPostsModal({
 		setDescription(event.target.value)
 	}
 
+	const handleClear = () => {
+		setSubject('')
+		setCategory(-1)
+		setDescription('')
+	}
+
+	const handleClose = () => {
+		handleClear()
+		onClose()
+	}
+
 	const handleSubmit = () => {
 		const newThread = {
 			title: subject,
@@ -62,12 +73,12 @@ export default function ForumPostsModal({
 		}
 
 		addThread(newThread, classroom).catch(console.error)
-		onClose()
+		handleClose()
 	}
 
 	const submitButton = (
 		<DialogActions>
-			<Button onClick={onClose}>Cancel</Button>
+			<Button onClick={handleClose}>Cancel</Button>
 			<Button variant='contained' onClick={handleSubmit}>
 				Submit
 			</Button>
@@ -88,15 +99,21 @@ export default function ForumPostsModal({
 						value={subject}
 						onChange={handleSubject}
 					/>
-					<TextField
-						margin='normal'
-						id='category'
+					<InputLabel id='category'>Category</InputLabel>
+					<Select
+						// margin='normal'
+						labelId='category'
 						label='Category'
 						fullWidth
-						variant='standard'
+						// variant='standard'
 						value={category}
 						onChange={handleCategory}
-					/>
+					>
+						<MenuItem value={1}>General</MenuItem>
+						<MenuItem value={2}>Assignments</MenuItem>
+						<MenuItem value={3}>For Fun</MenuItem>
+						<MenuItem value={4}>Starred</MenuItem>
+					</Select>
 					<TextField
 						margin='normal'
 						id='description'

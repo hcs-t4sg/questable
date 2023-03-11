@@ -116,3 +116,23 @@ export type UserRole = 'student' | 'teacher'
 export interface PlayerWithEmail extends Player {
 	email: string
 }
+
+export interface ForumPost {
+	id: string
+	title: string
+	content: string
+	postTime: Timestamp
+	likes: number
+	comments: Comment[]
+	author: Player
+	postType: number
+}
+
+export interface Comment {
+	id: string
+	content: string
+	author: Player
+	likes: number
+	postTime: Timestamp
+	parent: string
+}
