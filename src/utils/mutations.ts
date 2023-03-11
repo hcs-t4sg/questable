@@ -871,7 +871,6 @@ export async function addComment(comment: any, classroom: Classroom, forumPost: 
 		db,
 		`classrooms/${classroom.id}/forumPosts/${forumPost.id}/comments`,
 	)
-	console.log('POST TIME:', comment.postTime)
 	await addDoc(commentRef, {
 		author: comment.author,
 		content: comment.content,
