@@ -17,6 +17,9 @@ import { SnackbarProvider } from 'notistack'
 import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 
+// import 'Superscript' from './styles/fonts/SUPERSCR.ttf'
+import 'virtual:fonts.css'
+
 // MUI styling constants
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
@@ -26,10 +29,16 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 const mdTheme = createTheme({
 	palette: {
 		primary: {
-			main: '#5299f0',
+			main: '#9f7767',
 		},
 		secondary: {
-			main: '#94a7ff',
+			main: '#d0b285',
+		},
+	},
+	typography: {
+		h3: {
+			fontFamily: 'Superscript',
+			color: 'white',
 		},
 	},
 	components: {
