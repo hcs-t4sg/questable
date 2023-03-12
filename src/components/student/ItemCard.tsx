@@ -39,7 +39,8 @@ export function ItemCard(props: Props) {
 	})
 
 	const handlePurchase = async () => {
-		const res = (await purchaseItem(props.classroom.id, props.player.id, props.item)) || null
+		const res = await purchaseItem(props.classroom.id, props.player.id, props.item)
+		// || null
 		console.log(res)
 
 		if (res) {

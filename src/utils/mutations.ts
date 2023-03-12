@@ -520,6 +520,7 @@ export async function purchaseItem(classID: string, studentID: string, item: Ite
 	}
 	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
 	const playerSnap = await getDoc(playerRef)
+	// Update
 	if (!playerSnap.exists()) {
 		return 'Could not find player'
 	} else {
