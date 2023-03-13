@@ -6,7 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import * as React from 'react'
 import { useState } from 'react'
-import Grid from '@mui/material/Grid'
+// import Grid from '@mui/material/Grid'
 import { addClassroom } from '../../utils/mutations'
 import { User } from 'firebase/auth'
 // import ClassroomModalContent from './ClassroomModalContent'
@@ -47,7 +47,8 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 	)
 
 	return (
-		<Grid item xs={12}>
+		// <Grid item xs={12}>
+		<>
 			{openButton}
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>{'Create Classroom'}</DialogTitle>
@@ -63,7 +64,8 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 				</DialogContent>
 				{actionButtons}
 			</Dialog>
-		</Grid>
+		</>
+		// </Grid>
 		// <ClassroomModalContent
 		// 	type='create'
 		// 	openButton={openButton}

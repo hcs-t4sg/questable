@@ -31,6 +31,11 @@ export default defineConfig({
 						 */
 						src: './src/styles/fonts/SUPERSCR.ttf',
 					},
+					{
+						name: 'Andale Mono',
+						local: 'Andale Mono',
+						src: './src/styles/fonts/Andale-Mono.ttf',
+					},
 				],
 			},
 		}),

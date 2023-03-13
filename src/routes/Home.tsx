@@ -67,7 +67,8 @@ export default function Home({ user }: { user: User }) {
 						sx={{
 							width: '100%',
 							height: 300,
-							backgroundColor: 'primary.dark',
+							border: '2px dashed',
+							borderColor: 'primary.main',
 							display: 'flex',
 							flexWrap: 'wrap',
 							justifyContent: 'center',
@@ -78,8 +79,14 @@ export default function Home({ user }: { user: User }) {
 						<Typography variant='h3' sx={{ flex: '100%' }}>
 							Welcome Back!
 						</Typography>
-						<JoinClassroomModal user={user} />
-						<CreateClassroomModal user={user} />
+						<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
+							<Grid item>
+								<JoinClassroomModal user={user} />
+							</Grid>
+							<Grid item>
+								<CreateClassroomModal user={user} />
+							</Grid>
+						</Grid>
 					</Box>
 				</Grid>
 				<Grid item xs={12}>

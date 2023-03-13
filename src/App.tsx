@@ -17,7 +17,6 @@ import { SnackbarProvider } from 'notistack'
 import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 
-// import 'Superscript' from './styles/fonts/SUPERSCR.ttf'
 import 'virtual:fonts.css'
 
 // MUI styling constants
@@ -32,13 +31,13 @@ const mdTheme = createTheme({
 			main: '#9f7767',
 		},
 		secondary: {
-			main: '#d0b285',
+			main: '#9bb496',
 		},
 	},
 	typography: {
-		h3: {
+		fontFamily: 'Andale Mono',
+		h2: {
 			fontFamily: 'Superscript',
-			color: 'white',
 		},
 	},
 	components: {
@@ -92,7 +91,7 @@ export default function App() {
 								variant='h6'
 								color='inherit'
 								noWrap
-								sx={{ flexGrow: 1 }}
+								sx={{ flexGrow: 1, fontFamily: 'Superscript', textDecoration: 'none' }}
 							>
 								Questable
 							</Typography>
