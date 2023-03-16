@@ -14,6 +14,7 @@ import Settings from './routes/Settings'
 import { auth, SignInScreen } from './utils/firebase'
 import Error from './components/global/Error'
 import { SnackbarProvider } from 'notistack'
+import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 
 // MUI styling constants
@@ -36,7 +37,14 @@ const mdTheme = createTheme({
 // App.js is the homepage and handles top-level functions like user auth.
 
 export default function App() {
-	const currentUser = useAuthUser(['user'], auth)
+	const currentUser = useAuthUser(['user'], auth, {
+		onSuccess(user) {
+			if (user) {
+				console.log('User is authenticated')
+				syncUsers(user)
+			}
+		},
+	})
 
 	return (
 		<ThemeProvider theme={mdTheme}>
@@ -66,10 +74,10 @@ export default function App() {
 								noWrap
 								sx={{
 									marginRight: '20px',
-									display: currentUser ? 'inline' : 'none',
+									display: currentUser.data ? 'inline' : 'none',
 								}}
 							>
-								Signed in as {auth.currentUser?.displayName}
+								Signed in as {currentUser.data?.displayName ?? ''}
 							</Typography>
 							<Button
 								variant='contained'
@@ -90,7 +98,7 @@ export default function App() {
 								sx={{
 									marginTop: '5px',
 									marginBottom: '5px',
-									display: currentUser ? 'inline' : 'none',
+									display: currentUser.data ? 'inline' : 'none',
 								}}
 								onClick={() => auth.signOut()}
 							>

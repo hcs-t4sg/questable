@@ -5,6 +5,8 @@ import { Outfit } from '../../types'
 
 Keep in mind that the sprite stretches to fill its parent container. When using this, you must place <Avatar /> inside a parent MUI component with a defined width! */
 export default function Avatar({ outfit }: { outfit: Outfit }) {
+	console.log(outfit)
+
 	return (
 		<Box
 			sx={{
