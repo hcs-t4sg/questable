@@ -74,7 +74,7 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
 				}
 				// if task is overdue, add to overdue list
-				if (doc.data().due < Date.now() / 1000) {
+				if (doc.data().due.toDate() < new Date()) {
 					overdue.push(Object.assign({ id: doc.id, status: 3 }, doc.data()) as TaskWithStatus)
 				}
 			})

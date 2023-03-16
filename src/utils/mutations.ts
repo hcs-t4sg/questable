@@ -1,4 +1,3 @@
-import { getUnixTime } from 'date-fns'
 import { User } from 'firebase/auth'
 import {
 	addDoc,
@@ -13,6 +12,7 @@ import {
 	query,
 	serverTimestamp,
 	setDoc,
+	Timestamp,
 	updateDoc,
 	where,
 } from 'firebase/firestore'
@@ -230,7 +230,7 @@ export async function updateTask(
 	classroomID: string,
 	task: {
 		name: string
-		due: number
+		due: Timestamp
 		reward: number
 		id: string
 	},
@@ -375,7 +375,7 @@ export async function addTask(
 		name: string
 		description: string
 		reward: number
-		due: number
+		due: Timestamp
 	},
 	teacherID: string,
 ) {
@@ -393,7 +393,7 @@ export async function addTask(
 		name: task.name,
 		description: task.description,
 		reward: task.reward,
-		created: getUnixTime(new Date()),
+		created: serverTimestamp(),
 		due: task.due,
 		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
 		completed: [],
@@ -425,7 +425,7 @@ export async function addRepeatable(
 		name: repeatable.name,
 		description: repeatable.description,
 		reward: repeatable.reward,
-		created: getUnixTime(new Date()),
+		created: serverTimestamp(),
 		maxCompletions: repeatable.maxCompletions,
 		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
 		requestCount: 0,

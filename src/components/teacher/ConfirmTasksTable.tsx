@@ -28,10 +28,8 @@ function truncate(description: string) {
 const formatStatus = (task: CompletedTask) => {
 	const playerCompletion = task.completionTime
 
-	if (playerCompletion.seconds > task.due) {
-		return (
-			formatDistance(new Date(playerCompletion.seconds * 1000), new Date(task.due * 1000)) + ' late'
-		)
+	if (playerCompletion > task.due) {
+		return formatDistance(playerCompletion.toDate(), task.due.toDate()) + ' late'
 	} else {
 		return 'On time'
 	}

@@ -156,7 +156,7 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 						>
 							<TableCell align='center'>{completion.repeatable.name}</TableCell>
 							<TableCell align='center'>
-								{format(new Date(completion.time.seconds * 1000), 'MM/dd/yyyy h:mm aa')}
+								{format(completion.time.toDate(), 'MM/dd/yyyy h:mm a')}
 							</TableCell>
 							<TableCell align='center'>{truncate(completion.repeatable.description)}</TableCell>
 							<TableCell align='center'>{completion.repeatable.reward}</TableCell>

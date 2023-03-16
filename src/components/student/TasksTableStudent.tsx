@@ -1,5 +1,5 @@
-import { Box, IconButton, Tab, Tabs } from '@mui/material'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import { Box, IconButton, Tab, Tabs } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
@@ -8,7 +8,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { format, fromUnixTime } from 'date-fns'
+import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, Task, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
@@ -95,7 +95,7 @@ export default function TasksTableStudent({
 										<TableCell align='left'>{task.name}</TableCell>
 										<TableCell align='left'>{task.description || 'None'}</TableCell>
 										<TableCell align='left'>
-											{format(fromUnixTime(task.due), 'MM/dd/yyyy')}
+											{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
 										</TableCell>
 										<TableCell align='center'>${task.reward}</TableCell>
 										<TableCell align='center'>

@@ -5,14 +5,14 @@ interface Assignment {
 	name: string
 	description: string
 	reward: number
-	created: number
+	created: Timestamp
 	assigned: string[]
 }
 
 export interface Task extends Assignment {
 	completed: string[]
 	confirmed: string[]
-	due: number
+	due: Timestamp
 }
 
 export interface TaskWithStatus extends Task {
