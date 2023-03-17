@@ -1,4 +1,3 @@
-import { getUnixTime } from 'date-fns'
 import { User } from 'firebase/auth'
 import {
 	addDoc,
@@ -13,6 +12,7 @@ import {
 	query,
 	serverTimestamp,
 	setDoc,
+	Timestamp,
 	updateDoc,
 	where,
 } from 'firebase/firestore'
@@ -230,7 +230,7 @@ export async function updateTask(
 	classroomID: string,
 	task: {
 		name: string
-		due: number
+		due: Timestamp
 		reward: number
 		id: string
 	},
@@ -375,7 +375,7 @@ export async function addTask(
 		name: string
 		description: string
 		reward: number
-		due: number
+		due: Timestamp
 	},
 	teacherID: string,
 ) {
@@ -393,7 +393,7 @@ export async function addTask(
 		name: task.name,
 		description: task.description,
 		reward: task.reward,
-		created: getUnixTime(new Date()),
+		created: serverTimestamp(),
 		due: task.due,
 		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
 		completed: [],
@@ -425,7 +425,7 @@ export async function addRepeatable(
 		name: repeatable.name,
 		description: repeatable.description,
 		reward: repeatable.reward,
-		created: getUnixTime(new Date()),
+		created: serverTimestamp(),
 		maxCompletions: repeatable.maxCompletions,
 		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
 		requestCount: 0,
@@ -520,7 +520,10 @@ export async function purchaseItem(classID: string, studentID: string, item: Ite
 	}
 	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
 	const playerSnap = await getDoc(playerRef)
-	if (playerSnap.exists()) {
+	// Update
+	if (!playerSnap.exists()) {
+		return 'Could not find player'
+	} else {
 		const balance = playerSnap.data().money
 
 		const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
@@ -854,20 +857,35 @@ export async function updateAvatar(player: Player, newItem: Item, classroom: Cla
 	return 'There was an error equipping.'
 }
 
-export async function addThread(thread: any, classroom: Classroom) {
+export async function addForumPost(
+	thread: {
+		title: string
+		postType: 0 | 1 | 2 | 3
+		content: string
+		author: Player
+	},
+	classroom: Classroom,
+) {
 	const classRef = collection(db, `classrooms/${classroom.id}/forumPosts`)
 	await addDoc(classRef, {
 		title: thread.title,
 		postType: thread.postType,
 		content: thread.content,
-		author: thread.author,
-
-		postTime: thread.postTime,
+		author: thread.author.id,
+		postTime: serverTimestamp(),
+		likes: 0,
 	})
 	console.log('Successfully Added Thread')
 }
 
-export async function addComment(comment: any, classroom: Classroom, forumPost: ForumPost) {
+export async function addComment(
+	comment: {
+		content: string
+		author: Player
+	},
+	classroom: Classroom,
+	forumPost: ForumPost,
+) {
 	const commentRef = collection(
 		db,
 		`classrooms/${classroom.id}/forumPosts/${forumPost.id}/comments`,
@@ -875,8 +893,7 @@ export async function addComment(comment: any, classroom: Classroom, forumPost: 
 	await addDoc(commentRef, {
 		author: comment.author,
 		content: comment.content,
-		likes: comment.likes,
-		postTime: comment.postTime,
-		parent: comment.parent,
+		likes: 0,
+		postTime: serverTimestamp(),
 	})
 }

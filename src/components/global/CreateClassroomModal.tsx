@@ -9,6 +9,7 @@ import { useState } from 'react'
 import Grid from '@mui/material/Grid'
 import { addClassroom } from '../../utils/mutations'
 import { User } from 'firebase/auth'
+// import ClassroomModalContent from './ClassroomModalContent'
 
 export default function CreateClassroomModal({ user }: { user: User }) {
 	const [open, setOpen] = useState(false)
@@ -63,5 +64,14 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 				{actionButtons}
 			</Dialog>
 		</Grid>
+		// <ClassroomModalContent
+		// 	type='create'
+		// 	openButton={openButton}
+		// 	open={open}
+		// 	handleClose={handleClose}
+		// 	setNew={setNewClassroomName}
+		// 	newClass={newClassroomName}
+		// 	actionButtons={actionButtons}
+		// />
 	)
 }

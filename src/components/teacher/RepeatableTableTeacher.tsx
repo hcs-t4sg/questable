@@ -11,6 +11,11 @@ import { useEffect, useState } from 'react'
 import { Classroom, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
 import RepeatableModalTeacher from './RepeatableModalTeacher'
+import { IconButton } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { deleteRepeatable } from '../../utils/mutations'
+
+import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -33,25 +38,34 @@ export default function RepeatableTableTeacher({ classroom }: { classroom: Class
 		return unsub
 	}, [classroom])
 
+	const handleDelete = (repeatable: Repeatable) => {
+		// message box to confirm deletion
+		if (window.confirm('Are you sure you want to delete this task?')) {
+			deleteRepeatable(classroom.id, repeatable.id).catch(console.error)
+		}
+	}
+
 	return (
 		<Grid item xs={12}>
 			<TableContainer component={Paper}>
-				<Table sx={{ minWidth: 650 }} aria-label='simple table'>
+				<Table aria-label='simple table'>
 					<TableHead>
 						<TableRow>
+							<BlankTableCell />
 							<TableCell>Task</TableCell>
 							<TableCell>Description</TableCell>
 							<TableCell>Max Completions</TableCell>
-							<TableCell>Reward </TableCell>
-							<TableCell sx={{ m: '1%', p: '1%' }}></TableCell>
+							<TableCell>Reward</TableCell>
+							<BlankTableCell />
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{repeatables?.map((repeatable) => (
-							<TableRow
-								key={repeatable.id}
-								sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-							>
+							// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+							<StyledTableRow key={repeatable.id}>
+								<TableCell>
+									<RepeatableModalTeacher classroom={classroom} repeatable={repeatable} />
+								</TableCell>
 								{/* <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0, width: .01 }} align="left">
                            <RepeatableModalTeacher task={repeatable} classroom={classroom} />
                         </TableCell> */}
@@ -59,14 +73,16 @@ export default function RepeatableTableTeacher({ classroom }: { classroom: Class
 								<TableCell component='th' scope='row'>
 									{repeatable.name}
 								</TableCell>
-								<TableCell align='left'>{truncate(repeatable.description)}</TableCell>
-								<TableCell align='left'>{repeatable.maxCompletions}</TableCell>
-								<TableCell align='left'>{repeatable.reward}</TableCell>
-
-								<TableCell align='right' sx={{ width: 0.01 }}>
-									<RepeatableModalTeacher classroom={classroom} repeatable={repeatable} />
+								<TableCell>{truncate(repeatable.description)}</TableCell>
+								<TableCell>{repeatable.maxCompletions}</TableCell>
+								<TableCell>{repeatable.reward}</TableCell>
+								<TableCell align='right'>
+									<IconButton onClick={() => handleDelete(repeatable)}>
+										<DeleteIcon />
+									</IconButton>
 								</TableCell>
-							</TableRow>
+							</StyledTableRow>
+							// </TableRow>
 						))}
 					</TableBody>
 				</Table>

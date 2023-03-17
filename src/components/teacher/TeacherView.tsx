@@ -29,10 +29,6 @@ export default function TeacherView({
 					path='class-teacher'
 					element={<ClassTeacher player={player} classroom={classroom} />}
 				/>
-				{/* <Route
-						path={`${classroom.id}/forum`}
-						element={<ForumView player={player} classroom={classroom} />}
-					/> */}
 				<Route
 					path='class-settings'
 					element={<ClassSettings player={player} user={user} classroom={classroom} />}

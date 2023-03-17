@@ -32,6 +32,26 @@ const mdTheme = createTheme({
 			main: '#94a7ff',
 		},
 	},
+	components: {
+		MuiTable: {
+			styleOverrides: {
+				root: {
+					minWidth: 650,
+				},
+			},
+		},
+		MuiTableCell: {
+			defaultProps: {
+				align: 'left',
+				// width: 0.01,
+			},
+		},
+		MuiButton: {
+			defaultProps: {
+				variant: 'contained',
+			},
+		},
+	},
 })
 
 // App.js is the homepage and handles top-level functions like user auth.

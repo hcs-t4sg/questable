@@ -3,10 +3,10 @@ import Layout from '../global/Layout'
 import { Button, Grid, List, ListItem, ListItemButton } from '@mui/material'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import { useEffect, useState } from 'react'
-import ForumPostsModal from './ForumPostsModal'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 import ForumPostCard from './ForumPostCard'
+import CreateForumPostModal from './CreateForumPostModal'
 
 export default function ForumHome({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [open, setOpen] = useState(false)
@@ -30,12 +30,8 @@ export default function ForumHome({ player, classroom }: { player: Player; class
 			console.log(forumPosts)
 			setForumPosts(forumPosts)
 		})
-		// const unsub = onSnapshot(forumPostsQuery, (snapshot) => {
-		// 	setForumPosts(
-		// 		snapshot.docs.map((doc: ForumPost) => ({...doc.data(), id: doc.id} as ForumPost))
-		// ))
 		return unsub
-	}, [classroom])
+	}, [player, classroom])
 
 	return (
 		<Layout>
@@ -92,7 +88,7 @@ export default function ForumHome({ player, classroom }: { player: Player; class
 					))}
 				</Grid>
 			</Grid>
-			<ForumPostsModal
+			<CreateForumPostModal
 				player={player}
 				classroom={classroom}
 				onClose={() => setOpen(false)}

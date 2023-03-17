@@ -1,11 +1,11 @@
 import { Button, Grid, TextField, Typography } from '@mui/material'
 import { collection, onSnapshot } from 'firebase/firestore'
-import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { Classroom, Comment, ForumPost, Player } from '../../types'
 import { db } from '../../utils/firebase'
 import { addComment } from '../../utils/mutations'
 import CommentCard from './CommentCard'
+import format from 'date-fns/format'
 
 // const CommentCard = ({ comment }: { comment: Comment }) => (
 // 	<Grid item style={{ backgroundColor: 'lightgray', borderRadius: 10, margin: 10 }}>
@@ -72,7 +72,7 @@ export default function ForumPostCard({
 				</Typography>
 				<Typography variant='body2'>{forumPost.content}</Typography>
 				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
-					Posted {moment(forumPost.postTime).local().fromNow()}
+					Posted {format(forumPost.postTime.toDate(), 'MM/dd/yyyy h:mm a')}
 				</Typography>
 
 				<Grid container style={{ alignContent: 'center' }}>

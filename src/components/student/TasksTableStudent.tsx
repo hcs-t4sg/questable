@@ -1,5 +1,5 @@
-import { Box, IconButton, Tab, Tabs } from '@mui/material'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import { Box, IconButton, Tab, Tabs } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
@@ -8,11 +8,12 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { format, fromUnixTime } from 'date-fns'
+import { format } from 'date-fns'
 import { useState } from 'react'
-import { Classroom, Player, Task, TaskWithStatus } from '../../types'
+import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
-import TaskModalStudent from './TaskModalStudent'
+// import TaskModalStudent from './TaskModalStudent'
+import ModalsStudent from './ModalsStudent'
 
 function a11yProps(index: number) {
 	return {
@@ -53,7 +54,7 @@ export default function TasksTableStudent({
 	}
 
 	// Handle task completion
-	const handleTaskComplete = (task: Task) => {
+	const handleTaskComplete = (task: TaskWithStatus) => {
 		// Call the `completeTask` mutation
 		if (window.confirm('Are you sure you want to mark this task as complete?')) {
 			completeTask(classroom.id, task.id, player.id)
@@ -95,7 +96,7 @@ export default function TasksTableStudent({
 										<TableCell align='left'>{task.name}</TableCell>
 										<TableCell align='left'>{task.description || 'None'}</TableCell>
 										<TableCell align='left'>
-											{format(fromUnixTime(task.due), 'MM/dd/yyyy')}
+											{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
 										</TableCell>
 										<TableCell align='center'>${task.reward}</TableCell>
 										<TableCell align='center'>
@@ -112,7 +113,13 @@ export default function TasksTableStudent({
 											/>
 										</TableCell>
 										<TableCell align='center'>
-											<TaskModalStudent task={task} classroom={classroom} player={player} />
+											{/* <TaskModalStudent task={task} classroom={classroom} player={player} /> */}
+											<ModalsStudent
+												taskOrRepeatable={task}
+												classroom={classroom}
+												player={player}
+												type='task'
+											/>
 										</TableCell>
 										{taskCategory === 0 ? (
 											<TableCell align='center'>

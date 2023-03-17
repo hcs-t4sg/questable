@@ -17,6 +17,7 @@ import {
 	getPlayerData,
 	getRepeatableCompletionTimes,
 } from '../../utils/mutations'
+import { StyledTableRow } from '../../styles/TaskTableStyles'
 
 function truncate(description: string) {
 	if (description.length > 40) {
@@ -70,97 +71,31 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 		return unsub
 	}, [classroom])
 
-	// useEffect(() => {
-	// 	// fetch player information
-	// 	const q = query(collection(db, `classrooms/${classroom.id}/players`))
-	// 	const unsubPlayers = onSnapshot(q, (snapshot) => {
-	// 		const playerDataFetch = async () => {
-	// 			const queryRes: Player[] = []
-	// 			snapshot.forEach((doc) => {
-	// 				// attach player ID to doc data for each player and push into array.
-	// 				queryRes.push(Object.assign({ id: doc.id }, doc.data()) as Player)
-	// 			})
-	// 			setPlayerData(queryRes)
-	// 		}
-	// 		playerDataFetch().catch(console.error)
-	// 	})
-
-	// 	const qr = query(collection(db, `classrooms/${classroom.id}/repeatables`))
-	// 	const unsubRepeatables = onSnapshot(qr, (snapshot) => {
-	// 		const cRepeatablesFetch = async () => {
-	// 			const queryRes: RepeatableWithPlayerCompletionsArray[] = []
-	// 			snapshot.forEach(async (doc) => {
-	// 				// Query the completions collection for each repeatable and store that data in an array.
-	// 				const completions: RepeatablePlayerCompletionsArray[] = []
-	// 				const completionsQuery = query(
-	// 					collection(db, `classrooms/${classroom.id}/repeatables/${doc.id}/playerCompletions`),
-	// 				)
-	// 				// ! FIX THIS. YOU CANNOT SET ONSNAPSHOT LISTENERS IN A FOR LOOP WITHOUT UNSUBSCRIPTION
-	// 				onSnapshot(completionsQuery, (completion) => {
-	// 					completion.forEach(async (item) => {
-	// 						completions.push({
-	// 							id: item.id,
-	// 							...item.data(),
-	// 						} as RepeatablePlayerCompletionsArray)
-	// 					})
-	// 				})
-
-	// 				queryRes.push(
-	// 					Object.assign(
-	// 						{ id: doc.id },
-	// 						{ ...doc.data(), playerCompletions: completions },
-	// 					) as RepeatableWithPlayerCompletionsArray,
-	// 				)
-	// 			})
-
-	// 			setCompletedRepeatables(queryRes)
-	// 		}
-	// 		cRepeatablesFetch().catch(console.error)
-	// 	})
-
-	// 	return function cleanup() {
-	// 		unsubPlayers()
-	// 		unsubRepeatables()
-	// 	}
-	// }, [classroom])
-
-	// const getPlayerNameFromID = (id: string) => {
-	// 	const player = playerData.filter((player) => player.id === id)
-	// 	if (player.length <= 0) {
-	// 		return 'Player not found'
-	// 	}
-	// 	return player[0].name
-	// }
-
 	return (
 		<TableContainer component={Paper}>
-			<Table sx={{ minWidth: 650 }} aria-label='simple table'>
+			<Table aria-label='simple table'>
 				<TableHead>
 					<TableRow>
-						<TableCell align='center'>Repeatable</TableCell>
-						<TableCell align='center'>Completion Time</TableCell>
-						<TableCell align='center'>Description</TableCell>
-						<TableCell align='center'>Reward</TableCell>
-						<TableCell align='center'>Student</TableCell>
-						<TableCell align='center'>Confirm?</TableCell>
+						{/* align='center' before theme */}
+						<TableCell>Repeatable</TableCell>
+						<TableCell>Completion Time</TableCell>
+						<TableCell>Description</TableCell>
+						<TableCell>Reward</TableCell>
+						<TableCell>Student</TableCell>
+						<TableCell>Confirm?</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
 					{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
 					{completedRepeatables.map((completion) => (
-						<TableRow
-							key={completion.id}
-							sx={{
-								'&:last-child td, &:last-child th': { border: 0 },
-							}}
-						>
+						<StyledTableRow key={completion.id}>
 							<TableCell align='center'>{completion.repeatable.name}</TableCell>
 							<TableCell align='center'>
-								{format(new Date(completion.time.seconds * 1000), 'MM/dd/yyyy h:mm aa')}
+								{format(completion.time.toDate(), 'MM/dd/yyyy h:mm a')}
 							</TableCell>
-							<TableCell align='center'>{truncate(completion.repeatable.description)}</TableCell>
-							<TableCell align='center'>{completion.repeatable.reward}</TableCell>
-							<TableCell align='center' component='th' scope='row'>
+							<TableCell>{truncate(completion.repeatable.description)}</TableCell>
+							<TableCell>{completion.repeatable.reward}</TableCell>
+							<TableCell component='th' scope='row'>
 								{completion.player.name}
 							</TableCell>
 							<TableCell align='center'>
@@ -173,7 +108,6 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 											completion.id,
 										)
 									}
-									variant='contained'
 								>
 									Confirm
 								</Button>
@@ -186,52 +120,12 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 											completion.id,
 										)
 									}
-									variant='contained'
 									color='error'
 								>
 									Deny
 								</Button>
 							</TableCell>
-						</TableRow>
-
-						// return repeatable.playerCompletions.map((completion) => {
-						// 	const playerName = getPlayerNameFromID(completion.id)
-						// 	const rows = []
-						// 	for (let i = 0; i < completion.completions; i++) {
-						// 		rows.push(
-						// 			<TableRow
-						// 				key={'test'}
-						// 				sx={{
-						// 					'&:last-child td, &:last-child th': { border: 0 },
-						// 				}}
-						// 			>
-						// 				<TableCell align='center'>{repeatable.name}</TableCell>
-						// 				<TableCell align='center'>{truncate(repeatable.description)}</TableCell>
-						// 				<TableCell align='center'>{repeatable.reward}</TableCell>
-						// 				<TableCell align='center' component='th' scope='row'>
-						// 					{playerName}
-						// 				</TableCell>
-						// 				<TableCell align='center'>
-						// 					<Button
-						// 						onClick={() =>
-						// 							confirmRepeatable(classroom.id, completion.id, repeatable.id)
-						// 						}
-						// 						variant='contained'
-						// 					>
-						// 						Confirm
-						// 					</Button>
-						// 					<Button
-						// 						onClick={() => denyRepeatable(classroom.id, completion.id, repeatable.id)}
-						// 						variant='contained'
-						// 						color='error'
-						// 					>
-						// 						Deny
-						// 					</Button>
-						// 				</TableCell>
-						// 			</TableRow>,
-						// 		)
-						// 	}
-						// 	return rows
+						</StyledTableRow>
 					))}
 				</TableBody>
 			</Table>

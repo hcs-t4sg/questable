@@ -2,15 +2,11 @@ import { Button, DialogActions, InputLabel, MenuItem, Select } from '@mui/materi
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-// import FormControl from '@mui/material/FormControl'
-// import InputLabel from '@mui/material/InputLabel'
-// import MenuItem from '@mui/material/MenuItem'
-// import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import * as React from 'react'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
-import { addThread } from '../../utils/mutations'
+import { addForumPost } from '../../utils/mutations'
 // Notes: onsnapshot, don't implement at database level; implement on frontend, show only ones you filtered for
 // Modal component for individual entries.
 
@@ -21,7 +17,7 @@ type: Type of entry modal being opened.
    "edit" (for opening or editing an existing entry from table).
 user: User making query (The current logged in user). */
 
-export default function ForumPostsModal({
+export default function CreateForumPostModal({
 	isOpen,
 	onClose,
 	player,
@@ -37,24 +33,14 @@ export default function ForumPostsModal({
 	// TODO: For editing, you may have to add and manage another state variable to check if the entry is being edited.
 
 	const [subject, setSubject] = useState('')
-	const [category, setCategory] = useState(-1)
+	const [category, setCategory] = useState<0 | 1 | 2 | 3>(0)
 	const [description, setDescription] = useState('')
 
 	// Modal visibility handlers
 
-	const handleSubject = (event: any) => {
-		setSubject(event.target.value)
-	}
-	const handleCategory = (event: any) => {
-		setCategory(event.target.value)
-	}
-	const handleDescription = (event: any) => {
-		setDescription(event.target.value)
-	}
-
 	const handleClear = () => {
 		setSubject('')
-		setCategory(-1)
+		setCategory(0)
 		setDescription('')
 	}
 
@@ -69,10 +55,9 @@ export default function ForumPostsModal({
 			postType: category,
 			content: description,
 			author: player,
-			postTime: new Date().toJSON(),
 		}
 
-		addThread(newThread, classroom).catch(console.error)
+		addForumPost(newThread, classroom).catch(console.error)
 		handleClose()
 	}
 
@@ -97,7 +82,7 @@ export default function ForumPostsModal({
 						fullWidth
 						variant='standard'
 						value={subject}
-						onChange={handleSubject}
+						onChange={(event) => setSubject(event.target.value)}
 					/>
 					<InputLabel id='category'>Category</InputLabel>
 					<Select
@@ -107,12 +92,12 @@ export default function ForumPostsModal({
 						fullWidth
 						// variant='standard'
 						value={category}
-						onChange={handleCategory}
+						onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
 					>
-						<MenuItem value={1}>General</MenuItem>
-						<MenuItem value={2}>Assignments</MenuItem>
-						<MenuItem value={3}>For Fun</MenuItem>
-						<MenuItem value={4}>Starred</MenuItem>
+						<MenuItem value={0}>General</MenuItem>
+						<MenuItem value={1}>Assignments</MenuItem>
+						<MenuItem value={2}>For Fun</MenuItem>
+						<MenuItem value={3}>Starred</MenuItem>
 					</Select>
 					<TextField
 						margin='normal'
@@ -123,7 +108,7 @@ export default function ForumPostsModal({
 						multiline
 						maxRows={8}
 						value={description}
-						onChange={handleDescription}
+						onChange={(event) => setDescription(event.target.value)}
 					/>
 				</DialogContent>
 				{submitButton}

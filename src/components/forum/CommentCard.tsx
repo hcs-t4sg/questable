@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Grid, Typography, Button, TextField } from '@mui/material'
-import moment from 'moment'
 import { Classroom, Player, Comment, ForumPost } from '../../types'
 import { addComment } from '../../utils/mutations'
+import { format } from 'date-fns'
 
 export default function CommentCard({
 	comment,
@@ -43,7 +43,7 @@ export default function CommentCard({
 				<Grid container style={{ alignItems: 'baseline', flexDirection: 'row' }}>
 					<Typography>{title}</Typography>
 					<Typography variant='caption' style={{ marginInline: 10, fontStyle: 'italic' }}>
-						Posted {moment(comment.postTime).local().fromNow()}
+						Posted {format(comment.postTime.toDate(), 'MM/dd/yyyy h:mm a')}
 					</Typography>
 				</Grid>
 				<Typography variant='subtitle2'>{comment.content}</Typography>
