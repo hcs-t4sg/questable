@@ -15,31 +15,6 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 	//   const [teacher, setTeacher] = React.useState();
 
 	const [page, setPage] = React.useState(0)
-	// Pages:
-	// (0): Tasks
-	// (1): Repeatables
-
-	//   React.useEffect(() => {
-	//     // If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
-	//     const playersRef = collection(db, `classrooms/${classroom.id}/players`);
-	//     const teacherQuery = query(playersRef, where("role", "==", "teacher"));
-
-	//     //Attach a listener to the teacher document
-	//     onSnapshot(teacherQuery, (snapshot) => {
-	//       const mapTeacher = async () => {
-	//         const teacher = await Promise.all(
-	//           snapshot.docs.map(async (player) => {
-	//             const email = (await getUserData(player.id)).email;
-	//             return { ...player.data(), id: player.id, email: email };
-	//           })
-	//         )[0];
-	//         setTeacher(teacher);
-	//       };
-
-	//       // Call the async `mapTeacher` function
-	//       mapTeacher().catch(console.error);
-	//     });
-	//   }, []);
 
 	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
 		setPage(newTabIndex)
