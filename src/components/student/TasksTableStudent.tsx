@@ -1,5 +1,6 @@
-import { Box, IconButton, Tab, Tabs } from '@mui/material'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import { Box, Tab, Tabs } from '@mui/material'
+// import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import Checkbox from '@mui/material/Checkbox'
 import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
@@ -121,9 +122,10 @@ export default function TasksTableStudent({
 										</TableCell>
 										{taskCategory === 0 ? (
 											<TableCell align='center'>
-												<IconButton onClick={() => handleTaskComplete(task)}>
+												{/* <IconButton onClick={() => handleTaskComplete(task)}>
 													<CheckBoxIcon />
-												</IconButton>
+												</IconButton> */}
+												<Checkbox onChange={() => handleTaskComplete(task)} />
 											</TableCell>
 										) : null}
 									</TableRow>

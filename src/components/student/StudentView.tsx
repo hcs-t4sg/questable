@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material'
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
-import { styled } from '@mui/material/styles'
+// import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
+// import { styled } from '@mui/material/styles'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import ClassStudent from '../../routes/student/ClassStudent'
 import Inventory from '../../routes/student/Inventory'
@@ -14,26 +14,29 @@ import Layout from '../global/Layout'
 import { Classroom, Player } from '../../types'
 import { useEffect } from 'react'
 import { refreshAllRepeatables } from '../../utils/mutations'
+import { User } from 'firebase/auth'
 
 export default function StudentView({
 	player,
 	classroom,
+	user,
 }: {
 	player: Player
 	classroom: Classroom
+	user: User
 }) {
-	const ThickProgress = styled(LinearProgress)(() => ({
-		height: 20,
-		borderRadius: 0,
-		marginTop: 50,
-		[`&.${linearProgressClasses.colorPrimary}`]: {
-			backgroundColor: 'rgba(102, 187, 106, .5)',
-		},
-		[`& .${linearProgressClasses.bar}`]: {
-			borderRadius: 0,
-			backgroundColor: '#1B710D',
-		},
-	}))
+	// const ThickProgress = styled(LinearProgress)(() => ({
+	// 	height: 20,
+	// 	borderRadius: 0,
+	// 	marginTop: 50,
+	// 	[`&.${linearProgressClasses.colorPrimary}`]: {
+	// 		backgroundColor: 'rgba(102, 187, 106, .5)',
+	// 	},
+	// 	[`& .${linearProgressClasses.bar}`]: {
+	// 		borderRadius: 0,
+	// 		backgroundColor: '#1B710D',
+	// 	},
+	// }))
 
 	// Given the IDs for the outfit fetched from Firebase (and the hair subtype), you can designate the avatar outfit like so.
 	const playerOutfit = currentAvatar(player)
@@ -50,7 +53,7 @@ export default function StudentView({
 					<Box
 						sx={{
 							width: '100%',
-							height: '60%',
+							height: '100%',
 							display: 'flex',
 							flexDirection: 'column',
 							// marginTop: '30px',
@@ -59,12 +62,14 @@ export default function StudentView({
 							paddingRight: '80px',
 							paddingBottom: '72px',
 							paddingTop: '40px',
-							borderColor: 'rgba(102, 187, 106, 0.5)',
+							borderColor: '#92ae83',
 							borderStyle: 'solid',
 							borderWidth: '10px',
 						}}
 					>
-						<Typography variant='h4'>{player.name}</Typography>
+						<Typography variant='h3' sx={{ fontFamily: 'Superscript' }}>
+							{player.name}
+						</Typography>
 						<Box sx={{ display: 'flex', marginTop: '20px' }}>
 							<Box
 								sx={{
@@ -76,7 +81,7 @@ export default function StudentView({
 							>
 								<Avatar outfit={playerOutfit} />
 							</Box>
-							<Box
+							{/* <Box
 								sx={{
 									width: '350px',
 									display: 'flex',
@@ -86,17 +91,24 @@ export default function StudentView({
 							>
 								<ThickProgress variant='determinate' value={30} />
 								<ThickProgress variant='determinate' value={60} />
-							</Box>
+							</Box> */}
 							<Box
 								sx={{
 									width: '350px',
 									display: 'flex',
 									flexDirection: 'column',
-									marginLeft: '30px',
+									marginLeft: '50px',
 								}}
 							>
-								<Typography sx={{ fontSize: '25px', marginTop: '38px' }}>Powerups</Typography>
-								<Typography sx={{ fontSize: '25px', marginTop: '38px' }}>Streak</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '40px' }}>
+									Name: {user.displayName}
+								</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+									Email: {user.email}
+								</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+									Gold: {player.money}
+								</Typography>
 							</Box>
 						</Box>
 					</Box>

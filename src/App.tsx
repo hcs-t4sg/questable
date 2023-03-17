@@ -28,7 +28,7 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 const mdTheme = createTheme({
 	palette: {
 		primary: {
-			main: '#9f7767',
+			main: '#4a2511',
 		},
 		secondary: {
 			main: '#9bb496',
@@ -39,6 +39,9 @@ const mdTheme = createTheme({
 		h2: {
 			fontFamily: 'Superscript',
 		},
+		// h4: {
+		// 	fontFamily: 'Superscript',
+		// },
 	},
 	components: {
 		MuiTable: {
@@ -114,6 +117,8 @@ export default function App() {
 									marginTop: '5px',
 									marginBottom: '5px',
 									marginRight: '20px',
+									backgroundColor: '#92ae83',
+									color: '#4a2511',
 								}}
 								component={Link}
 								to={'/settings'}
@@ -127,6 +132,8 @@ export default function App() {
 									marginTop: '5px',
 									marginBottom: '5px',
 									display: currentUser.data ? 'inline' : 'none',
+									backgroundColor: '#92ae83',
+									color: '#4a2511',
 								}}
 								onClick={() => auth.signOut()}
 							>

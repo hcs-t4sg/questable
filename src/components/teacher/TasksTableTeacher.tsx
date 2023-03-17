@@ -44,7 +44,7 @@ function LinearProgressWithLabel({ task }: { task: Task }) {
 					task.completed?.length + task.assigned?.length + task.confirmed?.length
 				} students`}</Typography>
 			</Box>
-			<Box sx={{ minWidth: '50%', mr: 1 }}>
+			<Box sx={{ minWidth: '50%', mr: 1, ml: 1 }}>
 				<LinearProgress variant='determinate' value={percentDone(task)} />
 			</Box>
 		</Box>

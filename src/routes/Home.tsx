@@ -77,7 +77,7 @@ export default function Home({ user }: { user: User }) {
 						}}
 					>
 						<Typography variant='h3' sx={{ flex: '100%' }}>
-							Welcome Back!
+							Welcome Back, {user.displayName}!
 						</Typography>
 						<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
 							<Grid item>

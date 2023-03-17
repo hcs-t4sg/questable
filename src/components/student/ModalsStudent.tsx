@@ -43,7 +43,7 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 
 	const Cluster = ({ title, data }: { title: string; data: string | number | JSX.Element }) => (
 		<>
-			<Typography sx={{ marginTop: '25px' }} fontWeight='medium' variant='h6'>
+			<Typography sx={{ marginTop: '25px' }} fontWeight='bold' variant='h6'>
 				{title}
 			</Typography>
 			<Typography fontWeight='light' variant='h6'>
