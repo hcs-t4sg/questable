@@ -9,6 +9,7 @@ import ForumPost from '../forum/ForumPost'
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
 import ForumHome from '../forum/ForumHome'
+import { Grid } from '@mui/material'
 
 export default function TeacherView({
 	player,
@@ -21,32 +22,34 @@ export default function TeacherView({
 }) {
 	return (
 		<Layout classroom role={player?.role}>
-			<Routes>
-				<Route path='/' element={<Navigate to='tasks' />} />
-				<Route path='tasks' element={<Tasks player={player} classroom={classroom} />} />
-				<Route path='requests' element={<Requests player={player} classroom={classroom} />} />
-				<Route
-					path='class-teacher'
-					element={<ClassTeacher player={player} classroom={classroom} />}
-				/>
-				<Route
-					path='class-settings'
-					element={<ClassSettings player={player} user={user} classroom={classroom} />}
-				/>
+			<Grid container spacing={3} sx={{ p: 5 }}>
+				<Routes>
+					<Route path='/' element={<Navigate to='tasks' />} />
+					<Route path='tasks' element={<Tasks player={player} classroom={classroom} />} />
+					<Route path='requests' element={<Requests player={player} classroom={classroom} />} />
+					<Route
+						path='class-teacher'
+						element={<ClassTeacher player={player} classroom={classroom} />}
+					/>
+					<Route
+						path='class-settings'
+						element={<ClassSettings player={player} user={user} classroom={classroom} />}
+					/>
 
-				<Route path='forum' element={<ForumHome player={player} classroom={classroom} />}>
-					<Route path=':postID/*' element={<ForumPost player={player} classroom={classroom} />} />
-				</Route>
-				<Route
-					path='*'
-					element={
-						<main style={{ padding: '1rem' }}>
-							<p>There&apos;s nothing here!</p>
-						</main>
-					}
-				/>
-			</Routes>
-			<Outlet />
+					<Route path='forum' element={<ForumHome player={player} classroom={classroom} />}>
+						<Route path=':postID/*' element={<ForumPost player={player} classroom={classroom} />} />
+					</Route>
+					<Route
+						path='*'
+						element={
+							<main style={{ padding: '1rem' }}>
+								<p>There&apos;s nothing here!</p>
+							</main>
+						}
+					/>
+				</Routes>
+				<Outlet />
+			</Grid>
 		</Layout>
 	)
 }
