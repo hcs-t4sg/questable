@@ -48,7 +48,7 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 
 	return (
 		// <Grid item xs={12}>
-		<>
+		<div>
 			{openButton}
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>{'Create Classroom'}</DialogTitle>
@@ -64,7 +64,7 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 				</DialogContent>
 				{actionButtons}
 			</Dialog>
-		</>
+		</div>
 		// </Grid>
 		// <ClassroomModalContent
 		// 	type='create'

@@ -18,6 +18,7 @@ import {
 	getPlayerTaskCompletion,
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
+import { Grid } from '@mui/material'
 
 function truncate(description: string) {
 	if (description.length > 40) {
@@ -109,21 +110,30 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 								{completedTask.player.name}
 							</TableCell>
 							<TableCell align='center'>
-								<Button
-									onClick={() =>
-										confirmTask(classroom.id, completedTask.player.id, completedTask.id)
-									}
-									// variant='contained'
-								>
-									Confirm
-								</Button>
-								<Button
-									onClick={() => denyTask(classroom.id, completedTask.player.id, completedTask.id)}
-									// variant='contained'
-									color='error'
-								>
-									Deny
-								</Button>
+								<Grid container columnSpacing={1}>
+									<Grid item>
+										<Button
+											onClick={() =>
+												confirmTask(classroom.id, completedTask.player.id, completedTask.id)
+											}
+											color='secondary'
+											// variant='contained'
+										>
+											Confirm
+										</Button>
+									</Grid>
+									<Grid item>
+										<Button
+											onClick={() =>
+												denyTask(classroom.id, completedTask.player.id, completedTask.id)
+											}
+											// variant='contained'
+											color='error'
+										>
+											Deny
+										</Button>
+									</Grid>
+								</Grid>
 							</TableCell>
 						</StyledTableRow>
 					))}

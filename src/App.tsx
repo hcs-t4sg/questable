@@ -31,7 +31,7 @@ const mdTheme = createTheme({
 			main: '#4a2511',
 		},
 		secondary: {
-			main: '#9bb496',
+			main: '#92ae83',
 		},
 	},
 	typography: {

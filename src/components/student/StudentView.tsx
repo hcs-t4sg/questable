@@ -65,6 +65,7 @@ export default function StudentView({
 							borderColor: '#92ae83',
 							borderStyle: 'solid',
 							borderWidth: '10px',
+							backgroundColor: '#f3f8df',
 						}}
 					>
 						<Typography variant='h3' sx={{ fontFamily: 'Superscript' }}>
