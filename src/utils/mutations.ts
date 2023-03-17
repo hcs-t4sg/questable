@@ -891,7 +891,7 @@ export async function addComment(
 		`classrooms/${classroom.id}/forumPosts/${forumPost.id}/comments`,
 	)
 	await addDoc(commentRef, {
-		author: comment.author,
+		author: comment.author.id,
 		content: comment.content,
 		likes: 0,
 		postTime: serverTimestamp(),

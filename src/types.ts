@@ -133,5 +133,4 @@ export interface Comment {
 	author: Player
 	likes: number
 	postTime: Timestamp
-	parent: string
 }

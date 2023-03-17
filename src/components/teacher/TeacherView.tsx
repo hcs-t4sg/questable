@@ -4,12 +4,11 @@ import ClassTeacher from '../../routes/teacher/ClassTeacher'
 import Requests from '../../routes/teacher/Requests'
 import Tasks from '../../routes/teacher/Tasks'
 import Layout from '../global/Layout'
-import ForumPost from '../forum/ForumPost'
 
+import { Grid } from '@mui/material'
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
-import ForumHome from '../forum/ForumHome'
-import { Grid } from '@mui/material'
+import ForumView from '../forum/ForumView'
 
 export default function TeacherView({
 	player,
@@ -36,9 +35,7 @@ export default function TeacherView({
 						element={<ClassSettings player={player} user={user} classroom={classroom} />}
 					/>
 
-					<Route path='forum' element={<ForumHome player={player} classroom={classroom} />}>
-						<Route path=':postID/*' element={<ForumPost player={player} classroom={classroom} />} />
-					</Route>
+					<Route path='forum/*' element={<ForumView player={player} classroom={classroom} />} />
 					<Route
 						path='*'
 						element={
