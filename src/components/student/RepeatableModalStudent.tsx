@@ -1,3 +1,4 @@
+// ! DEPRECATED
 import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'

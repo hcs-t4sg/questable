@@ -19,6 +19,8 @@ import { db } from '../../utils/firebase'
 import { deleteTask } from '../../utils/mutations'
 import TaskModalTeacher from './TaskModalTeacher'
 
+import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
+
 function truncate(description: string) {
 	if (description.length > 50) {
 		return description.slice(0, 50) + '...'
@@ -70,21 +72,23 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 	return (
 		<Grid item xs={12}>
 			<TableContainer component={Paper}>
-				<Table sx={{ minWidth: 650 }} aria-label='simple table'>
+				<Table aria-label='simple table'>
 					<TableHead>
 						<TableRow>
-							<TableCell sx={{ m: '1%', p: '1%' }}></TableCell>
+							<BlankTableCell />
 							<TableCell>Task</TableCell>
 							<TableCell>Description</TableCell>
 							<TableCell>Deadline</TableCell>
 							<TableCell>Reward </TableCell>
 							<TableCell>Students Confirmed</TableCell>
+							<BlankTableCell />
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{tasks?.map((task) => (
-							<TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-								<TableCell sx={{ paddingTop: 0, paddingBottom: 0, width: 0.01 }} align='left'>
+							// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+							<StyledTableRow key={task.id}>
+								<TableCell>
 									<TaskModalTeacher task={task} classroom={classroom} />
 								</TableCell>
 
@@ -98,12 +102,13 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 									<LinearProgressWithLabel task={task} />
 								</TableCell>
 
-								<TableCell align='right' sx={{ width: 0.01 }}>
+								<TableCell align='right'>
 									<IconButton onClick={() => handleDelete(task)}>
 										<DeleteIcon />
 									</IconButton>
 								</TableCell>
-							</TableRow>
+							</StyledTableRow>
+							// </TableRow>
 						))}
 					</TableBody>
 				</Table>

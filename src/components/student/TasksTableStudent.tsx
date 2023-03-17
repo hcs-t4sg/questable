@@ -10,9 +10,10 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { format } from 'date-fns'
 import { useState } from 'react'
-import { Classroom, Player, Task, TaskWithStatus } from '../../types'
+import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
-import TaskModalStudent from './TaskModalStudent'
+// import TaskModalStudent from './TaskModalStudent'
+import ModalsStudent from './ModalsStudent'
 
 function a11yProps(index: number) {
 	return {
@@ -53,7 +54,7 @@ export default function TasksTableStudent({
 	}
 
 	// Handle task completion
-	const handleTaskComplete = (task: Task) => {
+	const handleTaskComplete = (task: TaskWithStatus) => {
 		// Call the `completeTask` mutation
 		if (window.confirm('Are you sure you want to mark this task as complete?')) {
 			completeTask(classroom.id, task.id, player.id)
@@ -112,7 +113,13 @@ export default function TasksTableStudent({
 											/>
 										</TableCell>
 										<TableCell align='center'>
-											<TaskModalStudent task={task} classroom={classroom} player={player} />
+											{/* <TaskModalStudent task={task} classroom={classroom} player={player} /> */}
+											<ModalsStudent
+												taskOrRepeatable={task}
+												classroom={classroom}
+												player={player}
+												type='task'
+											/>
 										</TableCell>
 										{taskCategory === 0 ? (
 											<TableCell align='center'>

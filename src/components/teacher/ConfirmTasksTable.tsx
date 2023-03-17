@@ -17,6 +17,7 @@ import {
 	getPlayerData,
 	getPlayerTaskCompletion,
 } from '../../utils/mutations'
+import { StyledTableRow } from '../../styles/TaskTableStyles'
 
 function truncate(description: string) {
 	if (description.length > 40) {
@@ -80,26 +81,29 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 
 	return (
 		<TableContainer component={Paper}>
-			<Table sx={{ minWidth: 650 }} aria-label='simple table'>
+			<Table aria-label='simple table'>
 				<TableHead>
 					<TableRow>
-						<TableCell align='center'>Task</TableCell>
-						<TableCell align='center'>Description</TableCell>
-						<TableCell align='center'>Status</TableCell>
-						<TableCell align='center'>Reward</TableCell>
-						<TableCell align='center'>Student</TableCell>
-						<TableCell align='center'>Confirm?</TableCell>
+						<TableCell>Task</TableCell>
+						<TableCell>Description</TableCell>
+						<TableCell>Status</TableCell>
+						<TableCell>Reward</TableCell>
+						<TableCell>Student</TableCell>
+						<TableCell>Confirm?</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
 					{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
 					{completedTasks.map((completedTask) => (
-						<TableRow key={'test'} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-							<TableCell align='center'>{completedTask.name}</TableCell>
-							<TableCell align='center'>{truncate(completedTask.description)}</TableCell>
-							<TableCell align='center'>{formatStatus(completedTask)}</TableCell>
-							<TableCell align='center'>{completedTask.reward}</TableCell>
-							<TableCell align='center' component='th' scope='row'>
+						<StyledTableRow
+							key={'test'}
+							// sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell>{completedTask.name}</TableCell>
+							<TableCell>{truncate(completedTask.description)}</TableCell>
+							<TableCell>{formatStatus(completedTask)}</TableCell>
+							<TableCell>{completedTask.reward}</TableCell>
+							<TableCell component='th' scope='row'>
 								{completedTask.player.name}
 							</TableCell>
 							<TableCell align='center'>
@@ -107,19 +111,19 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 									onClick={() =>
 										confirmTask(classroom.id, completedTask.player.id, completedTask.id)
 									}
-									variant='contained'
+									// variant='contained'
 								>
 									Confirm
 								</Button>
 								<Button
 									onClick={() => denyTask(classroom.id, completedTask.player.id, completedTask.id)}
-									variant='contained'
+									// variant='contained'
 									color='error'
 								>
 									Deny
 								</Button>
 							</TableCell>
-						</TableRow>
+						</StyledTableRow>
 					))}
 				</TableBody>
 			</Table>

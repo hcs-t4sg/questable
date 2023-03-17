@@ -9,6 +9,7 @@ import { useState } from 'react'
 import Grid from '@mui/material/Grid'
 import { joinClassroom } from '../../utils/mutations'
 import { User } from 'firebase/auth'
+// import ClassroomModalContent from './ClassroomModalContent'
 
 export default function JoinClassroomModal({ user }: { user: User }) {
 	const [open, setOpen] = useState(false)
@@ -66,5 +67,14 @@ export default function JoinClassroomModal({ user }: { user: User }) {
 				{actionButtons}
 			</Dialog>
 		</Grid>
+		// <ClassroomModalContent
+		// 	type='join'
+		// 	openButton={openButton}
+		// 	open={open}
+		// 	handleClose={handleClose}
+		// 	setNew={setSignupCode}
+		// 	newClass={signupCode}
+		// 	actionButtons={actionButtons}
+		// />
 	)
 }

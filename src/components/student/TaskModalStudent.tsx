@@ -1,10 +1,13 @@
-import CloseIcon from '@mui/icons-material/Close'
+// ! DEPRECATED
+// import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
+
+import { ModalTitle } from '../../styles/TaskModalStyles'
 
 export default function TaskModalStudent({
 	classroom,
@@ -73,7 +76,7 @@ export default function TaskModalStudent({
 						marginBottom: '18px',
 					}}
 				>
-					<Box
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -97,7 +100,8 @@ export default function TaskModalStudent({
 							borderRadius: '5px',
 							width: '100%',
 						}}
-					/>
+					/> */}
+					<ModalTitle onClick={handleClose} text='Task Overview' />
 
 					<Box
 						sx={{
@@ -107,6 +111,7 @@ export default function TaskModalStudent({
 							justifyContent: 'left',
 						}}
 					>
+						{/* <BoxInModal> */}
 						<Cluster title='Task Name' data={task.name} />
 						<Cluster title='Description' data={task.description} />
 						<Cluster title='Deadline' data={format(task.due.toDate(), 'MM/dd/yyyy h:mm a')} />
@@ -132,6 +137,7 @@ export default function TaskModalStudent({
 								}
 							/>
 						)}
+						{/* </BoxInModal> */}
 					</Box>
 				</Box>
 			</Modal>

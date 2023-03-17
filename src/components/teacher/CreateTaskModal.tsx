@@ -1,12 +1,10 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import CloseIcon from '@mui/icons-material/Close'
-import { Box, FormControl, InputLabel, MenuItem, Modal, Select, Tab, Tabs } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
 import Button from '@mui/material/Button'
 import DialogActions from '@mui/material/DialogActions'
 import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+// import Typography from '@mui/material/Typography'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -32,6 +30,13 @@ function maxCompletionsIsInvalid(maxCompletions: string) {
 	}
 	return false
 }
+
+import {
+	BoxInModal,
+	ModalTitle,
+	TaskModalBox,
+	TeacherModalStyled,
+} from '../../styles/TaskModalStyles'
 
 export default function CreateTaskModal({
 	classroom,
@@ -117,7 +122,12 @@ export default function CreateTaskModal({
 	}
 
 	const openButton = (
-		<Button sx={{ width: 1 }} onClick={handleOpen} startIcon={<AddCircleOutlineIcon />}>
+		<Button
+			variant='text'
+			sx={{ width: 1 }}
+			onClick={handleOpen}
+			startIcon={<AddCircleOutlineIcon />}
+		>
 			Create Manually
 		</Button>
 	)
@@ -144,12 +154,8 @@ export default function CreateTaskModal({
 	return (
 		<div>
 			{openButton}
-			<Modal
-				sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-				open={open}
-				onClose={handleClose}
-			>
-				<Box
+			<TeacherModalStyled open={open} onClose={handleClose}>
+				{/* <Box
 					sx={{
 						width: '40%',
 						display: 'flex',
@@ -161,8 +167,10 @@ export default function CreateTaskModal({
 						backgroundColor: 'white',
 						marginBottom: '18px',
 					}}
-				>
-					<Box
+				> */}
+				<TaskModalBox>
+					<ModalTitle onClick={handleClose} text='Create Task' />
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -187,7 +195,7 @@ export default function CreateTaskModal({
 							width: '100%',
 							marginBottom: '10px',
 						}}
-					/>
+					/> */}
 
 					{repeatableButton}
 
@@ -212,7 +220,8 @@ export default function CreateTaskModal({
 						value={description}
 						onChange={(event) => setDescription(event.target.value)}
 					/>
-					<Box
+					<BoxInModal>
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -220,7 +229,7 @@ export default function CreateTaskModal({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
 						{/* either show a due date option or max completions based on if task is repeatable */}
 						{!isRepeatable ? (
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -252,8 +261,9 @@ export default function CreateTaskModal({
 								onChange={(event) => setMaxCompletions(event.target.value)}
 							/>
 						)}
-					</Box>
-					<Box
+					</BoxInModal>
+					{/* </Box> */}
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -261,7 +271,8 @@ export default function CreateTaskModal({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
+					<BoxInModal>
 						<FormControl fullWidth>
 							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
 							<Select
@@ -277,14 +288,16 @@ export default function CreateTaskModal({
 								<MenuItem value={40}>40</MenuItem>
 							</Select>
 						</FormControl>
-					</Box>
+						{/* </Box> */}
+					</BoxInModal>
 					<br />
 					{/* center the save button */}
 					<Grid container justifyContent='center'>
 						{actionButtons}
 					</Grid>
-				</Box>
-			</Modal>
+					{/* </Box> */}
+				</TaskModalBox>
+			</TeacherModalStyled>
 		</div>
 	)
 }

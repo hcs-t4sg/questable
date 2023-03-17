@@ -29,7 +29,7 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 	}
 
 	return (
-		<Grid container spacing={3} sx={{ p: 5 }}>
+		<>
 			<Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
@@ -62,6 +62,6 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 				</Tabs>
 				{getTable()}
 			</Grid>
-		</Grid>
+		</>
 	)
 }

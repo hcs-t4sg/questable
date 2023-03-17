@@ -3,8 +3,7 @@ import Grid from '@mui/material/Grid'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import * as React from 'react'
-import Layout from '../../components/global/Layout'
-import ShopItemCard from '../../components/student/ShopItemCard'
+// import ShopItemCard from '../../components/student/ShopItemCard'
 import { Classroom, Player } from '../../types'
 import {
 	getBodyItems,
@@ -13,6 +12,9 @@ import {
 	getShirtItems,
 	getShoesItems,
 } from '../../utils/items'
+import { ItemCard } from '../../components/student/ItemCard'
+// import { Classroom, Player } from '../../types'
+import { useState } from 'react'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -51,13 +53,13 @@ const shoes = getShoesItems()
 //  const all = bodies.concat(hairs, shirts, pants, shoes)
 
 export default function Shop({ player, classroom }: { player: Player; classroom: Classroom }) {
-	const [value, setValue] = React.useState(0)
+	const [value, setValue] = useState(0)
 	const handleChange = (event: React.SyntheticEvent, newValue: 0 | 1 | 2 | 3 | 4) => {
 		setValue(newValue)
 	}
 
 	return (
-		<Layout>
+		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container spacing={3}>
 				<Grid item xs={12}>
 					<h3>Shop</h3>
@@ -76,7 +78,14 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(bodies).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} itemPrice='Free' item={item} />
+								{/* <ShopItemCard player={player} classroom={classroom} itemPrice='Free' item={item} /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='Free'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>
@@ -85,7 +94,14 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(hairs).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' />
+								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='$100'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>
@@ -94,7 +110,14 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(shirts).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' />
+								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='$150'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>
@@ -103,7 +126,14 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(pants).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' />
+								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='$150'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>
@@ -112,12 +142,19 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 						{Array.from(shoes).map((item, index) => (
 							<Grid item xs={2} sm={3} md={3} key={index}>
-								<ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' />
+								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
+								<ItemCard
+									item={item}
+									player={player}
+									classroom={classroom}
+									itemPrice='$100'
+									type='shop'
+								/>
 							</Grid>
 						))}
 					</Grid>
 				</TabPanel>
 			</Grid>
-		</Layout>
+		</Grid>
 	)
 }

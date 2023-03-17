@@ -1,4 +1,4 @@
-import { Tab, Tabs } from '@mui/material'
+import { Grid, Tab, Tabs } from '@mui/material'
 import { Box } from '@mui/system'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import * as React from 'react'
@@ -63,19 +63,17 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 
 			// TODO rewrite using Promise.all
 			snapshot.forEach((doc) => {
-				// Find assigned, completed, and confirmed tasks using player's id.
-				if (doc.data().assigned?.includes(player.id)) {
-					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
-				}
-				if (doc.data().completed?.includes(player.id)) {
-					completed.push(Object.assign({ id: doc.id, status: 1 }, doc.data()) as TaskWithStatus)
-				}
-				if (doc.data().confirmed?.includes(player.id)) {
-					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
-				}
 				// if task is overdue, add to overdue list
 				if (doc.data().due.toDate() < new Date()) {
 					overdue.push(Object.assign({ id: doc.id, status: 3 }, doc.data()) as TaskWithStatus)
+				}
+				// Find assigned, completed, and confirmed tasks using player's id.
+				else if (doc.data().assigned?.includes(player.id)) {
+					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
+				} else if (doc.data().completed?.includes(player.id)) {
+					completed.push(Object.assign({ id: doc.id, status: 1 }, doc.data()) as TaskWithStatus)
+				} else if (doc.data().confirmed?.includes(player.id)) {
+					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
 				}
 			})
 			setAssigned(assigned)
@@ -87,7 +85,7 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 	}, [classroom.id, player.id])
 
 	return (
-		<Box>
+		<Grid item xs={12}>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 				<Tabs value={taskRepTab} onChange={handleChangeTaskRep} aria-label='Task/repeatable tabs'>
 					<Tab label='Tasks' {...a11yProps(0)} />
@@ -107,6 +105,6 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 			<TabPanel value={taskRepTab} index={1}>
 				<RepeatableTableStudent classroom={classroom} player={player} />
 			</TabPanel>
-		</Box>
+		</Grid>
 	)
 }
