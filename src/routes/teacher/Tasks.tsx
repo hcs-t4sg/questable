@@ -5,6 +5,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import * as React from 'react'
 import CreateTaskModal from '../../components/teacher/CreateTaskModal'
+import CreateCanvasTaskModal from '../../components/teacher/CreateCanvasTaskModal'
 import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
 
 import { doc, onSnapshot } from 'firebase/firestore'
@@ -88,6 +89,7 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 			<Grid item xs={12}>
 				<Typography variant='h5'>Create a New Task</Typography>
 				<CreateTaskModal classroom={classroom} player={player} />
+				<CreateCanvasTaskModal classroom={classroom} player={player} />
 			</Grid>
 
 			<Grid item xs={12}>

@@ -13,6 +13,7 @@ interface Assignment {
 export interface Task extends Assignment {
 	completed: string[]
 	confirmed: string[]
+	canvasId?: string
 }
 
 export interface TaskWithStatus extends Task {
@@ -94,4 +95,11 @@ export type UserRole = 'student' | 'teacher'
 
 export interface PlayerWithEmail extends Player {
 	email: string
+}
+
+export interface CanvasAssignment {
+	id: string
+	name: string
+	description: string
+	// due_at: string
 }

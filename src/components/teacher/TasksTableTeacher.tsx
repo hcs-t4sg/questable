@@ -19,7 +19,7 @@ import { db } from '../../utils/firebase'
 import { deleteTask } from '../../utils/mutations'
 import TaskModalTeacher from './TaskModalTeacher'
 
-function truncate(description: string) {
+export function truncate(description: string) {
 	if (description.length > 50) {
 		return description.slice(0, 50) + '...'
 	}
