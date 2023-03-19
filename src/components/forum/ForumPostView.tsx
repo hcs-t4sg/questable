@@ -20,6 +20,47 @@ import Avatar from '../global/Avatar'
 import { currentAvatar } from '../../utils/items'
 import { format } from 'date-fns'
 
+const IncomingComment = ({ comment }: { comment: Comment }) => (
+	<Card variant='outlined' sx={{ backgroundColor: '#FEFAE0', width: '60%' }}>
+		<CardContent>
+			<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
+				{comment.content}
+			</Typography>
+			<Divider sx={{ margin: '10px 0' }} />
+			<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
+				<Box
+					sx={{
+						width: '30px',
+						height: '30px',
+					}}
+				>
+					<Avatar outfit={currentAvatar(comment.author)} />
+				</Box>
+				<Typography gutterBottom variant='subtitle2' sx={{ marginBottom: 0, marginRight: '5px' }}>
+					{comment.author.name}
+				</Typography>
+				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
+					{comment.postTime ? format(comment.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
+				</Typography>
+			</Box>
+		</CardContent>
+	</Card>
+)
+
+const OutgoingComment = ({ comment }: { comment: Comment }) => (
+	<Card variant='outlined' sx={{ backgroundColor: '#F3F8DF', width: '60%', alignSelf: 'flex-end' }}>
+		<CardContent>
+			<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
+				{comment.content}
+			</Typography>
+			<Divider sx={{ margin: '10px 0' }} />
+			<Typography variant='caption' style={{ fontStyle: 'italic' }}>
+				{comment.postTime ? format(comment.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
+			</Typography>
+		</CardContent>
+	</Card>
+)
+
 export default function ForumPostView({
 	player,
 	classroom,
@@ -111,37 +152,14 @@ export default function ForumPostView({
 				<Card variant='outlined'>
 					<CardContent sx={{ height: '500px', overflowY: 'scroll' }}>
 						{comments ? (
-							<Stack direction='column' spacing={2}>
-								{comments.map((comment) => (
-									<Card key={comment.id}>
-										<CardContent>
-											<Typography variant='body1'>{comment.content}</Typography>
-											<Divider sx={{ margin: '10px 0' }} />
-											<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
-												<Box
-													sx={{
-														width: '30px',
-														height: '30px',
-													}}
-												>
-													<Avatar outfit={currentAvatar(comment.author)} />
-												</Box>
-												<Typography
-													gutterBottom
-													variant='subtitle2'
-													sx={{ marginBottom: 0, marginRight: '5px' }}
-												>
-													{comment.author.name}
-												</Typography>
-												<Typography variant='caption' style={{ fontStyle: 'italic' }}>
-													{comment.postTime
-														? format(comment.postTime.toDate(), 'MM/dd/yyyy h:mm a')
-														: ''}
-												</Typography>
-											</Box>
-										</CardContent>
-									</Card>
-								))}
+							<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
+								{comments.map((comment, index) => {
+									if (index % 2 === 0) {
+										return <IncomingComment comment={comment} key={comment.id} />
+									} else {
+										return <OutgoingComment comment={comment} key={comment.id} />
+									}
+								})}
 							</Stack>
 						) : (
 							<Typography variant='body1'>Loading comments...</Typography>

@@ -8,9 +8,11 @@ import Avatar from '../global/Avatar'
 export default function ForumPostCard({
 	forumPost,
 	isLink,
+	resetCategoryCallback,
 }: {
 	forumPost: ForumPost
 	isLink: boolean
+	resetCategoryCallback?: () => void
 }) {
 	const cardContent = (
 		<CardContent>
@@ -24,13 +26,13 @@ export default function ForumPostCard({
 				>
 					<Avatar outfit={currentAvatar(forumPost.author)} />
 				</Box>
-				<Typography gutterBottom variant='subtitle2' sx={{ marginBottom: 0 }}>
+				<Typography gutterBottom variant='subtitle2' sx={{ marginBottom: 0, marginRight: '5px' }}>
 					{forumPost.author.name}
 				</Typography>
+				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
+					{forumPost.postTime ? format(forumPost.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
+				</Typography>
 			</Box>
-			<Typography variant='caption' style={{ fontStyle: 'italic' }}>
-				Posted {forumPost.postTime ? format(forumPost.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
-			</Typography>
 			<Divider sx={{ margin: '10px 0' }} />
 			<Typography variant='body2'>{forumPost.content}</Typography>
 		</CardContent>
@@ -39,7 +41,7 @@ export default function ForumPostCard({
 	return (
 		<Card sx={{ marginBottom: '10px' }} variant={isLink ? 'elevation' : 'outlined'}>
 			{isLink ? (
-				<CardActionArea component={Link} to={forumPost.id}>
+				<CardActionArea component={Link} to={forumPost.id} onClick={resetCategoryCallback}>
 					{cardContent}
 				</CardActionArea>
 			) : (
