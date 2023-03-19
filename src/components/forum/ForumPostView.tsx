@@ -108,7 +108,7 @@ export default function ForumPostView({
 		return (
 			<>
 				<ForumPostCard forumPost={post} isLink={false} />
-				<Card>
+				<Card variant='outlined'>
 					<CardContent sx={{ height: '500px', overflowY: 'scroll' }}>
 						{comments ? (
 							<Stack direction='column' spacing={2}>
