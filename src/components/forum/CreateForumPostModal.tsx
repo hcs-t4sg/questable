@@ -1,9 +1,8 @@
-import { Button, DialogActions, InputLabel, MenuItem, Select } from '@mui/material'
+import { Button, DialogActions, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
-import * as React from 'react'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { addForumPost } from '../../utils/mutations'
@@ -50,6 +49,18 @@ export default function CreateForumPostModal({
 	}
 
 	const handleSubmit = () => {
+		const subjectContainsNonWhitespaceChars = subject.replace(/\s+/g, '') != ''
+		if (!subjectContainsNonWhitespaceChars) {
+			alert('Title cannot be empty')
+			return
+		}
+
+		const descriptionContainsNonWhitespaceChars = description.replace(/\s+/g, '') != ''
+		if (!descriptionContainsNonWhitespaceChars) {
+			alert('Description cannot be empty')
+			return
+		}
+
 		const newThread = {
 			title: subject,
 			postType: category,
@@ -84,21 +95,6 @@ export default function CreateForumPostModal({
 						value={subject}
 						onChange={(event) => setSubject(event.target.value)}
 					/>
-					<InputLabel id='category'>Category</InputLabel>
-					<Select
-						// margin='normal'
-						labelId='category'
-						label='Category'
-						fullWidth
-						// variant='standard'
-						value={category}
-						onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
-					>
-						<MenuItem value={0}>General</MenuItem>
-						<MenuItem value={1}>Assignments</MenuItem>
-						<MenuItem value={2}>For Fun</MenuItem>
-						<MenuItem value={3}>Starred</MenuItem>
-					</Select>
 					<TextField
 						margin='normal'
 						id='description'
@@ -110,6 +106,24 @@ export default function CreateForumPostModal({
 						value={description}
 						onChange={(event) => setDescription(event.target.value)}
 					/>
+					<FormControl fullWidth>
+						<InputLabel id='category-label'>Category</InputLabel>
+						<Select
+							// margin='normal'
+							labelId='category-label'
+							id='category'
+							label='Category'
+							fullWidth
+							// variant='standard'
+							value={category}
+							onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
+						>
+							<MenuItem value={0}>General</MenuItem>
+							<MenuItem value={1}>Assignments</MenuItem>
+							<MenuItem value={2}>For Fun</MenuItem>
+							<MenuItem value={3}>Announcements</MenuItem>
+						</Select>
+					</FormControl>
 				</DialogContent>
 				{submitButton}
 			</Dialog>
