@@ -237,7 +237,6 @@ export default function CreateTaskModal({
 									label='Due Date'
 									value={dueDate}
 									onChange={(value) => setDueDate(value)}
-									renderInput={(params) => <TextField {...params} />}
 								/>
 							</LocalizationProvider>
 						) : (
