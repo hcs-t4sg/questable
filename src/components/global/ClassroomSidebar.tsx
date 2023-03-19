@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar'
 import React from 'react'
 import '../../App.css'
 import { UserRole } from '../../types'
-import { mainListItemsStudent, mainListItemsTeacher } from './listItems'
+import { MainListItemsStudent, MainListItemsTeacher } from './listItems'
 
 const drawerWidth = 240
 
@@ -63,11 +63,11 @@ export default function ClassroomSidebar({ role }: { role: UserRole }) {
 			</Toolbar>
 			<Divider />
 			<List component='nav'>
-				{role === 'teacher'
-					? mainListItemsTeacher
-					: role === 'student'
-					? mainListItemsStudent
-					: null}
+				{role === 'teacher' ? (
+					<MainListItemsTeacher />
+				) : role === 'student' ? (
+					<MainListItemsStudent />
+				) : null}
 			</List>
 		</Drawer>
 	)

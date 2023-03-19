@@ -10,63 +10,112 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 // Handles list of pages on sidebar. Edit if you want to add more pages
 
-export const mainListItemsTeacher = (
-	<React.Fragment>
-		<ListItemButton component={Link} to='tasks'>
-			<ListItemIcon>
-				<AssignmentIcon />
-			</ListItemIcon>
-			<ListItemText primary='Tasks' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='requests'>
-			<ListItemIcon>
-				<EmailIcon />
-			</ListItemIcon>
-			<ListItemText primary='Requests' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='class-teacher'>
-			<ListItemIcon>
-				<GroupIcon />
-			</ListItemIcon>
-			<ListItemText primary='Class' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='class-settings'>
-			<ListItemIcon>
-				<SettingsIcon />
-			</ListItemIcon>
-			<ListItemText primary='Class Settings' />
-		</ListItemButton>
-	</React.Fragment>
-)
+export function MainListItemsTeacher() {
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3>(0)
 
-export const mainListItemsStudent = (
-	<React.Fragment>
-		<ListItemButton component={Link} to='main'>
-			<ListItemIcon>
-				<FortIcon />
-			</ListItemIcon>
-			<ListItemText primary='Main' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='shop'>
-			<ListItemIcon>
-				<SellIcon />
-			</ListItemIcon>
-			<ListItemText primary='Shop' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='class-student'>
-			<ListItemIcon>
-				<GroupIcon />
-			</ListItemIcon>
-			<ListItemText primary='Class' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='inventory'>
-			<ListItemIcon>
-				<InventoryIcon />
-			</ListItemIcon>
-			<ListItemText primary='Inventory' />
-		</ListItemButton>
-	</React.Fragment>
-)
+	return (
+		<React.Fragment>
+			<ListItemButton
+				component={Link}
+				to='tasks'
+				onClick={() => setSelected(0)}
+				selected={selected === 0}
+			>
+				<ListItemIcon>
+					<AssignmentIcon />
+				</ListItemIcon>
+				<ListItemText primary='Tasks' />
+			</ListItemButton>
+			<ListItemButton
+				component={Link}
+				to='requests'
+				onClick={() => setSelected(1)}
+				selected={selected === 1}
+			>
+				<ListItemIcon>
+					<EmailIcon />
+				</ListItemIcon>
+				<ListItemText primary='Requests' />
+			</ListItemButton>
+			<ListItemButton
+				component={Link}
+				to='class-teacher'
+				onClick={() => setSelected(2)}
+				selected={selected === 2}
+			>
+				<ListItemIcon>
+					<GroupIcon />
+				</ListItemIcon>
+				<ListItemText primary='Class' />
+			</ListItemButton>
+			<ListItemButton
+				component={Link}
+				to='class-settings'
+				onClick={() => setSelected(3)}
+				selected={selected === 3}
+			>
+				<ListItemIcon>
+					<SettingsIcon />
+				</ListItemIcon>
+				<ListItemText primary='Class Settings' />
+			</ListItemButton>
+		</React.Fragment>
+	)
+}
+
+export function MainListItemsStudent() {
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3>(0)
+
+	return (
+		<React.Fragment>
+			<ListItemButton
+				component={Link}
+				to='main'
+				onClick={() => setSelected(0)}
+				selected={selected === 0}
+			>
+				<ListItemIcon>
+					<FortIcon />
+				</ListItemIcon>
+				<ListItemText primary='Main' />
+			</ListItemButton>
+			<ListItemButton
+				component={Link}
+				to='shop'
+				onClick={() => setSelected(1)}
+				selected={selected === 1}
+			>
+				<ListItemIcon>
+					<SellIcon />
+				</ListItemIcon>
+				<ListItemText primary='Shop' />
+			</ListItemButton>
+			<ListItemButton
+				component={Link}
+				to='class-student'
+				onClick={() => setSelected(2)}
+				selected={selected === 2}
+			>
+				<ListItemIcon>
+					<GroupIcon />
+				</ListItemIcon>
+				<ListItemText primary='Class' />
+			</ListItemButton>
+			<ListItemButton
+				component={Link}
+				to='inventory'
+				onClick={() => setSelected(3)}
+				selected={selected === 3}
+			>
+				<ListItemIcon>
+					<InventoryIcon />
+				</ListItemIcon>
+				<ListItemText primary='Inventory' />
+			</ListItemButton>
+		</React.Fragment>
+	)
+}

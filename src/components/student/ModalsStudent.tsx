@@ -97,19 +97,23 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 								/>
 							</StudentBoxInModal>
 						</Grid>
-						<Grid item xs={6} marginTop={10}>
+						<Grid item xs={6} marginTop={10} alignItems='center'>
 							<Box
 								component='img'
 								sx={{
 									imageRendering: 'pixelated',
 									maxHeight: { xs: 150, md: 200 },
 									maxWidth: { xs: 150, md: 200 },
+									position: 'relative',
 								}}
 								alt='Red Potion'
 								src={red3}
 								height='100%'
 								width='100%'
 							/>
+							<Typography fontWeight='light' variant='h6' fontFamily='Superscript' textAlign='left'>
+								Potion Collection
+							</Typography>
 						</Grid>
 					</Grid>
 				</StudentTaskModalBox>
