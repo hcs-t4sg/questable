@@ -1,12 +1,24 @@
-import { Button, TextField, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { Classroom, Comment, ForumPost, Player } from '../../types'
-import { useParams } from 'react-router-dom'
-import { db } from '../../utils/firebase'
+import {
+	Box,
+	Button,
+	Card,
+	CardActions,
+	CardContent,
+	Divider,
+	Stack,
+	TextField,
+	Typography,
+} from '@mui/material'
 import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore'
-import { format } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Classroom, Comment, ForumPost, Player } from '../../types'
+import { db } from '../../utils/firebase'
 import { addComment, getPlayerData } from '../../utils/mutations'
-import CommentCard from './CommentCard'
+import ForumPostCard from './ForumPostCard'
+import Avatar from '../global/Avatar'
+import { currentAvatar } from '../../utils/items'
+import { format } from 'date-fns'
 
 export default function ForumPostView({
 	player,
@@ -63,7 +75,7 @@ export default function ForumPostView({
 	useEffect(() => {
 		if (postID) {
 			const commentsRef = collection(db, `classrooms/${classroom.id}/forumPosts/${postID}/comments`)
-			const commentsQuery = query(commentsRef, orderBy('postTime', 'desc'))
+			const commentsQuery = query(commentsRef, orderBy('postTime', 'asc'))
 			const unsub = onSnapshot(commentsQuery, (snapshot) => {
 				const appendAuthorsToComments = async () => {
 					const commentList: Comment[] = []
@@ -74,7 +86,7 @@ export default function ForumPostView({
 							if (author) {
 								const commentData = { ...doc.data(), id: doc.id } as Comment
 								commentData.author = author
-								commentList.push(commentData as Comment)
+								commentList.push(commentData)
 							}
 						}),
 					)
@@ -90,33 +102,63 @@ export default function ForumPostView({
 	console.log(player)
 	console.log(comments)
 
+	// TODO With comment flexbox that avatar, name, and timestamp side by side, we have weird resizing behavior of the avatar. Fix by having the timestamp go below the avatar and name when card gets too small
+
 	if (post) {
 		return (
 			<>
-				<Typography variant='h2'>{`${post.title}`}</Typography>
-				<Typography variant='body1'>{`${post.content}`}</Typography>
-				<Typography variant='caption'>{`${format(
-					post.postTime.toDate(),
-					'MM/dd/yyyy h:mm a',
-				)}`}</Typography>
-				<Typography variant='h6'>{`${post.likes.toString()}`}</Typography>
-				<Typography variant='h6'>{`${post.author.name}`}</Typography>
-				<TextField
-					variant='outlined'
-					label='Comment Field'
-					value={comment}
-					onChange={(event) => setComment(event.target.value)}
-				/>
-				<Button variant='contained' onClick={handleSubmit}>
-					Comment
-				</Button>
-				{comments ? (
-					comments.map((comment) => (
-						<CommentCard comment={comment} player={player} key={comment.id} />
-					))
-				) : (
-					<p>Loading comments...</p>
-				)}
+				<ForumPostCard forumPost={post} isLink={false} />
+				<Card>
+					<CardContent sx={{ height: '500px', overflowY: 'scroll' }}>
+						{comments ? (
+							<Stack direction='column' spacing={2}>
+								{comments.map((comment) => (
+									<Card key={comment.id}>
+										<CardContent>
+											<Typography variant='body1'>{comment.content}</Typography>
+											<Divider sx={{ margin: '10px 0' }} />
+											<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
+												<Box
+													sx={{
+														width: '30px',
+														height: '30px',
+													}}
+												>
+													<Avatar outfit={currentAvatar(comment.author)} />
+												</Box>
+												<Typography
+													gutterBottom
+													variant='subtitle2'
+													sx={{ marginBottom: 0, marginRight: '5px' }}
+												>
+													{comment.author.name}
+												</Typography>
+												<Typography variant='caption' style={{ fontStyle: 'italic' }}>
+													{comment.postTime
+														? format(comment.postTime.toDate(), 'MM/dd/yyyy h:mm a')
+														: ''}
+												</Typography>
+											</Box>
+										</CardContent>
+									</Card>
+								))}
+							</Stack>
+						) : (
+							<Typography variant='body1'>Loading comments...</Typography>
+						)}
+					</CardContent>
+					<CardActions>
+						<TextField
+							variant='outlined'
+							label='Comment Field'
+							value={comment}
+							onChange={(event) => setComment(event.target.value)}
+						/>
+						<Button variant='contained' onClick={handleSubmit}>
+							Comment
+						</Button>
+					</CardActions>
+				</Card>
 			</>
 		)
 	} else {

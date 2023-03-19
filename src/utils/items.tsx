@@ -93,6 +93,8 @@ export default function render(file: string, spriteStart: number, doAnimation: b
 				imageRendering: 'pixelated',
 				position: 'absolute',
 				width: '100%',
+				// height: '100%',
+				// objectFit: 'contain',
 			}}
 			image={imports[file]}
 			widthFrame={32}

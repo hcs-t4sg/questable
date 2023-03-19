@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Classroom, ForumPost, Player } from '../../types'
 import { db } from '../../utils/firebase'
 import ForumPostCard from './ForumPostCard'
+import { getPlayerData } from '../../utils/mutations'
 
 export default function ForumPostList({
 	player,
@@ -14,7 +15,7 @@ export default function ForumPostList({
 	classroom: Classroom
 	categoryFilter: -1 | 0 | 1 | 2 | 3
 }) {
-	const [forumPosts, setForumPosts] = useState<ForumPost[]>([])
+	const [forumPosts, setForumPosts] = useState<ForumPost[] | null>(null)
 
 	useEffect(() => {
 		const forumPostsRef = collection(db, `classrooms/${classroom.id}/forumPosts`)
@@ -32,9 +33,22 @@ export default function ForumPostList({
 		console.log(forumPostsQuery)
 
 		const unsub = onSnapshot(forumPostsQuery, (snapshot) => {
-			const forumPosts = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as ForumPost))
-			console.log(forumPosts)
-			setForumPosts(forumPosts)
+			const appendAuthorsToPosts = async () => {
+				const postList: ForumPost[] = []
+				await Promise.all(
+					snapshot.docs.map(async (doc) => {
+						const author = await getPlayerData(classroom.id, doc.data().author)
+						if (author) {
+							const postData = { ...doc.data(), id: doc.id } as ForumPost
+							postData.author = author
+							postList.push(postData)
+						}
+					}),
+				)
+				console.log(postList)
+				setForumPosts(postList)
+			}
+			appendAuthorsToPosts().catch(console.error)
 		})
 		return unsub
 	}, [player, classroom, categoryFilter])
@@ -50,9 +64,11 @@ export default function ForumPostList({
 	return (
 		<>
 			<Typography variant='h3'>{categoryTitles[categoryFilter]}</Typography>
-			{forumPosts.map((post) => (
-				<ForumPostCard player={player} classroom={classroom} forumPost={post} key={post.id} />
-			))}
+			{forumPosts ? (
+				forumPosts.map((post) => <ForumPostCard forumPost={post} isLink key={post.id} />)
+			) : (
+				<Typography variant='body1'>Loading...</Typography>
+			)}
 		</>
 	)
 }
