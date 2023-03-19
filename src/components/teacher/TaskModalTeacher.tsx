@@ -157,7 +157,6 @@ export default function TaskModalTeacher({
 								label='Due Date'
 								value={date}
 								onChange={(newValue) => setDate(newValue)}
-								renderInput={(params) => <TextField {...params} />}
 							/>
 						</LocalizationProvider>
 						{/* </Box> */}
