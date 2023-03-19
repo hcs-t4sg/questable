@@ -33,6 +33,9 @@ const mdTheme = createTheme({
 		secondary: {
 			main: '#92ae83',
 		},
+		success: {
+			main: '#92ae83',
+		},
 	},
 	typography: {
 		fontFamily: 'Andale Mono',
