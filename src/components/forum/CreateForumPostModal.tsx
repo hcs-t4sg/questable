@@ -1,11 +1,20 @@
-import { Button, DialogActions, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import Dialog from '@mui/material/Dialog'
+import {
+	// Box,
+	Button,
+	DialogActions,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+} from '@mui/material'
+// import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { addForumPost } from '../../utils/mutations'
+import { TaskModalBox, TeacherModalStyled } from '../../styles/TaskModalStyles'
 // Notes: onsnapshot, don't implement at database level; implement on frontend, show only ones you filtered for
 // Modal component for individual entries.
 
@@ -28,8 +37,6 @@ export default function CreateForumPostModal({
 	classroom: Classroom
 }) {
 	// State variables for modal status
-
-	// TODO: For editing, you may have to add and manage another state variable to check if the entry is being edited.
 
 	const [subject, setSubject] = useState('')
 	const [category, setCategory] = useState<0 | 1 | 2 | 3>(0)
@@ -75,58 +82,62 @@ export default function CreateForumPostModal({
 	const submitButton = (
 		<DialogActions>
 			<Button onClick={handleClose}>Cancel</Button>
-			<Button variant='contained' onClick={handleSubmit}>
+			<Button variant='contained' color='success' onClick={handleSubmit}>
 				Submit
 			</Button>
 		</DialogActions>
 	)
 	return (
 		<div>
-			<Dialog open={isOpen}>
-				<DialogTitle>New Thread</DialogTitle>
-				<DialogContent>
-					{/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
-					<TextField
-						margin='normal'
-						id='subject'
-						label='Subject'
-						fullWidth
-						variant='standard'
-						value={subject}
-						onChange={(event) => setSubject(event.target.value)}
-					/>
-					<TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						multiline
-						maxRows={8}
-						value={description}
-						onChange={(event) => setDescription(event.target.value)}
-					/>
-					<FormControl fullWidth>
-						<InputLabel id='category-label'>Category</InputLabel>
-						<Select
-							// margin='normal'
-							labelId='category-label'
-							id='category'
-							label='Category'
+			{/* <Dialog open={isOpen}> */}
+			<TeacherModalStyled open={isOpen}>
+				<TaskModalBox>
+					<DialogTitle>New Thread</DialogTitle>
+					<DialogContent>
+						{/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
+						<TextField
+							margin='normal'
+							id='subject'
+							label='Subject'
 							fullWidth
-							// variant='standard'
-							value={category}
-							onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
-						>
-							<MenuItem value={0}>General</MenuItem>
-							<MenuItem value={1}>Assignments</MenuItem>
-							<MenuItem value={2}>For Fun</MenuItem>
-							<MenuItem value={3}>Announcements</MenuItem>
-						</Select>
-					</FormControl>
-				</DialogContent>
-				{submitButton}
-			</Dialog>
+							variant='standard'
+							value={subject}
+							onChange={(event) => setSubject(event.target.value)}
+						/>
+						<TextField
+							margin='normal'
+							id='description'
+							label='Description'
+							fullWidth
+							variant='standard'
+							multiline
+							maxRows={8}
+							value={description}
+							onChange={(event) => setDescription(event.target.value)}
+						/>
+						<FormControl fullWidth sx={{ marginTop: 2 }}>
+							<InputLabel id='category-label'>Category</InputLabel>
+							<Select
+								// margin='normal'
+								labelId='category-label'
+								id='category'
+								label='Category'
+								fullWidth
+								// variant='standard'
+								value={category}
+								onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
+							>
+								<MenuItem value={0}>General</MenuItem>
+								<MenuItem value={1}>Assignments</MenuItem>
+								<MenuItem value={2}>For Fun</MenuItem>
+								<MenuItem value={3}>Announcements</MenuItem>
+							</Select>
+						</FormControl>
+					</DialogContent>
+					{submitButton}
+				</TaskModalBox>
+				{/* </Dialog> */}
+			</TeacherModalStyled>
 		</div>
 	)
 }

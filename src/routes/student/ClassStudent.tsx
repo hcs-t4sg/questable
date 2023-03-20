@@ -92,7 +92,7 @@ export default function ClassStudent({
 					<CardContent>
 						<Box
 							sx={{
-								height: 200,
+								height: 300, // changed from 200
 								width: 200,
 							}}
 						>
