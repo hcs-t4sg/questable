@@ -130,7 +130,7 @@ export interface ForumPost {
 export interface Comment {
 	id: string
 	content: string
-	author: Player
+	author: string
 	likes: number
 	postTime: Timestamp
 }

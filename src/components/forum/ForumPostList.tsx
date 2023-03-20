@@ -10,12 +10,10 @@ export default function ForumPostList({
 	player,
 	classroom,
 	categoryFilter,
-	resetCategoryCallback,
 }: {
 	player: Player
 	classroom: Classroom
-	categoryFilter: null | -1 | 0 | 1 | 2 | 3
-	resetCategoryCallback: () => void
+	categoryFilter: -1 | 0 | 1 | 2 | 3
 }) {
 	const [forumPosts, setForumPosts] = useState<ForumPost[] | null>(null)
 
@@ -62,22 +60,12 @@ export default function ForumPostList({
 		'2': 'For Fun',
 		'3': 'Starred',
 	}
-	if (categoryFilter === null) {
-		return <Typography variant='body1'>Post selected</Typography>
-	}
 
 	return (
 		<>
 			<Typography variant='h3'>{categoryTitles[categoryFilter]}</Typography>
 			{forumPosts ? (
-				forumPosts.map((post) => (
-					<ForumPostCard
-						forumPost={post}
-						isLink
-						key={post.id}
-						resetCategoryCallback={resetCategoryCallback}
-					/>
-				))
+				forumPosts.map((post) => <ForumPostCard forumPost={post} isLink key={post.id} />)
 			) : (
 				<Typography variant='body1'>Loading...</Typography>
 			)}

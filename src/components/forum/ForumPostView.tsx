@@ -10,7 +10,7 @@ import {
 	Typography,
 } from '@mui/material'
 import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Classroom, Comment, ForumPost, Player } from '../../types'
 import { db } from '../../utils/firebase'
@@ -20,32 +20,55 @@ import Avatar from '../global/Avatar'
 import { currentAvatar } from '../../utils/items'
 import { format } from 'date-fns'
 
-const IncomingComment = ({ comment }: { comment: Comment }) => (
-	<Card variant='outlined' sx={{ backgroundColor: '#FEFAE0', width: '60%' }}>
-		<CardContent>
-			<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
-				{comment.content}
-			</Typography>
-			<Divider sx={{ margin: '10px 0' }} />
-			<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
-				<Box
-					sx={{
-						width: '30px',
-						height: '30px',
-					}}
-				>
-					<Avatar outfit={currentAvatar(comment.author)} />
-				</Box>
-				<Typography gutterBottom variant='subtitle2' sx={{ marginBottom: 0, marginRight: '5px' }}>
-					{comment.author.name}
+// TODO Fix comment resizing on browser window resizing
+
+const IncomingComment = ({ comment, classroom }: { comment: Comment; classroom: Classroom }) => {
+	const [author, setAuthor] = useState<Player | null>(null)
+
+	useEffect(() => {
+		const fetchAuthorData = async () => {
+			const author = await getPlayerData(classroom.id, comment.author)
+			setAuthor(author)
+		}
+		fetchAuthorData().catch(console.error)
+		console.log('fetched author data')
+	}, [classroom, comment])
+
+	return (
+		<Card variant='outlined' sx={{ backgroundColor: '#FEFAE0', width: '60%' }}>
+			<CardContent>
+				<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
+					{comment.content}
 				</Typography>
-				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
-					{comment.postTime ? format(comment.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
-				</Typography>
-			</Box>
-		</CardContent>
-	</Card>
-)
+				<Divider sx={{ margin: '10px 0' }} />
+				{author ? (
+					<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
+						<Box
+							sx={{
+								width: '30px',
+								height: '30px',
+							}}
+						>
+							<Avatar outfit={currentAvatar(author)} />
+						</Box>
+						<Typography
+							gutterBottom
+							variant='subtitle2'
+							sx={{ marginBottom: 0, marginRight: '5px' }}
+						>
+							{author.name}
+						</Typography>
+						<Typography variant='caption' style={{ fontStyle: 'italic' }}>
+							{comment.postTime ? format(comment.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
+						</Typography>
+					</Box>
+				) : (
+					<Typography variant='caption'>Fetching author data...</Typography>
+				)}
+			</CardContent>
+		</Card>
+	)
+}
 
 const OutgoingComment = ({ comment }: { comment: Comment }) => (
 	<Card variant='outlined' sx={{ backgroundColor: '#F3F8DF', width: '60%', alignSelf: 'flex-end' }}>
@@ -94,7 +117,9 @@ export default function ForumPostView({
 
 	const [comment, setComment] = useState<string>('')
 
-	const handleSubmit = () => {
+	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+
 		const newComment = {
 			content: comment,
 			author: player,
@@ -118,23 +143,8 @@ export default function ForumPostView({
 			const commentsRef = collection(db, `classrooms/${classroom.id}/forumPosts/${postID}/comments`)
 			const commentsQuery = query(commentsRef, orderBy('postTime', 'asc'))
 			const unsub = onSnapshot(commentsQuery, (snapshot) => {
-				const appendAuthorsToComments = async () => {
-					const commentList: Comment[] = []
-					await Promise.all(
-						snapshot.docs.map(async (doc) => {
-							console.log(doc.data())
-							const author = await getPlayerData(classroom.id, doc.data().author)
-							if (author) {
-								const commentData = { ...doc.data(), id: doc.id } as Comment
-								commentData.author = author
-								commentList.push(commentData)
-							}
-						}),
-					)
-					console.log(commentList)
-					setComments(commentList)
-				}
-				appendAuthorsToComments().catch(console.error)
+				const commentsList = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Comment))
+				setComments(commentsList)
 			})
 			return unsub
 		}
@@ -150,14 +160,16 @@ export default function ForumPostView({
 			<>
 				<ForumPostCard forumPost={post} isLink={false} />
 				<Card variant='outlined'>
-					<CardContent sx={{ height: '500px', overflowY: 'scroll' }}>
+					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
 						{comments ? (
 							<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
-								{comments.map((comment, index) => {
-									if (index % 2 === 0) {
-										return <IncomingComment comment={comment} key={comment.id} />
-									} else {
+								{comments.map((comment) => {
+									if (comment.author === player.id) {
 										return <OutgoingComment comment={comment} key={comment.id} />
+									} else {
+										return (
+											<IncomingComment comment={comment} classroom={classroom} key={comment.id} />
+										)
 									}
 								})}
 							</Stack>
@@ -165,17 +177,23 @@ export default function ForumPostView({
 							<Typography variant='body1'>Loading comments...</Typography>
 						)}
 					</CardContent>
-					<CardActions>
-						<TextField
-							variant='outlined'
-							label='Comment Field'
-							value={comment}
-							onChange={(event) => setComment(event.target.value)}
-						/>
-						<Button variant='contained' onClick={handleSubmit}>
-							Comment
-						</Button>
-					</CardActions>
+					<form onSubmit={handleSubmit}>
+						<CardActions>
+							<TextField
+								variant='outlined'
+								size='small'
+								fullWidth
+								label='Message'
+								value={comment}
+								onChange={(event) => setComment(event.target.value)}
+								sx={{ marginRight: '5px' }}
+								type='text'
+							/>
+							<Button variant='contained' type='submit'>
+								Send
+							</Button>
+						</CardActions>
+					</form>
 				</Card>
 			</>
 		)

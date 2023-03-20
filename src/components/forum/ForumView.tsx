@@ -9,7 +9,7 @@ import ForumPostView from './ForumPostView'
 
 export default function ForumView({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [open, setOpen] = useState(false)
-	const [selectedCategory, setSelectedCategory] = useState<null | -1 | 0 | 1 | 2 | 3>(-1)
+	const [selectedCategory, setSelectedCategory] = useState<-1 | 0 | 1 | 2 | 3>(-1)
 
 	return (
 		<>
@@ -85,7 +85,6 @@ export default function ForumView({ player, classroom }: { player: Player; class
 								player={player}
 								classroom={classroom}
 								categoryFilter={selectedCategory}
-								resetCategoryCallback={() => setSelectedCategory(null)}
 							/>
 						}
 					/>

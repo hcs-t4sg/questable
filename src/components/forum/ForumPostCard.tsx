@@ -8,11 +8,9 @@ import Avatar from '../global/Avatar'
 export default function ForumPostCard({
 	forumPost,
 	isLink,
-	resetCategoryCallback,
 }: {
 	forumPost: ForumPost
 	isLink: boolean
-	resetCategoryCallback?: () => void
 }) {
 	const cardContent = (
 		<CardContent>
@@ -41,7 +39,7 @@ export default function ForumPostCard({
 	return (
 		<Card sx={{ marginBottom: '10px' }} variant={isLink ? 'elevation' : 'outlined'}>
 			{isLink ? (
-				<CardActionArea component={Link} to={forumPost.id} onClick={resetCategoryCallback}>
+				<CardActionArea component={Link} to={forumPost.id}>
 					{cardContent}
 				</CardActionArea>
 			) : (
