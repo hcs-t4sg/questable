@@ -230,6 +230,7 @@ export async function updateTask(
 	classroomID: string,
 	task: {
 		name: string
+		description: string
 		due: number
 		reward: number
 		id: string
@@ -237,6 +238,7 @@ export async function updateTask(
 ) {
 	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${task.id}`), {
 		name: task.name,
+		description: task.description,
 		due: task.due,
 		reward: task.reward,
 	})

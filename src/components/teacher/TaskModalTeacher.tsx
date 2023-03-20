@@ -51,6 +51,7 @@ export default function TaskModalTeacher({
 	const handleEdit = () => {
 		const updatedTask = {
 			name: name,
+			description: description,
 			due: date ? getUnixTime(date) : task.due,
 			reward: reward,
 			id: task.id,

@@ -53,7 +53,7 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 			<Typography sx={{ marginTop: '25px' }} fontWeight='bold' variant='h6'>
 				{title}
 			</Typography>
-			<Typography fontWeight='light' variant='h6'>
+			<Typography fontWeight='light' variant='body1'>
 				{data}
 			</Typography>
 		</>
@@ -98,7 +98,7 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 						onClick={handleClose}
 						text={props.type === 'task' ? 'Task Overview' : 'Repeatable Overview'}
 					/>
-					<Grid container>
+					<Grid container spacing={2}>
 						<Grid item xs={6}>
 							<StudentBoxInModal>
 								<Cluster title='Task Name' data={props.taskOrRepeatable.name} />
@@ -115,13 +115,13 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 								/>
 							</StudentBoxInModal>
 						</Grid>
-						<Grid item xs={6} marginTop={10} alignItems='center'>
+						<Grid item xs={6} marginTop={10}>
 							<Box
 								component='img'
 								sx={{
 									imageRendering: 'pixelated',
-									maxHeight: { xs: 150, md: 200 },
-									maxWidth: { xs: 150, md: 200 },
+									maxHeight: { xs: 140, md: 200 },
+									maxWidth: { xs: 140, md: 200 },
 									position: 'relative',
 								}}
 								alt='Potion'
