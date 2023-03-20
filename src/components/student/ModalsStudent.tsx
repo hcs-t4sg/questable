@@ -1,10 +1,10 @@
 // import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography, Grid } from '@mui/material'
+import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, Repeatable, TaskWithStatus } from '../../types'
 import { completeRepeatable, completeTask } from '../../utils/mutations'
-import { format, fromUnixTime } from 'date-fns'
 import { StudentTaskModalBox, ModalTitle, StudentBoxInModal } from '../../styles/TaskModalStyles'
 import red3 from '/src/assets/spriteSheets/potions/red3.png'
 import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
@@ -69,7 +69,7 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 		props.type === 'task' ? (
 			<Cluster
 				title='Deadline'
-				data={format(fromUnixTime(props.taskOrRepeatable.due), 'MM/dd/yyyy')}
+				data={format(props.taskOrRepeatable.due.toDate(), 'MM/dd/yyyy h:mm a')}
 			/>
 		) : (
 			<Cluster title='Completions' data={props.taskOrRepeatable.requestCount} />

@@ -1,4 +1,3 @@
-import { getUnixTime } from 'date-fns'
 import { User } from 'firebase/auth'
 import {
 	addDoc,
@@ -13,10 +12,11 @@ import {
 	query,
 	serverTimestamp,
 	setDoc,
+	Timestamp,
 	updateDoc,
 	where,
 } from 'firebase/firestore'
-import { Classroom, CompletionTime, Item, Player } from '../types'
+import { Classroom, CompletionTime, ForumPost, Item, Player } from '../types'
 import { db } from './firebase'
 
 export async function syncUsers(user: User) {
@@ -231,7 +231,7 @@ export async function updateTask(
 	task: {
 		name: string
 		description: string
-		due: number
+		due: Timestamp
 		reward: number
 		id: string
 	},
@@ -377,7 +377,7 @@ export async function addTask(
 		name: string
 		description: string
 		reward: number
-		due: number
+		due: Timestamp
 	},
 	teacherID: string,
 ) {
@@ -395,7 +395,7 @@ export async function addTask(
 		name: task.name,
 		description: task.description,
 		reward: task.reward,
-		created: getUnixTime(new Date()),
+		created: serverTimestamp(),
 		due: task.due,
 		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
 		completed: [],
@@ -427,7 +427,7 @@ export async function addRepeatable(
 		name: repeatable.name,
 		description: repeatable.description,
 		reward: repeatable.reward,
-		created: getUnixTime(new Date()),
+		created: serverTimestamp(),
 		maxCompletions: repeatable.maxCompletions,
 		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
 		requestCount: 0,
@@ -857,4 +857,45 @@ export async function updateAvatar(player: Player, newItem: Item, classroom: Cla
 		return `Successfully equipped ${newItem.name}!`
 	}
 	return 'There was an error equipping.'
+}
+
+export async function addForumPost(
+	thread: {
+		title: string
+		postType: 0 | 1 | 2 | 3
+		content: string
+		author: Player
+	},
+	classroom: Classroom,
+) {
+	const classRef = collection(db, `classrooms/${classroom.id}/forumPosts`)
+	await addDoc(classRef, {
+		title: thread.title,
+		postType: thread.postType,
+		content: thread.content,
+		author: thread.author.id,
+		postTime: serverTimestamp(),
+		likes: 0,
+	})
+	console.log('Successfully Added Thread')
+}
+
+export async function addComment(
+	comment: {
+		content: string
+		author: Player
+	},
+	classroom: Classroom,
+	forumPost: ForumPost,
+) {
+	const commentRef = collection(
+		db,
+		`classrooms/${classroom.id}/forumPosts/${forumPost.id}/comments`,
+	)
+	await addDoc(commentRef, {
+		author: comment.author.id,
+		content: comment.content,
+		likes: 0,
+		postTime: serverTimestamp(),
+	})
 }

@@ -11,9 +11,9 @@ import { updateTask } from '../../utils/mutations'
 
 import EditIcon from '@mui/icons-material/Edit'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+// import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { fromUnixTime, getUnixTime } from 'date-fns'
+import { Timestamp } from 'firebase/firestore'
 import { Classroom, Task } from '../../types'
 import {
 	TaskModalBox,
@@ -33,14 +33,14 @@ export default function TaskModalTeacher({
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState(task.name)
 	const [reward, setReward] = useState(task.reward)
-	const [date, setDate] = useState<Date | null>(fromUnixTime(task.due))
+	const [date, setDate] = useState<Date | null>(task.due.toDate())
 	const [description, setDescription] = useState(task.description)
 
 	// Open the task modal
 	const handleClickOpen = () => {
 		setOpen(true)
 		setName(task.name)
-		setDate(fromUnixTime(task.due))
+		setDate(task.due.toDate())
 		setReward(task.reward)
 	}
 	// Close the task modal
@@ -52,7 +52,7 @@ export default function TaskModalTeacher({
 		const updatedTask = {
 			name: name,
 			description: description,
-			due: date ? getUnixTime(date) : task.due,
+			due: date ? Timestamp.fromDate(date) : task.due,
 			reward: reward,
 			id: task.id,
 		}
@@ -72,74 +72,6 @@ export default function TaskModalTeacher({
 			Save Changes
 		</Button>
 	)
-	// const closeButton = (
-	//   <IconButton onClick={handleClose}>
-	//     <CloseIcon />
-	//   </IconButton>
-	// );
-
-	// const [completed, setCompleted] = React.useState([]);
-
-	// const [chartData, setChartData] = React.useState(0);
-
-	// React.useEffect(() => {
-	//   const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
-
-	//   // Attach a listener to the tasks collection
-	//   onSnapshot(taskRef, (snapshot) => {
-	//     const numCompleted = snapshot.data()?.completed.length;
-	//     const numAssigned = snapshot.data()?.assigned.length;
-	//     const numConfirmed = snapshot.data()?.confirmed.length;
-	//     const total = numAssigned + numCompleted + numConfirmed;
-	//     // check if values are definied then check if there will not be a divide by 0 error
-	//     if (
-	//       !(
-	//         numCompleted === undefined ||
-	//         numAssigned === undefined ||
-	//         numConfirmed === undefined ||
-	//         total === 0
-	//       )
-	//     ) {
-	//       setChartData(numConfirmed / total);
-	//     } else {
-	//       setChartData(0);
-	//     }
-	//   });
-	// });
-
-	// function CircularProgressWithLabel(
-	//   props: CircularProgressProps & { value: number }
-	// ) {
-	//   return (
-	//     <Box sx={{ position: "relative", display: "inline-flex" }}>
-	//       <CircularProgress variant="determinate" {...props} />
-	//       <Box
-	//         sx={{
-	//           top: 0,
-	//           left: 0,
-	//           bottom: 0,
-	//           right: 0,
-	//           position: "absolute",
-	//           display: "flex",
-	//           alignItems: "center",
-	//           justifyContent: "center",
-	//         }}
-	//       >
-	//         <Typography
-	//           variant="caption"
-	//           component="div"
-	//           color="text.secondary"
-	//         >{`${Math.round(props.value)}%`}</Typography>
-	//       </Box>
-	//     </Box>
-	//   );
-	// }
-
-	//   // function to handle the date change
-	//   // store the date as a unix time stamp
-	//   const handleDateChange = (date) => {
-	//     setDate(date);
-	//   };
 
 	return (
 		<div>
@@ -222,13 +154,11 @@ export default function TaskModalTeacher({
 					> */}
 					<BoxInModal>
 						<LocalizationProvider dateAdapter={AdapterDateFns}>
-							<DatePicker
+							{/* <DateTimePicker
 								label='Due Date'
 								value={date}
-								// TODO this is probably a bug with date setting. Fix!
-								onChange={() => setDate(date)}
-								renderInput={(params) => <TextField {...params} />}
-							/>
+								onChange={(newValue) => setDate(newValue)}
+							/> */}
 						</LocalizationProvider>
 						{/* </Box> */}
 					</BoxInModal>

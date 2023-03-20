@@ -13,31 +13,6 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 		setPage(newTabIndex)
 	}
 
-	// const formatStatus = (task: TaskWithCompletionTimes, playerID: string) => {
-	// 	if (!task || !playerID) {
-	// 		return 'Loading...'
-	// 	}
-
-	// 	const completionTimes = task.completionTimes
-
-	// 	const playerCompletion = completionTimes.filter((completion) => completion.id === playerID)
-
-	// 	if (playerCompletion.length <= 0) {
-	// 		return 'Player not found'
-	// 	}
-
-	// 	if (playerCompletion[0].time.seconds > task.due) {
-	// 		return (
-	// 			formatDistance(
-	// 				new Date(playerCompletion[0].time.seconds * 1000),
-	// 				new Date(task.due * 1000),
-	// 			) + ' late'
-	// 		)
-	// 	} else {
-	// 		return 'On time'
-	// 	}
-	// }
-
 	return (
 		<Grid item xs={12}>
 			<Typography variant='h4'>Tasks/Repeatables Awaiting Confirmation</Typography>

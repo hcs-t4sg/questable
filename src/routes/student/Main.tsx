@@ -63,19 +63,17 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 
 			// TODO rewrite using Promise.all
 			snapshot.forEach((doc) => {
-				// Find assigned, completed, and confirmed tasks using player's id.
-				if (doc.data().assigned?.includes(player.id)) {
-					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
-				}
-				if (doc.data().completed?.includes(player.id)) {
-					completed.push(Object.assign({ id: doc.id, status: 1 }, doc.data()) as TaskWithStatus)
-				}
-				if (doc.data().confirmed?.includes(player.id)) {
-					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
-				}
 				// if task is overdue, add to overdue list
-				if (doc.data().due < Date.now() / 1000) {
+				if (doc.data().due.toDate() < new Date()) {
 					overdue.push(Object.assign({ id: doc.id, status: 3 }, doc.data()) as TaskWithStatus)
+				}
+				// Find assigned, completed, and confirmed tasks using player's id.
+				else if (doc.data().assigned?.includes(player.id)) {
+					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
+				} else if (doc.data().completed?.includes(player.id)) {
+					completed.push(Object.assign({ id: doc.id, status: 1 }, doc.data()) as TaskWithStatus)
+				} else if (doc.data().confirmed?.includes(player.id)) {
+					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
 				}
 			})
 			setAssigned(assigned)

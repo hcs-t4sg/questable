@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 // import React, { useState, useEffect, useContext, useReducer } from "react"
 import React from 'react'
-import Spritesheet from './Spritesheet'
+import { Spritesheet } from './Spritesheet'
 // import { Box, ThemeProvider, createTheme, zIndex } from '@mui/system';
 import { capitalize } from 'lodash'
 
@@ -93,6 +93,8 @@ export default function render(file: string, spriteStart: number, doAnimation: b
 				imageRendering: 'pixelated',
 				position: 'absolute',
 				width: '100%',
+				// height: '100%',
+				// objectFit: 'contain',
 			}}
 			image={imports[file]}
 			widthFrame={32}

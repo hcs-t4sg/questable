@@ -5,14 +5,14 @@ interface Assignment {
 	name: string
 	description: string
 	reward: number
-	created: number
+	created: Timestamp
 	assigned: string[]
 }
 
 export interface Task extends Assignment {
 	completed: string[]
 	confirmed: string[]
-	due: number
+	due: Timestamp
 }
 
 export interface TaskWithStatus extends Task {
@@ -115,4 +115,22 @@ export type UserRole = 'student' | 'teacher'
 
 export interface PlayerWithEmail extends Player {
 	email: string
+}
+
+export interface ForumPost {
+	id: string
+	title: string
+	content: string
+	postTime: Timestamp
+	likes: number
+	author: Player
+	postType: 0 | 1 | 2 | 3
+}
+
+export interface Comment {
+	id: string
+	content: string
+	author: string
+	likes: number
+	postTime: Timestamp
 }

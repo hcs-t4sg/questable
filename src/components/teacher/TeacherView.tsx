@@ -5,9 +5,10 @@ import Requests from '../../routes/teacher/Requests'
 import Tasks from '../../routes/teacher/Tasks'
 import Layout from '../global/Layout'
 
+import { Grid } from '@mui/material'
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
-import { Grid } from '@mui/material'
+import ForumView from '../forum/ForumView'
 
 export default function TeacherView({
 	player,
@@ -33,6 +34,8 @@ export default function TeacherView({
 						path='class-settings'
 						element={<ClassSettings player={player} user={user} classroom={classroom} />}
 					/>
+
+					<Route path='forum/*' element={<ForumView player={player} classroom={classroom} />} />
 					<Route
 						path='*'
 						element={

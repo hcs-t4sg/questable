@@ -9,7 +9,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { format, fromUnixTime } from 'date-fns'
+import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
@@ -94,9 +94,11 @@ export default function TasksTableStudent({
 										key={task.id}
 										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 									>
-										<TableCell>{task.name}</TableCell>
-										<TableCell>{task.description || 'None'}</TableCell>
-										<TableCell>{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
+										<TableCell align='left'>{task.name}</TableCell>
+										<TableCell align='left'>{task.description || 'None'}</TableCell>
+										<TableCell align='left'>
+											{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
+										</TableCell>
 										<TableCell align='center'>${task.reward}</TableCell>
 										<TableCell align='center'>
 											<Chip

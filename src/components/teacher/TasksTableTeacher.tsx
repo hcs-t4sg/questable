@@ -11,7 +11,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import { format, fromUnixTime } from 'date-fns'
+import { format } from 'date-fns'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, Task } from '../../types'
@@ -95,10 +95,10 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 								<TableCell component='th' scope='row'>
 									{task.name}
 								</TableCell>
-								<TableCell>{truncate(task.description)}</TableCell>
-								<TableCell>{format(fromUnixTime(task.due), 'MM/dd/yyyy')}</TableCell>
-								<TableCell>{task.reward}</TableCell>
-								<TableCell>
+								<TableCell align='left'>{truncate(task.description)}</TableCell>
+								<TableCell align='left'>{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}</TableCell>
+								<TableCell align='left'>{task.reward}</TableCell>
+								<TableCell align='left'>
 									<LinearProgressWithLabel task={task} />
 								</TableCell>
 

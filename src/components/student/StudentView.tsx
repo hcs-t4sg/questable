@@ -11,9 +11,10 @@ import Avatar from '../global/Avatar'
 import Layout from '../global/Layout'
 
 // import x from '../../public/static/'
-import { Classroom, Player } from '../../types'
 import { useEffect } from 'react'
+import { Classroom, Player } from '../../types'
 import { refreshAllRepeatables } from '../../utils/mutations'
+import ForumView from '../forum/ForumView'
 import { User } from 'firebase/auth'
 
 export default function StudentView({
@@ -123,6 +124,7 @@ export default function StudentView({
 						element={<ClassStudent player={player} classroom={classroom} />}
 					/>
 					<Route path='inventory' element={<Inventory player={player} classroom={classroom} />} />
+					<Route path='forum/*' element={<ForumView player={player} classroom={classroom} />} />
 					<Route
 						path='*'
 						element={

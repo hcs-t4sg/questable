@@ -1,25 +1,40 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-// import CloseIcon from '@mui/icons-material/Close'
-import { FormControl, InputLabel, MenuItem, Select, Tabs, Tab } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
 import Button from '@mui/material/Button'
 import DialogActions from '@mui/material/DialogActions'
-// import IconButton from '@mui/material/IconButton'
+import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 // import Typography from '@mui/material/Typography'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+// import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { getUnixTime } from 'date-fns'
+import { Timestamp } from 'firebase/firestore'
 import * as React from 'react'
 import { useState } from 'react'
-import { addRepeatable, addTask } from '../../utils/mutations'
-import Grid from '@mui/material/Grid'
 import { Classroom, Player } from '../../types'
+import { addRepeatable, addTask } from '../../utils/mutations'
+
+function containsOnlyNumbers(str: string) {
+	return /^\d+$/.test(str)
+}
+
+function maxCompletionsIsInvalid(maxCompletions: string) {
+	if (!containsOnlyNumbers(maxCompletions)) {
+		return true
+	}
+	if (maxCompletions === '') {
+		return true
+	}
+	if (parseInt(maxCompletions) <= 0) {
+		return true
+	}
+	return false
+}
 
 import {
-	TaskModalBox,
-	ModalTitle,
 	BoxInModal,
+	ModalTitle,
+	TaskModalBox,
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
 
@@ -37,7 +52,7 @@ export default function CreateTaskModal({
 	const [dueDate, setDueDate] = useState<Date | null>(null)
 
 	const [isRepeatable, setIsRepeatable] = useState(false)
-	const [maxCompletions, setMaxCompletions] = useState(1)
+	const [maxCompletions, setMaxCompletions] = useState<string>('1')
 
 	const handleOpen = () => {
 		setOpen(true)
@@ -45,7 +60,7 @@ export default function CreateTaskModal({
 		setDueDate(new Date())
 		setDescription('')
 		setReward(10)
-		setMaxCompletions(1)
+		setMaxCompletions('1')
 		setIsRepeatable(false)
 	}
 
@@ -57,39 +72,47 @@ export default function CreateTaskModal({
 
 	const handleAdd = () => {
 		if (isRepeatable) {
-			// check the max completions input
-			console.log('maxCompletions: ' + maxCompletions)
-			if (maxCompletions < 1) {
-				setMaxCompletions(1)
-				alert('Max completions must be greater than 0')
+			if (name === '') {
+				window.alert('You need to provide a name for the task')
 				return
 			}
-			// else if(!Number.isInteger(maxCompletions))
-			// {
-			//    setMaxCompletions(1);
-			//    alert("Max completions must be an integer");
-			//    return;
-			// }
+
+			if (maxCompletionsIsInvalid(maxCompletions)) {
+				setMaxCompletions('1')
+				alert('Max completions must be a positive integer')
+				return
+			}
 
 			const newTask = {
 				name,
 				description,
 				reward,
-				maxCompletions,
+				maxCompletions: parseInt(maxCompletions),
 			}
 
 			addRepeatable(classroom.id, newTask, player.id).catch(console.error)
 		} else {
+			if (name === '') {
+				window.alert('You need to provide a name for the task')
+				return
+			}
+
 			if (!dueDate) {
 				window.alert('You need to provide a due date')
 				return
 			}
 
+			const dateIsInvalid = isNaN(dueDate.getTime())
+			if (dateIsInvalid) {
+				window.alert('Due date is invalid')
+				return
+			}
+
 			const newTask = {
 				name,
 				description,
 				reward,
-				due: getUnixTime(dueDate),
+				due: Timestamp.fromDate(dueDate),
 			}
 
 			addTask(classroom.id, newTask, player.id).catch(console.error)
@@ -179,7 +202,7 @@ export default function CreateTaskModal({
 					<TextField
 						margin='normal'
 						id='name'
-						label='Task Name'
+						label={isRepeatable ? 'Repeatable Name' : 'Task Name'}
 						fullWidth
 						variant='standard'
 						value={name}
@@ -210,16 +233,15 @@ export default function CreateTaskModal({
 						{/* either show a due date option or max completions based on if task is repeatable */}
 						{!isRepeatable ? (
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
-								<DatePicker
+								{/* <DateTimePicker
 									label='Due Date'
 									value={dueDate}
 									onChange={(value) => setDueDate(value)}
-									renderInput={(params) => <TextField {...params} />}
-								/>
+								/> */}
 							</LocalizationProvider>
 						) : (
 							<TextField
-								inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+								type='number'
 								margin='normal'
 								id='description'
 								label='Max Completions'
@@ -229,7 +251,13 @@ export default function CreateTaskModal({
 								multiline
 								maxRows={8}
 								value={maxCompletions}
-								onChange={(event) => setMaxCompletions(parseInt(event.target.value))}
+								error={maxCompletionsIsInvalid(maxCompletions)}
+								helperText={
+									maxCompletionsIsInvalid(maxCompletions)
+										? 'Max completions must be a positive integer'
+										: null
+								}
+								onChange={(event) => setMaxCompletions(event.target.value)}
 							/>
 						)}
 					</BoxInModal>

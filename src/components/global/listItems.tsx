@@ -8,6 +8,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
+import ForumIcon from '@mui/icons-material/Forum'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
@@ -68,7 +69,7 @@ export function MainListItemsTeacher() {
 }
 
 export function MainListItemsStudent() {
-	const [selected, setSelected] = useState<0 | 1 | 2 | 3>(0)
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4>(0)
 
 	return (
 		<React.Fragment>
@@ -115,6 +116,17 @@ export function MainListItemsStudent() {
 					<InventoryIcon />
 				</ListItemIcon>
 				<ListItemText primary='Inventory' />
+			</ListItemButton>
+			<ListItemButton
+				component={Link}
+				to='forum'
+				onClick={() => setSelected(4)}
+				selected={selected === 4}
+			>
+				<ListItemIcon>
+					<ForumIcon />
+				</ListItemIcon>
+				<ListItemText primary='Forum' />
 			</ListItemButton>
 		</React.Fragment>
 	)
