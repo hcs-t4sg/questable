@@ -7,6 +7,10 @@ import { completeRepeatable, completeTask } from '../../utils/mutations'
 import { format, fromUnixTime } from 'date-fns'
 import { StudentTaskModalBox, ModalTitle, StudentBoxInModal } from '../../styles/TaskModalStyles'
 import red3 from '/src/assets/spriteSheets/potions/red3.png'
+import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
+import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
+import green3 from '/src/assets/spriteSheets/potions/green3.png'
+// import { rewardsMatch } from './RewardItems'
 
 interface PropsTask {
 	classroom: Classroom
@@ -19,7 +23,7 @@ interface PropsRepeatables {
 	classroom: Classroom
 	player: Player
 	taskOrRepeatable: Repeatable
-	type: 'repeatables'
+	type: 'repeatable'
 }
 
 export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
@@ -71,6 +75,20 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 			<Cluster title='Completions' data={props.taskOrRepeatable.requestCount} />
 		)
 
+	const rewardAmount = props.taskOrRepeatable.reward
+	console.log(rewardAmount)
+
+	const rewardsMatch =
+		rewardAmount === 10
+			? blue3
+			: rewardAmount === 20
+			? green3
+			: rewardAmount === 30
+			? purple3
+			: rewardAmount === 40
+			? red3
+			: ''
+
 	return (
 		<Box>
 			{openButton}
@@ -106,8 +124,8 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 									maxWidth: { xs: 150, md: 200 },
 									position: 'relative',
 								}}
-								alt='Red Potion'
-								src={red3}
+								alt='Potion'
+								src={rewardsMatch}
 								height='100%'
 								width='100%'
 							/>

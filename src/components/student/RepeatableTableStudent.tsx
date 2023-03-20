@@ -10,7 +10,8 @@ import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, Player, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
-import RepeatableModalStudent from './RepeatableModalStudent'
+// import RepeatableModalStudent from './RepeatableModalStudent'
+import ModalsStudent from './ModalsStudent'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -79,10 +80,16 @@ function RepeatableTableRow({
 			<TableCell align='left'>{repeatable.reward}</TableCell>
 
 			<TableCell align='right' sx={{ width: 0.01 }}>
-				<RepeatableModalStudent
+				{/* <RepeatableModalStudent
 					classroom={classroom}
 					repeatable={repeatableWithPlayerData}
 					player={player}
+				/> */}
+				<ModalsStudent
+					taskOrRepeatable={repeatableWithPlayerData}
+					classroom={classroom}
+					player={player}
+					type='repeatable'
 				/>
 			</TableCell>
 		</TableRow>
