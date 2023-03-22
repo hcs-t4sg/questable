@@ -105,7 +105,7 @@ export default function ClassTeacher({
 					<CardContent>
 						<Box
 							sx={{
-								height: 200,
+								height: 300,
 								width: 200,
 							}}
 						>

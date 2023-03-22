@@ -11,6 +11,8 @@ import Layout from '../components/global/Layout'
 import { Classroom } from '../types'
 import { db } from '../utils/firebase'
 
+import nature from '/src/assets/Nature.png'
+
 export default function Home({ user }: { user: User }) {
 	// Listen to user's classrooms and maintain a corresponding state variable
 	const [classrooms, setClassrooms] = useState<Classroom[]>([])
@@ -59,35 +61,44 @@ export default function Home({ user }: { user: User }) {
 		}
 	})
 
+	const divStyle = {
+		height: '100%',
+		width: '100%',
+		backgroundImage: `url(${nature})`,
+		backgroundSize: 'contain',
+	}
+
 	return (
 		<Layout>
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
-					<Box
-						sx={{
-							width: '100%',
-							height: 300,
-							border: '2px dashed',
-							borderColor: 'primary.main',
-							display: 'flex',
-							flexWrap: 'wrap',
-							justifyContent: 'center',
-							alignItems: 'center',
-							textAlign: 'center',
-						}}
-					>
-						<Typography variant='h3' sx={{ flex: '100%' }}>
-							Welcome Back, {user.displayName}!
-						</Typography>
-						<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
-							<Grid item>
-								<JoinClassroomModal user={user} />
+					<div style={divStyle}>
+						<Box
+							sx={{
+								width: '100%',
+								height: 300,
+								border: '2px dashed',
+								borderColor: 'primary.main',
+								display: 'flex',
+								flexWrap: 'wrap',
+								justifyContent: 'center',
+								alignItems: 'center',
+								textAlign: 'center',
+							}}
+						>
+							<Typography variant='h3' sx={{ flex: '100%' }}>
+								Welcome Back, {user.displayName}!
+							</Typography>
+							<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
+								<Grid item>
+									<JoinClassroomModal user={user} />
+								</Grid>
+								<Grid item>
+									<CreateClassroomModal user={user} />
+								</Grid>
 							</Grid>
-							<Grid item>
-								<CreateClassroomModal user={user} />
-							</Grid>
-						</Grid>
-					</Box>
+						</Box>
+					</div>
 				</Grid>
 				<Grid item xs={12}>
 					<Typography variant='h5' sx={{ flex: '100%' }}>

@@ -15,6 +15,7 @@ import {
 import { ItemCard } from '../../components/student/ItemCard'
 // import { Classroom, Player } from '../../types'
 import { useState } from 'react'
+import wood2 from '/src/assets/Wood2.png'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -58,6 +59,13 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 		setValue(newValue)
 	}
 
+	const divStyle = {
+		height: '100%',
+		width: '100%',
+		backgroundImage: `url(${wood2})`,
+		backgroundSize: 'contain',
+	}
+
 	return (
 		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container spacing={3}>
@@ -74,86 +82,88 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Tab label='Shoes' {...a11yProps(4)} />
 					</Tabs>
 				</Box>
-				<TabPanel value={value} index={0}>
-					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-						{Array.from(bodies).map((item, index) => (
-							<Grid item xs={2} sm={3} md={3} key={index}>
-								{/* <ShopItemCard player={player} classroom={classroom} itemPrice='Free' item={item} /> */}
-								<ItemCard
-									item={item}
-									player={player}
-									classroom={classroom}
-									itemPrice='Free'
-									type='shop'
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</TabPanel>
-				<TabPanel value={value} index={1}>
-					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-						{Array.from(hairs).map((item, index) => (
-							<Grid item xs={2} sm={3} md={3} key={index}>
-								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
-								<ItemCard
-									item={item}
-									player={player}
-									classroom={classroom}
-									itemPrice='$100'
-									type='shop'
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</TabPanel>
-				<TabPanel value={value} index={2}>
-					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-						{Array.from(shirts).map((item, index) => (
-							<Grid item xs={2} sm={3} md={3} key={index}>
-								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
-								<ItemCard
-									item={item}
-									player={player}
-									classroom={classroom}
-									itemPrice='$150'
-									type='shop'
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</TabPanel>
-				<TabPanel value={value} index={3}>
-					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-						{Array.from(pants).map((item, index) => (
-							<Grid item xs={2} sm={3} md={3} key={index}>
-								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
-								<ItemCard
-									item={item}
-									player={player}
-									classroom={classroom}
-									itemPrice='$150'
-									type='shop'
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</TabPanel>
-				<TabPanel value={value} index={4}>
-					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-						{Array.from(shoes).map((item, index) => (
-							<Grid item xs={2} sm={3} md={3} key={index}>
-								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
-								<ItemCard
-									item={item}
-									player={player}
-									classroom={classroom}
-									itemPrice='$100'
-									type='shop'
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</TabPanel>
+				<div style={divStyle}>
+					<TabPanel value={value} index={0}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{Array.from(bodies).map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									{/* <ShopItemCard player={player} classroom={classroom} itemPrice='Free' item={item} /> */}
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='Free'
+										type='shop'
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+					<TabPanel value={value} index={1}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{Array.from(hairs).map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='$100'
+										type='shop'
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+					<TabPanel value={value} index={2}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{Array.from(shirts).map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='$150'
+										type='shop'
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+					<TabPanel value={value} index={3}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{Array.from(pants).map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='$150'
+										type='shop'
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+					<TabPanel value={value} index={4}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{Array.from(shoes).map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='$100'
+										type='shop'
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+				</div>
 			</Grid>
 		</Grid>
 	)
