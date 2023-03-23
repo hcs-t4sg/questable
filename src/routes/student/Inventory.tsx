@@ -104,6 +104,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								classroom={classroom}
 								itemPrice=''
 								type='inventory'
+								isBody={true}
 							/>
 						</Grid>
 					))}
@@ -121,6 +122,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								classroom={classroom}
 								itemPrice=''
 								type='inventory'
+								isBody={false}
 							/>
 						</Grid>
 					))}
@@ -139,6 +141,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								classroom={classroom}
 								itemPrice=''
 								type='inventory'
+								isBody={false}
 							/>
 						</Grid>
 					))}
@@ -156,6 +159,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								classroom={classroom}
 								itemPrice=''
 								type='inventory'
+								isBody={false}
 							/>
 						</Grid>
 					))}
@@ -173,6 +177,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								classroom={classroom}
 								itemPrice=''
 								type='inventory'
+								isBody={false}
 							/>
 						</Grid>
 					))}
@@ -190,6 +195,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								classroom={classroom}
 								itemPrice=''
 								type='inventory'
+								isBody={false}
 							/>
 						</Grid>
 					))}

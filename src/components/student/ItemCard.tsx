@@ -9,6 +9,8 @@ import { capitalize } from 'lodash'
 import { purchaseItem, updateAvatar } from '../../utils/mutations'
 import { useState } from 'react'
 
+import { getHairItems, getPantsItems, getShirtItems, getShoesItems } from '../../utils/items'
+
 import { styled } from '@mui/system'
 
 interface Props {
@@ -17,6 +19,7 @@ interface Props {
 	classroom: Classroom
 	itemPrice: string
 	type: 'shop' | 'inventory'
+	isBody: boolean
 }
 
 export function ItemCard(props: Props) {
@@ -76,9 +79,30 @@ export function ItemCard(props: Props) {
 			</Button>
 		)
 
+	const hairs = getHairItems()
+	const shirts = getShirtItems()
+	const pants = getPantsItems()
+	const shoes = getShoesItems()
+
+	const defaultOutfit = (
+		<>
+			{hairs[0].renderStatic()}
+			{shirts[0].renderStatic()}
+			{pants[0].renderStatic()}
+			{shoes[0].renderStatic()}
+		</>
+	)
+
 	return (
 		<Card sx={{ maxWidth: 345 }}>
-			<ItemBox>{props.item.renderStatic()}</ItemBox>
+			{props.isBody ? (
+				<ItemBox>
+					{props.item.renderStatic()}
+					{defaultOutfit}
+				</ItemBox>
+			) : (
+				<ItemBox>{props.item.renderStatic()}</ItemBox>
+			)}
 			<CardContent>
 				<Typography variant='body1' sx={{ fontWeight: 'medium', color: 'green' }} component='div'>
 					{capitalize(props.item.type)}

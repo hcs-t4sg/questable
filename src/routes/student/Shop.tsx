@@ -94,6 +94,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										classroom={classroom}
 										itemPrice='Free'
 										type='shop'
+										isBody={true}
 									/>
 								</Grid>
 							))}
@@ -110,6 +111,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										classroom={classroom}
 										itemPrice='$100'
 										type='shop'
+										isBody={false}
 									/>
 								</Grid>
 							))}
@@ -126,6 +128,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										classroom={classroom}
 										itemPrice='$150'
 										type='shop'
+										isBody={false}
 									/>
 								</Grid>
 							))}
@@ -142,6 +145,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										classroom={classroom}
 										itemPrice='$150'
 										type='shop'
+										isBody={false}
 									/>
 								</Grid>
 							))}
@@ -158,6 +162,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										classroom={classroom}
 										itemPrice='$100'
 										type='shop'
+										isBody={false}
 									/>
 								</Grid>
 							))}
