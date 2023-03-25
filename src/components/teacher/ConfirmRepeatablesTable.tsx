@@ -18,6 +18,7 @@ import {
 	getRepeatableCompletionTimes,
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
+import Loading from '../global/Loading'
 
 function truncate(description: string) {
 	if (description.length > 40) {
@@ -27,7 +28,9 @@ function truncate(description: string) {
 }
 
 export default function ConfirmRepeatablesTable({ classroom }: { classroom: Classroom }) {
-	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[]>([])
+	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[] | null>(
+		null,
+	)
 
 	useEffect(() => {
 		const repeatablesRef = collection(db, `classrooms/${classroom.id}/repeatables`)
@@ -71,6 +74,9 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 		return unsub
 	}, [classroom])
 
+	if (!completedRepeatables) {
+		return <Loading>Loading repeatables...</Loading>
+	}
 	return (
 		<TableContainer component={Paper}>
 			<Table aria-label='simple table'>

@@ -18,6 +18,7 @@ import {
 	getPlayerTaskCompletion,
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
+import Loading from '../global/Loading'
 
 function truncate(description: string) {
 	if (description.length > 40) {
@@ -37,7 +38,7 @@ const formatStatus = (task: CompletedTask) => {
 }
 
 export default function ConfirmTasksTable({ classroom }: { classroom: Classroom }) {
-	const [completedTasks, setCompletedTasks] = useState<CompletedTask[]>([])
+	const [completedTasks, setCompletedTasks] = useState<CompletedTask[] | null>(null)
 
 	useEffect(() => {
 		const completedTasksQuery = query(
@@ -78,6 +79,10 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 
 		return unsub
 	}, [classroom])
+
+	if (!completedTasks) {
+		return <Loading>Loading tasks...</Loading>
+	}
 
 	return (
 		<TableContainer component={Paper}>
