@@ -26,6 +26,12 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 
 	// Mutation handlers
 	const handleAddClassroom = () => {
+		const classNameContainsNonWhitespaceChars = newClassroomName.replace(/\s+/g, '') != ''
+		if (!classNameContainsNonWhitespaceChars) {
+			alert('Classroom name cannot be empty')
+			return
+		}
+
 		addClassroom(newClassroomName, user)
 		setNewClassroomName('')
 		setOpen(false)

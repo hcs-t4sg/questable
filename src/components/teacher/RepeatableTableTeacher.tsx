@@ -16,6 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { deleteRepeatable } from '../../utils/mutations'
 
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
+import Loading from '../global/Loading'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -26,7 +27,7 @@ function truncate(description: string) {
 
 export default function RepeatableTableTeacher({ classroom }: { classroom: Classroom }) {
 	// Create a state variable to hold the tasks
-	const [repeatables, setRepeatables] = useState<Repeatable[]>([])
+	const [repeatables, setRepeatables] = useState<Repeatable[] | null>(null)
 	useEffect(() => {
 		// Create a reference to the tasks collection
 		const repeatableCollectionRef = collection(db, `classrooms/${classroom.id}/repeatables`)
@@ -47,46 +48,50 @@ export default function RepeatableTableTeacher({ classroom }: { classroom: Class
 
 	return (
 		<Grid item xs={12}>
-			<TableContainer component={Paper}>
-				<Table aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							<BlankTableCell />
-							<TableCell>Task</TableCell>
-							<TableCell>Description</TableCell>
-							<TableCell>Max Completions</TableCell>
-							<TableCell>Reward</TableCell>
-							<BlankTableCell />
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{repeatables?.map((repeatable) => (
-							// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-							<StyledTableRow key={repeatable.id}>
-								<TableCell>
-									<RepeatableModalTeacher classroom={classroom} repeatable={repeatable} />
-								</TableCell>
-								{/* <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0, width: .01 }} align="left">
+			{repeatables ? (
+				<TableContainer component={Paper}>
+					<Table aria-label='simple table'>
+						<TableHead>
+							<TableRow>
+								<BlankTableCell />
+								<TableCell>Task</TableCell>
+								<TableCell>Description</TableCell>
+								<TableCell>Max Completions</TableCell>
+								<TableCell>Reward</TableCell>
+								<BlankTableCell />
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{repeatables.map((repeatable) => (
+								// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+								<StyledTableRow key={repeatable.id}>
+									<TableCell>
+										<RepeatableModalTeacher classroom={classroom} repeatable={repeatable} />
+									</TableCell>
+									{/* <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0, width: .01 }} align="left">
                            <RepeatableModalTeacher task={repeatable} classroom={classroom} />
                         </TableCell> */}
 
-								<TableCell component='th' scope='row'>
-									{repeatable.name}
-								</TableCell>
-								<TableCell>{truncate(repeatable.description)}</TableCell>
-								<TableCell>{repeatable.maxCompletions}</TableCell>
-								<TableCell>{repeatable.reward}</TableCell>
-								<TableCell align='right'>
-									<IconButton onClick={() => handleDelete(repeatable)}>
-										<DeleteIcon />
-									</IconButton>
-								</TableCell>
-							</StyledTableRow>
-							// </TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+									<TableCell component='th' scope='row'>
+										{repeatable.name}
+									</TableCell>
+									<TableCell>{truncate(repeatable.description)}</TableCell>
+									<TableCell>{repeatable.maxCompletions}</TableCell>
+									<TableCell>{repeatable.reward}</TableCell>
+									<TableCell align='right'>
+										<IconButton onClick={() => handleDelete(repeatable)}>
+											<DeleteIcon />
+										</IconButton>
+									</TableCell>
+								</StyledTableRow>
+								// </TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			) : (
+				<Loading>Loading repeatables...</Loading>
+			)}
 		</Grid>
 	)
 }

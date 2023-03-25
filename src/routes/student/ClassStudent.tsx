@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import Avatar from '../../components/global/Avatar'
 import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { currentAvatar } from '../../utils/items'
+import Loading from '../../components/global/Loading'
 
 export default function ClassStudent({
 	player,
@@ -20,7 +21,7 @@ export default function ClassStudent({
 	player: Player
 	classroom: Classroom
 }) {
-	const [students, setStudents] = useState<PlayerWithEmail[]>([])
+	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
 
 	useEffect(() => {
 		// If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
@@ -87,22 +88,28 @@ export default function ClassStudent({
 				</Card>
 			</Grid>
 
-			{students?.map((student) => (
-				<Card sx={{ width: 0.22, m: 2 }} key={student.id}>
-					<CardContent>
-						<Box
-							sx={{
-								height: 200,
-								width: 200,
-							}}
-						>
-							<Avatar outfit={currentAvatar(student)} />
-						</Box>
-						<Typography variant='body1'>Name: {student.name}</Typography>
-						<Typography variant='body1'>{student.email}</Typography>
-					</CardContent>
-				</Card>
-			))}
+			{students ? (
+				students.map((student) => (
+					<Card sx={{ width: 0.22, m: 2 }} key={student.id}>
+						<CardContent>
+							<Box
+								sx={{
+									height: 200,
+									width: 200,
+								}}
+							>
+								<Avatar outfit={currentAvatar(student)} />
+							</Box>
+							<Typography variant='body1'>Name: {student.name}</Typography>
+							<Typography variant='body1'>{student.email}</Typography>
+						</CardContent>
+					</Card>
+				))
+			) : (
+				<Grid item xs={12}>
+					<Loading>Loading students...</Loading>
+				</Grid>
+			)}
 		</>
 	)
 }

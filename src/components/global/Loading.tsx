@@ -30,7 +30,7 @@ export default function Loading({
 					}}
 				/>
 			</Box>
-			<Typography variant='body1'>{children}</Typography>
+			<Typography variant='caption'>{children}</Typography>
 		</Stack>
 	)
 }

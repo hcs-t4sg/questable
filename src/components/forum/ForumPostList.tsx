@@ -5,6 +5,7 @@ import { Classroom, ForumPost, Player } from '../../types'
 import { db } from '../../utils/firebase'
 import ForumPostCard from './ForumPostCard'
 import { getPlayerData } from '../../utils/mutations'
+import Loading from '../global/Loading'
 
 export default function ForumPostList({
 	player,
@@ -67,7 +68,7 @@ export default function ForumPostList({
 			{forumPosts ? (
 				forumPosts.map((post) => <ForumPostCard forumPost={post} isLink key={post.id} />)
 			) : (
-				<Typography variant='body1'>Loading...</Typography>
+				<Loading>Loading forum posts...</Loading>
 			)}
 		</>
 	)

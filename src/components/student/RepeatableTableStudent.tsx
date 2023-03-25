@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 import { Classroom, Player, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
 import RepeatableModalStudent from './RepeatableModalStudent'
+import Loading from '../global/Loading'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -97,7 +98,7 @@ export default function RepeatableTableStudent({
 	player: Player
 }) {
 	// Create a state variable to hold the tasks
-	const [repeatables, setRepeatables] = useState<Repeatable[]>([])
+	const [repeatables, setRepeatables] = useState<Repeatable[] | null>(null)
 	useEffect(() => {
 		// Create a reference to the tasks collection
 		const repeatableCollectionRef = query(
@@ -134,14 +135,18 @@ export default function RepeatableTableStudent({
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{repeatables?.map((repeatable) => (
-							<RepeatableTableRow
-								key={repeatable.id}
-								repeatable={repeatable}
-								classroom={classroom}
-								player={player}
-							/>
-						))}
+						{repeatables ? (
+							repeatables.map((repeatable) => (
+								<RepeatableTableRow
+									key={repeatable.id}
+									repeatable={repeatable}
+									classroom={classroom}
+									player={player}
+								/>
+							))
+						) : (
+							<Loading>Loading repeatables...</Loading>
+						)}
 					</TableBody>
 				</Table>
 			</TableContainer>

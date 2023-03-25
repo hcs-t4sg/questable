@@ -46,7 +46,7 @@ export default function StudentView({
 
 	return (
 		<Layout classroom role={player.role}>
-			<Grid container spacing={3} sx={{ p: 5 }}>
+			<Grid container spacing={3}>
 				<Grid item xs={12}>
 					<Box
 						sx={{

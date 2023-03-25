@@ -10,6 +10,7 @@ import { Box } from '@mui/system'
 import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
 import { getBodyItems, Hair, Pants, Shirt, Shoes } from '../../utils/items'
 import { ItemCard } from '../../components/student/ItemCard'
+import Loading from '../../components/global/Loading'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -42,7 +43,7 @@ function a11yProps(index: number) {
 
 export default function Inventory({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [value, setValue] = React.useState(0)
-	const [inventoryItems, setInventoryItems] = React.useState<DatabaseInventoryItem[]>([])
+	const [inventoryItems, setInventoryItems] = React.useState<DatabaseInventoryItem[] | null>(null)
 
 	// Listens for changes in the inventory items
 	useEffect(() => {
@@ -59,6 +60,13 @@ export default function Inventory({ player, classroom }: { player: Player; class
 		setValue(newValue)
 	}
 
+	if (!inventoryItems) {
+		return (
+			<Grid item xs={12}>
+				<Loading>Loading inventory...</Loading>
+			</Grid>
+		)
+	}
 	const inventoryObjects: Item[] = []
 
 	console.log(inventoryItems)

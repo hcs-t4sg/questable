@@ -19,6 +19,7 @@ import ForumPostCard from './ForumPostCard'
 import Avatar from '../global/Avatar'
 import { currentAvatar } from '../../utils/items'
 import { format } from 'date-fns'
+import Loading from '../global/Loading'
 
 // TODO Fix comment resizing on browser window resizing
 
@@ -174,7 +175,7 @@ export default function ForumPostView({
 								})}
 							</Stack>
 						) : (
-							<Typography variant='body1'>Loading comments...</Typography>
+							<Loading>Loading comments...</Loading>
 						)}
 					</CardContent>
 					<form onSubmit={handleSubmit}>
@@ -198,6 +199,6 @@ export default function ForumPostView({
 			</>
 		)
 	} else {
-		return <div>Loading...</div>
+		return <Loading>Loading post data...</Loading>
 	}
 }

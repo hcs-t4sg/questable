@@ -7,6 +7,7 @@ import RepeatableTableStudent from '../../components/student/RepeatableTableStud
 import TasksTableStudent from '../../components/student/TasksTableStudent'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { db } from '../../utils/firebase'
+import Loading from '../../components/global/Loading'
 
 // TODO Rewrite this component, it's very inefficient and unmaintainable
 interface TabPanelProps {
@@ -39,12 +40,12 @@ function a11yProps(index: number) {
 }
 
 export default function Main({ classroom, player }: { classroom: Classroom; player: Player }) {
-	const [assigned, setAssigned] = useState<TaskWithStatus[]>([])
-	const [completed, setCompleted] = useState<TaskWithStatus[]>([])
-	const [confirmed, setConfirmed] = useState<TaskWithStatus[]>([])
+	const [assigned, setAssigned] = useState<TaskWithStatus[] | null>(null)
+	const [completed, setCompleted] = useState<TaskWithStatus[] | null>(null)
+	const [confirmed, setConfirmed] = useState<TaskWithStatus[] | null>(null)
 	//   const [filter, setFilter] = useState("all");
 	//   const [filteredTasks, setFilteredTasks] = useState(null);
-	const [overdue, setOverdue] = useState<TaskWithStatus[]>([])
+	const [overdue, setOverdue] = useState<TaskWithStatus[] | null>(null)
 
 	const [taskRepTab, setTaskRepTab] = useState<0 | 1>(0)
 	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
@@ -93,14 +94,18 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 				</Tabs>
 			</Box>
 			<TabPanel value={taskRepTab} index={0}>
-				<TasksTableStudent
-					assigned={assigned}
-					completed={completed}
-					confirmed={confirmed}
-					overdue={overdue}
-					classroom={classroom}
-					player={player}
-				/>
+				{assigned && completed && confirmed && overdue ? (
+					<TasksTableStudent
+						assigned={assigned}
+						completed={completed}
+						confirmed={confirmed}
+						overdue={overdue}
+						classroom={classroom}
+						player={player}
+					/>
+				) : (
+					<Loading>Loading tasks...</Loading>
+				)}
 			</TabPanel>
 			<TabPanel value={taskRepTab} index={1}>
 				<RepeatableTableStudent classroom={classroom} player={player} />
