@@ -12,7 +12,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import { format } from 'date-fns'
-import { collection, onSnapshot } from 'firebase/firestore'
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, Task } from '../../types'
 import { db } from '../../utils/firebase'
@@ -56,7 +56,8 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 	const [tasks, setTasks] = useState<Task[]>([])
 	useEffect(() => {
 		const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`)
-		const unsub = onSnapshot(taskCollectionRef, (snapshot) => {
+		const taskCollectionQuery = query(taskCollectionRef, orderBy('created', 'desc'))
+		const unsub = onSnapshot(taskCollectionQuery, (snapshot) => {
 			// Store the tasks in the `tasks` state variable
 			setTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Task)))
 		})

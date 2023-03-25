@@ -11,7 +11,7 @@ import Layout from '../components/global/Layout'
 import { Classroom } from '../types'
 import { db } from '../utils/firebase'
 
-import nature from '/src/assets/Nature.png'
+import wood1 from '/src/assets/Wood1.png'
 
 export default function Home({ user }: { user: User }) {
 	// Listen to user's classrooms and maintain a corresponding state variable
@@ -64,7 +64,7 @@ export default function Home({ user }: { user: User }) {
 	const divStyle = {
 		height: '100%',
 		width: '100%',
-		backgroundImage: `url(${nature})`,
+		backgroundImage: `url(${wood1})`,
 		backgroundSize: 'contain',
 	}
 

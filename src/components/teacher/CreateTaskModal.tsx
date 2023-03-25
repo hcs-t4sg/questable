@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 // import Typography from '@mui/material/Typography'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-// import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { Timestamp } from 'firebase/firestore'
 import * as React from 'react'
@@ -233,11 +233,11 @@ export default function CreateTaskModal({
 						{/* either show a due date option or max completions based on if task is repeatable */}
 						{!isRepeatable ? (
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
-								{/* <DateTimePicker
+								<DateTimePicker
 									label='Due Date'
 									value={dueDate}
 									onChange={(value) => setDueDate(value)}
-								/> */}
+								/>
 							</LocalizationProvider>
 						) : (
 							<TextField

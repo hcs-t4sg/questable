@@ -31,10 +31,10 @@ const mdTheme = createTheme({
 			main: '#4a2511',
 		},
 		secondary: {
-			main: '#92ae83',
+			main: '#83924c',
 		},
 		success: {
-			main: '#92ae83',
+			main: '#92ae8c',
 		},
 	},
 	typography: {

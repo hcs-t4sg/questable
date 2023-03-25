@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { updateTask } from '../../utils/mutations'
 import EditIcon from '@mui/icons-material/Edit'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-// import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { Timestamp } from 'firebase/firestore'
 import { Classroom, Task } from '../../types'
@@ -153,11 +153,11 @@ export default function TaskModalTeacher({
 					> */}
 					<BoxInModal>
 						<LocalizationProvider dateAdapter={AdapterDateFns}>
-							{/* <DateTimePicker
+							<DateTimePicker
 								label='Due Date'
 								value={date}
 								onChange={(newValue) => setDate(newValue)}
-							/> */}
+							/>
 						</LocalizationProvider>
 						{/* </Box> */}
 					</BoxInModal>

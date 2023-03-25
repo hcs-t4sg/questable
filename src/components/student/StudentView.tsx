@@ -63,7 +63,7 @@ export default function StudentView({
 							paddingRight: '80px',
 							paddingBottom: '72px',
 							paddingTop: '40px',
-							borderColor: '#92ae83',
+							borderColor: '#373d20',
 							borderStyle: 'solid',
 							borderWidth: '10px',
 							backgroundColor: '#f3f8df',

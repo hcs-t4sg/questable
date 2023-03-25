@@ -37,6 +37,7 @@ const Drawer = styled(MuiDrawer, {
 			},
 		}),
 	},
+	backgroundColor: '#f3f8df',
 }))
 
 export default function ClassroomSidebar({ role }: { role: UserRole }) {
