@@ -17,13 +17,19 @@ export default function ForumView({ player, classroom }: { player: Player; class
 				<Typography variant='h2'>Forum</Typography>
 				<h5>Post questions or comments in the class discussion below!</h5>
 			</Grid>
-			<Grid item xs={2}>
-				<Button onClick={() => setOpen(true)} variant='contained' disableElevation>
-					<EditOutlinedIcon />
-					New Post
-				</Button>
-				<Typography variant='h6'>Categories</Typography>
+			<Grid item xs={2.1}>
 				<List>
+					<ListItem>
+						<Button onClick={() => setOpen(true)} variant='contained' disableElevation>
+							<EditOutlinedIcon />
+							New Post
+						</Button>
+					</ListItem>
+					<ListItem>
+						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+							Categories
+						</Typography>
+					</ListItem>
 					<ListItem>
 						<ListItemButton
 							component={Link}
@@ -76,7 +82,7 @@ export default function ForumView({ player, classroom }: { player: Player; class
 					</ListItem>
 				</List>
 			</Grid>
-			<Grid item xs={10}>
+			<Grid item xs={9.9}>
 				<Routes>
 					<Route path='/' element={<Navigate to='posts' />} />
 					<Route
