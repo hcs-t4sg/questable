@@ -7,26 +7,14 @@ import { db } from '../utils/firebase'
 import { getPlayerData, syncUsers } from '../utils/mutations'
 import { Player, Classroom } from '../types'
 import { useState, useEffect } from 'react'
+import Layout from '../components/global/Layout'
+import { Grid } from '@mui/material'
+import Loading from '../components/global/Loading'
 
 export default function ClassroomPage({ user }: { user: User }) {
 	// Use react router to fetch class ID from URL params
 	const params = useParams()
 	const classID = params.classID
-
-	// Fetch user's player information for classroom
-	const [player, setPlayer] = useState<Player | null>(null)
-	useEffect(() => {
-		const updatePlayer = async () => {
-			const auth = getAuth()
-			const user = auth.currentUser
-			if (!!user && classID) {
-				syncUsers(user)
-				const playerData = await getPlayerData(classID, user.uid)
-				if (playerData) setPlayer(playerData)
-			}
-		}
-		updatePlayer().catch(console.error)
-	}, [classID])
 
 	// Listen to classroom data
 	const [classroom, setClassroom] = useState<Classroom | null>(null)
@@ -45,6 +33,21 @@ export default function ClassroomPage({ user }: { user: User }) {
 		}
 	}, [user, classID])
 
+	// Fetch user's player information for classroom
+	const [player, setPlayer] = useState<Player | null>(null)
+	useEffect(() => {
+		const updatePlayer = async () => {
+			const auth = getAuth()
+			const user = auth.currentUser
+			if (!!user && classID) {
+				syncUsers(user)
+				const playerData = await getPlayerData(classID, user.uid)
+				if (playerData) setPlayer(playerData)
+			}
+		}
+		updatePlayer().catch(console.error)
+	}, [classID])
+
 	if (classroom) {
 		if (player) {
 			if (player.role === 'teacher') {
@@ -55,9 +58,25 @@ export default function ClassroomPage({ user }: { user: User }) {
 				return <p>Error: Player role does not exist or is invalid.</p>
 			}
 		} else {
-			return <p>Error: Player does not exist.</p>
+			return (
+				<Layout>
+					<Grid container spacing={3}>
+						<Grid item xs={12}>
+							<Loading>Loading player data...</Loading>
+						</Grid>
+					</Grid>
+				</Layout>
+			)
 		}
 	} else {
-		return <p>Error: Classroom does not exist.</p>
+		return (
+			<Layout>
+				<Grid container spacing={3}>
+					<Grid item xs={12}>
+						<Loading>Loading classroom data...</Loading>
+					</Grid>
+				</Grid>
+			</Layout>
+		)
 	}
 }

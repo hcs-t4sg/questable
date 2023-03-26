@@ -21,7 +21,7 @@ export default function TeacherView({
 }) {
 	return (
 		<Layout classroom role={player?.role}>
-			<Grid container spacing={3} sx={{ p: 5 }}>
+			<Grid container spacing={3}>
 				<Routes>
 					<Route path='/' element={<Navigate to='tasks' />} />
 					<Route path='tasks' element={<Tasks player={player} classroom={classroom} />} />

@@ -20,6 +20,8 @@ import { deleteTask } from '../../utils/mutations'
 import TaskModalTeacher from './TaskModalTeacher'
 
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
+import Loading from '../global/Loading'
+import { enqueueSnackbar } from 'notistack'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -53,7 +55,7 @@ function LinearProgressWithLabel({ task }: { task: Task }) {
 
 export default function TasksTableTeacher({ classroom }: { classroom: Classroom }) {
 	// Create a state variable to hold the tasks
-	const [tasks, setTasks] = useState<Task[]>([])
+	const [tasks, setTasks] = useState<Task[] | null>(null)
 	useEffect(() => {
 		const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`)
 		const taskCollectionQuery = query(taskCollectionRef, orderBy('created', 'desc'))
@@ -67,53 +69,67 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 	const handleDelete = (task: Task) => {
 		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this task?')) {
-			deleteTask(classroom.id, task.id).catch(console.error)
+			deleteTask(classroom.id, task.id)
+				.then(() => {
+					enqueueSnackbar('Deleted task!', { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar(err.message, { variant: 'error' })
+				})
 		}
 	}
+
 	return (
 		<Grid item xs={12}>
-			<TableContainer component={Paper}>
-				<Table aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							<BlankTableCell />
-							<TableCell>Task</TableCell>
-							<TableCell>Description</TableCell>
-							<TableCell>Deadline</TableCell>
-							<TableCell>Reward </TableCell>
-							<TableCell>Students Confirmed</TableCell>
-							<BlankTableCell />
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{tasks?.map((task) => (
-							// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-							<StyledTableRow key={task.id}>
-								<TableCell>
-									<TaskModalTeacher task={task} classroom={classroom} />
-								</TableCell>
+			{tasks ? (
+				<TableContainer component={Paper}>
+					<Table aria-label='simple table'>
+						<TableHead>
+							<TableRow>
+								<BlankTableCell />
+								<TableCell>Task</TableCell>
+								<TableCell>Description</TableCell>
+								<TableCell>Deadline</TableCell>
+								<TableCell>Reward </TableCell>
+								<TableCell>Students Confirmed</TableCell>
+								<BlankTableCell />
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{tasks.map((task) => (
+								// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+								<StyledTableRow key={task.id}>
+									<TableCell>
+										<TaskModalTeacher task={task} classroom={classroom} />
+									</TableCell>
 
-								<TableCell component='th' scope='row'>
-									{task.name}
-								</TableCell>
-								<TableCell align='left'>{truncate(task.description)}</TableCell>
-								<TableCell align='left'>{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}</TableCell>
-								<TableCell align='left'>{task.reward}</TableCell>
-								<TableCell align='left'>
-									<LinearProgressWithLabel task={task} />
-								</TableCell>
+									<TableCell component='th' scope='row'>
+										{task.name}
+									</TableCell>
+									<TableCell align='left'>{truncate(task.description)}</TableCell>
+									<TableCell align='left'>
+										{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
+									</TableCell>
+									<TableCell align='left'>{task.reward}</TableCell>
+									<TableCell align='left'>
+										<LinearProgressWithLabel task={task} />
+									</TableCell>
 
-								<TableCell align='right'>
-									<IconButton onClick={() => handleDelete(task)}>
-										<DeleteIcon />
-									</IconButton>
-								</TableCell>
-							</StyledTableRow>
-							// </TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+									<TableCell align='right'>
+										<IconButton onClick={() => handleDelete(task)}>
+											<DeleteIcon />
+										</IconButton>
+									</TableCell>
+								</StyledTableRow>
+								// </TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			) : (
+				<Loading>Loading tasks...</Loading>
+			)}
 		</Grid>
 	)
 }

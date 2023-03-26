@@ -14,6 +14,7 @@ import Avatar from '../../components/global/Avatar'
 import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { currentAvatar } from '../../utils/items'
 import { useEffect, useState } from 'react'
+import Loading from '../../components/global/Loading'
 
 export default function ClassTeacher({
 	player,
@@ -22,7 +23,7 @@ export default function ClassTeacher({
 	player: Player
 	classroom: Classroom
 }) {
-	const [students, setStudents] = useState<PlayerWithEmail[]>([])
+	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
 	//   const [teacher, setTeacher] = React.useState();
 
 	useEffect(() => {
@@ -99,25 +100,30 @@ export default function ClassTeacher({
 					</CardContent>
 				</Card>
 			</Grid>
-
-			{students?.map((student) => (
-				<Card sx={{ width: 0.22, m: 2 }} key={student.id}>
-					<CardContent>
-						<Box
-							sx={{
-								height: 300,
-								width: 200,
-							}}
-						>
-							<Avatar outfit={currentAvatar(student)} />
-						</Box>
-						<Typography variant='body1'>Name: {student.name}</Typography>
-						<Typography variant='body1'>Account Balance: {student.money}</Typography>
-						<Typography variant='body1'>{student.email}</Typography>
-						<ClassTeacherModal student={student} />
-					</CardContent>
-				</Card>
-			))}
+			{students ? (
+				students.map((student) => (
+					<Card sx={{ width: 0.22, m: 2 }} key={student.id}>
+						<CardContent>
+							<Box
+								sx={{
+									height: 300,
+									width: 200,
+								}}
+							>
+								<Avatar outfit={currentAvatar(student)} />
+							</Box>
+							<Typography variant='body1'>Name: {student.name}</Typography>
+							<Typography variant='body1'>Account Balance: {student.money}</Typography>
+							<Typography variant='body1'>{student.email}</Typography>
+							<ClassTeacherModal student={student} />
+						</CardContent>
+					</Card>
+				))
+			) : (
+				<Grid item xs={12}>
+					<Loading>Loading students...</Loading>
+				</Grid>
+			)}
 		</>
 	)
 }

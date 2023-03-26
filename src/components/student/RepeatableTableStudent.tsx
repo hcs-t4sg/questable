@@ -12,6 +12,7 @@ import { Classroom, Player, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
 // import RepeatableModalStudent from './RepeatableModalStudent'
 import ModalsStudent from './ModalsStudent'
+import Loading from '../global/Loading'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -104,7 +105,7 @@ export default function RepeatableTableStudent({
 	player: Player
 }) {
 	// Create a state variable to hold the tasks
-	const [repeatables, setRepeatables] = useState<Repeatable[]>([])
+	const [repeatables, setRepeatables] = useState<Repeatable[] | null>(null)
 	useEffect(() => {
 		// Create a reference to the tasks collection
 		const repeatableCollectionRef = query(
@@ -128,30 +129,34 @@ export default function RepeatableTableStudent({
 
 	return (
 		<Grid item xs={12}>
-			<TableContainer component={Paper}>
-				<Table sx={{ minWidth: 650 }} aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							<TableCell>Task</TableCell>
-							<TableCell>Description</TableCell>
-							<TableCell>Pending Completions</TableCell>
-							<TableCell>Confirmed Completions</TableCell>
-							<TableCell>Reward </TableCell>
-							<TableCell sx={{ m: '1%', p: '1%' }}></TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{repeatables?.map((repeatable) => (
-							<RepeatableTableRow
-								key={repeatable.id}
-								repeatable={repeatable}
-								classroom={classroom}
-								player={player}
-							/>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			{repeatables ? (
+				<TableContainer component={Paper}>
+					<Table sx={{ minWidth: 650 }} aria-label='simple table'>
+						<TableHead>
+							<TableRow>
+								<TableCell>Task</TableCell>
+								<TableCell>Description</TableCell>
+								<TableCell>Pending Completions</TableCell>
+								<TableCell>Confirmed Completions</TableCell>
+								<TableCell>Reward </TableCell>
+								<TableCell>Open</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{repeatables.map((repeatable) => (
+								<RepeatableTableRow
+									key={repeatable.id}
+									repeatable={repeatable}
+									classroom={classroom}
+									player={player}
+								/>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			) : (
+				<Loading>Loading repeatables...</Loading>
+			)}
 		</Grid>
 	)
 }

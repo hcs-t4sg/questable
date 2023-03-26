@@ -14,18 +14,10 @@ import { Classroom, Player } from '../../types'
 export default function Tasks({ player, classroom }: { player: Player; classroom: Classroom }) {
 	//   const [teacher, setTeacher] = React.useState();
 
-	const [page, setPage] = React.useState(0)
+	const [page, setPage] = React.useState<0 | 1>(0)
 
-	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
+	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: 0 | 1) => {
 		setPage(newTabIndex)
-	}
-
-	const getTable = () => {
-		if (page === 0) {
-			return <TasksTableTeacher classroom={classroom} />
-		} else if (page === 1) {
-			return <RepeatableTableTeacher classroom={classroom} />
-		}
 	}
 
 	return (
@@ -60,7 +52,11 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 					<Tab label='One Time' />
 					<Tab label='Repeatable' />
 				</Tabs>
-				{getTable()}
+				{page === 0 ? (
+					<TasksTableTeacher classroom={classroom} />
+				) : (
+					<RepeatableTableTeacher classroom={classroom} />
+				)}
 			</Grid>
 		</>
 	)

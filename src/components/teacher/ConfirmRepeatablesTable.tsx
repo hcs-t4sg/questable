@@ -19,6 +19,8 @@ import {
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import { Grid } from '@mui/material'
+import Loading from '../global/Loading'
+import { useSnackbar } from 'notistack'
 
 function truncate(description: string) {
 	if (description.length > 40) {
@@ -28,7 +30,11 @@ function truncate(description: string) {
 }
 
 export default function ConfirmRepeatablesTable({ classroom }: { classroom: Classroom }) {
-	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[]>([])
+	const { enqueueSnackbar } = useSnackbar()
+
+	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[] | null>(
+		null,
+	)
 
 	useEffect(() => {
 		const repeatablesRef = collection(db, `classrooms/${classroom.id}/repeatables`)
@@ -72,6 +78,9 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 		return unsub
 	}, [classroom])
 
+	if (!completedRepeatables) {
+		return <Loading>Loading repeatables...</Loading>
+	}
 	return (
 		<TableContainer component={Paper}>
 			<Table aria-label='simple table'>
@@ -110,9 +119,23 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 													completion.repeatable.id,
 													completion.id,
 												)
+													.then(() => {
+														enqueueSnackbar(
+															`Confirmed task completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+															{ variant: 'success' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar(
+															'There was an error confirming the repeatable completion.',
+															{
+																variant: 'error',
+															},
+														)
+													})
 											}
-											color='secondary'
-											// variant='contained'
+											color='success'
 										>
 											Confirm
 										</Button>
@@ -126,8 +149,22 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 													completion.repeatable.id,
 													completion.id,
 												)
+													.then(() => {
+														enqueueSnackbar(
+															`Denied repeatable completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+															{ variant: 'default' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar(
+															'There was an error denying the repeatable completion.',
+															{
+																variant: 'error',
+															},
+														)
+													})
 											}
-											// variant='contained'
 											color='error'
 										>
 											Deny

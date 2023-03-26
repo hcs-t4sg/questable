@@ -15,6 +15,7 @@ import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { addForumPost } from '../../utils/mutations'
 import { TaskModalBox, TeacherModalStyled } from '../../styles/TaskModalStyles'
+import { useSnackbar } from 'notistack'
 // Notes: onsnapshot, don't implement at database level; implement on frontend, show only ones you filtered for
 // Modal component for individual entries.
 
@@ -36,6 +37,8 @@ export default function CreateForumPostModal({
 	player: Player
 	classroom: Classroom
 }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	// State variables for modal status
 
 	const [subject, setSubject] = useState('')
@@ -58,13 +61,13 @@ export default function CreateForumPostModal({
 	const handleSubmit = () => {
 		const subjectContainsNonWhitespaceChars = subject.replace(/\s+/g, '') != ''
 		if (!subjectContainsNonWhitespaceChars) {
-			alert('Title cannot be empty')
+			enqueueSnackbar('Title cannot be empty', { variant: 'error' })
 			return
 		}
 
 		const descriptionContainsNonWhitespaceChars = description.replace(/\s+/g, '') != ''
 		if (!descriptionContainsNonWhitespaceChars) {
-			alert('Description cannot be empty')
+			enqueueSnackbar('Description cannot be empty', { variant: 'error' })
 			return
 		}
 
@@ -75,8 +78,19 @@ export default function CreateForumPostModal({
 			author: player,
 		}
 
-		addForumPost(newThread, classroom).catch(console.error)
-		handleClose()
+		addForumPost(newThread, classroom)
+			.then(() => {
+				enqueueSnackbar(`Created post "${subject}"!`, {
+					variant: 'success',
+				})
+				handleClose()
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar('There was an error creating the post.', {
+					variant: 'error',
+				})
+			})
 	}
 
 	const submitButton = (

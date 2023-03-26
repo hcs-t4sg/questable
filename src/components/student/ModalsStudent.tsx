@@ -11,6 +11,7 @@ import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
 import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
 import green3 from '/src/assets/spriteSheets/potions/green3.png'
 // import { rewardsMatch } from './RewardItems'
+import { useSnackbar } from 'notistack'
 
 interface PropsTask {
 	classroom: Classroom
@@ -27,7 +28,7 @@ interface PropsRepeatables {
 }
 
 export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
-	// console.log(blue3)
+	const { enqueueSnackbar } = useSnackbar()
 
 	const [open, setOpen] = useState(false)
 
@@ -43,7 +44,29 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 		if (window.confirm('Are you sure you want to mark this task as complete?')) {
 			props.type === 'task'
 				? completeTask(props.classroom.id, props.taskOrRepeatable.id, props.player.id)
+						.then(() => {
+							enqueueSnackbar(`Task "${props.taskOrRepeatable.name}" marked as complete!`, {
+								variant: 'success',
+							})
+						})
+						.catch((err) => {
+							console.error(err)
+							enqueueSnackbar('There was an issue completing the task.', {
+								variant: 'error',
+							})
+						})
 				: completeRepeatable(props.classroom.id, props.taskOrRepeatable.id, props.player.id)
+						.then(() => {
+							enqueueSnackbar(`Repeatable completion added for "${props.taskOrRepeatable.name}"!`, {
+								variant: 'success',
+							})
+						})
+						.catch((err) => {
+							console.error(err)
+							enqueueSnackbar('There was an issue adding the repeatable completion.', {
+								variant: 'error',
+							})
+						})
 			handleClose()
 		}
 	}
