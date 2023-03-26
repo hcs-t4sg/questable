@@ -122,34 +122,34 @@ export default function RepeatableTableStudent({
 
 	return (
 		<Grid item xs={12}>
-			<TableContainer component={Paper}>
-				<Table sx={{ minWidth: 650 }} aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							<TableCell>Task</TableCell>
-							<TableCell>Description</TableCell>
-							<TableCell>Pending Completions</TableCell>
-							<TableCell>Confirmed Completions</TableCell>
-							<TableCell>Reward </TableCell>
-							<TableCell sx={{ m: '1%', p: '1%' }}></TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{repeatables ? (
-							repeatables.map((repeatable) => (
+			{repeatables ? (
+				<TableContainer component={Paper}>
+					<Table sx={{ minWidth: 650 }} aria-label='simple table'>
+						<TableHead>
+							<TableRow>
+								<TableCell>Task</TableCell>
+								<TableCell>Description</TableCell>
+								<TableCell>Pending Completions</TableCell>
+								<TableCell>Confirmed Completions</TableCell>
+								<TableCell>Reward </TableCell>
+								<TableCell sx={{ m: '1%', p: '1%' }}></TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{repeatables.map((repeatable) => (
 								<RepeatableTableRow
 									key={repeatable.id}
 									repeatable={repeatable}
 									classroom={classroom}
 									player={player}
 								/>
-							))
-						) : (
-							<Loading>Loading repeatables...</Loading>
-						)}
-					</TableBody>
-				</Table>
-			</TableContainer>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			) : (
+				<Loading>Loading repeatables...</Loading>
+			)}
 		</Grid>
 	)
 }
