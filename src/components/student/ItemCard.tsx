@@ -90,16 +90,18 @@ export function ItemCard(props: Props) {
 				<ItemBox>{props.item.renderStatic()}</ItemBox>
 			)}
 			<CardContent>
-				<Typography variant='body1' sx={{ fontWeight: 'medium', color: 'green' }} component='div'>
+				<Typography variant='body2' sx={{ fontWeight: 'medium', color: 'green' }} component='div'>
 					{capitalize(props.item.type)}
 				</Typography>
-				<Typography sx={{ marginTop: '15px' }} variant='body1' component='div'>
+				<Typography sx={{ marginTop: '15px', fontWeight: 'bold' }} variant='body1' component='div'>
 					{props.item.name}
 				</Typography>
 				{props.type === 'shop' ? (
-					<ItemTypography variant='body1'>Price: {props.itemPrice}</ItemTypography>
+					<ItemTypography variant='body1' sx={{ fontWeight: 'bold' }}>
+						{props.itemPrice}
+					</ItemTypography>
 				) : null}
-				<ItemTypography variant='body1'>{props.item.description}</ItemTypography>
+				<ItemTypography variant='body2'>{props.item.description}</ItemTypography>
 			</CardContent>
 			<CardActions>{confirmActions}</CardActions>
 		</Card>

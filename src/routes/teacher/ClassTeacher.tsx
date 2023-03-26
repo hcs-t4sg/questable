@@ -82,7 +82,7 @@ export default function ClassTeacher({
 
 	return (
 		<>
-			<Grid item xs={12}>
+			{/* <Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
 				</Typography>
@@ -92,14 +92,14 @@ export default function ClassTeacher({
 					<CardContent>
 						<Typography variant='h5' component='div'>
 							{player.name}
-						</Typography>{' '}
-						{/* Do we want a separate user name?*/}
-						<Typography variant='h5' component='div'>
+						</Typography>{' '} */}
+			{/* Do we want a separate user name?*/}
+			{/* <Typography variant='h5' component='div'>
 							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
 				</Card>
-			</Grid>
+			</Grid> */}
 			{students ? (
 				students.map((student) => (
 					<Card sx={{ width: 0.22, m: 2 }} key={student.id}>

@@ -160,24 +160,34 @@ export default function Home({ user }: { user: User }) {
 		<Layout>
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
-					<Box
-						sx={{
-							width: '100%',
-							height: 300,
-							backgroundColor: 'primary.dark',
-							display: 'flex',
-							flexWrap: 'wrap',
-							justifyContent: 'center',
-							alignItems: 'center',
-							textAlign: 'center',
-						}}
-					>
-						<Typography variant='h3' sx={{ flex: '100%' }}>
-							Welcome Back!
-						</Typography>
-						<JoinClassroomModal user={user} />
-						<CreateClassroomModal user={user} />
-					</Box>
+					<div style={divStyle}>
+						<Box
+							sx={{
+								width: '100%',
+								height: 300,
+								border: '10px solid',
+								borderColor: 'primary.main',
+								display: 'flex',
+								flexWrap: 'wrap',
+								justifyContent: 'center',
+								alignItems: 'center',
+								textAlign: 'center',
+								boxShadow: 2,
+							}}
+						>
+							<Typography variant='h3' sx={{ flex: '100%' }}>
+								Welcome Back, {user.displayName}!
+							</Typography>
+							<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
+								<Grid item>
+									<JoinClassroomModal user={user} />
+								</Grid>
+								<Grid item>
+									<CreateClassroomModal user={user} />
+								</Grid>
+							</Grid>
+						</Box>
+					</div>
 				</Grid>
 				{classroomsSection}
 			</Grid>

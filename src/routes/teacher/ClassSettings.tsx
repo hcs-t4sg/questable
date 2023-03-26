@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
+// import Card from '@mui/material/Card'
+// import CardContent from '@mui/material/CardContent'
 import PlayerCard from '../../components/teacher/PlayerCard'
 
 import { User } from 'firebase/auth'
@@ -19,7 +19,7 @@ export default function ClassSettings({
 }) {
 	return (
 		<>
-			<Grid item xs={12}>
+			{/* <Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
 				</Typography>
@@ -29,14 +29,14 @@ export default function ClassSettings({
 					<CardContent>
 						<Typography variant='h5' component='div'>
 							{player.name}
-						</Typography>{' '}
-						{/* Do we want a separate user name?*/}
-						<Typography variant='h5' component='div'>
+						</Typography>{' '} */}
+			{/* Do we want a separate user name?*/}
+			{/* <Typography variant='h5' component='div'>
 							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
 				</Card>
-			</Grid>
+			</Grid> */}
 			<Grid item xs={12}>
 				<Typography variant='h4'>Teacher Profile</Typography>
 				<PlayerCard player={player} user={user} classroom={classroom} />
