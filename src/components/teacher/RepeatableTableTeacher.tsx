@@ -17,6 +17,7 @@ import { deleteRepeatable } from '../../utils/mutations'
 
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'
+import { useSnackbar } from 'notistack'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -26,6 +27,7 @@ function truncate(description: string) {
 }
 
 export default function RepeatableTableTeacher({ classroom }: { classroom: Classroom }) {
+	const { enqueueSnackbar } = useSnackbar()
 	// Create a state variable to hold the tasks
 	const [repeatables, setRepeatables] = useState<Repeatable[] | null>(null)
 	useEffect(() => {
@@ -42,7 +44,14 @@ export default function RepeatableTableTeacher({ classroom }: { classroom: Class
 	const handleDelete = (repeatable: Repeatable) => {
 		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this task?')) {
-			deleteRepeatable(classroom.id, repeatable.id).catch(console.error)
+			deleteRepeatable(classroom.id, repeatable.id)
+				.then(() => {
+					enqueueSnackbar('Deleted repeatable!', { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar(err.message, { variant: 'error' })
+				})
 		}
 	}
 

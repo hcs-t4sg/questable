@@ -62,6 +62,8 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 			const confirmed: TaskWithStatus[] = []
 			const overdue: TaskWithStatus[] = []
 
+			console.log(snapshot.docs)
+
 			// TODO rewrite using Promise.all
 			snapshot.forEach((doc) => {
 				// if task is overdue, add to overdue list

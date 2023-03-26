@@ -83,7 +83,7 @@ export async function joinClassroom(classID: string, user: User) {
 
 	// Check if class exists
 	if (!classroomSnap.exists()) {
-		return 'Code invalid, please make sure you are entering the right code'
+		throw new Error('Code invalid, please make sure you are entering the right code')
 	}
 
 	// Check if student already in class
@@ -91,7 +91,7 @@ export async function joinClassroom(classID: string, user: User) {
 	const playerList = classroomData.playerList
 
 	if (playerList.includes(user.uid)) {
-		return 'You are already in this class!'
+		throw new Error('You are already in this class!')
 	}
 
 	// Update classroom.playerList
@@ -307,7 +307,7 @@ export async function completeRepeatable(
 	const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
 	const repeatableSnap = await getDoc(repeatableRef)
 	if (!repeatableSnap.exists()) {
-		return Error('Repeatable not found')
+		throw new Error('Repeatable not found')
 	}
 
 	// Fetch player repeatable completions
@@ -336,12 +336,12 @@ export async function completeRepeatable(
 			completionsSnap.data().completions + confirmations >=
 			repeatableSnap.data().maxCompletions
 		) {
-			return Error('You have queued the maximum number of completions')
+			throw new Error('You have queued the maximum number of completions')
 		}
 
 		// Error if max completions have been confirmed
 		if (confirmations >= repeatableSnap.data().maxCompletions) {
-			return Error('The maximum number of completions has been confirmed by the teacher')
+			throw new Error('The maximum number of completions has been confirmed by the teacher')
 		}
 
 		updateDoc(completionsDocRef, {

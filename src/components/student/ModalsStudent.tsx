@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { ModalTitle, StudentBoxInModal, StudentTaskModalBox } from '../../styles/TaskModalStyles'
 import { Classroom, Player, Repeatable, TaskWithStatus } from '../../types'
 import { completeRepeatable, completeTask } from '../../utils/mutations'
+import { useSnackbar } from 'notistack'
 
 interface PropsTask {
 	classroom: Classroom
@@ -22,6 +23,8 @@ interface PropsRepeatables {
 }
 
 export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [open, setOpen] = useState(false)
 
 	const handleClickOpen = () => {
@@ -36,7 +39,29 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 		if (window.confirm('Are you sure you want to mark this task as complete?')) {
 			props.type === 'task'
 				? completeTask(props.classroom.id, props.taskOrRepeatable.id, props.player.id)
+						.then(() => {
+							enqueueSnackbar(`Task "${props.taskOrRepeatable.name}" marked as complete!`, {
+								variant: 'success',
+							})
+						})
+						.catch((err) => {
+							console.error(err)
+							enqueueSnackbar('There was an issue completing the task.', {
+								variant: 'error',
+							})
+						})
 				: completeRepeatable(props.classroom.id, props.taskOrRepeatable.id, props.player.id)
+						.then(() => {
+							enqueueSnackbar(`Repeatable completion added for "${props.taskOrRepeatable.name}"!`, {
+								variant: 'success',
+							})
+						})
+						.catch((err) => {
+							console.error(err)
+							enqueueSnackbar('There was an issue adding the repeatable completion.', {
+								variant: 'error',
+							})
+						})
 			handleClose()
 		}
 	}

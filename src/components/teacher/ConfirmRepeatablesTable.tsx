@@ -19,6 +19,7 @@ import {
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'
+import { useSnackbar } from 'notistack'
 
 function truncate(description: string) {
 	if (description.length > 40) {
@@ -28,6 +29,8 @@ function truncate(description: string) {
 }
 
 export default function ConfirmRepeatablesTable({ classroom }: { classroom: Classroom }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[] | null>(
 		null,
 	)
@@ -113,6 +116,21 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 											completion.repeatable.id,
 											completion.id,
 										)
+											.then(() => {
+												enqueueSnackbar(
+													`Confirmed task completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+													{ variant: 'success' },
+												)
+											})
+											.catch((err) => {
+												console.error(err)
+												enqueueSnackbar(
+													'There was an error confirming the repeatable completion.',
+													{
+														variant: 'error',
+													},
+												)
+											})
 									}
 								>
 									Confirm
@@ -125,6 +143,18 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 											completion.repeatable.id,
 											completion.id,
 										)
+											.then(() => {
+												enqueueSnackbar(
+													`Denied repeatable completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+													{ variant: 'default' },
+												)
+											})
+											.catch((err) => {
+												console.error(err)
+												enqueueSnackbar('There was an error denying the repeatable completion.', {
+													variant: 'error',
+												})
+											})
 									}
 									color='error'
 								>

@@ -19,6 +19,7 @@ import {
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'
+import { useSnackbar } from 'notistack'
 
 function truncate(description: string) {
 	if (description.length > 40) {
@@ -38,6 +39,8 @@ const formatStatus = (task: CompletedTask) => {
 }
 
 export default function ConfirmTasksTable({ classroom }: { classroom: Classroom }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [completedTasks, setCompletedTasks] = useState<CompletedTask[] | null>(null)
 
 	useEffect(() => {
@@ -115,13 +118,39 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 								<Button
 									onClick={() =>
 										confirmTask(classroom.id, completedTask.player.id, completedTask.id)
+											.then(() => {
+												enqueueSnackbar(
+													`Confirmed task completion "${completedTask.name}" from ${completedTask.player.name}!`,
+													{ variant: 'success' },
+												)
+											})
+											.catch((err) => {
+												console.error(err)
+												enqueueSnackbar('There was an error confirming the task completion.', {
+													variant: 'error',
+												})
+											})
 									}
 									// variant='contained'
 								>
 									Confirm
 								</Button>
 								<Button
-									onClick={() => denyTask(classroom.id, completedTask.player.id, completedTask.id)}
+									onClick={() =>
+										denyTask(classroom.id, completedTask.player.id, completedTask.id)
+											.then(() => {
+												enqueueSnackbar(
+													`Rejected task completion "${completedTask.name}" from ${completedTask.player.name}.`,
+													{ variant: 'default' },
+												)
+											})
+											.catch((err) => {
+												console.error(err)
+												enqueueSnackbar('There was an error rejecting the task completion.', {
+													variant: 'error',
+												})
+											})
+									}
 									// variant='contained'
 									color='error'
 								>

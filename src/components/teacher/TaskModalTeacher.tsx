@@ -21,6 +21,7 @@ import {
 	BoxInModal,
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
+import { useSnackbar } from 'notistack'
 
 export default function TaskModalTeacher({
 	task,
@@ -29,6 +30,7 @@ export default function TaskModalTeacher({
 	task: Task
 	classroom: Classroom
 }) {
+	const { enqueueSnackbar } = useSnackbar()
 	// State variables
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState(task.name)
@@ -49,6 +51,21 @@ export default function TaskModalTeacher({
 	}
 	// Handle the click of an edit button
 	const handleEdit = () => {
+		if (name === '') {
+			enqueueSnackbar('You need to provide a name for the task', { variant: 'error' })
+			return
+		}
+
+		if (!date) {
+			enqueueSnackbar('You need to provide a due date', { variant: 'error' })
+			return
+		}
+
+		const dateIsInvalid = isNaN(date.getTime())
+		if (dateIsInvalid) {
+			enqueueSnackbar('Due date is invalid', { variant: 'error' })
+			return
+		}
 		const updatedTask = {
 			name: name,
 			due: date ? Timestamp.fromDate(date) : task.due,
@@ -57,7 +74,14 @@ export default function TaskModalTeacher({
 		}
 		// Call the `updateTask` mutation
 		updateTask(classroom.id, updatedTask)
-		handleClose()
+			.then(() => {
+				handleClose()
+				enqueueSnackbar('Edited task!', { variant: 'success' })
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar('There was an issue editing the task', { variant: 'error' })
+			})
 	}
 
 	const openButton = (

@@ -21,6 +21,7 @@ import TaskModalTeacher from './TaskModalTeacher'
 
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'
+import { enqueueSnackbar } from 'notistack'
 
 function truncate(description: string) {
 	if (description.length > 50) {
@@ -67,7 +68,14 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 	const handleDelete = (task: Task) => {
 		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this task?')) {
-			deleteTask(classroom.id, task.id).catch(console.error)
+			deleteTask(classroom.id, task.id)
+				.then(() => {
+					enqueueSnackbar('Deleted task!', { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar(err.message, { variant: 'error' })
+				})
 		}
 	}
 

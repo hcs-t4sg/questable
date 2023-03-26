@@ -9,9 +9,12 @@ import { useState } from 'react'
 import Grid from '@mui/material/Grid'
 import { addClassroom } from '../../utils/mutations'
 import { User } from 'firebase/auth'
+import { useSnackbar } from 'notistack'
 // import ClassroomModalContent from './ClassroomModalContent'
 
 export default function CreateClassroomModal({ user }: { user: User }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [open, setOpen] = useState(false)
 	const [newClassroomName, setNewClassroomName] = React.useState('')
 
@@ -28,28 +31,30 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 	const handleAddClassroom = () => {
 		const classNameContainsNonWhitespaceChars = newClassroomName.replace(/\s+/g, '') != ''
 		if (!classNameContainsNonWhitespaceChars) {
-			alert('Classroom name cannot be empty')
+			enqueueSnackbar('Classroom name cannot be empty', { variant: 'error' })
 			return
 		}
 
 		addClassroom(newClassroomName, user)
-		setNewClassroomName('')
-		setOpen(false)
+			.then(() => {
+				enqueueSnackbar(`Created classroom "${newClassroomName}"`, {
+					variant: 'success',
+				})
+				handleClose()
+				setNewClassroomName('')
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar('There was an error creating the classsroom.', {
+					variant: 'error',
+				})
+			})
 	}
 
 	const openButton = (
 		<Button variant='contained' onClick={handleClickOpen}>
 			Create!
 		</Button>
-	)
-
-	const actionButtons = (
-		<DialogActions>
-			<Button onClick={handleClose}>Cancel</Button>
-			<Button variant='contained' onClick={handleAddClassroom}>
-				Create
-			</Button>
-		</DialogActions>
 	)
 
 	return (
@@ -67,7 +72,12 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 						value={newClassroomName}
 					/>
 				</DialogContent>
-				{actionButtons}
+				<DialogActions>
+					<Button onClick={handleClose}>Cancel</Button>
+					<Button variant='contained' onClick={handleAddClassroom}>
+						Create
+					</Button>
+				</DialogActions>
 			</Dialog>
 		</Grid>
 		// <ClassroomModalContent

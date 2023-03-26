@@ -4,12 +4,12 @@ import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import { Classroom, Item, Player } from '../../types'
 import { capitalize } from 'lodash'
+import { Classroom, Item, Player } from '../../types'
 import { purchaseItem, updateAvatar } from '../../utils/mutations'
-import { useState } from 'react'
 
 import { styled } from '@mui/system'
+import { useSnackbar } from 'notistack'
 
 interface Props {
 	item: Item
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export function ItemCard(props: Props) {
-	const [text, setText] = useState('')
+	const { enqueueSnackbar } = useSnackbar()
 
 	console.log('item')
 	console.log(props.item)
@@ -40,12 +40,7 @@ export function ItemCard(props: Props) {
 
 	const handlePurchase = async () => {
 		const res = await purchaseItem(props.classroom.id, props.player.id, props.item)
-		// || null
-		console.log(res)
-
-		if (res) {
-			setText(res)
-		}
+		enqueueSnackbar(res, { variant: res === 'Success!' ? 'success' : 'error' })
 	}
 
 	const handleEquip = async () => {
@@ -57,15 +52,6 @@ export function ItemCard(props: Props) {
 	const confirmActions =
 		props.type === 'shop' ? (
 			<>
-				<Typography
-					sx={{
-						color: text !== 'Success!' ? '#B53737' : 'green',
-						marginBottom: '5px',
-					}}
-					variant='subtitle2'
-				>
-					{text}
-				</Typography>
 				<Button variant='contained' color='success' size='small' onClick={handlePurchase}>
 					Purchase
 				</Button>

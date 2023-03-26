@@ -132,7 +132,7 @@ export default function RepeatableTableStudent({
 								<TableCell>Pending Completions</TableCell>
 								<TableCell>Confirmed Completions</TableCell>
 								<TableCell>Reward </TableCell>
-								<TableCell sx={{ m: '1%', p: '1%' }}></TableCell>
+								<TableCell>Open</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>

@@ -18,6 +18,7 @@ import {
 	BoxInModal,
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
+import { useSnackbar } from 'notistack'
 
 function containsOnlyNumbers(str: string) {
 	return /^\d+$/.test(str)
@@ -43,6 +44,8 @@ export default function RepeatableModalTeacher({
 	repeatable: Repeatable
 	classroom: Classroom
 }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState(repeatable.name)
 	const [description, setDescription] = useState(repeatable.description)
@@ -71,10 +74,16 @@ export default function RepeatableModalTeacher({
 	}
 	// Handle the click of an edit button
 	const handleEdit = () => {
-		// if (maxCompletionsIsInvalid(maxCompletions)) {
-		// 	window.alert('Max completions must be an integer greater than 0')
-		// 	return
-		// }
+		if (name === '') {
+			enqueueSnackbar('You need to provide a name for the repeatable', { variant: 'error' })
+			return
+		}
+
+		if (maxCompletionsIsInvalid(maxCompletions)) {
+			setMaxCompletions('1')
+			enqueueSnackbar('Max completions must be a positive integer', { variant: 'error' })
+			return
+		}
 
 		const updatedRepeatable = {
 			name: name,
@@ -84,9 +93,15 @@ export default function RepeatableModalTeacher({
 		}
 
 		updateRepeatable(classroom.id, updatedRepeatable)
-
-		handleClose()
-		setIsEditing(false)
+			.then(() => {
+				handleClose()
+				setIsEditing(false)
+				enqueueSnackbar('Edited repeatable!', { variant: 'success' })
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar('There was an issue editing the repeatable', { variant: 'error' })
+			})
 	}
 
 	const toggleIsEditing = () => {
@@ -96,7 +111,14 @@ export default function RepeatableModalTeacher({
 	const handleDelete = () => {
 		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this repeatable task?')) {
-			deleteRepeatable(classroom.id, repeatable.id).catch(console.error)
+			deleteRepeatable(classroom.id, repeatable.id)
+				.then(() => {
+					enqueueSnackbar('Deleted repeatable!', { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar(err.message, { variant: 'error' })
+				})
 		}
 	}
 

@@ -14,6 +14,7 @@ import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
 import ModalsStudent from './ModalsStudent'
+import { useSnackbar } from 'notistack'
 
 function a11yProps(index: number) {
 	return {
@@ -37,6 +38,8 @@ export default function TasksTableStudent({
 	classroom: Classroom
 	player: Player
 }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [taskCategory, setTaskCategory] = useState<0 | 1 | 2 | 3>(0)
 	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
 		setTaskCategory(newValue)
@@ -58,9 +61,17 @@ export default function TasksTableStudent({
 		// Call the `completeTask` mutation
 		if (window.confirm('Are you sure you want to mark this task as complete?')) {
 			completeTask(classroom.id, task.id, player.id)
+				.then(() => {
+					enqueueSnackbar(`Task "${task.name}" marked as complete!`, { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an issue completing the task.', { variant: 'error' })
+				})
 		}
 	}
 
+	console.log(assigned)
 	return (
 		<Box>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
