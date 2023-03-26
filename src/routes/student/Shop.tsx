@@ -16,6 +16,7 @@ import { ItemCard } from '../../components/student/ItemCard'
 // import { Classroom, Player } from '../../types'
 import { useState } from 'react'
 import wood2 from '/src/assets/Wood2.png'
+import { Typography } from '@mui/material'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -63,14 +64,15 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 		height: '100%',
 		width: '100%',
 		backgroundImage: `url(${wood2})`,
-		backgroundSize: 'contain',
+		backgroundSize: 'cover',
 	}
 
 	return (
 		<Grid item xs={12}>
-			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container spacing={3}>
+			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
+				{/* spacing={3} for above grid? */}
 				<Grid item xs={12}>
-					<h3>Shop</h3>
+					<Typography variant='h2'>Shop</Typography>
 					<h5>Purchase avatars, accessories, and special rewards from the shop!</h5>
 				</Grid>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

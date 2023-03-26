@@ -36,8 +36,8 @@ const Drawer = styled(MuiDrawer, {
 				width: theme.spacing(9),
 			},
 		}),
+		backgroundColor: '#4a2511',
 	},
-	backgroundColor: '#f3f8df',
 }))
 
 export default function ClassroomSidebar({ role }: { role: UserRole }) {
@@ -58,7 +58,7 @@ export default function ClassroomSidebar({ role }: { role: UserRole }) {
 					px: [1],
 				}}
 			>
-				<IconButton onClick={toggleDrawer}>
+				<IconButton onClick={toggleDrawer} sx={{ color: 'white' }}>
 					{open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
 				</IconButton>
 			</Toolbar>

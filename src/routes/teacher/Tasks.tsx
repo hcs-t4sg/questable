@@ -50,12 +50,12 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant='h5'>Create a New Task</Typography>
+				<Typography variant='h4'>Create a New Task</Typography>
 				<CreateTaskModal classroom={classroom} player={player} />
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant='h5'>View and Edit Tasks</Typography>
+				<Typography variant='h4'>View and Edit Tasks</Typography>
 				<Tabs value={page} onChange={handleTabChange}>
 					<Tab label='One Time' />
 					<Tab label='Repeatable' />

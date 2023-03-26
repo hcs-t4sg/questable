@@ -38,7 +38,7 @@ export default function ClassSettings({
 				</Card>
 			</Grid>
 			<Grid item xs={12}>
-				<Typography variant='h5'>Teacher Profile</Typography>
+				<Typography variant='h4'>Teacher Profile</Typography>
 				<PlayerCard player={player} user={user} classroom={classroom} />
 			</Grid>
 		</>

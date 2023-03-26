@@ -31,10 +31,10 @@ const mdTheme = createTheme({
 			main: '#4a2511',
 		},
 		secondary: {
-			main: '#83924c',
+			main: '#93a262',
 		},
 		success: {
-			main: '#92ae8c',
+			main: '#93a262',
 		},
 	},
 	typography: {
@@ -42,9 +42,10 @@ const mdTheme = createTheme({
 		h2: {
 			fontFamily: 'Superscript',
 		},
-		// h4: {
-		// 	fontFamily: 'Superscript',
-		// },
+		h4: {
+			paddingBottom: '10px',
+			fontWeight: 'bold',
+		},
 	},
 	components: {
 		MuiTable: {
@@ -63,6 +64,25 @@ const mdTheme = createTheme({
 		MuiButton: {
 			defaultProps: {
 				variant: 'contained',
+			},
+		},
+		MuiTypography: {
+			styleOverrides: {
+				root: {
+					textDecoration: 1,
+				},
+			},
+		},
+		MuiListItemButton: {
+			styleOverrides: {
+				root: {
+					'&$selected': {
+						backgroundColor: 'red',
+						'&:hover': {
+							backgroundColor: 'orange',
+						},
+					},
+				},
 			},
 		},
 	},
@@ -116,12 +136,11 @@ export default function App() {
 							<Button
 								variant='contained'
 								size='small'
+								color='success'
 								sx={{
 									marginTop: '5px',
 									marginBottom: '5px',
 									marginRight: '20px',
-									backgroundColor: '#92ae83',
-									color: '#4a2511',
 								}}
 								component={Link}
 								to={'/settings'}
@@ -131,12 +150,11 @@ export default function App() {
 							<Button
 								variant='contained'
 								size='small'
+								color='success'
 								sx={{
 									marginTop: '5px',
 									marginBottom: '5px',
 									display: currentUser.data ? 'inline' : 'none',
-									backgroundColor: '#92ae83',
-									color: '#4a2511',
 								}}
 								onClick={() => auth.signOut()}
 							>

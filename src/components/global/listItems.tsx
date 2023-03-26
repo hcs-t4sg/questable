@@ -10,60 +10,78 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import ForumIcon from '@mui/icons-material/Forum'
 import * as React from 'react'
-import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { styled } from '@mui/material/styles'
+import { Link } from 'react-router-dom'
 
 // Handles list of pages on sidebar. Edit if you want to add more pages
+
+const ListItemButtonStyled = styled(ListItemButton)({
+	color: 'white',
+	'&.Mui-selected': {
+		backgroundColor: '#733a1b',
+	},
+	'&.Mui-focusVisible': {
+		backgroundColor: '#733a1b',
+	},
+	':hover': {
+		backgroundColor: '#733a1b',
+	},
+}) as typeof ListItemButton
+
+const ListItemIconStyled = styled(ListItemIcon)({
+	color: 'white',
+}) as typeof ListItemButton
 
 export function MainListItemsTeacher() {
 	const [selected, setSelected] = useState<0 | 1 | 2 | 3>(0)
 
 	return (
 		<React.Fragment>
-			<ListItemButton
+			<ListItemButtonStyled
 				component={Link}
 				to='tasks'
 				onClick={() => setSelected(0)}
 				selected={selected === 0}
 			>
-				<ListItemIcon>
+				<ListItemIconStyled>
 					<AssignmentIcon />
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary='Tasks' />
-			</ListItemButton>
-			<ListItemButton
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
 				component={Link}
 				to='requests'
 				onClick={() => setSelected(1)}
 				selected={selected === 1}
 			>
-				<ListItemIcon>
+				<ListItemIconStyled>
 					<EmailIcon />
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary='Requests' />
-			</ListItemButton>
-			<ListItemButton
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
 				component={Link}
 				to='class-teacher'
 				onClick={() => setSelected(2)}
 				selected={selected === 2}
 			>
-				<ListItemIcon>
+				<ListItemIconStyled>
 					<GroupIcon />
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary='Class' />
-			</ListItemButton>
-			<ListItemButton
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
 				component={Link}
 				to='class-settings'
 				onClick={() => setSelected(3)}
 				selected={selected === 3}
 			>
-				<ListItemIcon>
+				<ListItemIconStyled>
 					<SettingsIcon />
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary='Class Settings' />
-			</ListItemButton>
+			</ListItemButtonStyled>
 		</React.Fragment>
 	)
 }
@@ -73,61 +91,61 @@ export function MainListItemsStudent() {
 
 	return (
 		<React.Fragment>
-			<ListItemButton
+			<ListItemButtonStyled
 				component={Link}
 				to='main'
 				onClick={() => setSelected(0)}
 				selected={selected === 0}
 			>
-				<ListItemIcon>
+				<ListItemIconStyled>
 					<FortIcon />
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary='Main' />
-			</ListItemButton>
-			<ListItemButton
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
 				component={Link}
 				to='shop'
 				onClick={() => setSelected(1)}
 				selected={selected === 1}
 			>
-				<ListItemIcon>
+				<ListItemIconStyled>
 					<SellIcon />
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary='Shop' />
-			</ListItemButton>
-			<ListItemButton
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
 				component={Link}
 				to='class-student'
 				onClick={() => setSelected(2)}
 				selected={selected === 2}
 			>
-				<ListItemIcon>
+				<ListItemIconStyled>
 					<GroupIcon />
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary='Class' />
-			</ListItemButton>
-			<ListItemButton
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
 				component={Link}
 				to='inventory'
 				onClick={() => setSelected(3)}
 				selected={selected === 3}
 			>
-				<ListItemIcon>
+				<ListItemIconStyled>
 					<InventoryIcon />
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary='Inventory' />
-			</ListItemButton>
-			<ListItemButton
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
 				component={Link}
 				to='forum'
 				onClick={() => setSelected(4)}
 				selected={selected === 4}
 			>
-				<ListItemIcon>
+				<ListItemIconStyled>
 					<ForumIcon />
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary='Forum' />
-			</ListItemButton>
+			</ListItemButtonStyled>
 		</React.Fragment>
 	)
 }

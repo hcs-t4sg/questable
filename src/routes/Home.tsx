@@ -65,7 +65,7 @@ export default function Home({ user }: { user: User }) {
 		height: '100%',
 		width: '100%',
 		backgroundImage: `url(${wood1})`,
-		backgroundSize: 'contain',
+		backgroundSize: 'cover',
 	}
 
 	return (
@@ -77,13 +77,14 @@ export default function Home({ user }: { user: User }) {
 							sx={{
 								width: '100%',
 								height: 300,
-								border: '2px dashed',
+								border: '10px solid',
 								borderColor: 'primary.main',
 								display: 'flex',
 								flexWrap: 'wrap',
 								justifyContent: 'center',
 								alignItems: 'center',
 								textAlign: 'center',
+								boxShadow: 2,
 							}}
 						>
 							<Typography variant='h3' sx={{ flex: '100%' }}>
@@ -101,7 +102,7 @@ export default function Home({ user }: { user: User }) {
 					</div>
 				</Grid>
 				<Grid item xs={12}>
-					<Typography variant='h5' sx={{ flex: '100%' }}>
+					<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
 						Pinned Classrooms
 					</Typography>
 				</Grid>
@@ -111,7 +112,7 @@ export default function Home({ user }: { user: User }) {
 					</Grid>
 				))}
 				<Grid item xs={12}>
-					<Typography variant='h5' sx={{ flex: '100%' }}>
+					<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
 						Joined Classrooms
 					</Typography>
 				</Grid>
@@ -121,7 +122,7 @@ export default function Home({ user }: { user: User }) {
 					</Grid>
 				))}
 				<Grid item xs={12}>
-					<Typography variant='h5' sx={{ flex: '100%' }}>
+					<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
 						Created Classrooms
 					</Typography>
 				</Grid>

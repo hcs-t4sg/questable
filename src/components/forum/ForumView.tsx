@@ -15,6 +15,7 @@ export default function ForumView({ player, classroom }: { player: Player; class
 		<>
 			<Grid item xs={12}>
 				<Typography variant='h2'>Forum</Typography>
+				<h5>Post questions or comments in the class discussion below!</h5>
 			</Grid>
 			<Grid item xs={2}>
 				<Button onClick={() => setOpen(true)} variant='contained' disableElevation>
