@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-// import Paper from '@mui/material/Paper'
+import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -69,10 +69,10 @@ function RepeatableTableRow({
 
 	return (
 		<TableRow key={repeatable.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+			<TableCell>{rewardPotion(repeatable.reward)}</TableCell>
 			<TableCell component='th' scope='row'>
 				{repeatable.name}
 			</TableCell>
-			<TableCell>{rewardPotion(repeatable.reward)}</TableCell>
 			<TableCell align='left'>{truncate(repeatable.description)}</TableCell>
 			<TableCell align='left'>
 				{completions || completions === 0 ? `${completions}` : 'Loading'}
@@ -132,12 +132,12 @@ export default function RepeatableTableStudent({
 	return (
 		<Grid item xs={12}>
 			{repeatables ? (
-				<TableContainer sx={{ backgroundColor: 'white' }}>
+				<TableContainer component={Paper}>
 					<Table aria-label='simple table' sx={{ border: 'none' }}>
 						<TableHead>
 							<TableRow>
+								<TableCell sx={{ width: 60 }} />
 								<TableCell>Name</TableCell>
-								<TableCell>Potion</TableCell>
 								<TableCell>Description</TableCell>
 								<TableCell>Pending Completions</TableCell>
 								<TableCell>Confirmed Completions</TableCell>

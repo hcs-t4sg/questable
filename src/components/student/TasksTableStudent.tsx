@@ -16,6 +16,7 @@ import { completeTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
 import { useSnackbar } from 'notistack'
 import ModalsStudent, { rewardPotion } from './ModalsStudent'
+import Paper from '@mui/material/Paper'
 
 function a11yProps(index: number) {
 	return {
@@ -91,12 +92,12 @@ export default function TasksTableStudent({
 				</Tabs>
 			</Box>
 			<Grid item xs={12}>
-				<TableContainer sx={{ backgroundColor: 'white' }}>
+				<TableContainer component={Paper}>
 					<Table aria-label='simple table' sx={{ border: 'none' }}>
 						<TableHead>
 							<TableRow>
+								<TableCell sx={{ width: 60 }} />
 								<TableCell>Name</TableCell>
-								<TableCell>Potion</TableCell>
 								<TableCell>Description</TableCell>
 								<TableCell>Deadline</TableCell>
 								<TableCell align='center'>Reward Amount</TableCell>
@@ -113,8 +114,8 @@ export default function TasksTableStudent({
 										key={task.id}
 										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 									>
-										<TableCell align='left'>{task.name}</TableCell>
 										<TableCell align='left'>{rewardPotion(task.reward)}</TableCell>
+										<TableCell align='left'>{task.name}</TableCell>
 										<TableCell align='left'>
 											{/* {task.description || 'None'} */}
 											{truncate(task.description) || 'None'}
