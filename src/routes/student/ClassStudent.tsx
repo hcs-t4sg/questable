@@ -88,6 +88,7 @@ export default function ClassStudent({
 				</Card>
 			</Grid>
 
+			{/* <Grid item xs={12}> */}
 			{students ? (
 				students.map((student) => (
 					<Card sx={{ width: 0.22, m: 2 }} key={student.id}>
