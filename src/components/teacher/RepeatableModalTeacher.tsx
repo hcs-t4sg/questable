@@ -265,14 +265,15 @@ export default function RepeatableModalTeacher({
 						<Button
 							onClick={handleCancel}
 							sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
-							// variant='contained'
+							variant='text'
 						>
 							Cancel
 						</Button>
 						<Button
 							onClick={handleEdit}
 							sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
-							// variant='contained'
+							variant='contained'
+							color='success'
 						>
 							Save Changes
 						</Button>

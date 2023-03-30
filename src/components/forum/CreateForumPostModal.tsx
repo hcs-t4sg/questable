@@ -95,7 +95,9 @@ export default function CreateForumPostModal({
 
 	const submitButton = (
 		<DialogActions>
-			<Button onClick={handleClose}>Cancel</Button>
+			<Button variant='text' onClick={handleClose}>
+				Cancel
+			</Button>
 			<Button variant='contained' color='success' onClick={handleSubmit}>
 				Submit
 			</Button>

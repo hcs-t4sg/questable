@@ -27,6 +27,35 @@ interface PropsRepeatables {
 	type: 'repeatable'
 }
 
+export function rewardPotion(rewardAmount: number) {
+	const rewardMatch =
+		rewardAmount === 10
+			? blue3
+			: rewardAmount === 20
+			? green3
+			: rewardAmount === 30
+			? purple3
+			: rewardAmount === 40
+			? red3
+			: ''
+
+	return (
+		<Box
+			component='img'
+			sx={{
+				imageRendering: 'pixelated',
+				maxHeight: { xs: 140, md: 200 },
+				maxWidth: { xs: 140, md: 200 },
+				position: 'relative',
+			}}
+			alt='Potion'
+			src={rewardMatch}
+			height='100%'
+			width='100%'
+		/>
+	)
+}
+
 export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 	const { enqueueSnackbar } = useSnackbar()
 
@@ -98,20 +127,6 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 			<Cluster title='Completions' data={props.taskOrRepeatable.requestCount} />
 		)
 
-	const rewardAmount = props.taskOrRepeatable.reward
-	console.log(rewardAmount)
-
-	const rewardsMatch =
-		rewardAmount === 10
-			? blue3
-			: rewardAmount === 20
-			? green3
-			: rewardAmount === 30
-			? purple3
-			: rewardAmount === 40
-			? red3
-			: ''
-
 	return (
 		<Box>
 			{openButton}
@@ -139,19 +154,7 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 							</StudentBoxInModal>
 						</Grid>
 						<Grid item xs={6} marginTop={10}>
-							<Box
-								component='img'
-								sx={{
-									imageRendering: 'pixelated',
-									maxHeight: { xs: 140, md: 200 },
-									maxWidth: { xs: 140, md: 200 },
-									position: 'relative',
-								}}
-								alt='Potion'
-								src={rewardsMatch}
-								height='100%'
-								width='100%'
-							/>
+							{rewardPotion(props.taskOrRepeatable.reward)}
 							<Typography fontWeight='light' variant='h6' fontFamily='Superscript' textAlign='left'>
 								Potion Collection
 							</Typography>

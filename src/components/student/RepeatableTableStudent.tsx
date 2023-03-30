@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
+// import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -11,15 +11,16 @@ import { useEffect, useState } from 'react'
 import { Classroom, Player, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
 // import RepeatableModalStudent from './RepeatableModalStudent'
-import ModalsStudent from './ModalsStudent'
+import ModalsStudent, { rewardPotion } from './ModalsStudent'
 import Loading from '../global/Loading'
+import { truncate } from './TasksTableStudent'
 
-function truncate(description: string) {
-	if (description.length > 50) {
-		return description.slice(0, 50) + '...'
-	}
-	return description
-}
+// export function truncate(description: string) {
+// 	if (description.length > 50) {
+// 		return description.slice(0, 50) + '...'
+// 	}
+// 	return description
+// }
 
 function RepeatableTableRow({
 	repeatable,
@@ -71,6 +72,7 @@ function RepeatableTableRow({
 			<TableCell component='th' scope='row'>
 				{repeatable.name}
 			</TableCell>
+			<TableCell>{rewardPotion(repeatable.reward)}</TableCell>
 			<TableCell align='left'>{truncate(repeatable.description)}</TableCell>
 			<TableCell align='left'>
 				{completions || completions === 0 ? `${completions}` : 'Loading'}
@@ -78,7 +80,7 @@ function RepeatableTableRow({
 			<TableCell align='left'>
 				{confirmations || confirmations === 0 ? `${confirmations}` : 'Loading'}
 			</TableCell>
-			<TableCell align='left'>{repeatable.reward}</TableCell>
+			<TableCell align='left'>${repeatable.reward}</TableCell>
 
 			<TableCell align='right' sx={{ width: 0.01 }}>
 				{/* <RepeatableModalStudent
@@ -130,11 +132,12 @@ export default function RepeatableTableStudent({
 	return (
 		<Grid item xs={12}>
 			{repeatables ? (
-				<TableContainer component={Paper}>
-					<Table sx={{ minWidth: 650 }} aria-label='simple table'>
+				<TableContainer sx={{ backgroundColor: 'white' }}>
+					<Table aria-label='simple table' sx={{ border: 'none' }}>
 						<TableHead>
 							<TableRow>
-								<TableCell>Task</TableCell>
+								<TableCell>Name</TableCell>
+								<TableCell>Potion</TableCell>
 								<TableCell>Description</TableCell>
 								<TableCell>Pending Completions</TableCell>
 								<TableCell>Confirmed Completions</TableCell>

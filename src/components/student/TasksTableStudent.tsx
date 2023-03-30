@@ -14,14 +14,21 @@ import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
-import ModalsStudent from './ModalsStudent'
 import { useSnackbar } from 'notistack'
+import ModalsStudent, { rewardPotion } from './ModalsStudent'
 
 function a11yProps(index: number) {
 	return {
 		id: `simple-tab-${index}`,
 		'aria-controls': `simple-tabpanel-${index}`,
 	}
+}
+
+export function truncate(description: string) {
+	if (description.length > 50) {
+		return description.slice(0, 50) + '...'
+	}
+	return description
 }
 
 export default function TasksTableStudent({
@@ -89,6 +96,7 @@ export default function TasksTableStudent({
 						<TableHead>
 							<TableRow>
 								<TableCell>Name</TableCell>
+								<TableCell>Potion</TableCell>
 								<TableCell>Description</TableCell>
 								<TableCell>Deadline</TableCell>
 								<TableCell align='center'>Reward Amount</TableCell>
@@ -106,7 +114,11 @@ export default function TasksTableStudent({
 										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 									>
 										<TableCell align='left'>{task.name}</TableCell>
-										<TableCell align='left'>{task.description || 'None'}</TableCell>
+										<TableCell align='left'>{rewardPotion(task.reward)}</TableCell>
+										<TableCell align='left'>
+											{/* {task.description || 'None'} */}
+											{truncate(task.description) || 'None'}
+										</TableCell>
 										<TableCell align='left'>
 											{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
 										</TableCell>
