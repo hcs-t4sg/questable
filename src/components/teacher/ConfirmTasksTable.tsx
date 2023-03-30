@@ -21,13 +21,7 @@ import { StyledTableRow } from '../../styles/TaskTableStyles'
 import { Grid } from '@mui/material'
 import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
-
-function truncate(description: string) {
-	if (description.length > 40) {
-		return description.slice(0, 40) + '...'
-	}
-	return description
-}
+import { truncate } from '../../utils/helperFunctions'
 
 const formatStatus = (task: CompletedTask) => {
 	const playerCompletion = task.completionTime

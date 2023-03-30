@@ -90,13 +90,6 @@ export default function Inventory({ player, classroom }: { player: Player; class
 	console.log(inventoryObjects)
 	console.log(getBodyItems())
 
-	const divStyle = {
-		height: '100%',
-		width: '100%',
-		backgroundImage: `url(${wood2})`,
-		backgroundSize: 'cover',
-	}
-
 	return (
 		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
@@ -114,12 +107,22 @@ export default function Inventory({ player, classroom }: { player: Player; class
 						<Tab label='Shoes' {...a11yProps(5)} />
 					</Tabs>
 				</Box>
-				<div style={divStyle}>
+				<Box
+					sx={{
+						backgroundImage: `url(${wood2})`,
+						backgroundSize: 'cover',
+						height: '100%',
+						width: '100%',
+					}}
+				>
 					<TabPanel value={value} index={0}>
-						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-							{inventoryObjects.map((item, index) => (
-								<Grid item xs={12} sm={6} md={4} key={index}>
-									{/* <InventoryItemCard item={item} player={player} classroom={classroom} /> */}
+						{inventoryObjects.length === 0 ? (
+							<Typography variant='h5' color='white' align='center'>
+								No Items Yet!
+							</Typography>
+						) : (
+							inventoryObjects.map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
 									<ItemCard
 										item={item}
 										player={player}
@@ -129,15 +132,14 @@ export default function Inventory({ player, classroom }: { player: Player; class
 										isBody={false}
 									/>
 								</Grid>
-							))}
-						</Grid>
+							))
+						)}
 					</TabPanel>
 
 					<TabPanel value={value} index={1}>
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{getBodyItems().map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									{/* <InventoryItemCard item={item} player={player} classroom={classroom} /> */}
 									<ItemCard
 										item={item}
 										player={player}
@@ -152,77 +154,97 @@ export default function Inventory({ player, classroom }: { player: Player; class
 					</TabPanel>
 
 					<TabPanel value={value} index={2}>
-						{inventoryObjects
-							.filter((item) => item.type === 'hair')
-							.map((item, index) => (
-								<Grid item xs={12} sm={6} md={4} key={index}>
-									{/* <InventoryItemCard item={item} player={player} classroom={classroom} /> */}
-									<ItemCard
-										item={item}
-										player={player}
-										classroom={classroom}
-										itemPrice=''
-										type='inventory'
-										isBody={false}
-									/>
-								</Grid>
-							))}
+						{inventoryObjects.length === 0 ? (
+							<Typography variant='h5' color='white' align='center'>
+								No Items Yet!
+							</Typography>
+						) : (
+							inventoryObjects
+								.filter((item) => item.type === 'hair')
+								.map((item, index) => (
+									<Grid item xs={2} sm={3} md={3} key={index}>
+										<ItemCard
+											item={item}
+											player={player}
+											classroom={classroom}
+											itemPrice=''
+											type='inventory'
+											isBody={false}
+										/>
+									</Grid>
+								))
+						)}
 					</TabPanel>
 
 					<TabPanel value={value} index={3}>
-						{inventoryObjects
-							.filter((item) => item.type === 'shirt')
-							.map((item, index) => (
-								<Grid item xs={12} sm={6} md={4} key={index}>
-									{/* <InventoryItemCard item={item} player={player} classroom={classroom} /> */}
-									<ItemCard
-										item={item}
-										player={player}
-										classroom={classroom}
-										itemPrice=''
-										type='inventory'
-										isBody={false}
-									/>
-								</Grid>
-							))}
+						{inventoryObjects.length === 0 ? (
+							<Typography variant='h5' color='white' align='center'>
+								No Items Yet!
+							</Typography>
+						) : (
+							inventoryObjects
+								.filter((item) => item.type === 'shirt')
+								.map((item, index) => (
+									<Grid item xs={2} sm={3} md={3} key={index}>
+										<ItemCard
+											item={item}
+											player={player}
+											classroom={classroom}
+											itemPrice=''
+											type='inventory'
+											isBody={false}
+										/>
+									</Grid>
+								))
+						)}
 					</TabPanel>
 
 					<TabPanel value={value} index={4}>
-						{inventoryObjects
-							.filter((item) => item.type === 'pants')
-							.map((item, index) => (
-								<Grid item xs={12} sm={6} md={4} key={index}>
-									{/* <InventoryItemCard item={item} player={player} classroom={classroom} /> */}
-									<ItemCard
-										item={item}
-										player={player}
-										classroom={classroom}
-										itemPrice=''
-										type='inventory'
-										isBody={false}
-									/>
-								</Grid>
-							))}
+						{inventoryObjects.length === 0 ? (
+							<Typography variant='h5' color='white' align='center'>
+								No Items Yet!
+							</Typography>
+						) : (
+							inventoryObjects
+								.filter((item) => item.type === 'pants')
+								.map((item, index) => (
+									<Grid item xs={2} sm={3} md={3} key={index}>
+										<ItemCard
+											item={item}
+											player={player}
+											classroom={classroom}
+											itemPrice=''
+											type='inventory'
+											isBody={false}
+										/>
+									</Grid>
+								))
+						)}
 					</TabPanel>
 
 					<TabPanel value={value} index={5}>
-						{inventoryObjects
-							.filter((item) => item.type === 'shoes')
-							.map((item, index) => (
-								<Grid item xs={12} sm={6} md={4} key={index}>
-									{/* <InventoryItemCard item={item} player={player} classroom={classroom} /> */}
-									<ItemCard
-										item={item}
-										player={player}
-										classroom={classroom}
-										itemPrice=''
-										type='inventory'
-										isBody={true}
-									/>
-								</Grid>
-							))}
+						{inventoryObjects.length === 0 ? (
+							<Typography variant='h5' color='white' align='center'>
+								No Items Yet!
+							</Typography>
+						) : (
+							inventoryObjects
+								.filter((item) => item.type === 'shoes')
+								.map((item, index) => (
+									<Grid item xs={2} sm={3} md={3} key={index}>
+										<ItemCard
+											item={item}
+											player={player}
+											classroom={classroom}
+											itemPrice=''
+											type='inventory'
+											isBody={true}
+										/>
+									</Grid>
+								))
+						)}
 					</TabPanel>
-				</div>
+				</Box>
 			</Grid>
 		</Grid>
 	)

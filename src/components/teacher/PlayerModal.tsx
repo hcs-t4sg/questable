@@ -46,19 +46,11 @@ export default function PlayerModal({
 		setOpen(false)
 	}
 
-	const openButton = (
-		// <IconButton sx={{ fontFamily: 'Andale Mono' }} onClick={handleClickOpen}>
-		// 	Edit Profile
-		// 	<OpenInNewIcon />
-		// </IconButton>
-		<Button onClick={handleClickOpen} endIcon={<OpenInNewIcon />}>
-			Edit Profile
-		</Button>
-	)
-
 	return (
-		<div>
-			{openButton}
+		<>
+			<Button onClick={handleClickOpen} endIcon={<OpenInNewIcon />}>
+				Edit Profile
+			</Button>
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>Edit Profile</DialogTitle>
 				<DialogContent>
@@ -100,6 +92,6 @@ export default function PlayerModal({
 					</DialogActions>
 				</DialogContent>
 			</Dialog>
-		</div>
+		</>
 	)
 }

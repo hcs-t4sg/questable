@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { Classroom } from '../../types'
 import ConfirmRepeatablesTable from './ConfirmRepeatablesTable'
 import ConfirmTasksTable from './ConfirmTasksTable'
+// import { truncate } from '../../utils/helperFunctions'
 
 export default function ConfirmationTables({ classroom }: { classroom: Classroom }) {
 	const [page, setPage] = useState(0)

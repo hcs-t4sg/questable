@@ -22,13 +22,7 @@ import TaskModalTeacher from './TaskModalTeacher'
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'
 import { enqueueSnackbar } from 'notistack'
-
-function truncate(description: string) {
-	if (description.length > 50) {
-		return description.slice(0, 50) + '...'
-	}
-	return description
-}
+import { truncate } from '../../utils/helperFunctions'
 
 function percentDone(task: Task) {
 	const numCompleted = task.completed?.length

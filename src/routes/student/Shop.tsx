@@ -53,13 +53,6 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 		setValue(newValue)
 	}
 
-	const divStyle = {
-		height: '100%',
-		width: '100%',
-		backgroundImage: `url(${wood2})`,
-		backgroundSize: 'cover',
-	}
-
 	return (
 		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
@@ -76,12 +69,19 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Tab label='Shoes' {...a11yProps(3)} />
 					</Tabs>
 				</Box>
-				<div style={divStyle}>
+				<Box
+					sx={{
+						backgroundImage: `url(${wood2})`,
+						backgroundSize: 'cover',
+						height: '100%',
+						width: '100%',
+					}}
+				>
+					{' '}
 					<TabPanel value={value} index={0}>
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{hairs.map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
 									<ItemCard
 										item={item}
 										player={player}
@@ -98,7 +98,6 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{shirts.map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
 									<ItemCard
 										item={item}
 										player={player}
@@ -115,7 +114,6 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{pants.map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
 									<ItemCard
 										item={item}
 										player={player}
@@ -132,7 +130,6 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{shoes.map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
 									<ItemCard
 										item={item}
 										player={player}
@@ -145,7 +142,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 							))}
 						</Grid>
 					</TabPanel>
-				</div>
+				</Box>
 			</Grid>
 		</Grid>
 	)

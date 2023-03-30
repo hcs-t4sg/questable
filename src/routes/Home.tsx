@@ -66,19 +66,19 @@ export default function Home({ user }: { user: User }) {
 		})
 	}
 
-	const divStyle = {
-		height: '100%',
-		width: '100%',
-		backgroundImage: `url(${wood1})`,
-		backgroundSize: 'cover',
-	}
-
 	if (!(classrooms && pinned))
 		return (
 			<Layout>
 				<Grid container spacing={3}>
 					<Grid item xs={12}>
-						<div style={divStyle}>
+						<Box
+							sx={{
+								height: '100%',
+								width: '100%',
+								backgroundImage: `url(${wood1})`,
+								backgroundSize: 'cover',
+							}}
+						>
 							<Box
 								sx={{
 									width: '100%',
@@ -105,7 +105,7 @@ export default function Home({ user }: { user: User }) {
 									</Grid>
 								</Grid>
 							</Box>
-						</div>
+						</Box>
 					</Grid>
 					<Grid item xs={12}>
 						<Loading>
@@ -160,7 +160,14 @@ export default function Home({ user }: { user: User }) {
 		<Layout>
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
-					<div style={divStyle}>
+					<Box
+						sx={{
+							height: '100%',
+							width: '100%',
+							backgroundImage: `url(${wood1})`,
+							backgroundSize: 'cover',
+						}}
+					>
 						<Box
 							sx={{
 								width: '100%',
@@ -187,7 +194,7 @@ export default function Home({ user }: { user: User }) {
 								</Grid>
 							</Grid>
 						</Box>
-					</div>
+					</Box>
 				</Grid>
 				{classroomsSection}
 			</Grid>

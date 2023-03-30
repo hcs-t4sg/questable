@@ -13,7 +13,7 @@ import { db } from '../../utils/firebase'
 // import RepeatableModalStudent from './RepeatableModalStudent'
 import ModalsStudent, { rewardPotion } from './ModalsStudent'
 import Loading from '../global/Loading'
-import { truncate } from './TasksTableStudent'
+import { truncate } from '../../utils/helperFunctions'
 
 // export function truncate(description: string) {
 // 	if (description.length > 50) {
