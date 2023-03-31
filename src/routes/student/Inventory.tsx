@@ -154,7 +154,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 					</TabPanel>
 
 					<TabPanel value={value} index={2}>
-						{inventoryObjects.length === 0 ? (
+						{inventoryObjects.filter((item) => item.type === 'hair').length === 0 ? (
 							<Typography variant='h5' color='white' align='center'>
 								No Items Yet!
 							</Typography>
@@ -177,7 +177,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 					</TabPanel>
 
 					<TabPanel value={value} index={3}>
-						{inventoryObjects.length === 0 ? (
+						{inventoryObjects.filter((item) => item.type === 'shirt').length === 0 ? (
 							<Typography variant='h5' color='white' align='center'>
 								No Items Yet!
 							</Typography>
@@ -200,7 +200,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 					</TabPanel>
 
 					<TabPanel value={value} index={4}>
-						{inventoryObjects.length === 0 ? (
+						{inventoryObjects.filter((item) => item.type === 'pants').length === 0 ? (
 							<Typography variant='h5' color='white' align='center'>
 								No Items Yet!
 							</Typography>
@@ -223,7 +223,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 					</TabPanel>
 
 					<TabPanel value={value} index={5}>
-						{inventoryObjects.length === 0 ? (
+						{inventoryObjects.filter((item) => item.type === 'shoes').length === 0 ? (
 							<Typography variant='h5' color='white' align='center'>
 								No Items Yet!
 							</Typography>
