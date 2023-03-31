@@ -18,15 +18,10 @@ import {
 	getRepeatableCompletionTimes,
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
+import { Grid } from '@mui/material'
 import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
-
-function truncate(description: string) {
-	if (description.length > 40) {
-		return description.slice(0, 40) + '...'
-	}
-	return description
-}
+import { truncate } from '../../utils/helperFunctions'
 
 export default function ConfirmRepeatablesTable({ classroom }: { classroom: Classroom }) {
 	const { enqueueSnackbar } = useSnackbar()
@@ -108,58 +103,68 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 								{completion.player.name}
 							</TableCell>
 							<TableCell align='center'>
-								<Button
-									onClick={() =>
-										confirmRepeatable(
-											classroom.id,
-											completion.player.id,
-											completion.repeatable.id,
-											completion.id,
-										)
-											.then(() => {
-												enqueueSnackbar(
-													`Confirmed task completion "${completion.repeatable.name}" from ${completion.player.name}!`,
-													{ variant: 'success' },
+								<Grid container columnSpacing={1}>
+									<Grid item>
+										<Button
+											onClick={() =>
+												confirmRepeatable(
+													classroom.id,
+													completion.player.id,
+													completion.repeatable.id,
+													completion.id,
 												)
-											})
-											.catch((err) => {
-												console.error(err)
-												enqueueSnackbar(
-													'There was an error confirming the repeatable completion.',
-													{
-														variant: 'error',
-													},
+													.then(() => {
+														enqueueSnackbar(
+															`Confirmed task completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+															{ variant: 'success' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar(
+															'There was an error confirming the repeatable completion.',
+															{
+																variant: 'error',
+															},
+														)
+													})
+											}
+											color='success'
+										>
+											Confirm
+										</Button>
+									</Grid>
+									<Grid item>
+										<Button
+											onClick={() =>
+												denyRepeatable(
+													classroom.id,
+													completion.player.id,
+													completion.repeatable.id,
+													completion.id,
 												)
-											})
-									}
-								>
-									Confirm
-								</Button>
-								<Button
-									onClick={() =>
-										denyRepeatable(
-											classroom.id,
-											completion.player.id,
-											completion.repeatable.id,
-											completion.id,
-										)
-											.then(() => {
-												enqueueSnackbar(
-													`Denied repeatable completion "${completion.repeatable.name}" from ${completion.player.name}!`,
-													{ variant: 'default' },
-												)
-											})
-											.catch((err) => {
-												console.error(err)
-												enqueueSnackbar('There was an error denying the repeatable completion.', {
-													variant: 'error',
-												})
-											})
-									}
-									color='error'
-								>
-									Deny
-								</Button>
+													.then(() => {
+														enqueueSnackbar(
+															`Denied repeatable completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+															{ variant: 'default' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar(
+															'There was an error denying the repeatable completion.',
+															{
+																variant: 'error',
+															},
+														)
+													})
+											}
+											color='error'
+										>
+											Deny
+										</Button>
+									</Grid>
+								</Grid>
 							</TableCell>
 						</StyledTableRow>
 					))}

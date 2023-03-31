@@ -8,7 +8,6 @@ import TextField from '@mui/material/TextField'
 // import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { updateTask } from '../../utils/mutations'
-
 import EditIcon from '@mui/icons-material/Edit'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
@@ -68,6 +67,7 @@ export default function TaskModalTeacher({
 		}
 		const updatedTask = {
 			name: name,
+			description: description,
 			due: date ? Timestamp.fromDate(date) : task.due,
 			reward: reward,
 			id: task.id,

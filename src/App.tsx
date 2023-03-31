@@ -17,6 +17,8 @@ import { SnackbarProvider } from 'notistack'
 import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 
+import 'virtual:fonts.css'
+
 // MUI styling constants
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
@@ -26,10 +28,23 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 const mdTheme = createTheme({
 	palette: {
 		primary: {
-			main: '#5299f0',
+			main: '#4a2511',
 		},
 		secondary: {
-			main: '#94a7ff',
+			main: '#93a262',
+		},
+		success: {
+			main: '#93a262',
+		},
+	},
+	typography: {
+		fontFamily: 'Andale Mono',
+		h2: {
+			fontFamily: 'Superscript',
+		},
+		h4: {
+			paddingBottom: '10px',
+			fontWeight: 'bold',
 		},
 	},
 	components: {
@@ -37,6 +52,7 @@ const mdTheme = createTheme({
 			styleOverrides: {
 				root: {
 					minWidth: 650,
+					// backgroundColor: '#f3f8df',
 				},
 			},
 		},
@@ -49,6 +65,25 @@ const mdTheme = createTheme({
 		MuiButton: {
 			defaultProps: {
 				variant: 'contained',
+			},
+		},
+		MuiTypography: {
+			styleOverrides: {
+				root: {
+					textDecoration: 1,
+				},
+			},
+		},
+		MuiListItemButton: {
+			styleOverrides: {
+				root: {
+					'&$selected': {
+						backgroundColor: 'red',
+						'&:hover': {
+							backgroundColor: 'orange',
+						},
+					},
+				},
 			},
 		},
 	},
@@ -83,7 +118,7 @@ export default function App() {
 								variant='h6'
 								color='inherit'
 								noWrap
-								sx={{ flexGrow: 1 }}
+								sx={{ flexGrow: 1, fontFamily: 'Superscript', textDecoration: 'none' }}
 							>
 								Questable
 							</Typography>
@@ -102,6 +137,7 @@ export default function App() {
 							<Button
 								variant='contained'
 								size='small'
+								color='success'
 								sx={{
 									marginTop: '5px',
 									marginBottom: '5px',
@@ -115,6 +151,7 @@ export default function App() {
 							<Button
 								variant='contained'
 								size='small'
+								color='success'
 								sx={{
 									marginTop: '5px',
 									marginBottom: '5px',

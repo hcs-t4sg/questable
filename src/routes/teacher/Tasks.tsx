@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
+// import Card from '@mui/material/Card'
+// import CardContent from '@mui/material/CardContent'
 import * as React from 'react'
 import CreateTaskModal from '../../components/teacher/CreateTaskModal'
 import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
@@ -22,7 +22,7 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 
 	return (
 		<>
-			<Grid item xs={12}>
+			{/* <Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
 				</Typography>
@@ -34,20 +34,20 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 							{player.name}
 						</Typography>{' '}
 						{/* Do we want a separate user name?*/}
-						<Typography variant='h5' component='div'>
+			{/* <Typography variant='h5' component='div'>
 							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
 				</Card>
-			</Grid>
+			</Grid> */}
 
 			<Grid item xs={12}>
-				<Typography variant='h5'>Create a New Task</Typography>
+				<Typography variant='h4'>Create a New Task</Typography>
 				<CreateTaskModal classroom={classroom} player={player} />
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant='h5'>View and Edit Tasks</Typography>
+				<Typography variant='h4'>View and Edit Tasks</Typography>
 				<Tabs value={page} onChange={handleTabChange}>
 					<Tab label='One Time' />
 					<Tab label='Repeatable' />

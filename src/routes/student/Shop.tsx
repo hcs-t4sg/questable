@@ -9,6 +9,8 @@ import { getHairItems, getPantsItems, getShirtItems, getShoesItems } from '../..
 import { ItemCard } from '../../components/student/ItemCard'
 // import { Classroom, Player } from '../../types'
 import { useState } from 'react'
+import wood2 from '/src/assets/Wood2.png'
+import { Typography } from '@mui/material'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -53,9 +55,10 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 
 	return (
 		<Grid item xs={12}>
-			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container spacing={3}>
+			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
+				{/* spacing={3} for above grid? */}
 				<Grid item xs={12}>
-					<h3>Shop</h3>
+					<Typography variant='h2'>Shop</Typography>
 					<h5>Purchase avatars, accessories, and special rewards from the shop!</h5>
 				</Grid>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -66,70 +69,80 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Tab label='Shoes' {...a11yProps(3)} />
 					</Tabs>
 				</Box>
-				<TabPanel value={value} index={0}>
-					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-						{hairs.map((item, index) => (
-							<Grid item xs={2} sm={3} md={3} key={index}>
-								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
-								<ItemCard
-									item={item}
-									player={player}
-									classroom={classroom}
-									itemPrice='$100'
-									type='shop'
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</TabPanel>
-				<TabPanel value={value} index={1}>
-					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-						{shirts.map((item, index) => (
-							<Grid item xs={2} sm={3} md={3} key={index}>
-								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
-								<ItemCard
-									item={item}
-									player={player}
-									classroom={classroom}
-									itemPrice='$150'
-									type='shop'
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</TabPanel>
-				<TabPanel value={value} index={2}>
-					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-						{pants.map((item, index) => (
-							<Grid item xs={2} sm={3} md={3} key={index}>
-								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$150' /> */}
-								<ItemCard
-									item={item}
-									player={player}
-									classroom={classroom}
-									itemPrice='$150'
-									type='shop'
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</TabPanel>
-				<TabPanel value={value} index={3}>
-					<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-						{shoes.map((item, index) => (
-							<Grid item xs={2} sm={3} md={3} key={index}>
-								{/* <ShopItemCard player={player} classroom={classroom} item={item} itemPrice='$100' /> */}
-								<ItemCard
-									item={item}
-									player={player}
-									classroom={classroom}
-									itemPrice='$100'
-									type='shop'
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</TabPanel>
+				<Box
+					sx={{
+						backgroundImage: `url(${wood2})`,
+						backgroundSize: 'cover',
+						height: '100%',
+						width: '100%',
+					}}
+				>
+					{' '}
+					<TabPanel value={value} index={0}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{hairs.map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='$100'
+										type='shop'
+										isBody={false}
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+					<TabPanel value={value} index={1}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{shirts.map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='$150'
+										type='shop'
+										isBody={false}
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+					<TabPanel value={value} index={2}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{pants.map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='$150'
+										type='shop'
+										isBody={false}
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+					<TabPanel value={value} index={3}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{shoes.map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='$100'
+										type='shop'
+										isBody={false}
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+				</Box>
 			</Grid>
 		</Grid>
 	)

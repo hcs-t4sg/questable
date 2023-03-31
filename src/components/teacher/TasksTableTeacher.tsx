@@ -12,7 +12,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import { format } from 'date-fns'
-import { collection, onSnapshot } from 'firebase/firestore'
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, Task } from '../../types'
 import { db } from '../../utils/firebase'
@@ -22,13 +22,7 @@ import TaskModalTeacher from './TaskModalTeacher'
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'
 import { enqueueSnackbar } from 'notistack'
-
-function truncate(description: string) {
-	if (description.length > 50) {
-		return description.slice(0, 50) + '...'
-	}
-	return description
-}
+import { truncate } from '../../utils/helperFunctions'
 
 function percentDone(task: Task) {
 	const numCompleted = task.completed?.length
@@ -46,7 +40,7 @@ function LinearProgressWithLabel({ task }: { task: Task }) {
 					task.completed?.length + task.assigned?.length + task.confirmed?.length
 				} students`}</Typography>
 			</Box>
-			<Box sx={{ minWidth: '50%', mr: 1 }}>
+			<Box sx={{ minWidth: '50%', mr: 1, ml: 1 }}>
 				<LinearProgress variant='determinate' value={percentDone(task)} />
 			</Box>
 		</Box>
@@ -58,7 +52,8 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 	const [tasks, setTasks] = useState<Task[] | null>(null)
 	useEffect(() => {
 		const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`)
-		const unsub = onSnapshot(taskCollectionRef, (snapshot) => {
+		const taskCollectionQuery = query(taskCollectionRef, orderBy('created', 'desc'))
+		const unsub = onSnapshot(taskCollectionQuery, (snapshot) => {
 			// Store the tasks in the `tasks` state variable
 			setTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Task)))
 		})

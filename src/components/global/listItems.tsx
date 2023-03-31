@@ -10,76 +10,142 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import ForumIcon from '@mui/icons-material/Forum'
 import * as React from 'react'
+import { useState } from 'react'
+import { styled } from '@mui/material/styles'
 import { Link } from 'react-router-dom'
 
 // Handles list of pages on sidebar. Edit if you want to add more pages
 
-export const mainListItemsTeacher = (
-	<React.Fragment>
-		<ListItemButton component={Link} to='tasks'>
-			<ListItemIcon>
-				<AssignmentIcon />
-			</ListItemIcon>
-			<ListItemText primary='Tasks' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='requests'>
-			<ListItemIcon>
-				<EmailIcon />
-			</ListItemIcon>
-			<ListItemText primary='Requests' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='class-teacher'>
-			<ListItemIcon>
-				<GroupIcon />
-			</ListItemIcon>
-			<ListItemText primary='Class' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='class-settings'>
-			<ListItemIcon>
-				<SettingsIcon />
-			</ListItemIcon>
-			<ListItemText primary='Class Settings' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='forum'>
-			<ListItemIcon>
-				<ForumIcon />
-			</ListItemIcon>
-			<ListItemText primary='Forum' />
-		</ListItemButton>
-	</React.Fragment>
-)
+const ListItemButtonStyled = styled(ListItemButton)({
+	color: 'white',
+	'&.Mui-selected': {
+		backgroundColor: '#733a1b',
+	},
+	'&.Mui-focusVisible': {
+		backgroundColor: '#733a1b',
+	},
+	':hover': {
+		backgroundColor: '#733a1b',
+	},
+}) as typeof ListItemButton
 
-export const mainListItemsStudent = (
-	<React.Fragment>
-		<ListItemButton component={Link} to='main'>
-			<ListItemIcon>
-				<FortIcon />
-			</ListItemIcon>
-			<ListItemText primary='Main' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='shop'>
-			<ListItemIcon>
-				<SellIcon />
-			</ListItemIcon>
-			<ListItemText primary='Shop' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='class-student'>
-			<ListItemIcon>
-				<GroupIcon />
-			</ListItemIcon>
-			<ListItemText primary='Class' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='inventory'>
-			<ListItemIcon>
-				<InventoryIcon />
-			</ListItemIcon>
-			<ListItemText primary='Inventory' />
-		</ListItemButton>
-		<ListItemButton component={Link} to='forum'>
-			<ListItemIcon>
-				<ForumIcon />
-			</ListItemIcon>
-			<ListItemText primary='Forum' />
-		</ListItemButton>
-	</React.Fragment>
-)
+const ListItemIconStyled = styled(ListItemIcon)({
+	color: 'white',
+}) as typeof ListItemButton
+
+export function MainListItemsTeacher() {
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3>(0)
+
+	return (
+		<React.Fragment>
+			<ListItemButtonStyled
+				component={Link}
+				to='tasks'
+				onClick={() => setSelected(0)}
+				selected={selected === 0}
+			>
+				<ListItemIconStyled>
+					<AssignmentIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Tasks' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='requests'
+				onClick={() => setSelected(1)}
+				selected={selected === 1}
+			>
+				<ListItemIconStyled>
+					<EmailIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Requests' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='class-teacher'
+				onClick={() => setSelected(2)}
+				selected={selected === 2}
+			>
+				<ListItemIconStyled>
+					<GroupIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Class' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='class-settings'
+				onClick={() => setSelected(3)}
+				selected={selected === 3}
+			>
+				<ListItemIconStyled>
+					<SettingsIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Class Settings' />
+			</ListItemButtonStyled>
+		</React.Fragment>
+	)
+}
+
+export function MainListItemsStudent() {
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4>(0)
+
+	return (
+		<React.Fragment>
+			<ListItemButtonStyled
+				component={Link}
+				to='main'
+				onClick={() => setSelected(0)}
+				selected={selected === 0}
+			>
+				<ListItemIconStyled>
+					<FortIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Main' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='shop'
+				onClick={() => setSelected(1)}
+				selected={selected === 1}
+			>
+				<ListItemIconStyled>
+					<SellIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Shop' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='class-student'
+				onClick={() => setSelected(2)}
+				selected={selected === 2}
+			>
+				<ListItemIconStyled>
+					<GroupIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Class' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='inventory'
+				onClick={() => setSelected(3)}
+				selected={selected === 3}
+			>
+				<ListItemIconStyled>
+					<InventoryIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Inventory' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='forum'
+				onClick={() => setSelected(4)}
+				selected={selected === 4}
+			>
+				<ListItemIconStyled>
+					<ForumIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Forum' />
+			</ListItemButtonStyled>
+		</React.Fragment>
+	)
+}

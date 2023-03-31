@@ -8,6 +8,8 @@ import { capitalize } from 'lodash'
 import { Classroom, Item, Player } from '../../types'
 import { purchaseItem, updateAvatar } from '../../utils/mutations'
 
+import { getHairItems, getPantsItems, getShirtItems, getShoesItems } from '../../utils/items'
+
 import { styled } from '@mui/system'
 import { useSnackbar } from 'notistack'
 
@@ -17,6 +19,7 @@ interface Props {
 	classroom: Classroom
 	itemPrice: string
 	type: 'shop' | 'inventory'
+	isBody: boolean
 }
 
 export function ItemCard(props: Props) {
@@ -62,20 +65,43 @@ export function ItemCard(props: Props) {
 			</Button>
 		)
 
+	const hairs = getHairItems()
+	const shirts = getShirtItems()
+	const pants = getPantsItems()
+	const shoes = getShoesItems()
+
+	const defaultOutfit = (
+		<>
+			{hairs[0].renderStatic()}
+			{shirts[0].renderStatic()}
+			{pants[0].renderStatic()}
+			{shoes[0].renderStatic()}
+		</>
+	)
+
 	return (
 		<Card sx={{ maxWidth: 345 }}>
-			<ItemBox>{props.item.renderStatic()}</ItemBox>
+			{props.isBody ? (
+				<ItemBox>
+					{props.item.renderStatic()}
+					{defaultOutfit}
+				</ItemBox>
+			) : (
+				<ItemBox>{props.item.renderStatic()}</ItemBox>
+			)}
 			<CardContent>
-				<Typography variant='h6' sx={{ fontWeight: 'medium', color: 'green' }} component='div'>
+				<Typography variant='body2' sx={{ fontWeight: 'medium', color: 'green' }} component='div'>
 					{capitalize(props.item.type)}
 				</Typography>
-				<Typography sx={{ marginTop: '15px' }} variant='h6' component='div'>
+				<Typography sx={{ marginTop: '15px', fontWeight: 'bold' }} variant='body1' component='div'>
 					{props.item.name}
 				</Typography>
 				{props.type === 'shop' ? (
-					<ItemTypography variant='h6'>Price: {props.itemPrice}</ItemTypography>
+					<ItemTypography variant='body1' sx={{ fontWeight: 'bold' }}>
+						{props.itemPrice}
+					</ItemTypography>
 				) : null}
-				<ItemTypography variant='h6'>{props.item.description}</ItemTypography>
+				<ItemTypography variant='body2'>{props.item.description}</ItemTypography>
 			</CardContent>
 			<CardActions>{confirmActions}</CardActions>
 		</Card>

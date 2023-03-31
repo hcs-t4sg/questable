@@ -1,5 +1,6 @@
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import { Box, IconButton, Tab, Tabs } from '@mui/material'
+import { Box, Tab, Tabs } from '@mui/material'
+// import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import Checkbox from '@mui/material/Checkbox'
 import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
@@ -13,8 +14,10 @@ import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
-import ModalsStudent from './ModalsStudent'
 import { useSnackbar } from 'notistack'
+import ModalsStudent, { rewardPotion } from './ModalsStudent'
+import Paper from '@mui/material/Paper'
+import { truncate } from '../../utils/helperFunctions'
 
 function a11yProps(index: number) {
 	return {
@@ -83,10 +86,11 @@ export default function TasksTableStudent({
 				</Tabs>
 			</Box>
 			<Grid item xs={12}>
-				<TableContainer sx={{ backgroundColor: 'white' }}>
+				<TableContainer component={Paper}>
 					<Table aria-label='simple table' sx={{ border: 'none' }}>
 						<TableHead>
 							<TableRow>
+								<TableCell sx={{ width: 60 }} />
 								<TableCell>Name</TableCell>
 								<TableCell>Description</TableCell>
 								<TableCell>Deadline</TableCell>
@@ -104,8 +108,12 @@ export default function TasksTableStudent({
 										key={task.id}
 										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 									>
+										<TableCell align='left'>{rewardPotion(task.reward)}</TableCell>
 										<TableCell align='left'>{task.name}</TableCell>
-										<TableCell align='left'>{task.description || 'None'}</TableCell>
+										<TableCell align='left'>
+											{/* {task.description || 'None'} */}
+											{truncate(task.description) || 'None'}
+										</TableCell>
 										<TableCell align='left'>
 											{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
 										</TableCell>
@@ -134,9 +142,10 @@ export default function TasksTableStudent({
 										</TableCell>
 										{taskCategory === 0 ? (
 											<TableCell align='center'>
-												<IconButton onClick={() => handleTaskComplete(task)}>
+												{/* <IconButton onClick={() => handleTaskComplete(task)}>
 													<CheckBoxIcon />
-												</IconButton>
+												</IconButton> */}
+												<Checkbox onChange={() => handleTaskComplete(task)} />
 											</TableCell>
 										) : null}
 									</TableRow>

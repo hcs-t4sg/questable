@@ -12,6 +12,8 @@ import { Classroom } from '../types'
 import { db } from '../utils/firebase'
 import Loading from '../components/global/Loading'
 
+import wood1 from '/src/assets/Wood1.png'
+
 export default function Home({ user }: { user: User }) {
 	// Listen to user's classrooms and maintain a corresponding state variable
 	const [classrooms, setClassrooms] = useState<Classroom[] | null>(null)
@@ -71,21 +73,38 @@ export default function Home({ user }: { user: User }) {
 					<Grid item xs={12}>
 						<Box
 							sx={{
+								height: '100%',
 								width: '100%',
-								height: 300,
-								backgroundColor: 'primary.dark',
-								display: 'flex',
-								flexWrap: 'wrap',
-								justifyContent: 'center',
-								alignItems: 'center',
-								textAlign: 'center',
+								backgroundImage: `url(${wood1})`,
+								backgroundSize: 'cover',
 							}}
 						>
-							<Typography variant='h3' sx={{ flex: '100%' }}>
-								Welcome Back!
-							</Typography>
-							<JoinClassroomModal user={user} />
-							<CreateClassroomModal user={user} />
+							<Box
+								sx={{
+									width: '100%',
+									height: 300,
+									border: '10px solid',
+									borderColor: 'primary.main',
+									display: 'flex',
+									flexWrap: 'wrap',
+									justifyContent: 'center',
+									alignItems: 'center',
+									textAlign: 'center',
+									boxShadow: 2,
+								}}
+							>
+								<Typography variant='h3' sx={{ flex: '100%' }}>
+									Welcome Back, {user.displayName}!
+								</Typography>
+								<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
+									<Grid item>
+										<JoinClassroomModal user={user} />
+									</Grid>
+									<Grid item>
+										<CreateClassroomModal user={user} />
+									</Grid>
+								</Grid>
+							</Box>
 						</Box>
 					</Grid>
 					<Grid item xs={12}>
@@ -101,7 +120,7 @@ export default function Home({ user }: { user: User }) {
 		classrooms && pinned ? (
 			<>
 				<Grid item xs={12}>
-					<Typography variant='h5' sx={{ flex: '100%' }}>
+					<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
 						Pinned Classrooms
 					</Typography>
 				</Grid>
@@ -111,7 +130,7 @@ export default function Home({ user }: { user: User }) {
 					</Grid>
 				))}
 				<Grid item xs={12}>
-					<Typography variant='h5' sx={{ flex: '100%' }}>
+					<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
 						Joined Classrooms
 					</Typography>
 				</Grid>
@@ -121,7 +140,7 @@ export default function Home({ user }: { user: User }) {
 					</Grid>
 				))}
 				<Grid item xs={12}>
-					<Typography variant='h5' sx={{ flex: '100%' }}>
+					<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
 						Created Classrooms
 					</Typography>
 				</Grid>
@@ -143,21 +162,38 @@ export default function Home({ user }: { user: User }) {
 				<Grid item xs={12}>
 					<Box
 						sx={{
+							height: '100%',
 							width: '100%',
-							height: 300,
-							backgroundColor: 'primary.dark',
-							display: 'flex',
-							flexWrap: 'wrap',
-							justifyContent: 'center',
-							alignItems: 'center',
-							textAlign: 'center',
+							backgroundImage: `url(${wood1})`,
+							backgroundSize: 'cover',
 						}}
 					>
-						<Typography variant='h3' sx={{ flex: '100%' }}>
-							Welcome Back!
-						</Typography>
-						<JoinClassroomModal user={user} />
-						<CreateClassroomModal user={user} />
+						<Box
+							sx={{
+								width: '100%',
+								height: 300,
+								border: '10px solid',
+								borderColor: 'primary.main',
+								display: 'flex',
+								flexWrap: 'wrap',
+								justifyContent: 'center',
+								alignItems: 'center',
+								textAlign: 'center',
+								boxShadow: 2,
+							}}
+						>
+							<Typography variant='h3' sx={{ flex: '100%' }}>
+								Welcome Back, {user.displayName}!
+							</Typography>
+							<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
+								<Grid item>
+									<JoinClassroomModal user={user} />
+								</Grid>
+								<Grid item>
+									<CreateClassroomModal user={user} />
+								</Grid>
+							</Grid>
+						</Box>
 					</Box>
 				</Grid>
 				{classroomsSection}

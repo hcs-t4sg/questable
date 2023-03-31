@@ -18,15 +18,10 @@ import {
 	getPlayerTaskCompletion,
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
+import { Grid } from '@mui/material'
 import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
-
-function truncate(description: string) {
-	if (description.length > 40) {
-		return description.slice(0, 40) + '...'
-	}
-	return description
-}
+import { truncate } from '../../utils/helperFunctions'
 
 const formatStatus = (task: CompletedTask) => {
 	const playerCompletion = task.completionTime
@@ -115,47 +110,54 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 								{completedTask.player.name}
 							</TableCell>
 							<TableCell align='center'>
-								<Button
-									onClick={() =>
-										confirmTask(classroom.id, completedTask.player.id, completedTask.id)
-											.then(() => {
-												enqueueSnackbar(
-													`Confirmed task completion "${completedTask.name}" from ${completedTask.player.name}!`,
-													{ variant: 'success' },
-												)
-											})
-											.catch((err) => {
-												console.error(err)
-												enqueueSnackbar('There was an error confirming the task completion.', {
-													variant: 'error',
-												})
-											})
-									}
-									// variant='contained'
-								>
-									Confirm
-								</Button>
-								<Button
-									onClick={() =>
-										denyTask(classroom.id, completedTask.player.id, completedTask.id)
-											.then(() => {
-												enqueueSnackbar(
-													`Rejected task completion "${completedTask.name}" from ${completedTask.player.name}.`,
-													{ variant: 'default' },
-												)
-											})
-											.catch((err) => {
-												console.error(err)
-												enqueueSnackbar('There was an error rejecting the task completion.', {
-													variant: 'error',
-												})
-											})
-									}
-									// variant='contained'
-									color='error'
-								>
-									Deny
-								</Button>
+								<Grid container columnSpacing={1}>
+									<Grid item>
+										<Button
+											onClick={() =>
+												confirmTask(classroom.id, completedTask.player.id, completedTask.id)
+													.then(() => {
+														enqueueSnackbar(
+															`Confirmed task completion "${completedTask.name}" from ${completedTask.player.name}!`,
+															{ variant: 'success' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar('There was an error confirming the task completion.', {
+															variant: 'error',
+														})
+													})
+											}
+											// variant='contained'
+											color='success'
+										>
+											Confirm
+										</Button>
+									</Grid>
+									<Grid item>
+										<Button
+											onClick={() =>
+												denyTask(classroom.id, completedTask.player.id, completedTask.id)
+													.then(() => {
+														enqueueSnackbar(
+															`Rejected task completion "${completedTask.name}" from ${completedTask.player.name}.`,
+															{ variant: 'default' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar('There was an error rejecting the task completion.', {
+															variant: 'error',
+														})
+													})
+											}
+											// variant='contained'
+											color='error'
+										>
+											Deny
+										</Button>
+									</Grid>
+								</Grid>
 							</TableCell>
 						</StyledTableRow>
 					))}

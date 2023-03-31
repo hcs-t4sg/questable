@@ -65,7 +65,9 @@ export default function JoinClassroomModal({ user }: { user: User }) {
 					/>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={handleClose}>Cancel</Button>
+					<Button variant='text' onClick={handleClose}>
+						Cancel
+					</Button>
 					<Button variant='contained' onClick={handleJoinClassroom}>
 						Join
 					</Button>

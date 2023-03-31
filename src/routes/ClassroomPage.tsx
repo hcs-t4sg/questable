@@ -53,7 +53,7 @@ export default function ClassroomPage({ user }: { user: User }) {
 			if (player.role === 'teacher') {
 				return <TeacherView player={player} classroom={classroom} user={user} />
 			} else if (player.role === 'student') {
-				return <StudentView player={player} classroom={classroom} />
+				return <StudentView player={player} classroom={classroom} user={user} />
 			} else {
 				return <p>Error: Player role does not exist or is invalid.</p>
 			}

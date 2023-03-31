@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import IconButton from '@mui/material/IconButton'
+// import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import { User } from 'firebase/auth'
 import { useState } from 'react'
@@ -46,16 +46,11 @@ export default function PlayerModal({
 		setOpen(false)
 	}
 
-	const openButton = (
-		<IconButton onClick={handleClickOpen}>
-			Edit Profile
-			<OpenInNewIcon />
-		</IconButton>
-	)
-
 	return (
-		<div>
-			{openButton}
+		<>
+			<Button onClick={handleClickOpen} endIcon={<OpenInNewIcon />}>
+				Edit Profile
+			</Button>
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>Edit Profile</DialogTitle>
 				<DialogContent>
@@ -97,6 +92,6 @@ export default function PlayerModal({
 					</DialogActions>
 				</DialogContent>
 			</Dialog>
-		</div>
+		</>
 	)
 }

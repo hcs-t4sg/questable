@@ -18,13 +18,7 @@ import { deleteRepeatable } from '../../utils/mutations'
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
-
-function truncate(description: string) {
-	if (description.length > 50) {
-		return description.slice(0, 50) + '...'
-	}
-	return description
-}
+import { truncate } from '../../utils/helperFunctions'
 
 export default function RepeatableTableTeacher({ classroom }: { classroom: Classroom }) {
 	const { enqueueSnackbar } = useSnackbar()
