@@ -53,7 +53,7 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 
 	const openButton = (
 		<Button variant='contained' onClick={handleClickOpen}>
-			Create!
+			Create classroom
 		</Button>
 	)
 
