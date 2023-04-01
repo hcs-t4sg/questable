@@ -46,6 +46,8 @@ export function rewardPotion(rewardAmount: number) {
 				imageRendering: 'pixelated',
 				maxHeight: { xs: 140, md: 200 },
 				maxWidth: { xs: 140, md: 200 },
+				minWidth: '28px',
+				minHeight: '31.5px',
 				position: 'relative',
 			}}
 			alt='Potion'

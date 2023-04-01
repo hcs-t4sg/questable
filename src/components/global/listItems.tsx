@@ -27,6 +27,9 @@ const ListItemButtonStyled = styled(ListItemButton)({
 	':hover': {
 		backgroundColor: '#733a1b',
 	},
+	'&.Mui-selected:hover': {
+		backgroundColor: '#733a1b',
+	},
 }) as typeof ListItemButton
 
 const ListItemIconStyled = styled(ListItemIcon)({
