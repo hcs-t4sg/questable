@@ -110,7 +110,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 				<Box
 					sx={{
 						backgroundImage: `url(${wood2})`,
-						backgroundSize: 'cover',
+						backgroundSize: '2000px',
 						height: '100%',
 						width: '100%',
 					}}
@@ -121,18 +121,20 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects.map((item, index) => (
-								<Grid item xs={2} sm={3} md={3} key={index}>
-									<ItemCard
-										item={item}
-										player={player}
-										classroom={classroom}
-										itemPrice=''
-										type='inventory'
-										isBody={false}
-									/>
-								</Grid>
-							))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects.map((item, index) => (
+									<Grid item xs={2} sm={3} md={3} key={index}>
+										<ItemCard
+											item={item}
+											player={player}
+											classroom={classroom}
+											itemPrice=''
+											type='inventory'
+											isBody={false}
+										/>
+									</Grid>
+								))}
+							</Grid>
 						)}
 					</TabPanel>
 
@@ -159,20 +161,22 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects
-								.filter((item) => item.type === 'hair')
-								.map((item, index) => (
-									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={false}
-										/>
-									</Grid>
-								))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects
+									.filter((item) => item.type === 'hair')
+									.map((item, index) => (
+										<Grid item xs={2} sm={3} md={3} key={index}>
+											<ItemCard
+												item={item}
+												player={player}
+												classroom={classroom}
+												itemPrice=''
+												type='inventory'
+												isBody={false}
+											/>
+										</Grid>
+									))}
+							</Grid>
 						)}
 					</TabPanel>
 
@@ -182,20 +186,22 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects
-								.filter((item) => item.type === 'shirt')
-								.map((item, index) => (
-									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={false}
-										/>
-									</Grid>
-								))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects
+									.filter((item) => item.type === 'shirt')
+									.map((item, index) => (
+										<Grid item xs={2} sm={3} md={3} key={index}>
+											<ItemCard
+												item={item}
+												player={player}
+												classroom={classroom}
+												itemPrice=''
+												type='inventory'
+												isBody={false}
+											/>
+										</Grid>
+									))}
+							</Grid>
 						)}
 					</TabPanel>
 
@@ -205,20 +211,22 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects
-								.filter((item) => item.type === 'pants')
-								.map((item, index) => (
-									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={false}
-										/>
-									</Grid>
-								))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects
+									.filter((item) => item.type === 'pants')
+									.map((item, index) => (
+										<Grid item xs={2} sm={3} md={3} key={index}>
+											<ItemCard
+												item={item}
+												player={player}
+												classroom={classroom}
+												itemPrice=''
+												type='inventory'
+												isBody={false}
+											/>
+										</Grid>
+									))}
+							</Grid>
 						)}
 					</TabPanel>
 
@@ -228,20 +236,22 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects
-								.filter((item) => item.type === 'shoes')
-								.map((item, index) => (
-									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={true}
-										/>
-									</Grid>
-								))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects
+									.filter((item) => item.type === 'shoes')
+									.map((item, index) => (
+										<Grid item xs={2} sm={3} md={3} key={index}>
+											<ItemCard
+												item={item}
+												player={player}
+												classroom={classroom}
+												itemPrice=''
+												type='inventory'
+												isBody={false}
+											/>
+										</Grid>
+									))}
+							</Grid>
 						)}
 					</TabPanel>
 				</Box>

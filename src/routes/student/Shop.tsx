@@ -72,7 +72,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 				<Box
 					sx={{
 						backgroundImage: `url(${wood2})`,
-						backgroundSize: 'cover',
+						backgroundSize: '2000px',
 						height: '100%',
 						width: '100%',
 					}}
