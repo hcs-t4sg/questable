@@ -16,6 +16,7 @@ import { Classroom, Player } from '../../types'
 import { refreshAllRepeatables } from '../../utils/mutations'
 import ForumView from '../forum/ForumView'
 import { User } from 'firebase/auth'
+import StudentSettings from '../../routes/student/StudentSettings'
 
 export default function StudentView({
 	player,
@@ -69,6 +70,9 @@ export default function StudentView({
 							backgroundColor: '#f3f8df',
 						}}
 					>
+						<Typography variant='h2' sx={{ fontFamily: 'Superscript' }}>
+							{classroom.name}
+						</Typography>
 						<Typography variant='h3' sx={{ fontFamily: 'Superscript' }}>
 							{player.name}
 						</Typography>
@@ -124,6 +128,10 @@ export default function StudentView({
 						element={<ClassStudent player={player} classroom={classroom} />}
 					/>
 					<Route path='inventory' element={<Inventory player={player} classroom={classroom} />} />
+					<Route
+						path='student-settings'
+						element={<StudentSettings player={player} classroom={classroom} user={user} />}
+					/>
 					<Route path='forum/*' element={<ForumView player={player} classroom={classroom} />} />
 					<Route
 						path='*'

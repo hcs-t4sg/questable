@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
-import PlayerModal from './PlayerModal'
+import PlayerModal from '../teacher/PlayerModal'
 
 export default function PlayerCard({
 	player,
@@ -25,7 +25,7 @@ export default function PlayerCard({
 					Email: {user.email}
 				</Typography>
 				<Typography variant='h6' component='div'>
-					Money: {player.money}
+					Gold: {player.money}g
 				</Typography>
 			</CardContent>
 			<CardActions>

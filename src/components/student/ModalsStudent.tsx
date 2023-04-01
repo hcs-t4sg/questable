@@ -143,7 +143,7 @@ export default function ModalsStudent(props: PropsTask | PropsRepeatables) {
 							<StudentBoxInModal>
 								<Cluster title='Task Name' data={props.taskOrRepeatable.name} />
 								<Cluster title='Description' data={props.taskOrRepeatable.description} />
-								<Cluster title='Reward Amount' data={`$${props.taskOrRepeatable.reward}`} />
+								<Cluster title='Reward Amount' data={`${props.taskOrRepeatable.reward}g`} />
 								{completionOrDeadline}
 								<Cluster
 									title=''

@@ -80,7 +80,7 @@ function RepeatableTableRow({
 			<TableCell align='left'>
 				{confirmations || confirmations === 0 ? `${confirmations}` : 'Loading'}
 			</TableCell>
-			<TableCell align='left'>${repeatable.reward}</TableCell>
+			<TableCell align='left'>{`${repeatable.reward}g`}</TableCell>
 
 			<TableCell align='right' sx={{ width: 0.01 }}>
 				{/* <RepeatableModalStudent

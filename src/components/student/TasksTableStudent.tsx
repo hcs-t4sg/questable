@@ -117,7 +117,7 @@ export default function TasksTableStudent({
 										<TableCell align='left'>
 											{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
 										</TableCell>
-										<TableCell align='center'>${task.reward}</TableCell>
+										<TableCell align='center'>{`${task.reward}g`}</TableCell>
 										<TableCell align='center'>
 											<Chip
 												label={

@@ -93,12 +93,12 @@ export default function CreateTaskModal({
 				maxCompletions: parseInt(maxCompletions),
 			}
 
+			handleClose()
 			addRepeatable(classroom.id, newTask, player.id)
 				.then(() => {
 					enqueueSnackbar(`Added repeatable "${name}"!`, {
 						variant: 'success',
 					})
-					handleClose()
 				})
 				.catch((err) => {
 					console.error(err)
@@ -129,13 +129,12 @@ export default function CreateTaskModal({
 				reward,
 				due: Timestamp.fromDate(dueDate),
 			}
-
+			handleClose()
 			addTask(classroom.id, newTask, player.id)
 				.then(() => {
 					enqueueSnackbar(`Added task "${name}"!`, {
 						variant: 'success',
 					})
-					handleClose()
 				})
 				.catch((err) => {
 					console.error(err)
@@ -148,7 +147,7 @@ export default function CreateTaskModal({
 
 	const openButton = (
 		<Button
-			variant='text'
+			variant='contained'
 			sx={{ width: 1 }}
 			onClick={handleOpen}
 			startIcon={<AddCircleOutlineIcon />}
@@ -306,10 +305,10 @@ export default function CreateTaskModal({
 								label='Reward'
 								onChange={(event) => setReward(event.target.value as number)}
 							>
-								<MenuItem value={10}>10</MenuItem>
-								<MenuItem value={20}>20</MenuItem>
-								<MenuItem value={30}>30</MenuItem>
-								<MenuItem value={40}>40</MenuItem>
+								<MenuItem value={10}>10g</MenuItem>
+								<MenuItem value={20}>20g</MenuItem>
+								<MenuItem value={30}>30g</MenuItem>
+								<MenuItem value={40}>40g</MenuItem>
 							</Select>
 						</FormControl>
 						{/* </Box> */}

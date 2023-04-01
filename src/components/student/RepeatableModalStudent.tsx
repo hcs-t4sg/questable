@@ -124,7 +124,7 @@ export default function RepeatableModalStudent({
 					>
 						<Cluster title='Task Name' data={repeatable.name} />
 						<Cluster title='Description' data={repeatable.description} />
-						<Cluster title='Reward Amount' data={`$${repeatable.reward}`} />
+						<Cluster title='Reward Amount' data={`${repeatable.reward}g`} />
 						<Cluster title='Completions' data={repeatable.completions} />
 						<Cluster
 							title='Completion'

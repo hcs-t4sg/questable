@@ -113,7 +113,7 @@ export default function ClassTeacher({
 								<Avatar outfit={currentAvatar(student)} />
 							</Box>
 							<Typography variant='body1'>Name: {student.name}</Typography>
-							<Typography variant='body1'>Account Balance: {student.money}</Typography>
+							<Typography variant='body1'>Gold: {student.money}g</Typography>
 							<Typography variant='body1'>{student.email}</Typography>
 							<ClassTeacherModal student={student} />
 						</CardContent>

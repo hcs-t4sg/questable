@@ -105,7 +105,7 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 									<TableCell align='left'>
 										{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
 									</TableCell>
-									<TableCell align='left'>{task.reward}</TableCell>
+									<TableCell align='left'>{`${task.reward}g`}</TableCell>
 									<TableCell align='left'>
 										<LinearProgressWithLabel task={task} />
 									</TableCell>

@@ -204,10 +204,10 @@ export default function TaskModalTeacher({
 								label='Reward'
 								onChange={(event) => setReward(event.target.value as number)}
 							>
-								<MenuItem value={10}>10</MenuItem>
-								<MenuItem value={20}>20</MenuItem>
-								<MenuItem value={30}>30</MenuItem>
-								<MenuItem value={40}>40</MenuItem>
+								<MenuItem value={10}>10g</MenuItem>
+								<MenuItem value={20}>20g</MenuItem>
+								<MenuItem value={30}>30g</MenuItem>
+								<MenuItem value={40}>40g</MenuItem>
 							</Select>
 						</FormControl>
 						{/* </Box> */}
