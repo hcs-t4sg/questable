@@ -18,16 +18,17 @@ import {
 	getRepeatableCompletionTimes,
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
-
-function truncate(description: string) {
-	if (description.length > 40) {
-		return description.slice(0, 40) + '...'
-	}
-	return description
-}
+import { Grid } from '@mui/material'
+import Loading from '../global/Loading'
+import { useSnackbar } from 'notistack'
+import { truncate } from '../../utils/helperFunctions'
 
 export default function ConfirmRepeatablesTable({ classroom }: { classroom: Classroom }) {
-	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[]>([])
+	const { enqueueSnackbar } = useSnackbar()
+
+	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[] | null>(
+		null,
+	)
 
 	useEffect(() => {
 		const repeatablesRef = collection(db, `classrooms/${classroom.id}/repeatables`)
@@ -71,6 +72,9 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 		return unsub
 	}, [classroom])
 
+	if (!completedRepeatables) {
+		return <Loading>Loading repeatables...</Loading>
+	}
 	return (
 		<TableContainer component={Paper}>
 			<Table aria-label='simple table'>
@@ -94,36 +98,73 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 								{format(completion.time.toDate(), 'MM/dd/yyyy h:mm a')}
 							</TableCell>
 							<TableCell>{truncate(completion.repeatable.description)}</TableCell>
-							<TableCell>{completion.repeatable.reward}</TableCell>
+							<TableCell>{`${completion.repeatable.reward}g`}</TableCell>
 							<TableCell component='th' scope='row'>
 								{completion.player.name}
 							</TableCell>
 							<TableCell align='center'>
-								<Button
-									onClick={() =>
-										confirmRepeatable(
-											classroom.id,
-											completion.player.id,
-											completion.repeatable.id,
-											completion.id,
-										)
-									}
-								>
-									Confirm
-								</Button>
-								<Button
-									onClick={() =>
-										denyRepeatable(
-											classroom.id,
-											completion.player.id,
-											completion.repeatable.id,
-											completion.id,
-										)
-									}
-									color='error'
-								>
-									Deny
-								</Button>
+								<Grid container columnSpacing={1}>
+									<Grid item>
+										<Button
+											onClick={() =>
+												confirmRepeatable(
+													classroom.id,
+													completion.player.id,
+													completion.repeatable.id,
+													completion.id,
+												)
+													.then(() => {
+														enqueueSnackbar(
+															`Confirmed task completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+															{ variant: 'success' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar(
+															'There was an error confirming the repeatable completion.',
+															{
+																variant: 'error',
+															},
+														)
+													})
+											}
+											color='success'
+										>
+											Confirm
+										</Button>
+									</Grid>
+									<Grid item>
+										<Button
+											onClick={() =>
+												denyRepeatable(
+													classroom.id,
+													completion.player.id,
+													completion.repeatable.id,
+													completion.id,
+												)
+													.then(() => {
+														enqueueSnackbar(
+															`Denied repeatable completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+															{ variant: 'default' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar(
+															'There was an error denying the repeatable completion.',
+															{
+																variant: 'error',
+															},
+														)
+													})
+											}
+											color='error'
+										>
+											Deny
+										</Button>
+									</Grid>
+								</Grid>
 							</TableCell>
 						</StyledTableRow>
 					))}

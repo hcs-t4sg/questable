@@ -6,12 +6,15 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import * as React from 'react'
 import { useState } from 'react'
-import Grid from '@mui/material/Grid'
+// import Grid from '@mui/material/Grid'
 import { addClassroom } from '../../utils/mutations'
 import { User } from 'firebase/auth'
+import { useSnackbar } from 'notistack'
 // import ClassroomModalContent from './ClassroomModalContent'
 
 export default function CreateClassroomModal({ user }: { user: User }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [open, setOpen] = useState(false)
 	const [newClassroomName, setNewClassroomName] = React.useState('')
 
@@ -26,28 +29,36 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 
 	// Mutation handlers
 	const handleAddClassroom = () => {
+		const classNameContainsNonWhitespaceChars = newClassroomName.replace(/\s+/g, '') != ''
+		if (!classNameContainsNonWhitespaceChars) {
+			enqueueSnackbar('Classroom name cannot be empty', { variant: 'error' })
+			return
+		}
+
 		addClassroom(newClassroomName, user)
-		setNewClassroomName('')
-		setOpen(false)
+			.then(() => {
+				enqueueSnackbar(`Created classroom "${newClassroomName}"`, {
+					variant: 'success',
+				})
+				handleClose()
+				setNewClassroomName('')
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar('There was an error creating the classsroom.', {
+					variant: 'error',
+				})
+			})
 	}
 
 	const openButton = (
 		<Button variant='contained' onClick={handleClickOpen}>
-			Create!
+			Create classroom
 		</Button>
 	)
 
-	const actionButtons = (
-		<DialogActions>
-			<Button onClick={handleClose}>Cancel</Button>
-			<Button variant='contained' onClick={handleAddClassroom}>
-				Create
-			</Button>
-		</DialogActions>
-	)
-
 	return (
-		<Grid item xs={12}>
+		<>
 			{openButton}
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>{'Create Classroom'}</DialogTitle>
@@ -61,17 +72,15 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 						value={newClassroomName}
 					/>
 				</DialogContent>
-				{actionButtons}
+				<DialogActions>
+					<Button variant='text' onClick={handleClose}>
+						Cancel
+					</Button>
+					<Button variant='contained' onClick={handleAddClassroom}>
+						Create
+					</Button>
+				</DialogActions>
 			</Dialog>
-		</Grid>
-		// <ClassroomModalContent
-		// 	type='create'
-		// 	openButton={openButton}
-		// 	open={open}
-		// 	handleClose={handleClose}
-		// 	setNew={setNewClassroomName}
-		// 	newClass={newClassroomName}
-		// 	actionButtons={actionButtons}
-		// />
+		</>
 	)
 }

@@ -19,6 +19,8 @@ import ForumPostCard from './ForumPostCard'
 import Avatar from '../global/Avatar'
 import { currentAvatar } from '../../utils/items'
 import { format } from 'date-fns'
+import Loading from '../global/Loading'
+import { useSnackbar } from 'notistack'
 
 // TODO Fix comment resizing on browser window resizing
 
@@ -94,6 +96,8 @@ export default function ForumPostView({
 	const params = useParams()
 	const postID = params.postID
 
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [post, setPost] = useState<ForumPost | null>(null)
 	useEffect(() => {
 		if (postID) {
@@ -128,12 +132,15 @@ export default function ForumPostView({
 		// Only posts comment if it contains non-whitespace characters
 		if (newComment.content.replace(/\s+/g, '') != '') {
 			if (post) {
-				addComment(newComment, classroom, post).catch(console.error)
+				addComment(newComment, classroom, post).catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an error adding the comment.', { variant: 'error' })
+				})
 				// Clears TextInputField
 				setComment('')
 			}
 		} else {
-			alert('Comment must contain non-whitespace characters')
+			enqueueSnackbar('Comment must contain non-whitespace characters', { variant: 'error' })
 		}
 	}
 
@@ -149,9 +156,6 @@ export default function ForumPostView({
 			return unsub
 		}
 	}, [classroom, postID])
-
-	console.log(player)
-	console.log(comments)
 
 	// TODO With comment flexbox that avatar, name, and timestamp side by side, we have weird resizing behavior of the avatar. Fix by having the timestamp go below the avatar and name when card gets too small
 
@@ -174,7 +178,7 @@ export default function ForumPostView({
 								})}
 							</Stack>
 						) : (
-							<Typography variant='body1'>Loading comments...</Typography>
+							<Loading>Loading comments...</Loading>
 						)}
 					</CardContent>
 					<form onSubmit={handleSubmit}>
@@ -198,6 +202,6 @@ export default function ForumPostView({
 			</>
 		)
 	} else {
-		return <div>Loading...</div>
+		return <Loading>Loading post data...</Loading>
 	}
 }

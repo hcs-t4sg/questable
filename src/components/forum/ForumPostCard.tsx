@@ -14,7 +14,9 @@ export default function ForumPostCard({
 }) {
 	const cardContent = (
 		<CardContent>
-			<Typography variant='h4'>{forumPost.title}</Typography>
+			<Typography variant='h5' sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>
+				{forumPost.title}
+			</Typography>
 			<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
 				<Box
 					sx={{

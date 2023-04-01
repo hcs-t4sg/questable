@@ -10,14 +10,17 @@ import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, Player, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
-import RepeatableModalStudent from './RepeatableModalStudent'
+// import RepeatableModalStudent from './RepeatableModalStudent'
+import ModalsStudent, { rewardPotion } from './ModalsStudent'
+import Loading from '../global/Loading'
+import { truncate } from '../../utils/helperFunctions'
 
-function truncate(description: string) {
-	if (description.length > 50) {
-		return description.slice(0, 50) + '...'
-	}
-	return description
-}
+// export function truncate(description: string) {
+// 	if (description.length > 50) {
+// 		return description.slice(0, 50) + '...'
+// 	}
+// 	return description
+// }
 
 function RepeatableTableRow({
 	repeatable,
@@ -66,6 +69,7 @@ function RepeatableTableRow({
 
 	return (
 		<TableRow key={repeatable.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+			<TableCell>{rewardPotion(repeatable.reward)}</TableCell>
 			<TableCell component='th' scope='row'>
 				{repeatable.name}
 			</TableCell>
@@ -76,13 +80,19 @@ function RepeatableTableRow({
 			<TableCell align='left'>
 				{confirmations || confirmations === 0 ? `${confirmations}` : 'Loading'}
 			</TableCell>
-			<TableCell align='left'>{repeatable.reward}</TableCell>
+			<TableCell align='left'>{`${repeatable.reward}g`}</TableCell>
 
 			<TableCell align='right' sx={{ width: 0.01 }}>
-				<RepeatableModalStudent
+				{/* <RepeatableModalStudent
 					classroom={classroom}
 					repeatable={repeatableWithPlayerData}
 					player={player}
+				/> */}
+				<ModalsStudent
+					taskOrRepeatable={repeatableWithPlayerData}
+					classroom={classroom}
+					player={player}
+					type='repeatable'
 				/>
 			</TableCell>
 		</TableRow>
@@ -97,7 +107,7 @@ export default function RepeatableTableStudent({
 	player: Player
 }) {
 	// Create a state variable to hold the tasks
-	const [repeatables, setRepeatables] = useState<Repeatable[]>([])
+	const [repeatables, setRepeatables] = useState<Repeatable[] | null>(null)
 	useEffect(() => {
 		// Create a reference to the tasks collection
 		const repeatableCollectionRef = query(
@@ -121,30 +131,35 @@ export default function RepeatableTableStudent({
 
 	return (
 		<Grid item xs={12}>
-			<TableContainer component={Paper}>
-				<Table sx={{ minWidth: 650 }} aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							<TableCell>Task</TableCell>
-							<TableCell>Description</TableCell>
-							<TableCell>Pending Completions</TableCell>
-							<TableCell>Confirmed Completions</TableCell>
-							<TableCell>Reward </TableCell>
-							<TableCell sx={{ m: '1%', p: '1%' }}></TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{repeatables?.map((repeatable) => (
-							<RepeatableTableRow
-								key={repeatable.id}
-								repeatable={repeatable}
-								classroom={classroom}
-								player={player}
-							/>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			{repeatables ? (
+				<TableContainer component={Paper}>
+					<Table aria-label='simple table' sx={{ border: 'none' }}>
+						<TableHead>
+							<TableRow>
+								<TableCell sx={{ width: 60 }} />
+								<TableCell>Name</TableCell>
+								<TableCell>Description</TableCell>
+								<TableCell>Pending Completions</TableCell>
+								<TableCell>Confirmed Completions</TableCell>
+								<TableCell>Reward </TableCell>
+								<TableCell>Open</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{repeatables.map((repeatable) => (
+								<RepeatableTableRow
+									key={repeatable.id}
+									repeatable={repeatable}
+									classroom={classroom}
+									player={player}
+								/>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			) : (
+				<Loading>Loading repeatables...</Loading>
+			)}
 		</Grid>
 	)
 }

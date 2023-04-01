@@ -18,13 +18,10 @@ import {
 	getPlayerTaskCompletion,
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
-
-function truncate(description: string) {
-	if (description.length > 40) {
-		return description.slice(0, 40) + '...'
-	}
-	return description
-}
+import { Grid } from '@mui/material'
+import Loading from '../global/Loading'
+import { useSnackbar } from 'notistack'
+import { truncate } from '../../utils/helperFunctions'
 
 const formatStatus = (task: CompletedTask) => {
 	const playerCompletion = task.completionTime
@@ -37,7 +34,9 @@ const formatStatus = (task: CompletedTask) => {
 }
 
 export default function ConfirmTasksTable({ classroom }: { classroom: Classroom }) {
-	const [completedTasks, setCompletedTasks] = useState<CompletedTask[]>([])
+	const { enqueueSnackbar } = useSnackbar()
+
+	const [completedTasks, setCompletedTasks] = useState<CompletedTask[] | null>(null)
 
 	useEffect(() => {
 		const completedTasksQuery = query(
@@ -79,6 +78,10 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 		return unsub
 	}, [classroom])
 
+	if (!completedTasks) {
+		return <Loading>Loading tasks...</Loading>
+	}
+
 	return (
 		<TableContainer component={Paper}>
 			<Table aria-label='simple table'>
@@ -102,26 +105,59 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 							<TableCell>{completedTask.name}</TableCell>
 							<TableCell>{truncate(completedTask.description)}</TableCell>
 							<TableCell>{formatStatus(completedTask)}</TableCell>
-							<TableCell>{completedTask.reward}</TableCell>
+							<TableCell>{`${completedTask.reward}g`}</TableCell>
 							<TableCell component='th' scope='row'>
 								{completedTask.player.name}
 							</TableCell>
 							<TableCell align='center'>
-								<Button
-									onClick={() =>
-										confirmTask(classroom.id, completedTask.player.id, completedTask.id)
-									}
-									// variant='contained'
-								>
-									Confirm
-								</Button>
-								<Button
-									onClick={() => denyTask(classroom.id, completedTask.player.id, completedTask.id)}
-									// variant='contained'
-									color='error'
-								>
-									Deny
-								</Button>
+								<Grid container columnSpacing={1}>
+									<Grid item>
+										<Button
+											onClick={() =>
+												confirmTask(classroom.id, completedTask.player.id, completedTask.id)
+													.then(() => {
+														enqueueSnackbar(
+															`Confirmed task completion "${completedTask.name}" from ${completedTask.player.name}!`,
+															{ variant: 'success' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar('There was an error confirming the task completion.', {
+															variant: 'error',
+														})
+													})
+											}
+											// variant='contained'
+											color='success'
+										>
+											Confirm
+										</Button>
+									</Grid>
+									<Grid item>
+										<Button
+											onClick={() =>
+												denyTask(classroom.id, completedTask.player.id, completedTask.id)
+													.then(() => {
+														enqueueSnackbar(
+															`Rejected task completion "${completedTask.name}" from ${completedTask.player.name}.`,
+															{ variant: 'default' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar('There was an error rejecting the task completion.', {
+															variant: 'error',
+														})
+													})
+											}
+											// variant='contained'
+											color='error'
+										>
+											Deny
+										</Button>
+									</Grid>
+								</Grid>
 							</TableCell>
 						</StyledTableRow>
 					))}

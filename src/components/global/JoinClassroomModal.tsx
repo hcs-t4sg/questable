@@ -9,9 +9,12 @@ import { useState } from 'react'
 import Grid from '@mui/material/Grid'
 import { joinClassroom } from '../../utils/mutations'
 import { User } from 'firebase/auth'
+import { useSnackbar } from 'notistack'
 // import ClassroomModalContent from './ClassroomModalContent'
 
 export default function JoinClassroomModal({ user }: { user: User }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [open, setOpen] = useState(false)
 	const [signupCode, setSignupCode] = React.useState('')
 
@@ -27,31 +30,28 @@ export default function JoinClassroomModal({ user }: { user: User }) {
 	// Mutation handlers
 
 	const handleJoinClassroom = () => {
-		joinClassroom(signupCode, user).then((value) => {
-			window.alert(value)
-		})
-		setSignupCode('')
-		setOpen(false)
+		if (!signupCode) {
+			enqueueSnackbar('Please enter a code.', { variant: 'error' })
+			return
+		}
+
+		joinClassroom(signupCode, user)
+			.then((value) => {
+				enqueueSnackbar(value, { variant: 'success' })
+				setSignupCode('')
+				handleClose()
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar(err.message, { variant: 'error' })
+			})
 	}
-
-	const openButton = (
-		<Button variant='contained' onClick={handleClickOpen}>
-			Join!
-		</Button>
-	)
-
-	const actionButtons = (
-		<DialogActions>
-			<Button onClick={handleClose}>Cancel</Button>
-			<Button variant='contained' onClick={handleJoinClassroom}>
-				Join
-			</Button>
-		</DialogActions>
-	)
 
 	return (
 		<Grid item xs={12}>
-			{openButton}
+			<Button variant='contained' onClick={handleClickOpen}>
+				Join classroom
+			</Button>
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>{'Join Classroom'}</DialogTitle>
 				<DialogContent>
@@ -64,17 +64,15 @@ export default function JoinClassroomModal({ user }: { user: User }) {
 						value={signupCode}
 					/>
 				</DialogContent>
-				{actionButtons}
+				<DialogActions>
+					<Button variant='text' onClick={handleClose}>
+						Cancel
+					</Button>
+					<Button variant='contained' onClick={handleJoinClassroom}>
+						Join
+					</Button>
+				</DialogActions>
 			</Dialog>
 		</Grid>
-		// <ClassroomModalContent
-		// 	type='join'
-		// 	openButton={openButton}
-		// 	open={open}
-		// 	handleClose={handleClose}
-		// 	setNew={setSignupCode}
-		// 	newClass={signupCode}
-		// 	actionButtons={actionButtons}
-		// />
 	)
 }

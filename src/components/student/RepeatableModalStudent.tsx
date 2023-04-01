@@ -5,6 +5,7 @@ import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
 import { useState } from 'react'
 import { Classroom, Player, RepeatableWithPlayerData } from '../../types'
 import { completeRepeatable } from '../../utils/mutations'
+import { useSnackbar } from 'notistack'
 
 export default function RepeatableModalStudent({
 	classroom,
@@ -15,6 +16,8 @@ export default function RepeatableModalStudent({
 	player: Player
 	repeatable: RepeatableWithPlayerData
 }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	// State variables
 	const [open, setOpen] = useState(false)
 
@@ -30,8 +33,19 @@ export default function RepeatableModalStudent({
 	// Handle task completion
 	const handleComplete = () => {
 		// Call the `completeTask` mutation
-		if (window.confirm('Are you sure you want to mark this task as complete?')) {
+		if (window.confirm('Are you sure you want to add a completion for this repeatable?')) {
 			completeRepeatable(classroom.id, repeatable.id, player.id)
+				.then(() => {
+					enqueueSnackbar(`Repeatable completion added for "${repeatable.name}"!`, {
+						variant: 'success',
+					})
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar(err.message, {
+						variant: 'error',
+					})
+				})
 			handleClose()
 		}
 	}
@@ -110,7 +124,7 @@ export default function RepeatableModalStudent({
 					>
 						<Cluster title='Task Name' data={repeatable.name} />
 						<Cluster title='Description' data={repeatable.description} />
-						<Cluster title='Reward Amount' data={`$${repeatable.reward}`} />
+						<Cluster title='Reward Amount' data={`${repeatable.reward}g`} />
 						<Cluster title='Completions' data={repeatable.completions} />
 						<Cluster
 							title='Completion'

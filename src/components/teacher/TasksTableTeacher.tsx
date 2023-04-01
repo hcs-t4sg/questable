@@ -12,7 +12,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import { format } from 'date-fns'
-import { collection, onSnapshot } from 'firebase/firestore'
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, Task } from '../../types'
 import { db } from '../../utils/firebase'
@@ -20,13 +20,9 @@ import { deleteTask } from '../../utils/mutations'
 import TaskModalTeacher from './TaskModalTeacher'
 
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
-
-function truncate(description: string) {
-	if (description.length > 50) {
-		return description.slice(0, 50) + '...'
-	}
-	return description
-}
+import Loading from '../global/Loading'
+import { enqueueSnackbar } from 'notistack'
+import { truncate } from '../../utils/helperFunctions'
 
 function percentDone(task: Task) {
 	const numCompleted = task.completed?.length
@@ -44,7 +40,7 @@ function LinearProgressWithLabel({ task }: { task: Task }) {
 					task.completed?.length + task.assigned?.length + task.confirmed?.length
 				} students`}</Typography>
 			</Box>
-			<Box sx={{ minWidth: '50%', mr: 1 }}>
+			<Box sx={{ minWidth: '50%', mr: 1, ml: 1 }}>
 				<LinearProgress variant='determinate' value={percentDone(task)} />
 			</Box>
 		</Box>
@@ -53,10 +49,11 @@ function LinearProgressWithLabel({ task }: { task: Task }) {
 
 export default function TasksTableTeacher({ classroom }: { classroom: Classroom }) {
 	// Create a state variable to hold the tasks
-	const [tasks, setTasks] = useState<Task[]>([])
+	const [tasks, setTasks] = useState<Task[] | null>(null)
 	useEffect(() => {
 		const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`)
-		const unsub = onSnapshot(taskCollectionRef, (snapshot) => {
+		const taskCollectionQuery = query(taskCollectionRef, orderBy('created', 'desc'))
+		const unsub = onSnapshot(taskCollectionQuery, (snapshot) => {
 			// Store the tasks in the `tasks` state variable
 			setTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Task)))
 		})
@@ -66,53 +63,67 @@ export default function TasksTableTeacher({ classroom }: { classroom: Classroom 
 	const handleDelete = (task: Task) => {
 		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this task?')) {
-			deleteTask(classroom.id, task.id).catch(console.error)
+			deleteTask(classroom.id, task.id)
+				.then(() => {
+					enqueueSnackbar('Deleted task!', { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar(err.message, { variant: 'error' })
+				})
 		}
 	}
+
 	return (
 		<Grid item xs={12}>
-			<TableContainer component={Paper}>
-				<Table aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							<BlankTableCell />
-							<TableCell>Task</TableCell>
-							<TableCell>Description</TableCell>
-							<TableCell>Deadline</TableCell>
-							<TableCell>Reward </TableCell>
-							<TableCell>Students Confirmed</TableCell>
-							<BlankTableCell />
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{tasks?.map((task) => (
-							// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-							<StyledTableRow key={task.id}>
-								<TableCell>
-									<TaskModalTeacher task={task} classroom={classroom} />
-								</TableCell>
+			{tasks ? (
+				<TableContainer component={Paper}>
+					<Table aria-label='simple table'>
+						<TableHead>
+							<TableRow>
+								<BlankTableCell />
+								<TableCell>Task</TableCell>
+								<TableCell>Description</TableCell>
+								<TableCell>Deadline</TableCell>
+								<TableCell>Reward </TableCell>
+								<TableCell>Students Confirmed</TableCell>
+								<BlankTableCell />
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{tasks.map((task) => (
+								// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+								<StyledTableRow key={task.id}>
+									<TableCell>
+										<TaskModalTeacher task={task} classroom={classroom} />
+									</TableCell>
 
-								<TableCell component='th' scope='row'>
-									{task.name}
-								</TableCell>
-								<TableCell align='left'>{truncate(task.description)}</TableCell>
-								<TableCell align='left'>{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}</TableCell>
-								<TableCell align='left'>{task.reward}</TableCell>
-								<TableCell align='left'>
-									<LinearProgressWithLabel task={task} />
-								</TableCell>
+									<TableCell component='th' scope='row'>
+										{task.name}
+									</TableCell>
+									<TableCell align='left'>{truncate(task.description)}</TableCell>
+									<TableCell align='left'>
+										{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
+									</TableCell>
+									<TableCell align='left'>{`${task.reward}g`}</TableCell>
+									<TableCell align='left'>
+										<LinearProgressWithLabel task={task} />
+									</TableCell>
 
-								<TableCell align='right'>
-									<IconButton onClick={() => handleDelete(task)}>
-										<DeleteIcon />
-									</IconButton>
-								</TableCell>
-							</StyledTableRow>
-							// </TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+									<TableCell align='right'>
+										<IconButton onClick={() => handleDelete(task)}>
+											<DeleteIcon />
+										</IconButton>
+									</TableCell>
+								</StyledTableRow>
+								// </TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			) : (
+				<Loading>Loading tasks...</Loading>
+			)}
 		</Grid>
 	)
 }

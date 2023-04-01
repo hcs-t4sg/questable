@@ -37,6 +37,7 @@ import {
 	TaskModalBox,
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
+import { useSnackbar } from 'notistack'
 
 export default function CreateTaskModal({
 	classroom,
@@ -45,6 +46,8 @@ export default function CreateTaskModal({
 	classroom: Classroom
 	player: Player
 }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState('')
 	const [description, setDescription] = useState('')
@@ -73,13 +76,13 @@ export default function CreateTaskModal({
 	const handleAdd = () => {
 		if (isRepeatable) {
 			if (name === '') {
-				window.alert('You need to provide a name for the task')
+				enqueueSnackbar('You need to provide a name for the repeatable', { variant: 'error' })
 				return
 			}
 
 			if (maxCompletionsIsInvalid(maxCompletions)) {
 				setMaxCompletions('1')
-				alert('Max completions must be a positive integer')
+				enqueueSnackbar('Max completions must be a positive integer', { variant: 'error' })
 				return
 			}
 
@@ -90,21 +93,33 @@ export default function CreateTaskModal({
 				maxCompletions: parseInt(maxCompletions),
 			}
 
-			addRepeatable(classroom.id, newTask, player.id).catch(console.error)
+			handleClose()
+			addRepeatable(classroom.id, newTask, player.id)
+				.then(() => {
+					enqueueSnackbar(`Added repeatable "${name}"!`, {
+						variant: 'success',
+					})
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an error adding the repeatable.', {
+						variant: 'error',
+					})
+				})
 		} else {
 			if (name === '') {
-				window.alert('You need to provide a name for the task')
+				enqueueSnackbar('You need to provide a name for the task', { variant: 'error' })
 				return
 			}
 
 			if (!dueDate) {
-				window.alert('You need to provide a due date')
+				enqueueSnackbar('You need to provide a due date', { variant: 'error' })
 				return
 			}
 
 			const dateIsInvalid = isNaN(dueDate.getTime())
 			if (dateIsInvalid) {
-				window.alert('Due date is invalid')
+				enqueueSnackbar('Due date is invalid', { variant: 'error' })
 				return
 			}
 
@@ -114,16 +129,25 @@ export default function CreateTaskModal({
 				reward,
 				due: Timestamp.fromDate(dueDate),
 			}
-
-			addTask(classroom.id, newTask, player.id).catch(console.error)
+			handleClose()
+			addTask(classroom.id, newTask, player.id)
+				.then(() => {
+					enqueueSnackbar(`Added task "${name}"!`, {
+						variant: 'success',
+					})
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an error adding the task.', {
+						variant: 'error',
+					})
+				})
 		}
-
-		handleClose()
 	}
 
 	const openButton = (
 		<Button
-			variant='text'
+			variant='contained'
 			sx={{ width: 1 }}
 			onClick={handleOpen}
 			startIcon={<AddCircleOutlineIcon />}
@@ -281,10 +305,10 @@ export default function CreateTaskModal({
 								label='Reward'
 								onChange={(event) => setReward(event.target.value as number)}
 							>
-								<MenuItem value={10}>10</MenuItem>
-								<MenuItem value={20}>20</MenuItem>
-								<MenuItem value={30}>30</MenuItem>
-								<MenuItem value={40}>40</MenuItem>
+								<MenuItem value={10}>10g</MenuItem>
+								<MenuItem value={20}>20g</MenuItem>
+								<MenuItem value={30}>30g</MenuItem>
+								<MenuItem value={40}>40g</MenuItem>
 							</Select>
 						</FormControl>
 						{/* </Box> */}

@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material'
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
-import { styled } from '@mui/material/styles'
+// import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
+// import { styled } from '@mui/material/styles'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import ClassStudent from '../../routes/student/ClassStudent'
 import Inventory from '../../routes/student/Inventory'
@@ -15,26 +15,30 @@ import { useEffect } from 'react'
 import { Classroom, Player } from '../../types'
 import { refreshAllRepeatables } from '../../utils/mutations'
 import ForumView from '../forum/ForumView'
+import { User } from 'firebase/auth'
+import StudentSettings from '../../routes/student/StudentSettings'
 
 export default function StudentView({
 	player,
 	classroom,
+	user,
 }: {
 	player: Player
 	classroom: Classroom
+	user: User
 }) {
-	const ThickProgress = styled(LinearProgress)(() => ({
-		height: 20,
-		borderRadius: 0,
-		marginTop: 50,
-		[`&.${linearProgressClasses.colorPrimary}`]: {
-			backgroundColor: 'rgba(102, 187, 106, .5)',
-		},
-		[`& .${linearProgressClasses.bar}`]: {
-			borderRadius: 0,
-			backgroundColor: '#1B710D',
-		},
-	}))
+	// const ThickProgress = styled(LinearProgress)(() => ({
+	// 	height: 20,
+	// 	borderRadius: 0,
+	// 	marginTop: 50,
+	// 	[`&.${linearProgressClasses.colorPrimary}`]: {
+	// 		backgroundColor: 'rgba(102, 187, 106, .5)',
+	// 	},
+	// 	[`& .${linearProgressClasses.bar}`]: {
+	// 		borderRadius: 0,
+	// 		backgroundColor: '#1B710D',
+	// 	},
+	// }))
 
 	// Given the IDs for the outfit fetched from Firebase (and the hair subtype), you can designate the avatar outfit like so.
 	const playerOutfit = currentAvatar(player)
@@ -46,12 +50,12 @@ export default function StudentView({
 
 	return (
 		<Layout classroom role={player.role}>
-			<Grid container spacing={3} sx={{ p: 5 }}>
+			<Grid container spacing={3}>
 				<Grid item xs={12}>
 					<Box
 						sx={{
 							width: '100%',
-							height: '60%',
+							height: '100%',
 							display: 'flex',
 							flexDirection: 'column',
 							// marginTop: '30px',
@@ -60,12 +64,18 @@ export default function StudentView({
 							paddingRight: '80px',
 							paddingBottom: '72px',
 							paddingTop: '40px',
-							borderColor: 'rgba(102, 187, 106, 0.5)',
+							borderColor: '#373d20',
 							borderStyle: 'solid',
 							borderWidth: '10px',
+							backgroundColor: '#f3f8df',
 						}}
 					>
-						<Typography variant='h4'>{player.name}</Typography>
+						<Typography variant='h2' sx={{ fontFamily: 'Superscript' }}>
+							{classroom.name}
+						</Typography>
+						<Typography variant='h3' sx={{ fontFamily: 'Superscript' }}>
+							{player.name}
+						</Typography>
 						<Box sx={{ display: 'flex', marginTop: '20px' }}>
 							<Box
 								sx={{
@@ -77,7 +87,7 @@ export default function StudentView({
 							>
 								<Avatar outfit={playerOutfit} />
 							</Box>
-							<Box
+							{/* <Box
 								sx={{
 									width: '350px',
 									display: 'flex',
@@ -87,17 +97,24 @@ export default function StudentView({
 							>
 								<ThickProgress variant='determinate' value={30} />
 								<ThickProgress variant='determinate' value={60} />
-							</Box>
+							</Box> */}
 							<Box
 								sx={{
 									width: '350px',
 									display: 'flex',
 									flexDirection: 'column',
-									marginLeft: '30px',
+									marginLeft: '50px',
 								}}
 							>
-								<Typography sx={{ fontSize: '25px', marginTop: '38px' }}>Powerups</Typography>
-								<Typography sx={{ fontSize: '25px', marginTop: '38px' }}>Streak</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '40px' }}>
+									Name: {user.displayName}
+								</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+									Email: {user.email}
+								</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+									Gold: {player.money}
+								</Typography>
 							</Box>
 						</Box>
 					</Box>
@@ -111,6 +128,10 @@ export default function StudentView({
 						element={<ClassStudent player={player} classroom={classroom} />}
 					/>
 					<Route path='inventory' element={<Inventory player={player} classroom={classroom} />} />
+					<Route
+						path='student-settings'
+						element={<StudentSettings player={player} classroom={classroom} user={user} />}
+					/>
 					<Route path='forum/*' element={<ForumView player={player} classroom={classroom} />} />
 					<Route
 						path='*'

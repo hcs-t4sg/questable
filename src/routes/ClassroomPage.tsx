@@ -1,32 +1,20 @@
+import { Grid } from '@mui/material'
 import { getAuth, User } from 'firebase/auth'
 import { doc, onSnapshot } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import Layout from '../components/global/Layout'
+import Loading from '../components/global/Loading'
 import StudentView from '../components/student/StudentView'
 import TeacherView from '../components/teacher/TeacherView'
+import { Classroom, Player } from '../types'
 import { db } from '../utils/firebase'
-import { getPlayerData, syncUsers } from '../utils/mutations'
-import { Player, Classroom } from '../types'
-import { useState, useEffect } from 'react'
+import { syncUsers } from '../utils/mutations'
 
 export default function ClassroomPage({ user }: { user: User }) {
 	// Use react router to fetch class ID from URL params
 	const params = useParams()
 	const classID = params.classID
-
-	// Fetch user's player information for classroom
-	const [player, setPlayer] = useState<Player | null>(null)
-	useEffect(() => {
-		const updatePlayer = async () => {
-			const auth = getAuth()
-			const user = auth.currentUser
-			if (!!user && classID) {
-				syncUsers(user)
-				const playerData = await getPlayerData(classID, user.uid)
-				if (playerData) setPlayer(playerData)
-			}
-		}
-		updatePlayer().catch(console.error)
-	}, [classID])
 
 	// Listen to classroom data
 	const [classroom, setClassroom] = useState<Classroom | null>(null)
@@ -45,19 +33,58 @@ export default function ClassroomPage({ user }: { user: User }) {
 		}
 	}, [user, classID])
 
+	// Fetch user's player information for classroom
+	const [player, setPlayer] = useState<Player | null>(null)
+	useEffect(() => {
+		const updatePlayer = async () => {
+			const auth = getAuth()
+			const user = auth.currentUser
+			if (!!user && classID) {
+				syncUsers(user)
+				const playerRef = doc(db, `classrooms/${classID}/players/${user.uid}`)
+				const unsub = onSnapshot(playerRef, (doc) => {
+					if (doc.exists()) {
+						setPlayer({ ...doc.data(), id: doc.id } as Player)
+					}
+				})
+				return unsub
+				// const playerData = await getPlayerData(classID, user.uid)
+
+				// if (playerData) setPlayer(playerData)
+			}
+		}
+		updatePlayer().catch(console.error)
+	}, [classID])
+
 	if (classroom) {
 		if (player) {
 			if (player.role === 'teacher') {
 				return <TeacherView player={player} classroom={classroom} user={user} />
 			} else if (player.role === 'student') {
-				return <StudentView player={player} classroom={classroom} />
+				return <StudentView player={player} classroom={classroom} user={user} />
 			} else {
 				return <p>Error: Player role does not exist or is invalid.</p>
 			}
 		} else {
-			return <p>Error: Player does not exist.</p>
+			return (
+				<Layout>
+					<Grid container spacing={3}>
+						<Grid item xs={12}>
+							<Loading>Loading player data...</Loading>
+						</Grid>
+					</Grid>
+				</Layout>
+			)
 		}
 	} else {
-		return <p>Error: Classroom does not exist.</p>
+		return (
+			<Layout>
+				<Grid container spacing={3}>
+					<Grid item xs={12}>
+						<Loading>Loading classroom data...</Loading>
+					</Grid>
+				</Grid>
+			</Layout>
+		)
 	}
 }

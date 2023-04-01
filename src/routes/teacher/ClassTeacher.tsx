@@ -14,6 +14,7 @@ import Avatar from '../../components/global/Avatar'
 import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { currentAvatar } from '../../utils/items'
 import { useEffect, useState } from 'react'
+import Loading from '../../components/global/Loading'
 
 export default function ClassTeacher({
 	player,
@@ -22,7 +23,7 @@ export default function ClassTeacher({
 	player: Player
 	classroom: Classroom
 }) {
-	const [students, setStudents] = useState<PlayerWithEmail[]>([])
+	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
 	//   const [teacher, setTeacher] = React.useState();
 
 	useEffect(() => {
@@ -81,7 +82,7 @@ export default function ClassTeacher({
 
 	return (
 		<>
-			<Grid item xs={12}>
+			{/* <Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
 				</Typography>
@@ -91,33 +92,38 @@ export default function ClassTeacher({
 					<CardContent>
 						<Typography variant='h5' component='div'>
 							{player.name}
-						</Typography>{' '}
-						{/* Do we want a separate user name?*/}
-						<Typography variant='h5' component='div'>
+						</Typography>{' '} */}
+			{/* Do we want a separate user name?*/}
+			{/* <Typography variant='h5' component='div'>
 							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
 				</Card>
-			</Grid>
-
-			{students?.map((student) => (
-				<Card sx={{ width: 0.22, m: 2 }} key={student.id}>
-					<CardContent>
-						<Box
-							sx={{
-								height: 200,
-								width: 200,
-							}}
-						>
-							<Avatar outfit={currentAvatar(student)} />
-						</Box>
-						<Typography variant='body1'>Name: {student.name}</Typography>
-						<Typography variant='body1'>Account Balance: {student.money}</Typography>
-						<Typography variant='body1'>{student.email}</Typography>
-						<ClassTeacherModal student={student} />
-					</CardContent>
-				</Card>
-			))}
+			</Grid> */}
+			{students ? (
+				students.map((student) => (
+					<Card sx={{ width: 0.22, m: 2 }} key={student.id}>
+						<CardContent>
+							<Box
+								sx={{
+									height: 300,
+									width: 200,
+								}}
+							>
+								<Avatar outfit={currentAvatar(student)} />
+							</Box>
+							<Typography variant='body1'>Name: {student.name}</Typography>
+							<Typography variant='body1'>Gold: {student.money}g</Typography>
+							<Typography variant='body1'>{student.email}</Typography>
+							<ClassTeacherModal student={student} />
+						</CardContent>
+					</Card>
+				))
+			) : (
+				<Grid item xs={12}>
+					<Loading>Loading students...</Loading>
+				</Grid>
+			)}
 		</>
 	)
 }
