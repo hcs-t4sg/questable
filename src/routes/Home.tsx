@@ -77,6 +77,7 @@ export default function Home({ user }: { user: User }) {
 								width: '100%',
 								backgroundImage: `url(${wood1})`,
 								backgroundSize: 'cover',
+								imageRendering: 'pixelated',
 							}}
 						>
 							<Box

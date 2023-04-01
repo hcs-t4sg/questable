@@ -113,6 +113,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 						backgroundSize: '2000px',
 						height: '100%',
 						width: '100%',
+						imageRendering: 'pixelated',
 					}}
 				>
 					<TabPanel value={value} index={0}>
