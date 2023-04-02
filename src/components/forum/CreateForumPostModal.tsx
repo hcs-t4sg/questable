@@ -78,12 +78,12 @@ export default function CreateForumPostModal({
 			author: player,
 		}
 
+		handleClose()
 		addForumPost(newThread, classroom)
 			.then(() => {
 				enqueueSnackbar(`Created post "${subject}"!`, {
 					variant: 'success',
 				})
-				handleClose()
 			})
 			.catch((err) => {
 				console.error(err)
