@@ -129,6 +129,7 @@ export default function CreateTaskModal({
 				reward,
 				due: Timestamp.fromDate(dueDate),
 			}
+
 			handleClose()
 			addTask(classroom.id, newTask, player.id)
 				.then(() => {

@@ -15,9 +15,10 @@ import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
 import { useSnackbar } from 'notistack'
-import ModalsStudent, { rewardPotion } from './ModalsStudent'
 import Paper from '@mui/material/Paper'
 import { truncate } from '../../utils/helperFunctions'
+import TaskModalStudent from './TaskModalStudent'
+import { rewardPotion } from './AssignmentContentStudent'
 
 function a11yProps(index: number) {
 	return {
@@ -133,12 +134,7 @@ export default function TasksTableStudent({
 										</TableCell>
 										<TableCell align='center'>
 											{/* <TaskModalStudent task={task} classroom={classroom} player={player} /> */}
-											<ModalsStudent
-												taskOrRepeatable={task}
-												classroom={classroom}
-												player={player}
-												type='task'
-											/>
+											<TaskModalStudent classroom={classroom} player={player} task={task} />
 										</TableCell>
 										{taskCategory === 0 ? (
 											<TableCell align='center'>

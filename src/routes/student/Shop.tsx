@@ -87,7 +87,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										item={item}
 										player={player}
 										classroom={classroom}
-										itemPrice='$100'
+										itemPrice='100g'
 										type='shop'
 										isBody={false}
 									/>
@@ -103,7 +103,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										item={item}
 										player={player}
 										classroom={classroom}
-										itemPrice='$150'
+										itemPrice='150g'
 										type='shop'
 										isBody={false}
 									/>
@@ -119,7 +119,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										item={item}
 										player={player}
 										classroom={classroom}
-										itemPrice='$150'
+										itemPrice='150g'
 										type='shop'
 										isBody={false}
 									/>
@@ -135,7 +135,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										item={item}
 										player={player}
 										classroom={classroom}
-										itemPrice='$100'
+										itemPrice='100g'
 										type='shop'
 										isBody={false}
 									/>

@@ -35,12 +35,12 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 			return
 		}
 
+		handleClose()
 		addClassroom(newClassroomName, user)
 			.then(() => {
 				enqueueSnackbar(`Created classroom "${newClassroomName}"`, {
 					variant: 'success',
 				})
-				handleClose()
 				setNewClassroomName('')
 			})
 			.catch((err) => {
