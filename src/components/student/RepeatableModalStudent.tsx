@@ -1,20 +1,23 @@
+// ! DEPRECATED
 import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
 import { useState } from 'react'
-import sprite1 from '../../assets/tempAssets/sprite1.svg'
-import { Classroom, Player, TaskWithStatus } from '../../types'
-import { completeTask } from '../../utils/mutations'
+import { Classroom, Player, RepeatableWithPlayerData } from '../../types'
+import { completeRepeatable } from '../../utils/mutations'
+import { useSnackbar } from 'notistack'
 
-export default function TaskModalStudent({
+export default function RepeatableModalStudent({
 	classroom,
 	player,
-	task,
+	repeatable,
 }: {
 	classroom: Classroom
 	player: Player
-	task: TaskWithStatus
+	repeatable: RepeatableWithPlayerData
 }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	// State variables
 	const [open, setOpen] = useState(false)
 
@@ -30,8 +33,20 @@ export default function TaskModalStudent({
 	// Handle task completion
 	const handleComplete = () => {
 		// Call the `completeTask` mutation
-		if (window.confirm('Are you sure you want to mark this task as complete?')) {
-			completeTask(classroom.id, task.id, player.id)
+		if (window.confirm('Are you sure you want to add a completion for this repeatable?')) {
+			completeRepeatable(classroom.id, repeatable.id, player.id)
+				.then(() => {
+					enqueueSnackbar(`Repeatable completion added for "${repeatable.name}"!`, {
+						variant: 'success',
+					})
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar(err.message, {
+						variant: 'error',
+					})
+				})
+			handleClose()
 		}
 	}
 
@@ -53,7 +68,7 @@ export default function TaskModalStudent({
 	)
 
 	return (
-		<div>
+		<Box>
 			{openButton}
 			<Modal sx={{ overflow: 'scroll' }} open={open} onClose={handleClose}>
 				<Box
@@ -82,7 +97,7 @@ export default function TaskModalStudent({
 						}}
 					>
 						<Typography fontWeight='light' variant='h5'>
-							Overview
+							Repeatable Overview
 						</Typography>
 						<IconButton onClick={handleClose}>
 							<CloseIcon />
@@ -96,28 +111,9 @@ export default function TaskModalStudent({
 							borderWidth: '0px',
 							borderRadius: '5px',
 							width: '100%',
-							marginBottom: '35px',
 						}}
 					/>
-					<Box
-						component='img'
-						sx={{
-							width: '15%',
-							// height: '30%',
-							maxHeight: '200px',
-							maxWidth: '200px',
-							marginBottom: '24px',
-						}}
-						alt="User's avatar"
-						src={sprite1}
-					/>
-					<Typography
-						sx={{ textAlign: 'center', maxWidth: '400px' }}
-						fontWeight='light'
-						variant='h6'
-					>
-						Flavored Text: Strawberry Vanilla Chocolate!
-					</Typography>
+
 					<Box
 						sx={{
 							width: '100%',
@@ -126,34 +122,21 @@ export default function TaskModalStudent({
 							justifyContent: 'left',
 						}}
 					>
-						<Cluster title='Task Name' data={task.name} />
-						<Cluster title='Description' data={task.description} />
-						<Cluster title='Deadline' data={task.due} />
-						<Cluster title='Reward Amount' data={`$${task.reward}`} />
-						{task.status === 'assigned' ? (
-							<Cluster
-								title='Completion'
-								data={
-									<Button onClick={handleComplete} variant='contained'>
-										Mark as complete
-									</Button>
-								}
-							/>
-						) : (
-							<Cluster
-								title='Completion'
-								data={
-									task.status === 'completed'
-										? 'Marked as completed!'
-										: task.status === 'confirmed'
-										? 'Confirmed!'
-										: 'Unavailable'
-								}
-							/>
-						)}
+						<Cluster title='Task Name' data={repeatable.name} />
+						<Cluster title='Description' data={repeatable.description} />
+						<Cluster title='Reward Amount' data={`$${repeatable.reward}`} />
+						<Cluster title='Completions' data={repeatable.completions} />
+						<Cluster
+							title='Completion'
+							data={
+								<Button onClick={handleComplete} variant='contained'>
+									Mark as complete
+								</Button>
+							}
+						/>
 					</Box>
 				</Box>
 			</Modal>
-		</div>
+		</Box>
 	)
 }

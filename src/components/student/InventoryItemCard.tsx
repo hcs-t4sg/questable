@@ -1,3 +1,4 @@
+// ! DEPRECATED
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
@@ -6,6 +7,7 @@ import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { Classroom, Item, Player } from '../../types'
 import { updateAvatar } from '../../utils/mutations'
+import { useSnackbar } from 'notistack'
 
 // The display for an inventory card
 export default function InventoryItemCard({
@@ -17,10 +19,12 @@ export default function InventoryItemCard({
 	player: Player
 	classroom: Classroom
 }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const handleEquip = async () => {
 		const res = await updateAvatar(player, item, classroom)
-		window.alert(res)
 		window.location.reload()
+		enqueueSnackbar(res, { variant: 'success' })
 	}
 
 	// const selectItem = a

@@ -5,8 +5,7 @@ interface Assignment {
 	name: string
 	description: string
 	reward: number
-	created: number
-	due: number
+	created: Timestamp
 	assigned: string[]
 }
 
@@ -14,10 +13,11 @@ export interface Task extends Assignment {
 	completed: string[]
 	confirmed: string[]
 	canvasId?: string
+	due: Timestamp
 }
 
 export interface TaskWithStatus extends Task {
-	status: string
+	status: 0 | 1 | 2 | 3
 }
 
 export interface TaskCompletionTime {
@@ -29,20 +29,42 @@ export interface TaskWithCompletionTimes extends Task {
 	completionTimes: TaskCompletionTime[]
 }
 
-export interface Repeatable extends Assignment {
-	maxCompletions: string
+export interface CompletedTask extends Task {
+	player: Player
+	completionTime: Timestamp
 }
 
-export interface RepeatablePlayerCompletions {
+export interface Repeatable extends Assignment {
+	maxCompletions: number
+	requestCount: number
+}
+
+export interface RepeatablePlayerCompletionsArray {
 	id: string
 	completions: number
 }
 
-export interface RepeatableWithPlayerCompletions extends Repeatable {
-	playerCompletions: RepeatablePlayerCompletions[]
+export interface RepeatableWithPlayerCompletionsArray extends Repeatable {
+	playerCompletions: RepeatablePlayerCompletionsArray[]
 }
 
-// export interface RepeatableCompletion
+export interface RepeatableWithPlayerData extends Repeatable {
+	completions: number
+	confirmations: number
+}
+
+export interface CompletionTime {
+	id: string
+	playerID: string
+	time: Timestamp
+}
+
+export interface RepeatableCompletion {
+	id: string
+	repeatable: Repeatable
+	player: Player
+	time: Timestamp
+}
 
 export interface Classroom {
 	id: string
@@ -56,7 +78,6 @@ export interface Player {
 	name: string
 	role: UserRole
 	money: number
-	avatar: number
 	avaBody?: number
 	avaHair?: number
 	avaShirt?: number
@@ -101,5 +122,26 @@ export interface CanvasAssignment {
 	id: string
 	name: string
 	description: string
-	// due_at: string
+}
+
+export interface CanvasCourse {
+	id: string
+	name: string
+}
+export interface ForumPost {
+	id: string
+	title: string
+	content: string
+	postTime: Timestamp
+	likes: number
+	author: Player
+	postType: 0 | 1 | 2 | 3
+}
+
+export interface Comment {
+	id: string
+	content: string
+	author: string
+	likes: number
+	postTime: Timestamp
 }

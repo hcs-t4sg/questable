@@ -1,20 +1,26 @@
-import CloseIcon from '@mui/icons-material/Close'
-import { FormControl, InputLabel, MenuItem, Modal, Select } from '@mui/material'
-import Box from '@mui/material/Box'
+// import CloseIcon from '@mui/icons-material/Close'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+// import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+// import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { updateTask } from '../../utils/mutations'
-
 import EditIcon from '@mui/icons-material/Edit'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { fromUnixTime, getUnixTime } from 'date-fns'
+import { Timestamp } from 'firebase/firestore'
 import { Classroom, Task } from '../../types'
+import {
+	TaskModalBox,
+	ModalTitle,
+	BoxInModal,
+	TeacherModalStyled,
+} from '../../styles/TaskModalStyles'
+import { useSnackbar } from 'notistack'
 
 export default function TaskModalTeacher({
 	task,
@@ -23,18 +29,19 @@ export default function TaskModalTeacher({
 	task: Task
 	classroom: Classroom
 }) {
+	const { enqueueSnackbar } = useSnackbar()
 	// State variables
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState(task.name)
 	const [reward, setReward] = useState(task.reward)
-	const [date, setDate] = useState<Date | null>(fromUnixTime(task.due))
+	const [date, setDate] = useState<Date | null>(task.due.toDate())
 	const [description, setDescription] = useState(task.description)
 
 	// Open the task modal
 	const handleClickOpen = () => {
 		setOpen(true)
 		setName(task.name)
-		setDate(fromUnixTime(task.due))
+		setDate(task.due.toDate())
 		setReward(task.reward)
 	}
 	// Close the task modal
@@ -43,15 +50,38 @@ export default function TaskModalTeacher({
 	}
 	// Handle the click of an edit button
 	const handleEdit = () => {
+		if (name === '') {
+			enqueueSnackbar('You need to provide a name for the task', { variant: 'error' })
+			return
+		}
+
+		if (!date) {
+			enqueueSnackbar('You need to provide a due date', { variant: 'error' })
+			return
+		}
+
+		const dateIsInvalid = isNaN(date.getTime())
+		if (dateIsInvalid) {
+			enqueueSnackbar('Due date is invalid', { variant: 'error' })
+			return
+		}
 		const updatedTask = {
 			name: name,
-			due: date ? getUnixTime(date) : task.due,
+			description: description,
+			due: date ? Timestamp.fromDate(date) : task.due,
 			reward: reward,
 			id: task.id,
 		}
 		// Call the `updateTask` mutation
 		updateTask(classroom.id, updatedTask)
-		handleClose()
+			.then(() => {
+				handleClose()
+				enqueueSnackbar('Edited task!', { variant: 'success' })
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar('There was an issue editing the task', { variant: 'error' })
+			})
 	}
 
 	const openButton = (
@@ -65,84 +95,16 @@ export default function TaskModalTeacher({
 			Save Changes
 		</Button>
 	)
-	// const closeButton = (
-	//   <IconButton onClick={handleClose}>
-	//     <CloseIcon />
-	//   </IconButton>
-	// );
-
-	// const [completed, setCompleted] = React.useState([]);
-
-	// const [chartData, setChartData] = React.useState(0);
-
-	// React.useEffect(() => {
-	//   const taskRef = doc(db, `classrooms/${classroom.id}/tasks/${task.id}`);
-
-	//   // Attach a listener to the tasks collection
-	//   onSnapshot(taskRef, (snapshot) => {
-	//     const numCompleted = snapshot.data()?.completed.length;
-	//     const numAssigned = snapshot.data()?.assigned.length;
-	//     const numConfirmed = snapshot.data()?.confirmed.length;
-	//     const total = numAssigned + numCompleted + numConfirmed;
-	//     // check if values are definied then check if there will not be a divide by 0 error
-	//     if (
-	//       !(
-	//         numCompleted === undefined ||
-	//         numAssigned === undefined ||
-	//         numConfirmed === undefined ||
-	//         total === 0
-	//       )
-	//     ) {
-	//       setChartData(numConfirmed / total);
-	//     } else {
-	//       setChartData(0);
-	//     }
-	//   });
-	// });
-
-	// function CircularProgressWithLabel(
-	//   props: CircularProgressProps & { value: number }
-	// ) {
-	//   return (
-	//     <Box sx={{ position: "relative", display: "inline-flex" }}>
-	//       <CircularProgress variant="determinate" {...props} />
-	//       <Box
-	//         sx={{
-	//           top: 0,
-	//           left: 0,
-	//           bottom: 0,
-	//           right: 0,
-	//           position: "absolute",
-	//           display: "flex",
-	//           alignItems: "center",
-	//           justifyContent: "center",
-	//         }}
-	//       >
-	//         <Typography
-	//           variant="caption"
-	//           component="div"
-	//           color="text.secondary"
-	//         >{`${Math.round(props.value)}%`}</Typography>
-	//       </Box>
-	//     </Box>
-	//   );
-	// }
-
-	//   // function to handle the date change
-	//   // store the date as a unix time stamp
-	//   const handleDateChange = (date) => {
-	//     setDate(date);
-	//   };
 
 	return (
 		<div>
 			{openButton}
-			<Modal
-				sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+			<TeacherModalStyled
+				// sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
 				open={open}
 				onClose={handleClose}
 			>
-				<Box
+				{/* <Box
 					sx={{
 						width: '40%',
 						display: 'flex',
@@ -154,8 +116,9 @@ export default function TaskModalTeacher({
 						backgroundColor: 'white',
 						marginBottom: '18px',
 					}}
-				>
-					<Box
+				> */}
+				<TaskModalBox>
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -179,7 +142,8 @@ export default function TaskModalTeacher({
 							width: '100%',
 							marginBottom: '10px',
 						}}
-					/>
+					/> */}
+					<ModalTitle onClick={handleClose} text='Overview' />
 					<TextField
 						margin='normal'
 						id='name'
@@ -202,7 +166,7 @@ export default function TaskModalTeacher({
 						onChange={(event) => setDescription(event.target.value)}
 					/>
 
-					<Box
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -210,18 +174,18 @@ export default function TaskModalTeacher({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
+					<BoxInModal>
 						<LocalizationProvider dateAdapter={AdapterDateFns}>
-							<DatePicker
+							<DateTimePicker
 								label='Due Date'
 								value={date}
-								// TODO this is probably a bug with date setting. Fix!
-								onChange={(_newValue) => setDate(date)}
-								renderInput={(params) => <TextField {...params} />}
+								onChange={(newValue) => setDate(newValue)}
 							/>
 						</LocalizationProvider>
-					</Box>
-					<Box
+						{/* </Box> */}
+					</BoxInModal>
+					{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -229,7 +193,8 @@ export default function TaskModalTeacher({
 							justifyContent: 'space-between',
 							m: 2,
 						}}
-					>
+					> */}
+					<BoxInModal>
 						<FormControl fullWidth>
 							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
 							<Select
@@ -245,14 +210,16 @@ export default function TaskModalTeacher({
 								<MenuItem value={40}>40</MenuItem>
 							</Select>
 						</FormControl>
-					</Box>
+						{/* </Box> */}
+					</BoxInModal>
 					<br />
 					{/* center the save button */}
 					<Grid container justifyContent='center'>
 						{saveButton}
 					</Grid>
-				</Box>
-			</Modal>
+				</TaskModalBox>
+				{/* </Box> */}
+			</TeacherModalStyled>
 		</div>
 	)
 }

@@ -57,8 +57,8 @@ export default function ClassTeacherModal({ student }: { student: Player }) {
 						height: 50,
 						width: 50,
 					}}
-					alt={`Avatar ${student.avatar}`}
-					src={`../../static/${student.avatar}.png`}
+					alt={`Avatar ${student.avaBody}`}
+					src={`../../static/${student.avaBody}.png`}
 				/>
 				<DialogContent></DialogContent>
 			</Dialog>

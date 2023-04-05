@@ -1,73 +1,29 @@
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
+// import Card from '@mui/material/Card'
+// import CardContent from '@mui/material/CardContent'
 import * as React from 'react'
 import CreateTaskModal from '../../components/teacher/CreateTaskModal'
-import CreateCanvasTaskModal from '../../components/teacher/CreateCanvasTaskModal'
 import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
-
-import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '../../utils/firebase'
+import CanvasAssignmentModal from '../../components/teacher/CanvasAssignmentModal'
 
 import { Tab, Tabs } from '@mui/material'
 import RepeatableTableTeacher from '../../components/teacher/RepeatableTableTeacher'
 import { Classroom, Player } from '../../types'
 
 export default function Tasks({ player, classroom }: { player: Player; classroom: Classroom }) {
-	const [numStudents, setNumStudents] = React.useState()
-
-	const classroomRef = doc(db, `classrooms/${classroom.id}`)
-	onSnapshot(classroomRef, (doc) => {
-		if (doc.exists()) {
-			setNumStudents(doc.data().playerList.length)
-		}
-	})
 	//   const [teacher, setTeacher] = React.useState();
 
-	const [page, setPage] = React.useState(0)
-	// Pages:
-	// (0): Tasks
-	// (1): Repeatables
+	const [page, setPage] = React.useState<0 | 1>(0)
 
-	//   React.useEffect(() => {
-	//     // If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
-	//     const playersRef = collection(db, `classrooms/${classroom.id}/players`);
-	//     const teacherQuery = query(playersRef, where("role", "==", "teacher"));
-
-	//     //Attach a listener to the teacher document
-	//     onSnapshot(teacherQuery, (snapshot) => {
-	//       const mapTeacher = async () => {
-	//         const teacher = await Promise.all(
-	//           snapshot.docs.map(async (player) => {
-	//             const email = (await getUserData(player.id)).email;
-	//             return { ...player.data(), id: player.id, email: email };
-	//           })
-	//         )[0];
-	//         setTeacher(teacher);
-	//       };
-
-	//       // Call the async `mapTeacher` function
-	//       mapTeacher().catch(console.error);
-	//     });
-	//   }, []);
-
-	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
+	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: 0 | 1) => {
 		setPage(newTabIndex)
 	}
 
-	const getTable = () => {
-		if (page === 0) {
-			return <TasksTableTeacher classroom={classroom} />
-		} else if (page === 1) {
-			return <RepeatableTableTeacher classroom={classroom} />
-		}
-	}
-
 	return (
-		<Grid container spacing={3} sx={{ p: 5 }}>
-			<Grid item xs={12}>
+		<>
+			{/* <Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
 				</Typography>
@@ -79,27 +35,31 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 							{player.name}
 						</Typography>{' '}
 						{/* Do we want a separate user name?*/}
-						<Typography variant='h5' component='div'>
-							{numStudents} Total Students
+			{/* <Typography variant='h5' component='div'>
+							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
 				</Card>
-			</Grid>
+			</Grid> */}
 
 			<Grid item xs={12}>
-				<Typography variant='h5'>Create a New Task</Typography>
+				<Typography variant='h4'>Create a New Task</Typography>
 				<CreateTaskModal classroom={classroom} player={player} />
-				<CreateCanvasTaskModal classroom={classroom} player={player} />
+				<CanvasAssignmentModal classroom={classroom} player={player} />
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant='h5'>View and Edit Tasks</Typography>
+				<Typography variant='h4'>View and Edit Tasks</Typography>
 				<Tabs value={page} onChange={handleTabChange}>
 					<Tab label='One Time' />
 					<Tab label='Repeatable' />
 				</Tabs>
-				{getTable()}
+				{page === 0 ? (
+					<TasksTableTeacher classroom={classroom} />
+				) : (
+					<RepeatableTableTeacher classroom={classroom} />
+				)}
 			</Grid>
-		</Grid>
+		</>
 	)
 }
