@@ -50,7 +50,7 @@ export default function JoinClassroomModal({ user }: { user: User }) {
 	return (
 		<Grid item xs={12}>
 			<Button variant='contained' onClick={handleClickOpen}>
-				Join!
+				Join classroom
 			</Button>
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>{'Join Classroom'}</DialogTitle>

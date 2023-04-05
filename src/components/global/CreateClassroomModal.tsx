@@ -35,12 +35,12 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 			return
 		}
 
+		handleClose()
 		addClassroom(newClassroomName, user)
 			.then(() => {
 				enqueueSnackbar(`Created classroom "${newClassroomName}"`, {
 					variant: 'success',
 				})
-				handleClose()
 				setNewClassroomName('')
 			})
 			.catch((err) => {
@@ -53,7 +53,7 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 
 	const openButton = (
 		<Button variant='contained' onClick={handleClickOpen}>
-			Create!
+			Create classroom
 		</Button>
 	)
 

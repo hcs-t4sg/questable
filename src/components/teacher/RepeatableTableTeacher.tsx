@@ -80,7 +80,7 @@ export default function RepeatableTableTeacher({ classroom }: { classroom: Class
 									</TableCell>
 									<TableCell>{truncate(repeatable.description)}</TableCell>
 									<TableCell>{repeatable.maxCompletions}</TableCell>
-									<TableCell>{repeatable.reward}</TableCell>
+									<TableCell>{`${repeatable.reward}g`}</TableCell>
 									<TableCell align='right'>
 										<IconButton onClick={() => handleDelete(repeatable)}>
 											<DeleteIcon />

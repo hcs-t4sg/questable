@@ -105,7 +105,7 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 							<TableCell>{completedTask.name}</TableCell>
 							<TableCell>{truncate(completedTask.description)}</TableCell>
 							<TableCell>{formatStatus(completedTask)}</TableCell>
-							<TableCell>{completedTask.reward}</TableCell>
+							<TableCell>{`${completedTask.reward}g`}</TableCell>
 							<TableCell component='th' scope='row'>
 								{completedTask.player.name}
 							</TableCell>

@@ -110,9 +110,10 @@ export default function Inventory({ player, classroom }: { player: Player; class
 				<Box
 					sx={{
 						backgroundImage: `url(${wood2})`,
-						backgroundSize: 'cover',
+						backgroundSize: '2000px',
 						height: '100%',
 						width: '100%',
+						imageRendering: 'pixelated',
 					}}
 				>
 					<TabPanel value={value} index={0}>
@@ -121,18 +122,20 @@ export default function Inventory({ player, classroom }: { player: Player; class
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects.map((item, index) => (
-								<Grid item xs={2} sm={3} md={3} key={index}>
-									<ItemCard
-										item={item}
-										player={player}
-										classroom={classroom}
-										itemPrice=''
-										type='inventory'
-										isBody={false}
-									/>
-								</Grid>
-							))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects.map((item, index) => (
+									<Grid item xs={2} sm={3} md={3} key={index}>
+										<ItemCard
+											item={item}
+											player={player}
+											classroom={classroom}
+											itemPrice=''
+											type='inventory'
+											isBody={false}
+										/>
+									</Grid>
+								))}
+							</Grid>
 						)}
 					</TabPanel>
 
@@ -154,94 +157,102 @@ export default function Inventory({ player, classroom }: { player: Player; class
 					</TabPanel>
 
 					<TabPanel value={value} index={2}>
-						{inventoryObjects.length === 0 ? (
+						{inventoryObjects.filter((item) => item.type === 'hair').length === 0 ? (
 							<Typography variant='h5' color='white' align='center'>
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects
-								.filter((item) => item.type === 'hair')
-								.map((item, index) => (
-									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={false}
-										/>
-									</Grid>
-								))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects
+									.filter((item) => item.type === 'hair')
+									.map((item, index) => (
+										<Grid item xs={2} sm={3} md={3} key={index}>
+											<ItemCard
+												item={item}
+												player={player}
+												classroom={classroom}
+												itemPrice=''
+												type='inventory'
+												isBody={false}
+											/>
+										</Grid>
+									))}
+							</Grid>
 						)}
 					</TabPanel>
 
 					<TabPanel value={value} index={3}>
-						{inventoryObjects.length === 0 ? (
+						{inventoryObjects.filter((item) => item.type === 'shirt').length === 0 ? (
 							<Typography variant='h5' color='white' align='center'>
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects
-								.filter((item) => item.type === 'shirt')
-								.map((item, index) => (
-									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={false}
-										/>
-									</Grid>
-								))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects
+									.filter((item) => item.type === 'shirt')
+									.map((item, index) => (
+										<Grid item xs={2} sm={3} md={3} key={index}>
+											<ItemCard
+												item={item}
+												player={player}
+												classroom={classroom}
+												itemPrice=''
+												type='inventory'
+												isBody={false}
+											/>
+										</Grid>
+									))}
+							</Grid>
 						)}
 					</TabPanel>
 
 					<TabPanel value={value} index={4}>
-						{inventoryObjects.length === 0 ? (
+						{inventoryObjects.filter((item) => item.type === 'pants').length === 0 ? (
 							<Typography variant='h5' color='white' align='center'>
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects
-								.filter((item) => item.type === 'pants')
-								.map((item, index) => (
-									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={false}
-										/>
-									</Grid>
-								))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects
+									.filter((item) => item.type === 'pants')
+									.map((item, index) => (
+										<Grid item xs={2} sm={3} md={3} key={index}>
+											<ItemCard
+												item={item}
+												player={player}
+												classroom={classroom}
+												itemPrice=''
+												type='inventory'
+												isBody={false}
+											/>
+										</Grid>
+									))}
+							</Grid>
 						)}
 					</TabPanel>
 
 					<TabPanel value={value} index={5}>
-						{inventoryObjects.length === 0 ? (
+						{inventoryObjects.filter((item) => item.type === 'shoes').length === 0 ? (
 							<Typography variant='h5' color='white' align='center'>
 								No Items Yet!
 							</Typography>
 						) : (
-							inventoryObjects
-								.filter((item) => item.type === 'shoes')
-								.map((item, index) => (
-									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={true}
-										/>
-									</Grid>
-								))
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{inventoryObjects
+									.filter((item) => item.type === 'shoes')
+									.map((item, index) => (
+										<Grid item xs={2} sm={3} md={3} key={index}>
+											<ItemCard
+												item={item}
+												player={player}
+												classroom={classroom}
+												itemPrice=''
+												type='inventory'
+												isBody={false}
+											/>
+										</Grid>
+									))}
+							</Grid>
 						)}
 					</TabPanel>
 				</Box>

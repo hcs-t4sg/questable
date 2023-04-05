@@ -16,6 +16,15 @@ export default function Loading({
 }) {
 	const indicatorImports = [bunny, chicken, cow, ghost, pig, sheep]
 
+	const importStrings: { [key: string]: string } = {
+		bunny,
+		chicken,
+		cow,
+		ghost,
+		pig,
+		sheep,
+	}
+
 	const randomIndicator = sample(indicatorImports)
 
 	return (
@@ -23,7 +32,7 @@ export default function Loading({
 			<Box>
 				<Box
 					component='img'
-					src={indicator ?? randomIndicator}
+					src={indicator ? importStrings[indicator] : randomIndicator}
 					sx={{
 						width: '5vw',
 						imageRendering: 'pixelated',

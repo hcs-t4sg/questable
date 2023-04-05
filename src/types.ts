@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore'
 
-interface Assignment {
+export interface Assignment {
 	id: string
 	name: string
 	description: string

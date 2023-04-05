@@ -1,5 +1,5 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
-import ClassSettings from '../../routes/teacher/ClassSettings'
+import TeacherSettings from '../../routes/teacher/TeacherSettings'
 import ClassTeacher from '../../routes/teacher/ClassTeacher'
 import Requests from '../../routes/teacher/Requests'
 import Tasks from '../../routes/teacher/Tasks'
@@ -66,8 +66,8 @@ export default function TeacherView({
 						element={<ClassTeacher player={player} classroom={classroom} />}
 					/>
 					<Route
-						path='class-settings'
-						element={<ClassSettings player={player} user={user} classroom={classroom} />}
+						path='teacher-settings'
+						element={<TeacherSettings player={player} user={user} classroom={classroom} />}
 					/>
 
 					<Route path='forum/*' element={<ForumView player={player} classroom={classroom} />} />

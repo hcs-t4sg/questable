@@ -30,6 +30,7 @@ export default function Layout({
 					flexGrow: 1,
 					height: '100vh',
 					overflow: 'auto',
+					imageRendering: 'pixelated',
 				}}
 			>
 				<Toolbar />

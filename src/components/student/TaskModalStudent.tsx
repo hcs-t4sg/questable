@@ -1,7 +1,8 @@
 // import CloseIcon from '@mui/icons-material/Close'
 import { Box, Button } from '@mui/material'
-import { Classroom, Player, Repeatable } from '../../types'
-import { completeRepeatable } from '../../utils/mutations'
+import { format } from 'date-fns'
+import { Classroom, Player, TaskWithStatus } from '../../types'
+import { completeTask } from '../../utils/mutations'
 import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
 import green3 from '/src/assets/spriteSheets/potions/green3.png'
 import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
@@ -42,14 +43,14 @@ export function rewardPotion(rewardAmount: number) {
 	)
 }
 
-export default function RepeatableModalStudent({
+export default function TaskModalStudent({
 	classroom,
 	player,
-	repeatable,
+	task,
 }: {
 	classroom: Classroom
 	player: Player
-	repeatable: Repeatable
+	task: TaskWithStatus
 }) {
 	const [open, setOpen] = useState(false)
 
@@ -60,41 +61,44 @@ export default function RepeatableModalStudent({
 	const { enqueueSnackbar } = useSnackbar()
 
 	const handleComplete = () => {
-		toggleOpen()
-		completeRepeatable(classroom.id, repeatable.id, player.id)
-			.then(() => {
-				enqueueSnackbar(`Repeatable completion added for "${repeatable.name}"!`, {
-					variant: 'success',
+		if (window.confirm('Are you sure you want to mark this as complete?')) {
+			toggleOpen()
+			completeTask(classroom.id, task.id, player.id)
+				.then(() => {
+					enqueueSnackbar(`Task "${task.name}" marked as complete!`, {
+						variant: 'success',
+					})
 				})
-			})
-			.catch((err) => {
-				console.error(err)
-				enqueueSnackbar('There was an issue adding the repeatable completion.', {
-					variant: 'error',
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an issue completing the task.', {
+						variant: 'error',
+					})
 				})
-			})
+		}
 	}
 
 	return (
 		<AssignmentContentStudent
-			assignment={repeatable}
-			assignmentType='Repeatable'
+			assignment={task}
+			assignmentType='Task'
 			isOpen={open}
 			toggleIsOpen={toggleOpen}
 		>
-			<Cluster title='Task Name' data={repeatable.name} />
-			<Cluster title='Description' data={repeatable.description} />
-			<Cluster title='Reward Amount' data={`${repeatable.reward}g`} />
-			<Cluster title='Completions' data={repeatable.requestCount} />
-			<Cluster title='Max Completions' data={repeatable.maxCompletions} />
-			<Cluster
-				title=''
-				data={
-					<Button onClick={handleComplete} variant='contained' color='success'>
-						Mark as complete
-					</Button>
-				}
-			/>
+			<Cluster title='Task Name' data={task.name} />
+			<Cluster title='Description' data={task.description} />
+			<Cluster title='Reward Amount' data={`${task.reward}g`} />
+			<Cluster title='Deadline' data={format(task.due.toDate(), 'MM/dd/yyyy h:mm a')} />
+			{task.status === 0 ? (
+				<Cluster
+					title=''
+					data={
+						<Button onClick={handleComplete} variant='contained' color='success'>
+							Mark as complete
+						</Button>
+					}
+				/>
+			) : null}
 		</AssignmentContentStudent>
 	)
 }

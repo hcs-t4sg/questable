@@ -1,15 +1,15 @@
+import { Grid } from '@mui/material'
 import { getAuth, User } from 'firebase/auth'
 import { doc, onSnapshot } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import Layout from '../components/global/Layout'
+import Loading from '../components/global/Loading'
 import StudentView from '../components/student/StudentView'
 import TeacherView from '../components/teacher/TeacherView'
+import { Classroom, Player } from '../types'
 import { db } from '../utils/firebase'
-import { getPlayerData, syncUsers } from '../utils/mutations'
-import { Player, Classroom } from '../types'
-import { useState, useEffect } from 'react'
-import Layout from '../components/global/Layout'
-import { Grid } from '@mui/material'
-import Loading from '../components/global/Loading'
+import { syncUsers } from '../utils/mutations'
 
 export default function ClassroomPage({ user }: { user: User }) {
 	// Use react router to fetch class ID from URL params
@@ -41,8 +41,16 @@ export default function ClassroomPage({ user }: { user: User }) {
 			const user = auth.currentUser
 			if (!!user && classID) {
 				syncUsers(user)
-				const playerData = await getPlayerData(classID, user.uid)
-				if (playerData) setPlayer(playerData)
+				const playerRef = doc(db, `classrooms/${classID}/players/${user.uid}`)
+				const unsub = onSnapshot(playerRef, (doc) => {
+					if (doc.exists()) {
+						setPlayer({ ...doc.data(), id: doc.id } as Player)
+					}
+				})
+				return unsub
+				// const playerData = await getPlayerData(classID, user.uid)
+
+				// if (playerData) setPlayer(playerData)
 			}
 		}
 		updatePlayer().catch(console.error)

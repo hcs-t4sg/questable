@@ -11,9 +11,10 @@ import { useEffect, useState } from 'react'
 import { Classroom, Player, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
 // import RepeatableModalStudent from './RepeatableModalStudent'
-import ModalsStudent, { rewardPotion } from './ModalsStudent'
 import Loading from '../global/Loading'
 import { truncate } from '../../utils/helperFunctions'
+import RepeatableModalStudent from './RepeatableModalStudent'
+import { rewardPotion } from './AssignmentContentStudent'
 
 // export function truncate(description: string) {
 // 	if (description.length > 50) {
@@ -80,19 +81,14 @@ function RepeatableTableRow({
 			<TableCell align='left'>
 				{confirmations || confirmations === 0 ? `${confirmations}` : 'Loading'}
 			</TableCell>
-			<TableCell align='left'>${repeatable.reward}</TableCell>
+			<TableCell align='left'>{repeatable.maxCompletions}</TableCell>
+			<TableCell align='left'>{`${repeatable.reward}g`}</TableCell>
 
 			<TableCell align='right' sx={{ width: 0.01 }}>
-				{/* <RepeatableModalStudent
+				<RepeatableModalStudent
 					classroom={classroom}
+					player={player}
 					repeatable={repeatableWithPlayerData}
-					player={player}
-				/> */}
-				<ModalsStudent
-					taskOrRepeatable={repeatableWithPlayerData}
-					classroom={classroom}
-					player={player}
-					type='repeatable'
 				/>
 			</TableCell>
 		</TableRow>
@@ -141,6 +137,7 @@ export default function RepeatableTableStudent({
 								<TableCell>Description</TableCell>
 								<TableCell>Pending Completions</TableCell>
 								<TableCell>Confirmed Completions</TableCell>
+								<TableCell>Max completions</TableCell>
 								<TableCell>Reward </TableCell>
 								<TableCell>Open</TableCell>
 							</TableRow>

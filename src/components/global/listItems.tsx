@@ -27,6 +27,9 @@ const ListItemButtonStyled = styled(ListItemButton)({
 	':hover': {
 		backgroundColor: '#733a1b',
 	},
+	'&.Mui-selected:hover': {
+		backgroundColor: '#733a1b',
+	},
 }) as typeof ListItemButton
 
 const ListItemIconStyled = styled(ListItemIcon)({
@@ -34,7 +37,7 @@ const ListItemIconStyled = styled(ListItemIcon)({
 }) as typeof ListItemButton
 
 export function MainListItemsTeacher() {
-	const [selected, setSelected] = useState<0 | 1 | 2 | 3>(0)
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4>(0)
 
 	return (
 		<React.Fragment>
@@ -73,9 +76,20 @@ export function MainListItemsTeacher() {
 			</ListItemButtonStyled>
 			<ListItemButtonStyled
 				component={Link}
-				to='class-settings'
+				to='forum'
 				onClick={() => setSelected(3)}
 				selected={selected === 3}
+			>
+				<ListItemIconStyled>
+					<ForumIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Forum' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='teacher-settings'
+				onClick={() => setSelected(4)}
+				selected={selected === 4}
 			>
 				<ListItemIconStyled>
 					<SettingsIcon />
@@ -87,7 +101,7 @@ export function MainListItemsTeacher() {
 }
 
 export function MainListItemsStudent() {
-	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4>(0)
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5>(0)
 
 	return (
 		<React.Fragment>
@@ -145,6 +159,17 @@ export function MainListItemsStudent() {
 					<ForumIcon />
 				</ListItemIconStyled>
 				<ListItemText primary='Forum' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='student-settings'
+				onClick={() => setSelected(5)}
+				selected={selected === 5}
+			>
+				<ListItemIconStyled>
+					<SettingsIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Class Settings' />
 			</ListItemButtonStyled>
 		</React.Fragment>
 	)

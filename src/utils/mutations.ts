@@ -267,6 +267,9 @@ export async function updatePlayer(
 		name: string
 	},
 ) {
+	console.log(userID)
+	console.log(classroomID)
+	console.log(newPlayer)
 	const playerRef = doc(db, `classrooms/${classroomID}/players/${userID}`)
 
 	await updateDoc(playerRef, {

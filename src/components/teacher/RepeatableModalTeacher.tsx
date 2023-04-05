@@ -92,9 +92,9 @@ export default function RepeatableModalTeacher({
 			id: repeatable.id,
 		}
 
+		handleClose()
 		updateRepeatable(classroom.id, updatedRepeatable)
 			.then(() => {
-				handleClose()
 				setIsEditing(false)
 				enqueueSnackbar('Edited repeatable!', { variant: 'success' })
 			})
@@ -242,7 +242,7 @@ export default function RepeatableModalTeacher({
 						}}
 					> */}
 					<BoxInModal>
-						<Typography variant='body1'>{`Reward: ${repeatable.reward} (cannot be edited)`}</Typography>
+						<Typography variant='body1'>{`Reward: ${repeatable.reward}g (cannot be edited)`}</Typography>
 						{/* </Box> */}
 					</BoxInModal>
 					<br />
