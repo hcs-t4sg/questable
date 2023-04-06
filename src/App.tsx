@@ -18,6 +18,9 @@ import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 
 import 'virtual:fonts.css'
+import { useEffect } from 'react'
+import { clientID } from './components/teacher/GCRLogin'
+import { gapi } from 'gapi-script'
 
 // MUI styling constants
 
@@ -100,6 +103,17 @@ export default function App() {
 			}
 		},
 	})
+
+	useEffect(() => {
+		function start() {
+			gapi.client.init({
+				clientId: clientID,
+				scope: '',
+			})
+		}
+
+		gapi.load('client:auth2', start)
+	}, [])
 
 	return (
 		<ThemeProvider theme={mdTheme}>

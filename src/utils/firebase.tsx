@@ -7,6 +7,8 @@ import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
 import Layout from '../components/global/Layout'
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
+import GCRLogin from '../components/teacher/GCRLogin'
+import { Grid } from '@mui/material'
 
 // ! DO NOT CHANGE THIS FILE.
 
@@ -50,6 +52,14 @@ export function SignInScreen() {
 			<h1>Sign in to Questable</h1>
 			<p>Please sign-in with your email account:</p>
 			<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+			<Grid container spacing={0} direction='column' alignItems='center' justifyContent='center'>
+				<Grid item xs={3}>
+					<h3>Google Classroom Login</h3>
+				</Grid>
+				<Grid item xs={3}>
+					<GCRLogin />
+				</Grid>
+			</Grid>
 		</Layout>
 	)
 }
