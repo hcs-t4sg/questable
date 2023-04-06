@@ -19,7 +19,7 @@ import { syncUsers } from './utils/mutations'
 
 import 'virtual:fonts.css'
 import { useEffect } from 'react'
-import { clientID } from './components/teacher/GCRLogin'
+import { API_KEY, clientID, SCOPES } from './components/teacher/GCRLogin'
 import { gapi } from 'gapi-script'
 
 // MUI styling constants
@@ -108,7 +108,8 @@ export default function App() {
 		function start() {
 			gapi.client.init({
 				clientId: clientID,
-				scope: '',
+				apiKey: API_KEY,
+				scope: SCOPES,
 			})
 		}
 
