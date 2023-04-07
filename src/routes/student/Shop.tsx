@@ -5,7 +5,13 @@ import Tabs from '@mui/material/Tabs'
 import * as React from 'react'
 // import ShopItemCard from '../../components/student/ShopItemCard'
 import { Classroom, Player } from '../../types'
-import { getHairItems, getPantsItems, getShirtItems, getShoesItems } from '../../utils/items'
+import {
+	getHairItems,
+	getPantsItems,
+	getShirtItems,
+	getShoesItems,
+	getArmorItems,
+} from '../../utils/items'
 import { ItemCard } from '../../components/student/ItemCard'
 // import { Classroom, Player } from '../../types'
 import { useState } from 'react'
@@ -45,6 +51,8 @@ const hairs = getHairItems()
 const shirts = getShirtItems()
 const pants = getPantsItems()
 const shoes = getShoesItems()
+const armor = getArmorItems()
+
 //  const all = bodies.concat(hairs, shirts, pants, shoes)
 
 export default function Shop({ player, classroom }: { player: Player; classroom: Classroom }) {
@@ -67,6 +75,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Tab label='Shirts' {...a11yProps(1)} />
 						<Tab label='Pants' {...a11yProps(2)} />
 						<Tab label='Shoes' {...a11yProps(3)} />
+						<Tab label='Armor' {...a11yProps(4)} />
 					</Tabs>
 				</Box>
 				<Box
@@ -136,6 +145,22 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 										player={player}
 										classroom={classroom}
 										itemPrice='100g'
+										type='shop'
+										isBody={false}
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</TabPanel>
+					<TabPanel value={value} index={4}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{armor.map((item, index) => (
+								<Grid item xs={2} sm={3} md={2} key={index}>
+									<ItemCard
+										item={item}
+										player={player}
+										classroom={classroom}
+										itemPrice='300g'
 										type='shop'
 										isBody={false}
 									/>

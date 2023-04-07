@@ -15,6 +15,8 @@ import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { currentAvatar } from '../../utils/items'
 import { useEffect, useState } from 'react'
 import Loading from '../../components/global/Loading'
+// import { useRadioGroup } from '@mui/material'
+// import { userEvent } from '@testing-library/user-event/dist/types/setup'
 
 export default function ClassTeacher({
 	player,
@@ -112,10 +114,14 @@ export default function ClassTeacher({
 							>
 								<Avatar outfit={currentAvatar(student)} />
 							</Box>
-							<Typography variant='body1'>Name: {student.name}</Typography>
-							<Typography variant='body1'>Gold: {student.money}g</Typography>
-							<Typography variant='body1'>{student.email}</Typography>
-							<ClassTeacherModal student={student} />
+							<Typography variant='body1'>Player Name: {student.name}</Typography>
+							{/* <Typography variant='body1'>Gold: {student.money}g</Typography>
+							<Typography variant='body1'>{student.email}</Typography> */}
+							<ClassTeacherModal
+								player={student}
+								classroom={classroom}
+								// completed={completed}
+							></ClassTeacherModal>
 						</CardContent>
 					</Card>
 				))

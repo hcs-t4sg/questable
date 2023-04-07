@@ -113,6 +113,7 @@ export async function joinClassroom(classID: string, user: User) {
 		name: 'Adventurer',
 		role: 'student',
 		id: user.uid,
+		streak: 0,
 	})
 
 	return 'Successfully joined ' + classroomData.name + '!'
@@ -274,6 +275,24 @@ export async function updatePlayer(
 
 	await updateDoc(playerRef, {
 		name: newPlayer.name,
+	})
+}
+
+// Mutation to update money
+export async function updateMoney(
+	playerID: string,
+	classroomID: string,
+	newMoney: {
+		money: string | number
+	},
+) {
+	console.log(playerID)
+	console.log(classroomID)
+	console.log(newMoney)
+	const playerRef = doc(db, `classrooms/${classroomID}/players/${playerID}`)
+
+	await updateDoc(playerRef, {
+		money: newMoney.money,
 	})
 }
 

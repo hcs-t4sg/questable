@@ -115,6 +115,9 @@ export default function StudentView({
 								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
 									Gold: {player.money}
 								</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+									Assignment Streak: {player.streak}
+								</Typography>
 							</Box>
 						</Box>
 					</Box>

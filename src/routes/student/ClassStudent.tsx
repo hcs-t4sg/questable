@@ -13,6 +13,7 @@ import Avatar from '../../components/global/Avatar'
 import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { currentAvatar } from '../../utils/items'
 import Loading from '../../components/global/Loading'
+import ClassStudentModal from './ClassStudentModal'
 
 export default function ClassStudent({
 	player,
@@ -101,8 +102,9 @@ export default function ClassStudent({
 							>
 								<Avatar outfit={currentAvatar(student)} />
 							</Box>
-							<Typography variant='body1'>Name: {student.name}</Typography>
-							<Typography variant='body1'>{student.email}</Typography>
+							<Typography variant='body1'>Player Name: {student.name}</Typography>
+							<ClassStudentModal player={student}></ClassStudentModal>
+							{/* <Typography variant='body1'>{student.email}</Typography> */}
 						</CardContent>
 					</Card>
 				))

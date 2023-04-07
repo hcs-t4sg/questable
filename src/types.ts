@@ -77,7 +77,8 @@ export interface Player {
 	id: string
 	name: string
 	role: UserRole
-	money: number
+	money: number | string
+	streak: number
 	avaBody?: number
 	avaHair?: number
 	avaShirt?: number
@@ -97,7 +98,7 @@ export interface Item {
 	id: number
 	name: string
 	description: string
-	type: 'body' | 'hair' | 'shirt' | 'pants' | 'shoes'
+	type: 'body' | 'hair' | 'shirt' | 'pants' | 'shoes' | 'armor'
 	subtype?: string
 	price: number
 	renderStatic: () => JSX.Element
