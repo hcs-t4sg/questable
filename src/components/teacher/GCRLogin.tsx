@@ -14,24 +14,21 @@ export const SCOPES = [
 
 // or switch to newer https://www.npmjs.com/package/@react-oauth/google
 
-// const { enqueueSnackbar } = useSnackbar()
-
 export default function GCRLogin() {
 	const onSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
 		console.log('Login success! res: ', res)
-		// enqueueSnackbar('Login success!', { variant: 'success' })
+		window.confirm('Logged in!')
 	}
 
 	const onFailure = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
 		console.log('Login failure! res: ', res)
-		// enqueueSnackbar('Login failure', { variant: 'error' })
 	}
 
 	return (
 		<Box>
 			<GoogleLogin
 				clientId={clientID}
-				buttonText='Create with Google Classroom'
+				buttonText='Log in with Google'
 				onSuccess={onSuccess}
 				onFailure={onFailure}
 				cookiePolicy={'single_host_origin'}

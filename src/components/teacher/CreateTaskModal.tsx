@@ -13,7 +13,6 @@ import * as React from 'react'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { addRepeatable, addTask } from '../../utils/mutations'
-import GCRLogin from './GCRLogin'
 
 function containsOnlyNumbers(str: string) {
 	return /^\d+$/.test(str)
@@ -148,19 +147,14 @@ export default function CreateTaskModal({
 	}
 
 	const openButton = (
-		<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
-			<Button
-				variant='contained'
-				// sx={{ width: 1 }}
-				onClick={handleOpen}
-				startIcon={<AddCircleOutlineIcon />}
-			>
-				Create Manually
-			</Button>
-			<Grid item xs={3}>
-				<GCRLogin />
-			</Grid>
-		</Grid>
+		<Button
+			variant='contained'
+			sx={{ width: 1 }}
+			onClick={handleOpen}
+			startIcon={<AddCircleOutlineIcon />}
+		>
+			Create Manually
+		</Button>
 	)
 
 	const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
