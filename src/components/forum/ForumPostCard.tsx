@@ -15,10 +15,11 @@ import format from 'date-fns/format'
 import { Link, useNavigate } from 'react-router-dom'
 import { ForumPost, Classroom, Player } from '../../types'
 import { currentAvatar } from '../../utils/items'
-import { deleteForumPost } from '../../utils/mutations'
+import { deleteForumPost, updateForumPostLikes } from '../../utils/mutations'
 import Avatar from '../global/Avatar'
 import { useSnackbar } from 'notistack'
 import EditForumPostModal from './EditForumPostModal'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 export default function ForumPostCard({
 	forumPost,
@@ -36,7 +37,6 @@ export default function ForumPostCard({
 
 	const [open, setOpen] = useState(false)
 
-	console.log(forumPost.anonymous)
 	const handleDelete = (forumPost: ForumPost) => {
 		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this post?')) {
@@ -52,12 +52,39 @@ export default function ForumPostCard({
 		}
 	}
 
+	const handleLike = (forumPost: ForumPost) => {
+		updateForumPostLikes(
+			classroom.id,
+			forumPost.id,
+			player.id,
+			!forumPost.likers.includes(player.id),
+		).catch((err) => {
+			console.error(err)
+			enqueueSnackbar(err.message, { variant: 'error' })
+		})
+	}
 	const cardContent = (
 		<CardContent>
 			<Stack direction='row'>
 				<Typography variant='h5' sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>
 					{forumPost.title}
 				</Typography>
+
+				<Stack sx={{ ml: 2 }} direction='column'>
+					<IconButton onClick={() => handleLike(forumPost)}>
+						<FavoriteIcon
+							sx={{
+								color: !forumPost.likers
+									? 'black'
+									: forumPost.likers.includes(player.id)
+									? 'red'
+									: 'black',
+							}}
+						/>
+					</IconButton>
+					<Typography variant='h6'>{forumPost.likes}</Typography>
+				</Stack>
+
 				{(player.role === 'teacher' || forumPost.author.id === player.id) && (
 					<Stack direction='row'>
 						<IconButton onClick={() => setOpen(true)}>

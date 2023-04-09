@@ -295,6 +295,47 @@ export async function updateForumPost(
 	})
 }
 
+export async function updateForumPostLikes(
+	classroomID: string,
+	postID: string,
+	likerID: string,
+	add: boolean,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
+	if (add) {
+		await updateDoc(postRef, {
+			likes: increment(1),
+			likers: arrayUnion(likerID),
+		})
+	} else {
+		await updateDoc(postRef, {
+			likes: increment(-1),
+			likers: arrayRemove(likerID),
+		})
+	}
+}
+
+export async function updateForumCommentLikes(
+	classroomID: string,
+	postID: string,
+	commentID: string,
+	likerID: string,
+	add: boolean,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`)
+	if (add) {
+		await updateDoc(postRef, {
+			likes: increment(1),
+			likers: arrayUnion(likerID),
+		})
+	} else {
+		await updateDoc(postRef, {
+			likes: increment(-1),
+			likers: arrayRemove(likerID),
+		})
+	}
+}
+
 // Mutation to delete tasks
 export async function deleteTask(classroomID: string, taskID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`))
@@ -909,6 +950,7 @@ export async function addForumPost(
 		postTime: serverTimestamp(),
 		likes: 0,
 		anonymous: thread.anonymous,
+		likers: [],
 	})
 	console.log('Successfully Added Thread')
 }
@@ -930,5 +972,6 @@ export async function addComment(
 		content: comment.content,
 		likes: 0,
 		postTime: serverTimestamp(),
+		likers: [],
 	})
 }

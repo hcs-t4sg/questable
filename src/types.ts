@@ -126,6 +126,7 @@ export interface ForumPost {
 	author: Player
 	postType: 0 | 1 | 2 | 3
 	anonymous: 0 | 1
+	likers: Array<string>
 }
 
 export interface Comment {
@@ -134,4 +135,5 @@ export interface Comment {
 	author: string
 	likes: number
 	postTime: Timestamp
+	likers: Array<string>
 }

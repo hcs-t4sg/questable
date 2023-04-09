@@ -16,13 +16,19 @@ import { FormEvent, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Classroom, Comment, ForumPost, Player } from '../../types'
 import { db } from '../../utils/firebase'
-import { addComment, getPlayerData, deleteForumComment } from '../../utils/mutations'
+import {
+	addComment,
+	getPlayerData,
+	deleteForumComment,
+	updateForumCommentLikes,
+} from '../../utils/mutations'
 import ForumPostCard from './ForumPostCard'
 import Avatar from '../global/Avatar'
 import { currentAvatar } from '../../utils/items'
 import { format } from 'date-fns'
 import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 // TODO Fix comment resizing on browser window resizing
 
@@ -47,6 +53,24 @@ const handleDelete = (
 	}
 }
 
+const handleLike = (
+	comment: Comment,
+	forumPost: ForumPost,
+	classroom: Classroom,
+	player: Player,
+	enqueueSnackbar: (_param1: string, _param2: object) => any,
+) => {
+	updateForumCommentLikes(
+		classroom.id,
+		forumPost.id,
+		comment.id,
+		player.id,
+		!comment.likers.includes(player.id),
+	).catch((err) => {
+		console.error(err)
+		enqueueSnackbar(err.message, { variant: 'error' })
+	})
+}
 const IncomingComment = ({
 	comment,
 	classroom,
@@ -83,6 +107,9 @@ const IncomingComment = ({
 							<DeleteIcon />
 						</IconButton>
 					)}
+					<IconButton onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}>
+						<FavoriteIcon sx={{ color: 'black' }} />
+					</IconButton>
 				</Stack>
 				<Divider sx={{ margin: '10px 0' }} />
 				{author ? (
@@ -141,6 +168,22 @@ const OutgoingComment = ({
 							<DeleteIcon />
 						</IconButton>
 					)}
+					<Stack direction='column'>
+						<IconButton
+							onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}
+						>
+							<FavoriteIcon
+								sx={{
+									color: !comment.likers
+										? 'black'
+										: comment.likers.includes(player.id)
+										? 'red'
+										: 'black',
+								}}
+							/>
+						</IconButton>
+						<Typography>{comment.likes}</Typography>
+					</Stack>
 				</Stack>
 				<Divider sx={{ margin: '10px 0' }} />
 				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
