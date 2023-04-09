@@ -1,11 +1,13 @@
-import { Typography } from '@mui/material'
-import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore'
+import { Typography, Stack } from '@mui/material'
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, ForumPost, Player } from '../../types'
 import { db } from '../../utils/firebase'
 import ForumPostCard from './ForumPostCard'
 import { getPlayerData } from '../../utils/mutations'
 import Loading from '../global/Loading'
+import Fuse from 'fuse.js'
+import TextField from '@mui/material/TextField'
 
 export default function ForumPostList({
 	player,
@@ -16,22 +18,30 @@ export default function ForumPostList({
 	classroom: Classroom
 	categoryFilter: -1 | 0 | 1 | 2 | 3
 }) {
+	const [originalPosts, setOriginalPosts] = useState<ForumPost[] | null>(null)
 	const [forumPosts, setForumPosts] = useState<ForumPost[] | null>(null)
+	const [fuse, newFuse] = useState(new Fuse<ForumPost>([]))
+	const [searchInput, setInput] = useState('')
+
+	const categoryTitles = {
+		'-1': 'All Posts',
+		'0': 'General',
+		'1': 'Assignment',
+		'2': 'For Fun',
+		'3': 'Starred',
+	}
 
 	useEffect(() => {
 		const forumPostsRef = collection(db, `classrooms/${classroom.id}/forumPosts`)
-		let forumPostsQuery
-		if (categoryFilter === -1) {
-			forumPostsQuery = query(forumPostsRef, orderBy('postTime', 'desc'))
-		} else {
-			forumPostsQuery = query(
-				forumPostsRef,
-				where('postType', '==', categoryFilter),
-				orderBy('postTime', 'desc'),
-			)
-		}
-
+		const forumPostsQuery = query(forumPostsRef, orderBy('postTime', 'desc'))
 		console.log(forumPostsQuery)
+
+		const options = {
+			keys: ['title', 'description'],
+			includeScore: true,
+			threshold: 0.4,
+			minMatchCharLength: 3,
+		}
 
 		const unsub = onSnapshot(forumPostsQuery, (snapshot) => {
 			const appendAuthorsToPosts = async () => {
@@ -48,23 +58,42 @@ export default function ForumPostList({
 				)
 				console.log(postList)
 				setForumPosts(postList)
+				setOriginalPosts(postList)
+				newFuse(new Fuse(postList, options))
 			}
 			appendAuthorsToPosts().catch(console.error)
 		})
 		return unsub
-	}, [player, classroom, categoryFilter])
+	}, [player, classroom])
 
-	const categoryTitles = {
-		'-1': 'All Posts',
-		'0': 'General',
-		'1': 'Assignment',
-		'2': 'For Fun',
-		'3': 'Starred',
-	}
+	useEffect(() => {
+		let searchedPosts = [] as ForumPost[] | null
+
+		if (searchInput != '') {
+			searchedPosts = fuse.search(searchInput).map((elem) => elem.item)
+		} else {
+			searchedPosts = originalPosts
+		}
+
+		if (categoryFilter == -1) {
+			setForumPosts(searchedPosts)
+		} else if (forumPosts && originalPosts && searchedPosts) {
+			const filteredPosts = searchedPosts.filter((post) => post.postType === categoryFilter)
+			setForumPosts(filteredPosts)
+		}
+	}, [categoryFilter, searchInput])
 
 	return (
 		<>
-			<Typography variant='h4'>{categoryTitles[categoryFilter]}</Typography>
+			<Stack direction='row'>
+				<Typography variant='h4'>{categoryTitles[categoryFilter]}</Typography>
+				<TextField
+					id='outlined-basic'
+					label='Search'
+					variant='outlined'
+					onChange={(e) => setInput(e.target.value)}
+				/>
+			</Stack>
 			{forumPosts ? (
 				forumPosts.map((post) => (
 					<ForumPostCard
