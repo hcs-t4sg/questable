@@ -107,9 +107,22 @@ const IncomingComment = ({
 							<DeleteIcon />
 						</IconButton>
 					)}
-					<IconButton onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}>
-						<FavoriteIcon sx={{ color: 'black' }} />
-					</IconButton>
+					<Stack direction='column'>
+						<IconButton
+							onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}
+						>
+							<FavoriteIcon
+								sx={{
+									color: !comment.likers
+										? 'black'
+										: comment.likers.includes(player.id)
+										? 'red'
+										: 'black',
+								}}
+							/>
+						</IconButton>
+						<Typography>{comment.likes}</Typography>
+					</Stack>
 				</Stack>
 				<Divider sx={{ margin: '10px 0' }} />
 				{author ? (
