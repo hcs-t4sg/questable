@@ -8,7 +8,9 @@ import {
 	Stack,
 	IconButton,
 } from '@mui/material'
+import { useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import format from 'date-fns/format'
 import { Link, useNavigate } from 'react-router-dom'
 import { ForumPost, Classroom, Player } from '../../types'
@@ -16,6 +18,7 @@ import { currentAvatar } from '../../utils/items'
 import { deleteForumPost } from '../../utils/mutations'
 import Avatar from '../global/Avatar'
 import { useSnackbar } from 'notistack'
+import EditForumPostModal from './EditForumPostModal'
 
 export default function ForumPostCard({
 	forumPost,
@@ -30,6 +33,8 @@ export default function ForumPostCard({
 }) {
 	const { enqueueSnackbar } = useSnackbar()
 	const navigate = useNavigate()
+
+	const [open, setOpen] = useState(false)
 
 	const handleDelete = (forumPost: ForumPost) => {
 		// message box to confirm deletion
@@ -53,9 +58,14 @@ export default function ForumPostCard({
 					{forumPost.title}
 				</Typography>
 				{(player.role === 'teacher' || forumPost.author.id === player.id) && (
-					<IconButton>
-						<DeleteIcon onClick={() => handleDelete(forumPost)}></DeleteIcon>
-					</IconButton>
+					<Stack direction='row'>
+						<IconButton onClick={() => setOpen(true)}>
+							<EditIcon></EditIcon>
+						</IconButton>
+						<IconButton>
+							<DeleteIcon onClick={() => handleDelete(forumPost)}></DeleteIcon>
+						</IconButton>
+					</Stack>
 				)}
 			</Stack>
 			<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
@@ -80,14 +90,23 @@ export default function ForumPostCard({
 	)
 
 	return (
-		<Card sx={{ marginBottom: '10px' }} variant={isLink ? 'elevation' : 'outlined'}>
-			{isLink ? (
-				<CardActionArea component={Link} to={forumPost.id}>
-					{cardContent}
-				</CardActionArea>
-			) : (
-				cardContent
-			)}
-		</Card>
+		<Box>
+			<Card sx={{ marginBottom: '10px' }} variant={isLink ? 'elevation' : 'outlined'}>
+				{isLink ? (
+					<CardActionArea component={Link} to={forumPost.id}>
+						{cardContent}
+					</CardActionArea>
+				) : (
+					cardContent
+				)}
+			</Card>
+			<EditForumPostModal
+				player={player}
+				classroom={classroom}
+				forumPost={forumPost}
+				onClose={() => setOpen(false)}
+				isOpen={open}
+			/>
+		</Box>
 	)
 }

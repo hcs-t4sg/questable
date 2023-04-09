@@ -277,6 +277,24 @@ export async function updatePlayer(
 	})
 }
 
+// Mutation to update Forum Post
+export async function updateForumPost(
+	updatedPost: {
+		title: string
+		content: string
+		postType: number
+	},
+	classroomID: string,
+	postID: string,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
+	await updateDoc(postRef, {
+		title: updatedPost.title,
+		content: updatedPost.content,
+		postType: updatedPost.postType,
+	})
+}
+
 // Mutation to delete tasks
 export async function deleteTask(classroomID: string, taskID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`))
@@ -286,10 +304,12 @@ export async function deleteRepeatable(classroomID: string, repeatableID: string
 	await deleteDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`))
 }
 
+// Mutation to delete forum posts
 export async function deleteForumPost(classroomID: string, postID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}`))
 }
 
+// Mutation to delete forum comments
 export async function deleteForumComment(classroomID: string, postID: string, commentID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`))
 }
