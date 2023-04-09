@@ -29,10 +29,15 @@ const firebaseConfig = {
 const uiConfig = {
 	// Popup signin flow rather than redirect flow.
 	signInFlow: 'popup',
-	signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+	signInOptions: [
+		firebase.auth.EmailAuthProvider.PROVIDER_ID,
+		firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+	],
 	callbacks: {
 		// Avoid redirects after sign-in.
-		signInSuccessWithAuthResult: () => false,
+		signInSuccessWithAuthResult: (authResult: any) => {
+			console.log(authResult.credential)
+		},
 	},
 }
 

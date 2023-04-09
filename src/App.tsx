@@ -100,6 +100,7 @@ export default function App() {
 			if (user) {
 				console.log('User is authenticated')
 				syncUsers(user)
+				console.log(currentUser)
 			}
 		},
 	})
