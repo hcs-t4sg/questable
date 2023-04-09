@@ -125,6 +125,7 @@ export interface ForumPost {
 	likes: number
 	author: Player
 	postType: 0 | 1 | 2 | 3
+	anonymous: 0 | 1
 }
 
 export interface Comment {

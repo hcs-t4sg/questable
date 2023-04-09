@@ -36,6 +36,7 @@ export default function ForumPostCard({
 
 	const [open, setOpen] = useState(false)
 
+	console.log(forumPost.anonymous)
 	const handleDelete = (forumPost: ForumPost) => {
 		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this post?')) {
@@ -78,7 +79,7 @@ export default function ForumPostCard({
 					<Avatar outfit={currentAvatar(forumPost.author)} />
 				</Box>
 				<Typography gutterBottom variant='subtitle2' sx={{ marginBottom: 0, marginRight: '5px' }}>
-					{forumPost.author.name}
+					{forumPost.anonymous == 1 ? 'Anonymous' : forumPost.author.name}
 				</Typography>
 				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
 					{forumPost.postTime ? format(forumPost.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}

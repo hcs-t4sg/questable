@@ -8,9 +8,12 @@ import {
 	Select,
 } from '@mui/material'
 // import Dialog from '@mui/material/Dialog'
+import Checkbox from '@mui/material/Checkbox'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
+import FormGroup from '@mui/material/FormGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { addForumPost } from '../../utils/mutations'
@@ -44,6 +47,7 @@ export default function CreateForumPostModal({
 	const [subject, setSubject] = useState('')
 	const [category, setCategory] = useState<0 | 1 | 2 | 3>(0)
 	const [description, setDescription] = useState('')
+	const [anonymous, setAnonymous] = useState(false)
 
 	// Modal visibility handlers
 
@@ -51,6 +55,7 @@ export default function CreateForumPostModal({
 		setSubject('')
 		setCategory(0)
 		setDescription('')
+		setAnonymous(false)
 	}
 
 	const handleClose = () => {
@@ -76,6 +81,7 @@ export default function CreateForumPostModal({
 			postType: category,
 			content: description,
 			author: player,
+			anonymous: (anonymous ? 1 : 0) as 0 | 1,
 		}
 
 		handleClose()
@@ -149,6 +155,21 @@ export default function CreateForumPostModal({
 								<MenuItem value={3}>Announcements</MenuItem>
 							</Select>
 						</FormControl>
+						{player.role == 'student' && (
+							<FormGroup>
+								<FormControlLabel
+									sx={{ mt: 2 }}
+									control={
+										<Checkbox
+											color='success'
+											checked={anonymous}
+											onChange={() => setAnonymous(!anonymous)}
+										/>
+									}
+									label='Anonymous'
+								/>
+							</FormGroup>
+						)}
 					</DialogContent>
 					{submitButton}
 				</TaskModalBox>

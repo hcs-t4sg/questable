@@ -896,6 +896,7 @@ export async function addForumPost(
 		postType: 0 | 1 | 2 | 3
 		content: string
 		author: Player
+		anonymous: 0 | 1
 	},
 	classroom: Classroom,
 ) {
@@ -907,6 +908,7 @@ export async function addForumPost(
 		author: thread.author.id,
 		postTime: serverTimestamp(),
 		likes: 0,
+		anonymous: thread.anonymous,
 	})
 	console.log('Successfully Added Thread')
 }
