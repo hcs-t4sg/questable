@@ -128,6 +128,7 @@ export interface ForumPost {
 	postType: 0 | 1 | 2 | 3
 	anonymous: 0 | 1
 	likers: Array<string>
+	pinnedComments: Array<string>
 }
 
 export interface Comment {

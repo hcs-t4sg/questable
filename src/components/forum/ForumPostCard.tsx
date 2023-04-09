@@ -63,6 +63,7 @@ export default function ForumPostCard({
 			enqueueSnackbar(err.message, { variant: 'error' })
 		})
 	}
+
 	const cardContent = (
 		<CardContent>
 			<Stack direction='row'>

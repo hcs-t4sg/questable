@@ -15,12 +15,15 @@ import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { FormEvent, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Classroom, Comment, ForumPost, Player } from '../../types'
+import StarIcon from '@mui/icons-material/Star'
+import StarBorderIcon from '@mui/icons-material/StarBorder'
 import { db } from '../../utils/firebase'
 import {
 	addComment,
 	getPlayerData,
 	deleteForumComment,
 	updateForumCommentLikes,
+	updateForumPostPinned,
 } from '../../utils/mutations'
 import ForumPostCard from './ForumPostCard'
 import Avatar from '../global/Avatar'
@@ -31,8 +34,6 @@ import { useSnackbar } from 'notistack'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 
 // TODO Fix comment resizing on browser window resizing
-
-// const { enqueueSnackbar } = useSnackbar();
 
 const handleDelete = (
 	forumComment: Comment,
@@ -71,6 +72,24 @@ const handleLike = (
 		enqueueSnackbar(err.message, { variant: 'error' })
 	})
 }
+
+const handleStar = (
+	comment: Comment,
+	forumPost: ForumPost,
+	classroom: Classroom,
+	enqueueSnackbar: (_param1: string, _param2: object) => any,
+) => {
+	updateForumPostPinned(
+		classroom.id,
+		forumPost.id,
+		comment.id,
+		!forumPost.pinnedComments.includes(comment.id),
+	).catch((err) => {
+		console.error(err)
+		enqueueSnackbar(err.message, { variant: 'error' })
+	})
+}
+
 const IncomingComment = ({
 	comment,
 	classroom,
@@ -123,6 +142,15 @@ const IncomingComment = ({
 						</IconButton>
 						<Typography>{comment.likes}</Typography>
 					</Stack>
+					{(player.role == 'teacher' || player.id == comment.author) && (
+						<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
+							{post.pinnedComments.includes(comment.id) ? (
+								<StarIcon />
+							) : (
+								<StarBorderIcon></StarBorderIcon>
+							)}
+						</IconButton>
+					)}
 				</Stack>
 				<Divider sx={{ margin: '10px 0' }} />
 				{author ? (
@@ -166,6 +194,8 @@ const OutgoingComment = ({
 	post: ForumPost
 }) => {
 	const { enqueueSnackbar } = useSnackbar()
+	console.log(post.pinnedComments)
+
 	return (
 		<Card
 			variant='outlined'
@@ -197,6 +227,15 @@ const OutgoingComment = ({
 						</IconButton>
 						<Typography>{comment.likes}</Typography>
 					</Stack>
+					{(player.role == 'teacher' || player.id == comment.author) && (
+						<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
+							{post.pinnedComments.includes(comment.id) ? (
+								<StarIcon />
+							) : (
+								<StarBorderIcon></StarBorderIcon>
+							)}
+						</IconButton>
+					)}
 				</Stack>
 				<Divider sx={{ margin: '10px 0' }} />
 				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
@@ -279,11 +318,33 @@ export default function ForumPostView({
 	}, [classroom, postID])
 
 	// TODO With comment flexbox that avatar, name, and timestamp side by side, we have weird resizing behavior of the avatar. Fix by having the timestamp go below the avatar and name when card gets too small
-
 	if (post) {
 		return (
 			<>
 				<ForumPostCard forumPost={post} classroom={classroom} player={player} isLink={false} />
+				<Card variant='outlined'>
+					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
+						{comments ? (
+							<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
+								{comments.map((comment) => {
+									if (post.pinnedComments.includes(comment.id)) {
+										return (
+											<OutgoingComment
+												post={post}
+												classroom={classroom}
+												player={player}
+												comment={comment}
+												key={comment.id}
+											/>
+										)
+									}
+								})}
+							</Stack>
+						) : (
+							<Loading>Loading comments...</Loading>
+						)}
+					</CardContent>
+				</Card>
 				<Card variant='outlined'>
 					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
 						{comments ? (

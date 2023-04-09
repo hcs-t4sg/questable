@@ -337,6 +337,24 @@ export async function updateForumCommentLikes(
 	}
 }
 
+export async function updateForumPostPinned(
+	classroomID: string,
+	postID: string,
+	commentID: string,
+	add: boolean,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
+	if (add) {
+		await updateDoc(postRef, {
+			pinnedComments: arrayUnion(commentID),
+		})
+	} else {
+		await updateDoc(postRef, {
+			pinnedComments: arrayRemove(commentID),
+		})
+	}
+}
+
 // Mutation to delete tasks
 export async function deleteTask(classroomID: string, taskID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`))
@@ -952,6 +970,7 @@ export async function addForumPost(
 		likes: 0,
 		anonymous: thread.anonymous,
 		likers: [],
+		pinnedComments: [],
 	})
 	console.log('Successfully Added Thread')
 }
