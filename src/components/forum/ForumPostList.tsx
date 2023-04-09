@@ -66,7 +66,15 @@ export default function ForumPostList({
 		<>
 			<Typography variant='h4'>{categoryTitles[categoryFilter]}</Typography>
 			{forumPosts ? (
-				forumPosts.map((post) => <ForumPostCard forumPost={post} isLink key={post.id} />)
+				forumPosts.map((post) => (
+					<ForumPostCard
+						player={player}
+						classroom={classroom}
+						forumPost={post}
+						isLink
+						key={post.id}
+					/>
+				))
 			) : (
 				<Loading>Loading forum posts...</Loading>
 			)}

@@ -8,13 +8,15 @@ import {
 	Stack,
 	TextField,
 	Typography,
+	IconButton,
 } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { FormEvent, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Classroom, Comment, ForumPost, Player } from '../../types'
 import { db } from '../../utils/firebase'
-import { addComment, getPlayerData } from '../../utils/mutations'
+import { addComment, getPlayerData, deleteForumComment } from '../../utils/mutations'
 import ForumPostCard from './ForumPostCard'
 import Avatar from '../global/Avatar'
 import { currentAvatar } from '../../utils/items'
@@ -24,8 +26,41 @@ import { useSnackbar } from 'notistack'
 
 // TODO Fix comment resizing on browser window resizing
 
-const IncomingComment = ({ comment, classroom }: { comment: Comment; classroom: Classroom }) => {
+// const { enqueueSnackbar } = useSnackbar();
+
+const handleDelete = (
+	forumComment: Comment,
+	classroom: Classroom,
+	post: ForumPost,
+	enqueueSnackbar: (_param1: string, _param2: object) => any,
+) => {
+	// message box to confirm deletion
+	if (window.confirm('Are you sure you want to delete this comment?')) {
+		deleteForumComment(classroom.id, post.id, forumComment.id)
+			.then(() => {
+				enqueueSnackbar('Deleted comment!', { variant: 'success' })
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar(err.message, { variant: 'error' })
+			})
+	}
+}
+
+const IncomingComment = ({
+	comment,
+	classroom,
+	player,
+	post,
+}: {
+	comment: Comment
+	classroom: Classroom
+	player: Player
+	post: ForumPost
+}) => {
 	const [author, setAuthor] = useState<Player | null>(null)
+
+	const { enqueueSnackbar } = useSnackbar()
 
 	useEffect(() => {
 		const fetchAuthorData = async () => {
@@ -39,9 +74,16 @@ const IncomingComment = ({ comment, classroom }: { comment: Comment; classroom: 
 	return (
 		<Card variant='outlined' sx={{ backgroundColor: '#FEFAE0', width: '60%' }}>
 			<CardContent>
-				<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
-					{comment.content}
-				</Typography>
+				<Stack direction='row'>
+					<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
+						{comment.content}
+					</Typography>
+					{player.role == 'teacher' && (
+						<IconButton onClick={() => handleDelete(comment, classroom, post, enqueueSnackbar)}>
+							<DeleteIcon />
+						</IconButton>
+					)}
+				</Stack>
 				<Divider sx={{ margin: '10px 0' }} />
 				{author ? (
 					<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
@@ -72,19 +114,42 @@ const IncomingComment = ({ comment, classroom }: { comment: Comment; classroom: 
 	)
 }
 
-const OutgoingComment = ({ comment }: { comment: Comment }) => (
-	<Card variant='outlined' sx={{ backgroundColor: '#F3F8DF', width: '60%', alignSelf: 'flex-end' }}>
-		<CardContent>
-			<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
-				{comment.content}
-			</Typography>
-			<Divider sx={{ margin: '10px 0' }} />
-			<Typography variant='caption' style={{ fontStyle: 'italic' }}>
-				{comment.postTime ? format(comment.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
-			</Typography>
-		</CardContent>
-	</Card>
-)
+const OutgoingComment = ({
+	comment,
+	classroom,
+	player,
+	post,
+}: {
+	comment: Comment
+	classroom: Classroom
+	player: Player
+	post: ForumPost
+}) => {
+	const { enqueueSnackbar } = useSnackbar()
+	return (
+		<Card
+			variant='outlined'
+			sx={{ backgroundColor: '#F3F8DF', width: '60%', alignSelf: 'flex-end' }}
+		>
+			<CardContent>
+				<Stack direction='row'>
+					<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
+						{comment.content}
+					</Typography>
+					{player.role == 'teacher' && (
+						<IconButton onClick={() => handleDelete(comment, classroom, post, enqueueSnackbar)}>
+							<DeleteIcon />
+						</IconButton>
+					)}
+				</Stack>
+				<Divider sx={{ margin: '10px 0' }} />
+				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
+					{comment.postTime ? format(comment.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
+				</Typography>
+			</CardContent>
+		</Card>
+	)
+}
 
 export default function ForumPostView({
 	player,
@@ -162,17 +227,31 @@ export default function ForumPostView({
 	if (post) {
 		return (
 			<>
-				<ForumPostCard forumPost={post} isLink={false} />
+				<ForumPostCard forumPost={post} classroom={classroom} player={player} isLink={false} />
 				<Card variant='outlined'>
 					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
 						{comments ? (
 							<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
 								{comments.map((comment) => {
 									if (comment.author === player.id) {
-										return <OutgoingComment comment={comment} key={comment.id} />
+										return (
+											<OutgoingComment
+												post={post}
+												classroom={classroom}
+												player={player}
+												comment={comment}
+												key={comment.id}
+											/>
+										)
 									} else {
 										return (
-											<IncomingComment comment={comment} classroom={classroom} key={comment.id} />
+											<IncomingComment
+												post={post}
+												player={player}
+												comment={comment}
+												classroom={classroom}
+												key={comment.id}
+											/>
 										)
 									}
 								})}

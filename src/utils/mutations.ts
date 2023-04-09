@@ -286,6 +286,14 @@ export async function deleteRepeatable(classroomID: string, repeatableID: string
 	await deleteDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`))
 }
 
+export async function deleteForumPost(classroomID: string, postID: string) {
+	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}`))
+}
+
+export async function deleteForumComment(classroomID: string, postID: string, commentID: string) {
+	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`))
+}
+
 export async function completeTask(classroomID: string, taskID: string, playerID: string) {
 	// Remove `playerID` from assigned array
 	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
