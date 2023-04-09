@@ -26,7 +26,7 @@
     ],
     "rules": {
         "react/react-in-jsx-scope": "off",
-        "camelcase": "error",
+        "camelcase": ["error", {"allow": ["jwt_decode"]}],
         "spaced-comment": "error",
         "quotes": [
             "error",

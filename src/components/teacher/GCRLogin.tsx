@@ -1,7 +1,12 @@
-import { Box } from '@mui/material'
+// import { Box } from '@mui/material'
 // import { useSnackbar } from 'notistack'
-import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login'
+// import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login'
+import { Typography } from '@mui/material'
+import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google'
+import { useState } from 'react'
+import jwt_decode from 'jwt-decode'
 
+// Store as env variables at some point
 export const clientID = '104855113016-3noojc4bmbk66foqac9pjf44vm3lbnlr.apps.googleusercontent.com'
 export const API_KEY = 'AIzaSyDzA5DkKC8gBEv9ImQ8QctoWSZXILTKYkw'
 export const SCOPES = [
@@ -14,26 +19,35 @@ export const SCOPES = [
 
 // or switch to newer https://www.npmjs.com/package/@react-oauth/google
 
-export default function GCRLogin() {
-	const onSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-		console.log('Login success! res: ', res)
-		window.confirm('Logged in!')
-	}
+interface JwtType {
+	email: string
+}
 
-	const onFailure = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-		console.log('Login failure! res: ', res)
+export default function GCRLogin() {
+	const [isSignedIn, setIsSignedIn] = useState(false)
+	const [email, setEmail] = useState('')
+
+	const handleSuccess = (credentialResponse: CredentialResponse) => {
+		console.log(credentialResponse)
+		console.log('hello')
+		setIsSignedIn(true)
+		const cred = credentialResponse.credential
+		if (cred) {
+			const userObject = jwt_decode<JwtType>(cred)
+			console.log(userObject)
+			setEmail(userObject.email)
+		}
 	}
 
 	return (
-		<Box>
+		<GoogleOAuthProvider clientId={clientID}>
+			{isSignedIn ? <Typography variant='h5'>Signed in as {email}</Typography> : null}
 			<GoogleLogin
-				clientId={clientID}
-				buttonText='Log in with Google'
-				onSuccess={onSuccess}
-				onFailure={onFailure}
-				cookiePolicy={'single_host_origin'}
-				isSignedIn={false}
+				onSuccess={handleSuccess}
+				onError={() => {
+					console.log('Login Failed')
+				}}
 			/>
-		</Box>
+		</GoogleOAuthProvider>
 	)
 }
