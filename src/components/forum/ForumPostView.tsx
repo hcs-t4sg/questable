@@ -142,7 +142,7 @@ const IncomingComment = ({
 						</IconButton>
 						<Typography>{comment.likes}</Typography>
 					</Stack>
-					{(player.role == 'teacher' || player.id == comment.author) && (
+					{(player.role == 'teacher' || player.id == post.author.id) && (
 						<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
 							{post.pinnedComments.includes(comment.id) ? (
 								<StarIcon />
@@ -227,7 +227,7 @@ const OutgoingComment = ({
 						</IconButton>
 						<Typography>{comment.likes}</Typography>
 					</Stack>
-					{(player.role == 'teacher' || player.id == comment.author) && (
+					{(player.role == 'teacher' || player.id == post.author.id) && (
 						<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
 							{post.pinnedComments.includes(comment.id) ? (
 								<StarIcon />
