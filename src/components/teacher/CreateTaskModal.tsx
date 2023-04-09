@@ -180,47 +180,8 @@ export default function CreateTaskModal({
 		<div>
 			{openButton}
 			<TeacherModalStyled open={open} onClose={handleClose}>
-				{/* <Box
-					sx={{
-						width: '40%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-						padding: '40px',
-						paddingTop: '40px',
-						backgroundColor: 'white',
-						marginBottom: '18px',
-					}}
-				> */}
 				<TaskModalBox>
 					<ModalTitle onClick={handleClose} text='Create Task' />
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-						}}
-					>
-						<Typography fontWeight='light' variant='h5'>
-							Create Task
-						</Typography>
-						<IconButton onClick={handleClose}>
-							<CloseIcon />
-						</IconButton>
-					</Box>
-
-					<hr
-						style={{
-							backgroundColor: '#D9D9D9',
-							height: '1px',
-							borderWidth: '0px',
-							borderRadius: '5px',
-							width: '100%',
-							marginBottom: '10px',
-						}}
-					/> */}
 
 					{repeatableButton}
 
@@ -246,15 +207,6 @@ export default function CreateTaskModal({
 						onChange={(event) => setDescription(event.target.value)}
 					/>
 					<BoxInModal>
-						{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
 						{/* either show a due date option or max completions based on if task is repeatable */}
 						{!isRepeatable ? (
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -286,16 +238,6 @@ export default function CreateTaskModal({
 							/>
 						)}
 					</BoxInModal>
-					{/* </Box> */}
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
 					<BoxInModal>
 						<FormControl fullWidth>
 							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
@@ -312,14 +254,12 @@ export default function CreateTaskModal({
 								<MenuItem value={40}>40g</MenuItem>
 							</Select>
 						</FormControl>
-						{/* </Box> */}
 					</BoxInModal>
 					<br />
 					{/* center the save button */}
 					<Grid container justifyContent='center'>
 						{actionButtons}
 					</Grid>
-					{/* </Box> */}
 				</TaskModalBox>
 			</TeacherModalStyled>
 		</div>
