@@ -126,7 +126,7 @@ export default function EditForumPostModal({
 							fullWidth
 							variant='standard'
 							defaultValue={forumPost.title}
-							disabled={isDisabled}
+							InputProps={{ readOnly: isDisabled }}
 							onChange={(event) => setSubject(event.target.value)}
 						/>
 						<TextField
@@ -138,7 +138,7 @@ export default function EditForumPostModal({
 							multiline
 							maxRows={8}
 							defaultValue={forumPost.content}
-							disabled={isDisabled}
+							InputProps={{ readOnly: isDisabled }}
 							onChange={(event) => setDescription(event.target.value)}
 						/>
 						<FormControl fullWidth sx={{ marginTop: 2 }}>

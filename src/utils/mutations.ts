@@ -34,6 +34,7 @@ export async function addClassroom(name: string, user: User) {
 		name: name,
 		playerList: [user.uid],
 		teacherList: [user.uid],
+		canEdit: true,
 		// studentList: [],
 	}
 	// NOTE: I made a slight change here. Instead of storing the teacher in the playersList,

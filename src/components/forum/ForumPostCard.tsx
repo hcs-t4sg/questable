@@ -85,7 +85,8 @@ export default function ForumPostCard({
 					<Typography variant='h6'>{forumPost.likes}</Typography>
 				</Stack>
 
-				{(player.role === 'teacher' || forumPost.author.id === player.id) && (
+				{(player.role === 'teacher' ||
+					(forumPost.author.id === player.id && classroom.canEdit)) && (
 					<Stack direction='row'>
 						<IconButton onClick={() => setOpen(true)}>
 							<EditIcon></EditIcon>

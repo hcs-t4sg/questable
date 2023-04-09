@@ -70,6 +70,7 @@ export interface Classroom {
 	name: string
 	playerList: string[]
 	teacherList: string[]
+	canEdit: boolean
 }
 
 export interface Player {
