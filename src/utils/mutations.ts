@@ -399,6 +399,18 @@ export async function completeTask(classroomID: string, taskID: string, playerID
 	})
 }
 
+export async function UnsendTask(classroomID: string, taskID: string, playerID: string) {
+	// Remove `playerID` from assigned array
+
+	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
+		assigned: arrayUnion(playerID),
+	})
+	// Add `playerID` to completed array
+	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
+		completed: arrayRemove(playerID),
+	})
+}
+
 export async function completeRepeatable(
 	classroomID: string,
 	repeatableID: string,

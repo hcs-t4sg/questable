@@ -1,6 +1,7 @@
 import { Box, Tab, Tabs } from '@mui/material'
 // import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import Checkbox from '@mui/material/Checkbox'
+import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
@@ -12,7 +13,7 @@ import TableRow from '@mui/material/TableRow'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
-import { completeTask } from '../../utils/mutations'
+import { completeTask, UnsendTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
 import { useSnackbar } from 'notistack'
 import Paper from '@mui/material/Paper'
@@ -90,6 +91,24 @@ export default function TasksTableStudent({
 		}
 	}
 
+	const handleUnsend = (task: TaskWithStatus) => {
+		if (!task.completed.includes(player.id)) {
+			enqueueSnackbar('There was an issue unsending the task', { variant: 'error' })
+			return
+		}
+
+		if (window.confirm('Are you sure you want to unsend this task?')) {
+			UnsendTask(classroom.id, task.id, player.id)
+				.then(() => {
+					enqueueSnackbar(`Task "${task.name}" was unsent!`, { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an issue completing the task.', { variant: 'error' })
+				})
+		}
+	}
+
 	console.log(assigned)
 	return (
 		<Box>
@@ -113,6 +132,7 @@ export default function TasksTableStudent({
 								<TableCell align='center'>Reward Amount</TableCell>
 								<TableCell align='center'>Status</TableCell>
 								<TableCell align='center'>Open</TableCell>
+								{taskCategory === 1 ? <TableCell align='center'>Unsend request</TableCell> : null}
 								{taskCategory === 0 ? <TableCell align='center'>Mark as Complete</TableCell> : null}
 							</TableRow>
 						</TableHead>
@@ -158,6 +178,13 @@ export default function TasksTableStudent({
 													<CheckBoxIcon />
 												</IconButton> */}
 												<Checkbox onChange={() => handleTaskComplete(task)} />
+											</TableCell>
+										) : null}
+										{taskCategory === 1 ? (
+											<TableCell align='center'>
+												<Button onClick={() => handleUnsend(task)} color='error'>
+													Unsend
+												</Button>
 											</TableCell>
 										) : null}
 									</TableRow>
