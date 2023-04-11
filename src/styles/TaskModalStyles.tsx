@@ -15,10 +15,13 @@ export const TeacherModalStyled = styled(Modal)({
 	display: 'flex',
 	justifyContent: 'center',
 	alignItems: 'center',
+	overflow: 'scroll',
+	position: 'absolute',
+	height: '100%',
 })
 
 export const TaskModalBox = styled(Box)({
-	width: '40%',
+	width: '80%',
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'center',

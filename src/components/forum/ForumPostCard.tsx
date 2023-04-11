@@ -115,7 +115,9 @@ export default function ForumPostCard({
 				</Typography>
 			</Box>
 			<Divider sx={{ margin: '10px 0' }} />
-			<Typography variant='body2'>{forumPost.content}</Typography>
+			<div dangerouslySetInnerHTML={{ __html: forumPost.content }} />
+
+			{/* <Typography variant='body2'>{forumPost.content}</Typography> */}
 		</CardContent>
 	)
 

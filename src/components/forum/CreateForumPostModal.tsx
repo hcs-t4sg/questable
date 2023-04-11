@@ -19,6 +19,8 @@ import { Classroom, Player } from '../../types'
 import { addForumPost } from '../../utils/mutations'
 import { TaskModalBox, TeacherModalStyled } from '../../styles/TaskModalStyles'
 import { useSnackbar } from 'notistack'
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // Notes: onsnapshot, don't implement at database level; implement on frontend, show only ones you filtered for
 // Modal component for individual entries.
 
@@ -126,7 +128,18 @@ export default function CreateForumPostModal({
 							value={subject}
 							onChange={(event) => setSubject(event.target.value)}
 						/>
-						<TextField
+						<CKEditor
+							editor={ClassicEditor}
+							// data="<p>Hello from CKEditor 5!</p>"
+							onReady={(editor) => {
+								console.log('CKEditor5 React Component is ready to use!', editor)
+							}}
+							onChange={(event, editor) => {
+								const data = editor.getData()
+								setDescription(data)
+							}}
+						/>
+						{/* <TextField
 							margin='normal'
 							id='description'
 							label='Description'
@@ -136,7 +149,7 @@ export default function CreateForumPostModal({
 							maxRows={8}
 							value={description}
 							onChange={(event) => setDescription(event.target.value)}
-						/>
+						/> */}
 						<FormControl fullWidth sx={{ marginTop: 2 }}>
 							<InputLabel id='category-label'>Category</InputLabel>
 							<Select
