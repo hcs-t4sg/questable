@@ -13,6 +13,8 @@ import * as React from 'react'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { addRepeatable, addTask } from '../../utils/mutations'
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 function containsOnlyNumbers(str: string) {
 	return /^\d+$/.test(str)
@@ -233,7 +235,7 @@ export default function CreateTaskModal({
 						value={name}
 						onChange={(event) => setName(event.target.value)}
 					/>
-					<TextField
+					{/* <TextField
 						margin='normal'
 						id='description'
 						label='Description'
@@ -244,6 +246,17 @@ export default function CreateTaskModal({
 						maxRows={8}
 						value={description}
 						onChange={(event) => setDescription(event.target.value)}
+					/> */}
+					<CKEditor
+						editor={ClassicEditor}
+						// data="<p>Hello from CKEditor 5!</p>"
+						onReady={(editor) => {
+							console.log('CKEditor5 React Component is ready to use!', editor)
+						}}
+						onChange={(event, editor) => {
+							const data = editor.getData()
+							setDescription(data)
+						}}
 					/>
 					<BoxInModal>
 						{/* <Box

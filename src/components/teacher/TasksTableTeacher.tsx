@@ -129,7 +129,11 @@ export default function TasksTableTeacher({
 									<TableCell component='th' scope='row'>
 										{task.name}
 									</TableCell>
-									<TableCell align='left'>{truncate(task.description)}</TableCell>
+									<TableCell>
+										{' '}
+										<div dangerouslySetInnerHTML={{ __html: truncate(task.description) }} />
+									</TableCell>
+									{/* <TableCell align='left'>{truncate(task.description)}</TableCell> */}
 									<TableCell align='left'>
 										{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
 									</TableCell>

@@ -7,7 +7,8 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
-
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import EditIcon from '@mui/icons-material/Edit'
 import { Classroom, Repeatable } from '../../types'
 import { deleteRepeatable, updateRepeatable } from '../../utils/mutations'
@@ -184,7 +185,7 @@ export default function RepeatableModalTeacher({
 						}}
 						onChange={(event) => setName(event.target.value)}
 					/>
-					<TextField
+					{/* <TextField
 						margin='normal'
 						id='description'
 						label='Description'
@@ -198,6 +199,14 @@ export default function RepeatableModalTeacher({
 							readOnly: !isEditing,
 						}}
 						onChange={(event) => setDescription(event.target.value)}
+					/> */}
+					<CKEditor
+						editor={ClassicEditor}
+						data={description}
+						onChange={(event, editor) => {
+							const data = editor.getData()
+							setDescription(data)
+						}}
 					/>
 
 					{/* <Box

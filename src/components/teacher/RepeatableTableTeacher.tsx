@@ -107,7 +107,11 @@ export default function RepeatableTableTeacher({
 									<TableCell component='th' scope='row'>
 										{repeatable.name}
 									</TableCell>
-									<TableCell>{truncate(repeatable.description)}</TableCell>
+									{/* <TableCell>{truncate(repeatable.description)}</TableCell> */}
+									<TableCell>
+										{' '}
+										<div dangerouslySetInnerHTML={{ __html: truncate(repeatable.description) }} />
+									</TableCell>
 									<TableCell>{repeatable.maxCompletions}</TableCell>
 									<TableCell>{`${repeatable.reward}g`}</TableCell>
 									<TableCell align='right'>

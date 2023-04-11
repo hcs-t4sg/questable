@@ -75,7 +75,11 @@ function RepeatableTableRow({
 			<TableCell component='th' scope='row'>
 				{repeatable.name}
 			</TableCell>
-			<TableCell align='left'>{truncate(repeatable.description)}</TableCell>
+			{/* <TableCell align='left'>{truncate(repeatable.description)}</TableCell> */}
+			<TableCell>
+				{' '}
+				<div dangerouslySetInnerHTML={{ __html: truncate(repeatable.description) }} />
+			</TableCell>
 			<TableCell align='left'>
 				{completions || completions === 0 ? `${completions}` : 'Loading'}
 			</TableCell>

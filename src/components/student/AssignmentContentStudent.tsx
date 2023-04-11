@@ -43,17 +43,23 @@ export function rewardPotion(rewardAmount: number) {
 export const Cluster = ({
 	title,
 	data,
+	html,
 }: {
 	title: string
 	data: string | number | JSX.Element
+	html: boolean
 }) => (
 	<>
 		<Typography sx={{ marginTop: '25px' }} fontWeight='bold' variant='h6'>
 			{title}
 		</Typography>
-		<Typography fontWeight='light' variant='body1'>
-			{data}
-		</Typography>
+		{html && typeof data == 'string' ? (
+			<div dangerouslySetInnerHTML={{ __html: data }} />
+		) : (
+			<Typography fontWeight='light' variant='body1'>
+				{data}
+			</Typography>
+		)}
 	</>
 )
 
