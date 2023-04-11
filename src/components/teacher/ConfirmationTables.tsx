@@ -17,7 +17,6 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 	return (
 		<Grid item xs={12}>
 			<Typography variant='h4'>Tasks/Repeatables Awaiting Confirmation</Typography>
-
 			<Tabs value={page} onChange={handleTabChange}>
 				<Tab label='One Time' />
 				<Tab label='Repeatable' />

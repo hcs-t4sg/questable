@@ -16,6 +16,7 @@ import {
 	denyTask,
 	getPlayerData,
 	getPlayerTaskCompletion,
+	confirmAllTasks,
 } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import { Grid } from '@mui/material'
@@ -78,91 +79,116 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 		return unsub
 	}, [classroom])
 
+	const handleConfirmAll = () => {
+		if (completedTasks) {
+			confirmAllTasks(completedTasks, classroom.id)
+				.then(() => {
+					enqueueSnackbar('All tasks confirmed', { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an error confirming the task completion.', {
+						variant: 'error',
+					})
+				})
+		}
+	}
+
 	if (!completedTasks) {
 		return <Loading>Loading tasks...</Loading>
 	}
 
 	return (
-		<TableContainer component={Paper}>
-			<Table aria-label='simple table'>
-				<TableHead>
-					<TableRow>
-						<TableCell>Task</TableCell>
-						<TableCell>Description</TableCell>
-						<TableCell>Status</TableCell>
-						<TableCell>Reward</TableCell>
-						<TableCell>Student</TableCell>
-						<TableCell>Confirm?</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
-					{completedTasks.map((completedTask) => (
-						<StyledTableRow
-							key={'test'}
-							// sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-						>
-							<TableCell>{completedTask.name}</TableCell>
-							<TableCell>{truncate(completedTask.description)}</TableCell>
-							<TableCell>{formatStatus(completedTask)}</TableCell>
-							<TableCell>{`${completedTask.reward}g`}</TableCell>
-							<TableCell component='th' scope='row'>
-								{completedTask.player.name}
-							</TableCell>
-							<TableCell align='center'>
-								<Grid container columnSpacing={1}>
-									<Grid item>
-										<Button
-											onClick={() =>
-												confirmTask(classroom.id, completedTask.player.id, completedTask.id)
-													.then(() => {
-														enqueueSnackbar(
-															`Confirmed task completion "${completedTask.name}" from ${completedTask.player.name}!`,
-															{ variant: 'success' },
-														)
-													})
-													.catch((err) => {
-														console.error(err)
-														enqueueSnackbar('There was an error confirming the task completion.', {
-															variant: 'error',
+		<div>
+			<TableContainer component={Paper}>
+				<Table aria-label='simple table'>
+					<TableHead>
+						<TableRow>
+							<TableCell>Task</TableCell>
+							<TableCell>Description</TableCell>
+							<TableCell>Status</TableCell>
+							<TableCell>Reward</TableCell>
+							<TableCell>Student</TableCell>
+							<TableCell>Confirm?</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
+						{completedTasks.map((completedTask) => (
+							<StyledTableRow
+								key={'test'}
+								// sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+							>
+								<TableCell>{completedTask.name}</TableCell>
+								<TableCell>
+									<div dangerouslySetInnerHTML={{ __html: truncate(completedTask.description) }} />{' '}
+								</TableCell>
+								<TableCell>{formatStatus(completedTask)}</TableCell>
+								<TableCell>{`${completedTask.reward}g`}</TableCell>
+								<TableCell component='th' scope='row'>
+									{completedTask.player.name}
+								</TableCell>
+								<TableCell align='center'>
+									<Grid container columnSpacing={1}>
+										<Grid item>
+											<Button
+												onClick={() =>
+													confirmTask(classroom.id, completedTask.player.id, completedTask.id)
+														.then(() => {
+															enqueueSnackbar(
+																`Confirmed task completion "${completedTask.name}" from ${completedTask.player.name}!`,
+																{ variant: 'success' },
+															)
 														})
-													})
-											}
-											// variant='contained'
-											color='success'
-										>
-											Confirm
-										</Button>
-									</Grid>
-									<Grid item>
-										<Button
-											onClick={() =>
-												denyTask(classroom.id, completedTask.player.id, completedTask.id)
-													.then(() => {
-														enqueueSnackbar(
-															`Rejected task completion "${completedTask.name}" from ${completedTask.player.name}.`,
-															{ variant: 'default' },
-														)
-													})
-													.catch((err) => {
-														console.error(err)
-														enqueueSnackbar('There was an error rejecting the task completion.', {
-															variant: 'error',
+														.catch((err) => {
+															console.error(err)
+															enqueueSnackbar(
+																'There was an error confirming the task completion.',
+																{
+																	variant: 'error',
+																},
+															)
 														})
-													})
-											}
-											// variant='contained'
-											color='error'
-										>
-											Deny
-										</Button>
+												}
+												// variant='contained'
+												color='success'
+											>
+												Confirm
+											</Button>
+										</Grid>
+										<Grid item>
+											<Button
+												onClick={() =>
+													denyTask(classroom.id, completedTask.player.id, completedTask.id)
+														.then(() => {
+															enqueueSnackbar(
+																`Rejected task completion "${completedTask.name}" from ${completedTask.player.name}.`,
+																{ variant: 'default' },
+															)
+														})
+														.catch((err) => {
+															console.error(err)
+															enqueueSnackbar('There was an error rejecting the task completion.', {
+																variant: 'error',
+															})
+														})
+												}
+												// variant='contained'
+												color='error'
+											>
+												Deny
+											</Button>
+										</Grid>
 									</Grid>
-								</Grid>
-							</TableCell>
-						</StyledTableRow>
-					))}
-				</TableBody>
-			</Table>
-		</TableContainer>
+								</TableCell>
+							</StyledTableRow>
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
+			<Button color='primary' onClick={() => handleConfirmAll()}>
+				Confirm All
+			</Button>
+		</div>
 	)
 }

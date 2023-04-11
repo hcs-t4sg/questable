@@ -97,7 +97,11 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 							<TableCell align='center'>
 								{format(completion.time.toDate(), 'MM/dd/yyyy h:mm a')}
 							</TableCell>
-							<TableCell>{truncate(completion.repeatable.description)}</TableCell>
+							<TableCell>
+								<div
+									dangerouslySetInnerHTML={{ __html: truncate(completion.repeatable.description) }}
+								/>{' '}
+							</TableCell>
 							<TableCell>{`${completion.repeatable.reward}g`}</TableCell>
 							<TableCell component='th' scope='row'>
 								{completion.player.name}

@@ -15,10 +15,10 @@ import {
 	Timestamp,
 	updateDoc,
 	where,
+	writeBatch,
 } from 'firebase/firestore'
-import { Classroom, CompletionTime, ForumPost, Item, Player } from '../types'
+import { Classroom, CompletionTime, ForumPost, Item, Player, CompletedTask } from '../types'
 import { db } from './firebase'
-
 export async function syncUsers(user: User) {
 	const userRef = doc(db, 'users', user.uid)
 	const data = {
@@ -602,6 +602,34 @@ export async function denyTask(classID: string, studentID: string, taskID: strin
 			assigned: arrayUnion(studentID),
 		})
 	}
+}
+
+export async function confirmAllTasks(tasks: CompletedTask[], classID: string) {
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		// console.error("Could not find classroom")
+		return 'Could not find classroom'
+	}
+
+	const batch = writeBatch(db)
+	for (const i in tasks) {
+		const taskRef = doc(db, `classrooms/${classID}/tasks/${tasks[i].id}`)
+		const taskSnap = await getDoc(taskRef)
+		if (taskSnap.exists()) {
+			batch.update(taskRef, {
+				completed: arrayRemove(tasks[i].player.id),
+				confirmed: arrayUnion(tasks[i].player.id),
+			})
+		}
+		const playerRef = doc(db, `classrooms/${classID}/players/${tasks[i].player.id}`)
+		const playerSnap = await getDoc(playerRef)
+		if (playerSnap.exists() && taskSnap.exists()) {
+			batch.update(playerRef, { money: increment(taskSnap.data().reward) })
+		}
+	}
+
+	await batch.commit()
 }
 
 export async function purchaseItem(classID: string, studentID: string, item: Item) {

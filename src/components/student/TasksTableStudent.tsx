@@ -128,7 +128,8 @@ export default function TasksTableStudent({
 										<TableCell align='left'>{task.name}</TableCell>
 										<TableCell align='left'>
 											{/* {task.description || 'None'} */}
-											{truncate(task.description) || 'None'}
+											{/* {truncate(task.description) || 'None'} */}
+											<div dangerouslySetInnerHTML={{ __html: truncate(task.description) }} />
 										</TableCell>
 										<TableCell align='left'>
 											{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
