@@ -65,7 +65,7 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 				{page === 0 ? (
 					<TasksTableTeacher classroom={classroom} searchInput={searchInput} />
 				) : (
-					<RepeatableTableTeacher classroom={classroom} />
+					<RepeatableTableTeacher classroom={classroom} searchInput={searchInput} />
 				)}
 			</Grid>
 		</>

@@ -15,6 +15,7 @@ import Loading from '../global/Loading'
 import { truncate } from '../../utils/helperFunctions'
 import RepeatableModalStudent from './RepeatableModalStudent'
 import { rewardPotion } from './AssignmentContentStudent'
+import Fuse from 'fuse.js'
 
 // export function truncate(description: string) {
 // 	if (description.length > 50) {
@@ -98,12 +99,24 @@ function RepeatableTableRow({
 export default function RepeatableTableStudent({
 	classroom,
 	player,
+	searchInput,
 }: {
 	classroom: Classroom
 	player: Player
+	searchInput: string
 }) {
 	// Create a state variable to hold the tasks
+	const [original, setOriginal] = useState<Repeatable[] | null>(null)
 	const [repeatables, setRepeatables] = useState<Repeatable[] | null>(null)
+	const [fuse, newFuse] = useState(new Fuse<Repeatable>([]))
+
+	const options = {
+		keys: ['name', 'description'],
+		includeScore: true,
+		threshold: 0.4,
+		minMatchCharLength: 3,
+	}
+
 	useEffect(() => {
 		// Create a reference to the tasks collection
 		const repeatableCollectionRef = query(
@@ -119,11 +132,20 @@ export default function RepeatableTableStudent({
 						id: doc.id,
 					} as Repeatable),
 			)
-
+			newFuse(new Fuse(repeatablesList, options))
+			setOriginal(repeatablesList)
 			setRepeatables(repeatablesList)
 		})
 		return unsub
 	}, [classroom, player])
+
+	useEffect(() => {
+		if (searchInput != '') {
+			setRepeatables(fuse.search(searchInput).map((elem) => elem.item))
+		} else {
+			setRepeatables(original)
+		}
+	}, [searchInput])
 
 	return (
 		<Grid item xs={12}>

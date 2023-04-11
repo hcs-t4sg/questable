@@ -19,6 +19,7 @@ import Paper from '@mui/material/Paper'
 import { truncate } from '../../utils/helperFunctions'
 import TaskModalStudent from './TaskModalStudent'
 import { rewardPotion } from './AssignmentContentStudent'
+import Fuse from 'fuse.js'
 
 function a11yProps(index: number) {
 	return {
@@ -34,6 +35,7 @@ export default function TasksTableStudent({
 	overdue,
 	classroom,
 	player,
+	searchInput,
 }: {
 	assigned: TaskWithStatus[]
 	completed: TaskWithStatus[]
@@ -41,12 +43,20 @@ export default function TasksTableStudent({
 	overdue: TaskWithStatus[]
 	classroom: Classroom
 	player: Player
+	searchInput: string
 }) {
 	const { enqueueSnackbar } = useSnackbar()
 
 	const [taskCategory, setTaskCategory] = useState<0 | 1 | 2 | 3>(0)
 	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
 		setTaskCategory(newValue)
+	}
+
+	const options = {
+		keys: ['name', 'description'],
+		includeScore: true,
+		threshold: 0.4,
+		minMatchCharLength: 3,
 	}
 
 	let selectedTasks: TaskWithStatus[]
@@ -58,6 +68,11 @@ export default function TasksTableStudent({
 		selectedTasks = confirmed
 	} else {
 		selectedTasks = overdue
+	}
+	const fuse = new Fuse(selectedTasks, options)
+
+	if (searchInput != '') {
+		selectedTasks = fuse.search(searchInput).map((elem) => elem.item)
 	}
 
 	// Handle task completion
