@@ -18,6 +18,7 @@ import { Classroom, Task } from '../../types'
 import { db } from '../../utils/firebase'
 import { deleteTask } from '../../utils/mutations'
 import TaskModalTeacher from './TaskModalTeacher'
+import Fuse from 'fuse.js'
 
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'
@@ -47,18 +48,45 @@ function LinearProgressWithLabel({ task }: { task: Task }) {
 	)
 }
 
-export default function TasksTableTeacher({ classroom }: { classroom: Classroom }) {
+export default function TasksTableTeacher({
+	classroom,
+	searchInput,
+}: {
+	classroom: Classroom
+	searchInput: string
+}) {
 	// Create a state variable to hold the tasks
+	const [originaltasks, setOriginalTasks] = useState<Task[] | null>(null)
 	const [tasks, setTasks] = useState<Task[] | null>(null)
+
+	const [fuse, newFuse] = useState(new Fuse<Task>([]))
+
+	const options = {
+		keys: ['name', 'description'],
+		includeScore: true,
+		threshold: 0.4,
+		minMatchCharLength: 3,
+	}
 	useEffect(() => {
 		const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`)
 		const taskCollectionQuery = query(taskCollectionRef, orderBy('created', 'desc'))
 		const unsub = onSnapshot(taskCollectionQuery, (snapshot) => {
 			// Store the tasks in the `tasks` state variable
-			setTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Task)))
+			const tasks = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Task))
+			setOriginalTasks(tasks)
+			setTasks(tasks)
+			newFuse(new Fuse(tasks, options))
 		})
 		return unsub
 	}, [classroom])
+
+	useEffect(() => {
+		if (searchInput != '') {
+			setTasks(fuse.search(searchInput).map((elem) => elem.item))
+		} else {
+			setTasks(originaltasks)
+		}
+	}, [searchInput])
 
 	const handleDelete = (task: Task) => {
 		// message box to confirm deletion
