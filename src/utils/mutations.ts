@@ -17,7 +17,15 @@ import {
 	where,
 	writeBatch,
 } from 'firebase/firestore'
-import { Classroom, CompletionTime, ForumPost, Item, Player, CompletedTask } from '../types'
+import {
+	Classroom,
+	CompletionTime,
+	ForumPost,
+	Item,
+	Player,
+	CompletedTask,
+	RepeatableCompletion,
+} from '../types'
 import { db } from './firebase'
 export async function syncUsers(user: User) {
 	const userRef = doc(db, 'users', user.uid)
@@ -866,6 +874,88 @@ export async function confirmRepeatable(
 	updateDoc(repeatableRef, {
 		requestCount: increment(-1),
 	})
+}
+
+export async function confirmAllRepeatables(tasks: RepeatableCompletion[], classID: string) {
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		// console.error("Could not find classroom")
+		return 'Could not find classroom'
+	}
+
+	const batch = writeBatch(db)
+
+	for (const i in tasks) {
+		const playerID = tasks[i].player.id
+		const repeatableID = tasks[i].repeatable.id
+		const completionTimeID = tasks[i].id
+
+		await refreshRepeatable(classID, playerID, repeatableID)
+		const repeatableRef = doc(db, `classrooms/${classID}/repeatables/${repeatableID}`)
+		const repeatableSnap = await getDoc(repeatableRef)
+		if (!repeatableSnap.exists()) {
+			return Error('Repeatable not found')
+		}
+
+		const completionTimeRef = doc(
+			db,
+			`classrooms/${classID}/repeatables/${repeatableID}/completionTimes/${completionTimeID}`,
+		)
+
+		const completionTimeSnap = await getDoc(completionTimeRef)
+		if (!completionTimeSnap.exists()) {
+			return Error('Corresponding completion time not found')
+		}
+
+		if (completionTimeSnap.data().time.toDate() >= lastSunday()) {
+			// increment confirmations
+			const confirmationsRef = doc(
+				db,
+				`classrooms/${classID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`,
+			)
+			const confirmationsSnap = await getDoc(confirmationsRef)
+			if (confirmationsSnap.exists()) {
+				batch.update(confirmationsRef, { confirmations: increment(1) })
+			} else {
+				batch.set(confirmationsRef, { confirmations: 1 })
+			}
+
+			// decrement completions
+			const completionsRef = doc(
+				db,
+				`classrooms/${classID}/repeatables/${repeatableID}/playerCompletions/${playerID}`,
+			)
+			const completionsSnap = await getDoc(completionsRef)
+			if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
+				batch.update(completionsRef, { completions: increment(-1) })
+			}
+		}
+
+		const playerRef = doc(db, `classrooms/${classID}/players/${playerID}`)
+		const playerSnap = await getDoc(playerRef)
+		if (playerSnap.exists()) {
+			batch.update(playerRef, { money: increment(repeatableSnap.data().reward) })
+		}
+
+		const streaksRef = doc(
+			db,
+			`classrooms/${classID}/repeatables/${repeatableID}/streaks/${playerID}`,
+		)
+		const streaksSnap = await getDoc(streaksRef)
+		if (!streaksSnap.exists()) {
+			batch.set(streaksRef, { streaks: 1 })
+		} else {
+			batch.update(streaksRef, { streak: increment(1) })
+		}
+
+		batch.delete(completionTimeRef)
+
+		// Decrement the requestCount variable
+		batch.update(repeatableRef, { requestCount: increment(-1) })
+	}
+
+	await batch.commit()
 }
 
 // Helper function to get last sunday 11:59 in current timezone
