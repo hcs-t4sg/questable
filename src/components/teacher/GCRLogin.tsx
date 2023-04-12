@@ -5,15 +5,7 @@ import { Typography } from '@mui/material'
 import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google'
 import { useState } from 'react'
 import jwt_decode from 'jwt-decode'
-
-// Store as env variables at some point
-export const clientID = '104855113016-3noojc4bmbk66foqac9pjf44vm3lbnlr.apps.googleusercontent.com'
-export const API_KEY = 'AIzaSyDzA5DkKC8gBEv9ImQ8QctoWSZXILTKYkw'
-export const SCOPES = [
-	'https://www.googleapis.com/auth/classroom.coursework.me',
-	'https://www.googleapis.com/auth/classroom.coursework.students',
-	'https://www.googleapis.com/auth/classroom.courseworkmaterials	',
-]
+import { clientID } from '../../utils/GCRAPI'
 
 // need to fully understand https://www.youtube.com/watch?v=HtJKUQXmtok&ab_channel=CooperCodes
 

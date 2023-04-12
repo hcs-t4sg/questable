@@ -7,6 +7,8 @@ import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
 import Layout from '../components/global/Layout'
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
+import { SCOPES } from './GCRAPI'
+// import { gapi } from 'gapi-script'
 // import GCRLogin from '../components/teacher/GCRLogin'
 // import { Grid } from '@mui/material'
 
@@ -30,13 +32,22 @@ const uiConfig = {
 	// Popup signin flow rather than redirect flow.
 	signInFlow: 'popup',
 	signInOptions: [
-		firebase.auth.EmailAuthProvider.PROVIDER_ID,
-		firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+		{
+			provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+		},
+		{
+			provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+			scopes: SCOPES,
+		},
 	],
 	callbacks: {
 		// Avoid redirects after sign-in.
 		signInSuccessWithAuthResult: (authResult: any) => {
-			console.log(authResult.credential)
+			const accessToken = authResult.credential.accessToken
+			console.log(accessToken)
+
+			// eslint-disable-next-line camelcase
+			// gapi.auth.setToken({ access_token: accessToken })
 		},
 	},
 }
@@ -57,14 +68,6 @@ export function SignInScreen() {
 			<h1>Sign in to Questable</h1>
 			<p>Please sign-in with your email account:</p>
 			<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
-			{/* <Grid container spacing={0} direction='column' alignItems='center' justifyContent='center'>
-				<Grid item xs={3}>
-					<h3>Google Classroom Login</h3>
-				</Grid>
-				<Grid item xs={3}>
-					<GCRLogin />
-				</Grid>
-			</Grid> */}
 		</Layout>
 	)
 }

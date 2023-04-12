@@ -18,9 +18,6 @@ import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 
 import 'virtual:fonts.css'
-// import { useEffect } from 'react'
-// import { API_KEY, clientID, SCOPES } from './components/teacher/GCRLogin'
-// import { gapi } from 'gapi-script'
 
 // MUI styling constants
 

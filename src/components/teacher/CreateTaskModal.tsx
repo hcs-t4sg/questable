@@ -238,6 +238,7 @@ export default function CreateTaskModal({
 							/>
 						)}
 					</BoxInModal>
+
 					<BoxInModal>
 						<FormControl fullWidth>
 							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>

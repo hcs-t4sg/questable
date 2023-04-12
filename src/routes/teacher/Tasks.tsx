@@ -10,6 +10,7 @@ import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
 import { Tab, Tabs } from '@mui/material'
 import RepeatableTableTeacher from '../../components/teacher/RepeatableTableTeacher'
 import { Classroom, Player } from '../../types'
+import CreateGCRTask from '../../components/teacher/CreateGCRTask'
 
 export default function Tasks({ player, classroom }: { player: Player; classroom: Classroom }) {
 	//   const [teacher, setTeacher] = React.useState();
@@ -43,7 +44,12 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 
 			<Grid item xs={12}>
 				<Typography variant='h4'>Create a New Task</Typography>
+			</Grid>
+			<Grid item xs={6}>
 				<CreateTaskModal classroom={classroom} player={player} />
+			</Grid>
+			<Grid item xs={6}>
+				<CreateGCRTask classroom={classroom} player={player} />
 			</Grid>
 
 			<Grid item xs={12}>
