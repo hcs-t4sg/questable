@@ -41,25 +41,32 @@ export default function CreateGCRTask({
 	const [description, setDescription] = useState('')
 	const [reward, setReward] = useState<number>(10)
 	const [dueDate, setDueDate] = useState<Date | null>(null)
+	// const [courseList, setCourseList] = useState([])
 
 	async function getCourses() {
 		const response = await gapi.client.classroom.courses.list({})
-		console.log(response)
+		// console.log(response)
+		// setCourseList(response.map((res: any) => res.name))
+
+		// const names = response.map((res: any) => res.name)
+		// console.log(names)
+		return response
 	}
 
 	const handleClick = () => {
 		loadClient()
-		gapi.auth2
-			.getAuthInstance()
-			.signIn()
-			.then(() => {
-				getCourses()
-			})
+
+		gapi.auth2.getAuthInstance().signIn()
+
+		getCourses().then((response: any) =>
+			// setCourseList(response.result.courses.map((courses: any) => courses.name)),
+			console.log(response.result.courses),
+		)
 
 		setOpen(true)
 	}
 
-	// ReactQuery - can't figure out how to stop after one run
+	// ReactQuery - can't figure out how to do after authentication
 	// const { isLoading, error, data } = useQuery('repoData', () =>
 	// 	fetch('https://classroom.googleapis.com/v1/courses').then((res) => res.json()),
 	// )
@@ -134,7 +141,6 @@ export default function CreateGCRTask({
 			<TeacherModalStyled open={open} onClose={handleClose}>
 				<TaskModalBox>
 					<ModalTitle onClick={handleClose} text='Create Task' />
-
 					<TextField
 						margin='normal'
 						id='name'
