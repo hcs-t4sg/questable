@@ -19,6 +19,21 @@ export default function GCRLogin() {
 	const [isSignedIn, setIsSignedIn] = useState(false)
 	const [email, setEmail] = useState('')
 
+	// async function login = useGoogleLogin({
+	// 	onSuccess: (response : any) => {
+	// 		try {
+	// 			const data = await axios.get('https://classroom.googleapis.com/v1/courses/603698134454/courseWork', {
+	// 			headers: {
+	// 				'Authorization': `Bearer ${response.access_token}`
+	// 			}
+	// 		})
+	// 		} catch (err) {
+	// 			console.log(err)
+	// 		}
+
+	// 	}
+	// });
+
 	const handleSuccess = (credentialResponse: CredentialResponse) => {
 		console.log(credentialResponse)
 		console.log('hello')

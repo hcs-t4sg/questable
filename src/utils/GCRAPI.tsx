@@ -23,7 +23,7 @@ export const SCOPES =
 // // View your course work and grades in Google Classroom
 // 'https://www.googleapis.com/auth/classroom.coursework.me.readonly',
 
-// // Manage course work and grades for students in the Google Classroom classes you teach and view the course work and grades for classes you administer
+// Manage course work and grades for students in the Google Classroom classes you teach and view the course work and grades for classes you administer
 // 'https://www.googleapis.com/auth/classroom.coursework.students',
 
 // // View course work and grades for students in the Google Classroom classes you teach or administer
@@ -95,6 +95,8 @@ export function loadClient() {
 		// 		}
 		// 	},
 		// )
+
+		gapi.auth2.getAuthInstance().signIn()
 
 		gapi.client.load('classroom', 'v1', () => {
 			// now we can use gapi.client.classroom

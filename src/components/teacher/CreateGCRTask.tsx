@@ -18,7 +18,7 @@ import {
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { Timestamp } from 'firebase/firestore'
 import { addTask } from '../../utils/mutations'
@@ -41,41 +41,50 @@ export default function CreateGCRTask({
 	const [description, setDescription] = useState('')
 	const [reward, setReward] = useState<number>(10)
 	const [dueDate, setDueDate] = useState<Date | null>(null)
-	// const [courseList, setCourseList] = useState([])
+	const [classroomList, setClassrooms] = useState<any[]>([])
+	const [classID, setClassId] = useState('')
 
 	async function getCourses() {
 		const response = await gapi.client.classroom.courses.list({})
-		// console.log(response)
-		// setCourseList(response.map((res: any) => res.name))
-
-		// const names = response.map((res: any) => res.name)
-		// console.log(names)
-		return response
+		return response.result.courses
 	}
+
+	// async function getCourseWork() {
+	// 	const response = fetch(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`, {
+	// 		method: 'GET',
+	// 		headers: {
+	// 			'Content-Type': 'application/json'
+	// 			'Authorization': `Bearer ${accessToken}`
+	// 		}
+	// 	})
+	// }
+
+	// async function which will make the API call and then set the state variable with the result.
+	const fetchGoogleClassrooms = async () => {
+		// gapi.auth2.getAuthInstance().signIn()
+
+		const classroomList = await getCourses()
+		setClassrooms(classroomList)
+		console.log(classroomList)
+	}
+
+	// const fetchCourses = async () => {
+	// 	const courses = await getCourses()
+	// 	console.log(courses)
+	// }
+
+	// useEffect to run the async function after the component renders. Make sure to include dependency array [] to ensure it only runs on the FIRST render (no loops)!
+	useEffect(() => {
+		loadClient()
+		// gapi.auth2.getAuthInstance().signIn()
+
+		// this popup is so annoying
+		fetchGoogleClassrooms()
+	}, [])
 
 	const handleClick = () => {
-		loadClient()
-
-		gapi.auth2.getAuthInstance().signIn()
-
-		getCourses().then((response: any) =>
-			// setCourseList(response.result.courses.map((courses: any) => courses.name)),
-			console.log(response.result.courses),
-		)
-
 		setOpen(true)
 	}
-
-	// ReactQuery - can't figure out how to do after authentication
-	// const { isLoading, error, data } = useQuery('repoData', () =>
-	// 	fetch('https://classroom.googleapis.com/v1/courses').then((res) => res.json()),
-	// )
-
-	// if (isLoading) console.log('Loading...')
-
-	// if (error) console.log('An error has occurred: ')
-
-	// console.log(data)
 
 	const handleAdd = () => {
 		if (name === '') {
@@ -141,6 +150,26 @@ export default function CreateGCRTask({
 			<TeacherModalStyled open={open} onClose={handleClose}>
 				<TaskModalBox>
 					<ModalTitle onClick={handleClose} text='Create Task' />
+					<BoxInModal>
+						<FormControl fullWidth>
+							<InputLabel id='classroom-dropdown-label'>Classroom</InputLabel>
+							<Select
+								labelId='classroom-dropdown'
+								id='classroom-dropdown'
+								value={classID}
+								label='Classroom'
+								onChange={(event) => {
+									setClassId(event.target.value as string)
+								}}
+							>
+								{classroomList.map((classroom) => (
+									<MenuItem key='class' value={classroom.id}>
+										{classroom.name}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</BoxInModal>
 					<TextField
 						margin='normal'
 						id='name'
