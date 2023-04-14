@@ -49,41 +49,47 @@ export default function CreateGCRTask({
 		return response.result.courses
 	}
 
-	// async function getCourseWork() {
-	// 	const response = fetch(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`, {
-	// 		method: 'GET',
-	// 		headers: {
-	// 			'Content-Type': 'application/json'
-	// 			'Authorization': `Bearer ${accessToken}`
-	// 		}
-	// 	})
-	// }
+	async function getCourseWork() {
+		const response = await gapi.client.classroom.courses.courseWork.list({
+			courseId: '603698134454',
+		})
+		console.log(response.result)
+		return response.result
+
+		// const response = fetch(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`, {
+		// 	method: 'GET',
+		// 	headers: {
+		// 		'Content-Type': 'application/json'
+		// 		'Authorization': `Bearer ${accessToken}`
+		// 	}
+		// })
+	}
 
 	// async function which will make the API call and then set the state variable with the result.
 	const fetchGoogleClassrooms = async () => {
-		// gapi.auth2.getAuthInstance().signIn()
-
 		const classroomList = await getCourses()
 		setClassrooms(classroomList)
 		console.log(classroomList)
 	}
 
-	// const fetchCourses = async () => {
-	// 	const courses = await getCourses()
-	// 	console.log(courses)
-	// }
+	const fetchCourseWork = async () => {
+		console.log(classID)
+		if (classID != '') {
+			const coursework = await getCourseWork()
+			console.log(coursework)
+		}
+	}
 
 	// useEffect to run the async function after the component renders. Make sure to include dependency array [] to ensure it only runs on the FIRST render (no loops)!
 	useEffect(() => {
-		loadClient()
-		// gapi.auth2.getAuthInstance().signIn()
-
-		// this popup is so annoying
-		fetchGoogleClassrooms()
+		loadClient('https://www.googleapis.com/auth/classroom.coursework.me')
 	}, [])
 
 	const handleClick = () => {
 		setOpen(true)
+		loadClient('https://www.googleapis.com/auth/classroom.courses')
+		// this popup is so annoying
+		fetchGoogleClassrooms()
 	}
 
 	const handleAdd = () => {
@@ -170,6 +176,7 @@ export default function CreateGCRTask({
 							</Select>
 						</FormControl>
 					</BoxInModal>
+					<Button onClick={fetchCourseWork}>fetch</Button>
 					<TextField
 						margin='normal'
 						id='name'
