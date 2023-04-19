@@ -49,7 +49,7 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 			</Grid>
 
 			<Grid item xs={12}>
-				<Stack direction='row' spacing={20}>
+				<Stack direction='row' sx={{ display: 'flex', justifyContent: 'space-between' }}>
 					<Typography variant='h4'>View and Edit Tasks</Typography>
 					<TextField
 						id='standard-basic'

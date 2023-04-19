@@ -7,17 +7,9 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { formatDistance } from 'date-fns'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+
 import { Classroom, CompletedTask } from '../../types'
-import { db } from '../../utils/firebase'
-import {
-	confirmTask,
-	denyTask,
-	getPlayerData,
-	getPlayerTaskCompletion,
-	confirmAllTasks,
-} from '../../utils/mutations'
+import { confirmTask, denyTask } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import { Grid } from '@mui/material'
 import Loading from '../global/Loading'
@@ -34,65 +26,14 @@ const formatStatus = (task: CompletedTask) => {
 	}
 }
 
-export default function ConfirmTasksTable({ classroom }: { classroom: Classroom }) {
+export default function ConfirmTasksTable({
+	classroom,
+	completedTasks,
+}: {
+	classroom: Classroom
+	completedTasks: CompletedTask[] | null
+}) {
 	const { enqueueSnackbar } = useSnackbar()
-
-	const [completedTasks, setCompletedTasks] = useState<CompletedTask[] | null>(null)
-
-	useEffect(() => {
-		const completedTasksQuery = query(
-			collection(db, `classrooms/${classroom.id}/tasks`),
-			where('completed', '!=', []),
-		)
-		const unsub = onSnapshot(completedTasksQuery, (snapshot) => {
-			const fetchCompletedTasks = async () => {
-				const completedTasksList: CompletedTask[] = []
-
-				await Promise.all(
-					snapshot.docs.map(async (doc) => {
-						const completedPlayerList = doc.data().completed as string[]
-						await Promise.all(
-							completedPlayerList.map(async (playerID) => {
-								const completionTime = await getPlayerTaskCompletion(classroom.id, doc.id, playerID)
-								const player = await getPlayerData(classroom.id, playerID)
-
-								if (completionTime && player) {
-									const completedTask = {
-										...doc.data(),
-										id: doc.id,
-										player,
-										completionTime,
-									}
-									completedTasksList.push(completedTask as CompletedTask)
-								}
-							}),
-						)
-					}),
-				)
-
-				console.log(completedTasksList)
-				setCompletedTasks(completedTasksList)
-			}
-			fetchCompletedTasks().catch(console.error)
-		})
-
-		return unsub
-	}, [classroom])
-
-	const handleConfirmAll = () => {
-		if (completedTasks) {
-			confirmAllTasks(completedTasks, classroom.id)
-				.then(() => {
-					enqueueSnackbar('All tasks confirmed', { variant: 'success' })
-				})
-				.catch((err) => {
-					console.error(err)
-					enqueueSnackbar('There was an error confirming the task completion.', {
-						variant: 'error',
-					})
-				})
-		}
-	}
 
 	if (!completedTasks) {
 		return <Loading>Loading tasks...</Loading>
@@ -186,9 +127,6 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 					</TableBody>
 				</Table>
 			</TableContainer>
-			<Button color='primary' onClick={() => handleConfirmAll()}>
-				Confirm All
-			</Button>
 		</div>
 	)
 }

@@ -94,16 +94,17 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 	return (
 		<Grid item xs={12}>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-				<Stack spacing={16} direction='row'>
+				<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
 					<Tabs value={taskRepTab} onChange={handleChangeTaskRep} aria-label='Task/repeatable tabs'>
 						<Tab label='Tasks' {...a11yProps(0)} />
 						<Tab label='Repeatables' {...a11yProps(1)} />
 					</Tabs>
 					<TextField
 						id='standard-basic'
-						label='Standard'
+						label='Search'
 						variant='standard'
 						onChange={(event) => setSearchInput(event.target.value)}
+						sx={{ mt: -1 }}
 					/>
 				</Stack>
 			</Box>

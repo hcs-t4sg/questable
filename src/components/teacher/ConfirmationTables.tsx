@@ -1,31 +1,174 @@
 import { Tab, Tabs } from '@mui/material'
 import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { useState } from 'react'
-import { Classroom } from '../../types'
+import { useState, useEffect } from 'react'
 import ConfirmRepeatablesTable from './ConfirmRepeatablesTable'
 import ConfirmTasksTable from './ConfirmTasksTable'
+import { Classroom, CompletedTask, RepeatableCompletion, Repeatable } from '../../types'
+import { useSnackbar } from 'notistack'
+import {
+	confirmAllTasks,
+	confirmAllRepeatables,
+	getPlayerData,
+	getPlayerTaskCompletion,
+	getRepeatableCompletionTimes,
+} from '../../utils/mutations'
 // import { truncate } from '../../utils/helperFunctions'
+
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { db } from '../../utils/firebase'
 
 export default function ConfirmationTables({ classroom }: { classroom: Classroom }) {
 	const [page, setPage] = useState(0)
+	const [completedTasks, setCompletedTasks] = useState<CompletedTask[] | null>(null)
+	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[] | null>(
+		null,
+	)
+
+	const { enqueueSnackbar } = useSnackbar()
 
 	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
 		setPage(newTabIndex)
+	}
+	useEffect(() => {
+		if (page == 0) {
+			const completedTasksQuery = query(
+				collection(db, `classrooms/${classroom.id}/tasks`),
+				where('completed', '!=', []),
+			)
+			const unsub = onSnapshot(completedTasksQuery, (snapshot) => {
+				const fetchCompletedTasks = async () => {
+					const completedTasksList: CompletedTask[] = []
+
+					await Promise.all(
+						snapshot.docs.map(async (doc) => {
+							const completedPlayerList = doc.data().completed as string[]
+							await Promise.all(
+								completedPlayerList.map(async (playerID) => {
+									const completionTime = await getPlayerTaskCompletion(
+										classroom.id,
+										doc.id,
+										playerID,
+									)
+									const player = await getPlayerData(classroom.id, playerID)
+
+									if (completionTime && player) {
+										const completedTask = {
+											...doc.data(),
+											id: doc.id,
+											player,
+											completionTime,
+										}
+										completedTasksList.push(completedTask as CompletedTask)
+									}
+								}),
+							)
+						}),
+					)
+
+					console.log(completedTasksList)
+					setCompletedTasks(completedTasksList)
+				}
+				fetchCompletedTasks().catch(console.error)
+			})
+
+			return unsub
+		} else {
+			const repeatablesRef = collection(db, `classrooms/${classroom.id}/repeatables`)
+			const repeatablesWithPendingRequestsQuery = query(
+				repeatablesRef,
+				where('requestCount', '>', 0),
+			)
+
+			const unsub = onSnapshot(repeatablesWithPendingRequestsQuery, (snapshot) => {
+				const fetchCompletedRepeatables = async () => {
+					const allCompletedRepeatables: RepeatableCompletion[] = []
+
+					console.log(snapshot.docs)
+
+					await Promise.all(
+						snapshot.docs.map(async (doc) => {
+							console.log(doc.data())
+							const completionTimes = await getRepeatableCompletionTimes(classroom.id, doc.id)
+
+							await Promise.all(
+								completionTimes.map(async (completionTime) => {
+									const player = await getPlayerData(classroom.id, completionTime.playerID)
+
+									if (player) {
+										const repeatableCompletion = {
+											id: completionTime.id,
+											repeatable: { ...doc.data(), id: doc.id } as Repeatable,
+											player: player,
+											time: completionTime.time,
+										}
+
+										allCompletedRepeatables.push(repeatableCompletion)
+									}
+								}),
+							)
+						}),
+					)
+
+					setCompletedRepeatables(allCompletedRepeatables)
+				}
+				fetchCompletedRepeatables().catch(console.error)
+			})
+
+			return unsub
+		}
+	}, [classroom, page])
+
+	const handleConfirmAll = () => {
+		if (completedTasks && page == 0) {
+			confirmAllTasks(completedTasks, classroom.id)
+				.then(() => {
+					enqueueSnackbar('All tasks confirmed', { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an error confirming the task completion.', {
+						variant: 'error',
+					})
+				})
+		}
+
+		if (completedRepeatables && page != 0) {
+			confirmAllRepeatables(completedRepeatables, classroom.id)
+				.then(() => {
+					enqueueSnackbar('All tasks confirmed', { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an error confirming the repeatable completion.', {
+						variant: 'error',
+					})
+				})
+		}
 	}
 
 	return (
 		<Grid item xs={12}>
 			<Typography variant='h4'>Tasks/Repeatables Awaiting Confirmation</Typography>
-			<Tabs value={page} onChange={handleTabChange}>
-				<Tab label='One Time' />
-				<Tab label='Repeatable' />
-			</Tabs>
+			<Stack direction='row' sx={{ justifyContent: 'space-between', display: 'flex' }}>
+				<Tabs value={page} onChange={handleTabChange}>
+					<Tab label='One Time' />
+					<Tab label='Repeatable' />
+				</Tabs>
+				<Button sx={{ mb: 2 }} color='primary' onClick={() => handleConfirmAll()}>
+					Confirm All
+				</Button>
+			</Stack>
 
 			{page === 0 ? (
-				<ConfirmTasksTable classroom={classroom} />
+				<ConfirmTasksTable classroom={classroom} completedTasks={completedTasks} />
 			) : (
-				<ConfirmRepeatablesTable classroom={classroom} />
+				<ConfirmRepeatablesTable
+					classroom={classroom}
+					completedRepeatables={completedRepeatables}
+				/>
 			)}
 		</Grid>
 	)
