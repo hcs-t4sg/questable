@@ -16,8 +16,9 @@ import { Classroom, Player, ForumPost } from '../../types'
 import { updateForumPost } from '../../utils/mutations'
 import { TaskModalBox, TeacherModalStyled } from '../../styles/TaskModalStyles'
 import { useSnackbar } from 'notistack'
-import { CKEditor } from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import modules from '../../utils/TextEditor'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 // Notes: onsnapshot, don't implement at database level; implement on frontend, show only ones you filtered for
 // Modal component for individual entries.
 
@@ -131,13 +132,12 @@ export default function EditForumPostModal({
 							InputProps={{ readOnly: isDisabled }}
 							onChange={(event) => setSubject(event.target.value)}
 						/>
-						<CKEditor
-							editor={ClassicEditor}
-							data={forumPost.content}
-							onChange={(event, editor) => {
-								const data = editor.getData()
-								setDescription(data)
-							}}
+						<ReactQuill
+							theme='snow'
+							onChange={setDescription}
+							value={description}
+							modules={modules}
+							readOnly={isDisabled}
 						/>
 						{/* <TextField
 							margin='normal'
