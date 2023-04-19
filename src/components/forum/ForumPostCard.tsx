@@ -20,6 +20,7 @@ import Avatar from '../global/Avatar'
 import { useSnackbar } from 'notistack'
 import EditForumPostModal from './EditForumPostModal'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import Chip from '@mui/material/Chip'
 
 export default function ForumPostCard({
 	forumPost,
@@ -66,12 +67,48 @@ export default function ForumPostCard({
 
 	const cardContent = (
 		<CardContent>
-			<Stack direction='row'>
+			<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
 				<Typography variant='h5' sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>
 					{forumPost.title}
 				</Typography>
 
-				<Stack sx={{ ml: 2 }} direction='column'>
+				<Stack direction='row'>
+					<Chip
+						sx={{ mt: 0.7 }}
+						icon={<FavoriteIcon />}
+						onClick={(e) => {
+							handleLike(forumPost)
+							e.preventDefault()
+						}}
+						label={forumPost.likes}
+					/>
+					{(player.role === 'teacher' ||
+						(forumPost.author.id === player.id && classroom.canEdit)) && (
+						<IconButton
+							onClick={(e) => {
+								setOpen(true)
+								e.preventDefault()
+							}}
+						>
+							<EditIcon></EditIcon>
+						</IconButton>
+					)}
+
+					{(player.role === 'teacher' ||
+						(forumPost.author.id === player.id && classroom.canEdit)) && (
+						<IconButton>
+							<DeleteIcon
+								onClick={(e) => {
+									handleDelete(forumPost)
+									e.preventDefault()
+								}}
+							></DeleteIcon>
+						</IconButton>
+					)}
+				</Stack>
+			</Stack>
+			{/* 
+				<Stack direction='column'>
 					<IconButton onClick={() => handleLike(forumPost)}>
 						<FavoriteIcon
 							sx={{
@@ -96,8 +133,7 @@ export default function ForumPostCard({
 							<DeleteIcon onClick={() => handleDelete(forumPost)}></DeleteIcon>
 						</IconButton>
 					</Stack>
-				)}
-			</Stack>
+				)} */}
 			<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
 				<Box
 					sx={{

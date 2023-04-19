@@ -18,6 +18,7 @@ import { Classroom, Comment, ForumPost, Player } from '../../types'
 import StarIcon from '@mui/icons-material/Star'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 import { db } from '../../utils/firebase'
+import Chip from '@mui/material/Chip'
 import {
 	addComment,
 	getPlayerData,
@@ -117,40 +118,32 @@ const IncomingComment = ({
 	return (
 		<Card variant='outlined' sx={{ backgroundColor: '#FEFAE0', width: '60%' }}>
 			<CardContent>
-				<Stack direction='row'>
+				<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
 					<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
 						{comment.content}
 					</Typography>
-					{player.role == 'teacher' && (
-						<IconButton onClick={() => handleDelete(comment, classroom, post, enqueueSnackbar)}>
-							<DeleteIcon />
-						</IconButton>
-					)}
-					<Stack direction='column'>
-						<IconButton
+					<Stack direction='row'>
+						<Chip
+							sx={{ mt: 0.65 }}
+							icon={<FavoriteIcon />}
 							onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}
-						>
-							<FavoriteIcon
-								sx={{
-									color: !comment.likers
-										? 'black'
-										: comment.likers.includes(player.id)
-										? 'red'
-										: 'black',
-								}}
-							/>
-						</IconButton>
-						<Typography>{comment.likes}</Typography>
+							label={comment.likes}
+						/>
+						{(player.role == 'teacher' || player.id == post.author.id) && (
+							<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
+								{post.pinnedComments.includes(comment.id) ? (
+									<StarIcon />
+								) : (
+									<StarBorderIcon></StarBorderIcon>
+								)}
+							</IconButton>
+						)}
+						{player.role == 'teacher' && (
+							<IconButton onClick={() => handleDelete(comment, classroom, post, enqueueSnackbar)}>
+								<DeleteIcon />
+							</IconButton>
+						)}
 					</Stack>
-					{(player.role == 'teacher' || player.id == post.author.id) && (
-						<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
-							{post.pinnedComments.includes(comment.id) ? (
-								<StarIcon />
-							) : (
-								<StarBorderIcon></StarBorderIcon>
-							)}
-						</IconButton>
-					)}
 				</Stack>
 				<Divider sx={{ margin: '10px 0' }} />
 				{author ? (
@@ -202,40 +195,33 @@ const OutgoingComment = ({
 			sx={{ backgroundColor: '#F3F8DF', width: '60%', alignSelf: 'flex-end' }}
 		>
 			<CardContent>
-				<Stack direction='row'>
+				<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
 					<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
 						{comment.content}
 					</Typography>
-					{player.role == 'teacher' && (
-						<IconButton onClick={() => handleDelete(comment, classroom, post, enqueueSnackbar)}>
-							<DeleteIcon />
-						</IconButton>
-					)}
-					<Stack direction='column'>
-						<IconButton
+					<Stack direction='row'>
+						<Chip
+							sx={{ mt: 0.65 }}
+							icon={<FavoriteIcon />}
 							onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}
-						>
-							<FavoriteIcon
-								sx={{
-									color: !comment.likers
-										? 'black'
-										: comment.likers.includes(player.id)
-										? 'red'
-										: 'black',
-								}}
-							/>
-						</IconButton>
-						<Typography>{comment.likes}</Typography>
+							label={comment.likes}
+						/>
+
+						{(player.role == 'teacher' || player.id == post.author.id) && (
+							<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
+								{post.pinnedComments.includes(comment.id) ? (
+									<StarIcon />
+								) : (
+									<StarBorderIcon></StarBorderIcon>
+								)}
+							</IconButton>
+						)}
+						{player.role == 'teacher' && (
+							<IconButton onClick={() => handleDelete(comment, classroom, post, enqueueSnackbar)}>
+								<DeleteIcon />
+							</IconButton>
+						)}
 					</Stack>
-					{(player.role == 'teacher' || player.id == post.author.id) && (
-						<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
-							{post.pinnedComments.includes(comment.id) ? (
-								<StarIcon />
-							) : (
-								<StarBorderIcon></StarBorderIcon>
-							)}
-						</IconButton>
-					)}
 				</Stack>
 				<Divider sx={{ margin: '10px 0' }} />
 				<Typography variant='caption' style={{ fontStyle: 'italic' }}>

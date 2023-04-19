@@ -85,13 +85,14 @@ export default function ForumPostList({
 
 	return (
 		<>
-			<Stack direction='row'>
+			<Stack direction='row' sx={{ display: 'flex', justifyContent: 'space-between' }}>
 				<Typography variant='h4'>{categoryTitles[categoryFilter]}</Typography>
 				<TextField
-					id='outlined-basic'
+					id='id="standard-basic"'
 					label='Search'
-					variant='outlined'
+					variant='standard'
 					onChange={(e) => setInput(e.target.value)}
+					sx={{ mb: 1 }}
 				/>
 			</Stack>
 			{forumPosts ? (
