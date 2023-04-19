@@ -308,8 +308,11 @@ export default function ForumPostView({
 		return (
 			<>
 				<ForumPostCard forumPost={post} classroom={classroom} player={player} isLink={false} />
-				<Card variant='outlined'>
+				<Card variant='outlined' sx={{ mb: 2 }}>
 					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
+						<Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+							Pinned Comments
+						</Typography>
 						{comments ? (
 							<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
 								{comments.map((comment) => {
@@ -331,8 +334,12 @@ export default function ForumPostView({
 						)}
 					</CardContent>
 				</Card>
+
 				<Card variant='outlined'>
 					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
+						<Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+							Comments
+						</Typography>
 						{comments ? (
 							<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
 								{comments.map((comment) => {
