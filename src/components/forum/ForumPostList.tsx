@@ -59,10 +59,7 @@ export default function ForumPostList({
 				console.log(postList)
 				setForumPosts(postList)
 				setOriginalPosts(postList)
-				const strippedHTMLList = postList.map((elem) => {
-					return { ...elem, content: elem.content.replace(/<[^>]+>/g, '') }
-				})
-				newFuse(new Fuse(strippedHTMLList, options))
+				newFuse(new Fuse(postList, options))
 			}
 			appendAuthorsToPosts().catch(console.error)
 		})
