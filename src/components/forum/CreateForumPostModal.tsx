@@ -131,7 +131,12 @@ export default function CreateForumPostModal({
 							onChange={(event) => setSubject(event.target.value)}
 						/>
 
-						<ReactQuill theme='snow' modules={modules} onChange={setDescription} />
+						<ReactQuill
+							placeholder='Description'
+							theme='snow'
+							modules={modules}
+							onChange={setDescription}
+						/>
 						{/* <TextField
 							margin='normal'
 							id='description'

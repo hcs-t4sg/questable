@@ -53,7 +53,7 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 					<Typography variant='h4'>View and Edit Tasks</Typography>
 					<TextField
 						id='standard-basic'
-						label='Standard'
+						label='Search'
 						variant='standard'
 						onChange={(event) => setSearchInput(event.target.value)}
 					/>

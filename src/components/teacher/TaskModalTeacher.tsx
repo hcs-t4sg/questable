@@ -6,8 +6,6 @@ import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 // import Typography from '@mui/material/Typography'
-import { CKEditor } from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { useState } from 'react'
 import { updateTask } from '../../utils/mutations'
 import EditIcon from '@mui/icons-material/Edit'
@@ -23,6 +21,9 @@ import {
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
 import { useSnackbar } from 'notistack'
+import modules from '../../utils/TextEditor'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
 export default function TaskModalTeacher({
 	task,
@@ -167,13 +168,20 @@ export default function TaskModalTeacher({
 						value={description}
 						onChange={(event) => setDescription(event.target.value)}
 					/> */}
-					<CKEditor
+					{/* <CKEditor
 						editor={ClassicEditor}
 						data={task.description}
 						onChange={(_event, editor) => {
 							const data = editor.getData()
 							setDescription(data)
 						}}
+					/> */}
+					<ReactQuill
+						theme='snow'
+						style={{ width: '100%' }}
+						value={description}
+						modules={modules}
+						onChange={setDescription}
 					/>
 
 					{/* <Box

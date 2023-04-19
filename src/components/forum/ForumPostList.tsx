@@ -37,7 +37,7 @@ export default function ForumPostList({
 		console.log(forumPostsQuery)
 
 		const options = {
-			keys: ['title', 'description'],
+			keys: ['title', 'content'],
 			includeScore: true,
 			threshold: 0.4,
 			minMatchCharLength: 3,
@@ -59,7 +59,10 @@ export default function ForumPostList({
 				console.log(postList)
 				setForumPosts(postList)
 				setOriginalPosts(postList)
-				newFuse(new Fuse(postList, options))
+				const strippedHTMLList = postList.map((elem) => {
+					return { ...elem, content: elem.content.replace(/<[^>]+>/g, '') }
+				})
+				newFuse(new Fuse(strippedHTMLList, options))
 			}
 			appendAuthorsToPosts().catch(console.error)
 		})
