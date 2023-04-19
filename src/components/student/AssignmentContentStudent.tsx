@@ -81,7 +81,20 @@ export function AssignmentContentStudent({
 			<IconButton onClick={toggleIsOpen}>
 				<OpenInNewIcon />
 			</IconButton>
-			<Modal sx={{ overflow: 'scroll' }} open={isOpen} onClose={toggleIsOpen}>
+			<Modal
+				sx={{
+					position: 'fixed',
+					display: 'flex',
+					justifyContent: 'center',
+					top: '0',
+					left: '0',
+					width: '100%',
+					height: '100%',
+					overflowY: 'auto',
+				}}
+				open={isOpen}
+				onClose={toggleIsOpen}
+			>
 				<StudentTaskModalBox>
 					<ModalTitle onClick={toggleIsOpen} text={`${assignmentType} overview`} />
 					<Grid container spacing={2}>
