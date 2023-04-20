@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Layout from '../components/global/Layout'
 import Loading from '../components/global/Loading'
+import OnboardingPage from '../components/global/OnboardingPage'
 import StudentView from '../components/student/StudentView'
 import TeacherView from '../components/teacher/TeacherView'
 import { Classroom, Player } from '../types'
@@ -56,7 +57,30 @@ export default function ClassroomPage({ user }: { user: User }) {
 		updatePlayer().catch(console.error)
 	}, [classID])
 
+	const [onboarded, setOnboarded] = useState<string[] | null>(null)
+	useEffect(() => {
+		const unsub = onSnapshot(doc(db, `users/${user.uid}`), (user) => {
+			if (user.exists()) {
+				const onboardedList = user.data().onboarded
+				if (onboardedList) {
+					setOnboarded(onboardedList)
+				} else {
+					setOnboarded([])
+				}
+			}
+		})
+		return unsub
+	}, [])
+
 	if (classroom) {
+		if (!onboarded) {
+			return <OnboardingPage classroom={classroom} user={user} />
+		}
+		if (onboarded && classID) {
+			if (onboarded.includes(classID) == false) {
+				return <OnboardingPage classroom={classroom} user={user} />
+			}
+		}
 		if (player) {
 			if (player.role === 'teacher') {
 				return <TeacherView player={player} classroom={classroom} user={user} />

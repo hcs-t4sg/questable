@@ -902,3 +902,25 @@ export async function addComment(
 		postTime: serverTimestamp(),
 	})
 }
+
+export async function onboardClassroom(userID: string, classID: string) {
+	console.log(userID)
+	console.log(classID)
+	const userRef = doc(db, `users/${userID}`)
+	const onboardedSnap = await getDoc(userRef)
+
+	// Add the classroom ID to the user's list of onboarded classrooms
+	if (onboardedSnap.exists()) {
+		const onboardedClassrooms = onboardedSnap.data().pinned
+		if (onboardedClassrooms) {
+			onboardedClassrooms.push(classID)
+			updateDoc(userRef, {
+				onboarded: onboardedClassrooms,
+			})
+		} else {
+			updateDoc(userRef, {
+				onboarded: [classID],
+			})
+		}
+	}
+}
