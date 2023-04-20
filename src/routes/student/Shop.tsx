@@ -3,10 +3,10 @@ import Grid from '@mui/material/Grid'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import * as React from 'react'
-// import ShopItemCard from '../../components/student/ShopItemCard'
+// import ShopShopItemCard from '../../components/student/ShopShopItemCard'
 import { Classroom, Player } from '../../types'
 import { getHairItems, getPantsItems, getShirtItems, getShoesItems } from '../../utils/items'
-import { ItemCard } from '../../components/student/ItemCard'
+import { ShopItemCard } from '../../components/student/ShopItemCard'
 // import { Classroom, Player } from '../../types'
 import { useState } from 'react'
 import wood2 from '/src/assets/Wood2.png'
@@ -83,13 +83,11 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{hairs.map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									<ItemCard
+									<ShopItemCard
 										item={item}
 										player={player}
 										classroom={classroom}
 										itemPrice='100g'
-										type='shop'
-										isBody={false}
 									/>
 								</Grid>
 							))}
@@ -99,13 +97,11 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{shirts.map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									<ItemCard
+									<ShopItemCard
 										item={item}
 										player={player}
 										classroom={classroom}
 										itemPrice='150g'
-										type='shop'
-										isBody={false}
 									/>
 								</Grid>
 							))}
@@ -115,13 +111,11 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{pants.map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									<ItemCard
+									<ShopItemCard
 										item={item}
 										player={player}
 										classroom={classroom}
 										itemPrice='150g'
-										type='shop'
-										isBody={false}
 									/>
 								</Grid>
 							))}
@@ -131,13 +125,11 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{shoes.map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									<ItemCard
+									<ShopItemCard
 										item={item}
 										player={player}
 										classroom={classroom}
 										itemPrice='100g'
-										type='shop'
-										isBody={false}
 									/>
 								</Grid>
 							))}

@@ -8,11 +8,11 @@ import { db } from '../../utils/firebase'
 import { Box } from '@mui/system'
 // import InventoryItemCard from '../../components/student/InventoryItemCard'
 import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
-import { getBodyItems, Hair, Pants, Shirt, Shoes } from '../../utils/items'
-import { ItemCard } from '../../components/student/ItemCard'
+import { currentAvatar, getBodyItems, Hair, Pants, Shirt, Shoes } from '../../utils/items'
 import { Typography } from '@mui/material'
 import wood2 from '/src/assets/Wood2.png'
 import Loading from '../../components/global/Loading'
+import { InventoryItemCard } from '../../components/student/InventoryItemCard'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -125,14 +125,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 								{inventoryObjects.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={false}
-										/>
+										<InventoryItemCard item={item} player={player} classroom={classroom} />
 									</Grid>
 								))}
 							</Grid>
@@ -143,13 +136,11 @@ export default function Inventory({ player, classroom }: { player: Player; class
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{getBodyItems().map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									<ItemCard
+									<InventoryItemCard
 										item={item}
 										player={player}
 										classroom={classroom}
-										itemPrice=''
-										type='inventory'
-										isBody={true}
+										bodyOutfit={currentAvatar(player)}
 									/>
 								</Grid>
 							))}
@@ -167,14 +158,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 									.filter((item) => item.type === 'hair')
 									.map((item, index) => (
 										<Grid item xs={2} sm={3} md={3} key={index}>
-											<ItemCard
-												item={item}
-												player={player}
-												classroom={classroom}
-												itemPrice=''
-												type='inventory'
-												isBody={false}
-											/>
+											<InventoryItemCard item={item} player={player} classroom={classroom} />
 										</Grid>
 									))}
 							</Grid>
@@ -192,14 +176,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 									.filter((item) => item.type === 'shirt')
 									.map((item, index) => (
 										<Grid item xs={2} sm={3} md={3} key={index}>
-											<ItemCard
-												item={item}
-												player={player}
-												classroom={classroom}
-												itemPrice=''
-												type='inventory'
-												isBody={false}
-											/>
+											<InventoryItemCard item={item} player={player} classroom={classroom} />
 										</Grid>
 									))}
 							</Grid>
@@ -217,14 +194,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 									.filter((item) => item.type === 'pants')
 									.map((item, index) => (
 										<Grid item xs={2} sm={3} md={3} key={index}>
-											<ItemCard
-												item={item}
-												player={player}
-												classroom={classroom}
-												itemPrice=''
-												type='inventory'
-												isBody={false}
-											/>
+											<InventoryItemCard item={item} player={player} classroom={classroom} />
 										</Grid>
 									))}
 							</Grid>
@@ -242,14 +212,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 									.filter((item) => item.type === 'shoes')
 									.map((item, index) => (
 										<Grid item xs={2} sm={3} md={3} key={index}>
-											<ItemCard
-												item={item}
-												player={player}
-												classroom={classroom}
-												itemPrice=''
-												type='inventory'
-												isBody={false}
-											/>
+											<InventoryItemCard item={item} player={player} classroom={classroom} />
 										</Grid>
 									))}
 							</Grid>
