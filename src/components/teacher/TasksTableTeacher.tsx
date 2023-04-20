@@ -131,7 +131,11 @@ export default function TasksTableTeacher({
 									</TableCell>
 									<TableCell>
 										{' '}
-										<div dangerouslySetInnerHTML={{ __html: truncate(task.description) }} />
+										<div
+											dangerouslySetInnerHTML={{
+												__html: truncate(task.description.replace(/<[^>]+>/g, '')),
+											}}
+										/>
 									</TableCell>
 									{/* <TableCell align='left'>{truncate(task.description)}</TableCell> */}
 									<TableCell align='left'>

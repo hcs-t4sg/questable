@@ -110,7 +110,11 @@ export default function RepeatableTableTeacher({
 									{/* <TableCell>{truncate(repeatable.description)}</TableCell> */}
 									<TableCell>
 										{' '}
-										<div dangerouslySetInnerHTML={{ __html: truncate(repeatable.description) }} />
+										<div
+											dangerouslySetInnerHTML={{
+												__html: truncate(repeatable.description.replace(/<[^>]+>/g, '')),
+											}}
+										/>
 									</TableCell>
 									<TableCell>{repeatable.maxCompletions}</TableCell>
 									<TableCell>{`${repeatable.reward}g`}</TableCell>
