@@ -42,6 +42,9 @@ export default function TeacherSettings({
 			<Grid item xs={12}>
 				<Typography variant='h4'>Teacher Profile</Typography>
 				<PlayerCard player={player} user={user} classroom={classroom} />
+				<Typography sx={{ mt: 2 }} variant='h4'>
+					Forum Settings
+				</Typography>
 				<FormControlLabel
 					control={<Switch onChange={() => handleSwitch(classroom)} checked={editOn} />}
 					label='Students can edit/delete posts'

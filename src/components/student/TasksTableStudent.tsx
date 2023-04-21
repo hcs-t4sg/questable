@@ -184,7 +184,7 @@ export default function TasksTableStudent({
 												<Checkbox onChange={() => handleTaskComplete(task)} />
 											</TableCell>
 										) : null}
-										{taskCategory === 1 ? (
+										{taskCategory === 1 && task.due.toDate() >= new Date() ? (
 											<TableCell align='center'>
 												<Button onClick={() => handleUnsend(task)} color='error'>
 													Unsend

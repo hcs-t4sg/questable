@@ -15,9 +15,9 @@ import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { FormEvent, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Classroom, Comment, ForumPost, Player } from '../../types'
-import StarIcon from '@mui/icons-material/Star'
-import StarBorderIcon from '@mui/icons-material/StarBorder'
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
 import { db } from '../../utils/firebase'
+import PushPinIcon from '@mui/icons-material/PushPin'
 import Chip from '@mui/material/Chip'
 import {
 	addComment,
@@ -132,9 +132,9 @@ const IncomingComment = ({
 						{(player.role == 'teacher' || player.id == post.author.id) && (
 							<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
 								{post.pinnedComments.includes(comment.id) ? (
-									<StarIcon />
+									<PushPinIcon />
 								) : (
-									<StarBorderIcon></StarBorderIcon>
+									<PushPinOutlinedIcon />
 								)}
 							</IconButton>
 						)}
@@ -210,9 +210,9 @@ const OutgoingComment = ({
 						{(player.role == 'teacher' || player.id == post.author.id) && (
 							<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
 								{post.pinnedComments.includes(comment.id) ? (
-									<StarIcon />
+									<PushPinIcon />
 								) : (
-									<StarBorderIcon></StarBorderIcon>
+									<PushPinOutlinedIcon />
 								)}
 							</IconButton>
 						)}
