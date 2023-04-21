@@ -63,7 +63,7 @@ export default function CreateTaskModal({
 	const handleOpen = () => {
 		setOpen(true)
 		setName('')
-		setDueDate(new Date())
+		setDueDate(null)
 		setDescription('')
 		setReward(10)
 		setMaxCompletions('1')
@@ -86,6 +86,15 @@ export default function CreateTaskModal({
 			if (maxCompletionsIsInvalid(maxCompletions)) {
 				setMaxCompletions('1')
 				enqueueSnackbar('Max completions must be a positive integer', { variant: 'error' })
+				return
+			}
+			if (!dueDate) {
+				enqueueSnackbar('You need to provide a due date', { variant: 'error' })
+				return
+			}
+
+			if (dueDate < new Date()) {
+				enqueueSnackbar('You cannot set a due date in the past!', { variant: 'error' })
 				return
 			}
 
@@ -269,8 +278,10 @@ export default function CreateTaskModal({
 						{!isRepeatable ? (
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
 								<DateTimePicker
+									sx={{ width: '30%' }}
 									label='Due Date'
 									value={dueDate}
+									minDateTime={new Date()}
 									onChange={(value) => setDueDate(value)}
 								/>
 							</LocalizationProvider>

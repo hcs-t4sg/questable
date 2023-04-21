@@ -63,6 +63,11 @@ export default function TaskModalTeacher({
 			return
 		}
 
+		if (date < new Date()) {
+			enqueueSnackbar('You cannot set a due date in the past!', { variant: 'error' })
+			return
+		}
+
 		const dateIsInvalid = isNaN(date.getTime())
 		if (dateIsInvalid) {
 			enqueueSnackbar('Due date is invalid', { variant: 'error' })
@@ -198,6 +203,8 @@ export default function TaskModalTeacher({
 							<DateTimePicker
 								label='Due Date'
 								value={date}
+								sx={{ width: '30%' }}
+								minDateTime={new Date()}
 								onChange={(newValue) => setDate(newValue)}
 							/>
 						</LocalizationProvider>
