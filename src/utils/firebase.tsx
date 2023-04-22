@@ -2,12 +2,12 @@
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
-import { getFirestore } from 'firebase/firestore'
+import { doc, getFirestore, setDoc } from 'firebase/firestore'
 import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
 import Layout from '../components/global/Layout'
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
-import { SCOPES } from './GCRAPI'
+import { clientID } from './GCRAPI'
 // import { gapi } from 'gapi-script'
 // import GCRLogin from '../components/teacher/GCRLogin'
 // import { Grid } from '@mui/material'
@@ -16,6 +16,10 @@ import { SCOPES } from './GCRAPI'
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+export let accessToken: any
+
+// ! TRY THIS: https://stackoverflow.com/questions/72209749/react-google-identity-services
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyD3v0oikzBtnyz7DHcDool2gtvRw48Z_kk',
@@ -37,17 +41,22 @@ const uiConfig = {
 		},
 		{
 			provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-			scopes: SCOPES,
+			clientId: clientID,
+			scopes: ['https://www.googleapis.com/auth/classroom.courses'],
 		},
 	],
 	callbacks: {
 		// Avoid redirects after sign-in.
 		signInSuccessWithAuthResult: (authResult: any) => {
-			const accessToken = authResult.credential.accessToken
-			console.log(accessToken)
+			accessToken = authResult.credential.accessToken
+			console.log(authResult)
 
-			// eslint-disable-next-line camelcase
-			// gapi.auth.setToken({ access_token: accessToken })
+			const user = authResult.user
+			const userRef = doc(db, 'users', user.uid)
+			const data = {
+				gcrToken: accessToken,
+			}
+			setDoc(userRef, data, { merge: true })
 		},
 	},
 }
