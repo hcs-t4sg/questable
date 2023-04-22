@@ -107,14 +107,14 @@ export function MainListItemsStudent() {
 		<React.Fragment>
 			<ListItemButtonStyled
 				component={Link}
-				to='main'
+				to='tasks'
 				onClick={() => setSelected(0)}
 				selected={selected === 0}
 			>
 				<ListItemIconStyled>
 					<FortIcon />
 				</ListItemIconStyled>
-				<ListItemText primary='Main' />
+				<ListItemText primary='Tasks' />
 			</ListItemButtonStyled>
 			<ListItemButtonStyled
 				component={Link}
