@@ -22,24 +22,24 @@ import {
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { useEffect, useState } from 'react'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { doc, getDoc } from 'firebase/firestore'
-// import { addTask } from '../../utils/mutations'
-// import { useSnackbar } from 'notistack'
-import { Player } from '../../types'
+import { Timestamp, doc, getDoc } from 'firebase/firestore'
+import { addTask } from '../../utils/mutations'
+import { useSnackbar } from 'notistack'
+import { Player, Classroom } from '../../types'
 import { db } from '../../utils/firebase'
-// import { queryClient } from '../..'
 // import { useQuery } from 'react-query'
 
 export default function CreateGCRTask({
-	// classroom,
+	classroom,
 	player,
 }: {
-	// classroom: Classroom
+	classroom: Classroom
 	player: Player
 }) {
-	// const { enqueueSnackbar } = useSnackbar()
+	const { enqueueSnackbar } = useSnackbar()
 
 	const [open, setOpen] = useState(false)
+	const [name, setName] = useState('')
 	const [description, setDescription] = useState('')
 	const [reward, setReward] = useState<number>(10)
 	const [dueDate, setDueDate] = useState<Date | null>(null)
@@ -48,7 +48,6 @@ export default function CreateGCRTask({
 	const [classID, setClassId] = useState('')
 	const [clientLoaded, setClientLoaded] = useState(false)
 	const [tasks, setTasks] = useState<any[]>([])
-	const [taskID, setTaskID] = useState('')
 
 	useEffect(() => {
 		const tokenRef = doc(db, 'users', player.id)
@@ -139,40 +138,39 @@ export default function CreateGCRTask({
 		// fetchCourseWork()
 	}
 
-	// const handleAdd = () => {
+	const handleAdd = () => {
+		if (!dueDate) {
+			enqueueSnackbar('You need to provide a due date', { variant: 'error' })
+			return
+		}
 
-	// 	if (!dueDate) {
-	// 		enqueueSnackbar('You need to provide a due date', { variant: 'error' })
-	// 		return
-	// 	}
+		const dateIsInvalid = isNaN(dueDate.getTime())
+		if (dateIsInvalid) {
+			enqueueSnackbar('Due date is invalid', { variant: 'error' })
+			return
+		}
 
-	// 	const dateIsInvalid = isNaN(dueDate.getTime())
-	// 	if (dateIsInvalid) {
-	// 		enqueueSnackbar('Due date is invalid', { variant: 'error' })
-	// 		return
-	// 	}
+		const newTask = {
+			name,
+			description,
+			reward,
+			due: Timestamp.fromDate(dueDate),
+		}
 
-	// 	const newTask = {
-	// 		name,
-	// 		description,
-	// 		reward,
-	// 		due: Timestamp.fromDate(dueDate),
-	// 	}
-
-	// 	handleClose()
-	// 	addTask(classroom.id, newTask, player.id)
-	// 		.then(() => {
-	// 			enqueueSnackbar(`Added task "${name}"!`, {
-	// 				variant: 'success',
-	// 			})
-	// 		})
-	// 		.catch((err) => {
-	// 			console.error(err)
-	// 			enqueueSnackbar('There was an error adding the task.', {
-	// 				variant: 'error',
-	// 			})
-	// 		})
-	// }
+		handleClose()
+		addTask(classroom.id, newTask, player.id)
+			.then(() => {
+				enqueueSnackbar(`Added task "${name}"!`, {
+					variant: 'success',
+				})
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar('There was an error adding the task.', {
+					variant: 'error',
+				})
+			})
+	}
 
 	const handleClose = () => {
 		setOpen(false)
@@ -180,7 +178,9 @@ export default function CreateGCRTask({
 	//	add onclick later
 	const actionButtons = (
 		<DialogActions>
-			<Button variant='contained'>Add Task</Button>
+			<Button variant='contained' onClick={handleAdd}>
+				Add Task
+			</Button>
 		</DialogActions>
 	)
 
@@ -226,21 +226,19 @@ export default function CreateGCRTask({
 						<FormControl fullWidth>
 							<InputLabel id='gcr-task-dropdown-label'>Task</InputLabel>
 							<Select
+								defaultValue=''
 								labelId='gcr-task-dropdown'
-								id='classroom-dropdown'
-								value={taskID}
-								label='Task Name'
+								id='gcr-task-dropdown'
+								value={name}
+								label='Task'
 								onChange={(event) => {
-									setTaskID(event.target.value as string)
+									setName(event.target.value as string)
 									console.log(event.target.value)
 								}}
 							>
-								<MenuItem key='select' value='select'>
-									Select Task
-								</MenuItem>
-								{tasks.map((tasks) => (
-									<MenuItem key={tasks.title} value={tasks.id}>
-										{tasks.title}
+								{tasks.map((task) => (
+									<MenuItem key={task.title} value={task.title}>
+										{task.title}
 									</MenuItem>
 								))}
 							</Select>

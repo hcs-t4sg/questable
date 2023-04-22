@@ -49,7 +49,7 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 				<CreateTaskModal classroom={classroom} player={player} />
 			</Grid>
 			<Grid item xs={6}>
-				<CreateGCRTask player={player} />
+				<CreateGCRTask classroom={classroom} player={player} />
 			</Grid>
 
 			<Grid item xs={12}>
