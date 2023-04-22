@@ -160,16 +160,22 @@ export default function TaskModalTeacher({
 						}}
 					/> */}
 					<ModalTitle onClick={handleClose} text='Overview' />
-					<TextField
-						margin='normal'
-						id='name'
-						label='Task Name'
-						fullWidth
-						variant='standard'
-						value={name}
-						onChange={(event) => setName(event.target.value)}
-					/>
-					{/* <TextField
+					<form
+						onSubmit={(e) => {
+							handleEdit()
+							e.preventDefault()
+						}}
+					>
+						<TextField
+							margin='normal'
+							id='name'
+							label='Task Name'
+							fullWidth
+							variant='standard'
+							value={name}
+							onChange={(event) => setName(event.target.value)}
+						/>
+						{/* <TextField
 						margin='normal'
 						id='description'
 						label='Description'
@@ -181,7 +187,7 @@ export default function TaskModalTeacher({
 						value={description}
 						onChange={(event) => setDescription(event.target.value)}
 					/> */}
-					{/* <CKEditor
+						{/* <CKEditor
 						editor={ClassicEditor}
 						data={task.description}
 						onChange={(_event, editor) => {
@@ -189,15 +195,15 @@ export default function TaskModalTeacher({
 							setDescription(data)
 						}}
 					/> */}
-					<ReactQuill
-						theme='snow'
-						style={{ width: '100%' }}
-						value={description}
-						modules={modules}
-						onChange={setDescription}
-					/>
+						<ReactQuill
+							theme='snow'
+							style={{ width: '100%' }}
+							value={description}
+							modules={modules}
+							onChange={setDescription}
+						/>
 
-					{/* <Box
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -206,19 +212,19 @@ export default function TaskModalTeacher({
 							m: 2,
 						}}
 					> */}
-					<BoxInModal>
-						<LocalizationProvider dateAdapter={AdapterDateFns}>
-							<DateTimePicker
-								label='Due Date'
-								value={date}
-								sx={{ width: '30%' }}
-								minDateTime={new Date()}
-								onChange={(newValue) => setDate(newValue)}
-							/>
-						</LocalizationProvider>
-						{/* </Box> */}
-					</BoxInModal>
-					{/* <Box
+						<BoxInModal>
+							<LocalizationProvider dateAdapter={AdapterDateFns}>
+								<DateTimePicker
+									label='Due Date'
+									value={date}
+									sx={{ width: '40%', ml: -2 }}
+									minDateTime={new Date()}
+									onChange={(newValue) => setDate(newValue)}
+								/>
+							</LocalizationProvider>
+							{/* </Box> */}
+						</BoxInModal>
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -227,34 +233,36 @@ export default function TaskModalTeacher({
 							m: 2,
 						}}
 					> */}
-					<BoxInModal>
-						<FormControl fullWidth>
-							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
-							<Select
-								labelId='reward-dropdown'
-								id='reward-dropdown'
-								value={reward}
-								label='Reward'
-								onChange={(event) => setReward(event.target.value as number)}
-							>
-								<MenuItem value={10}>10g</MenuItem>
-								<MenuItem value={20}>20g</MenuItem>
-								<MenuItem value={30}>30g</MenuItem>
-								<MenuItem value={40}>40g</MenuItem>
-							</Select>
-						</FormControl>
-						{/* </Box> */}
-					</BoxInModal>
-					<br />
-					{/* center the save button */}
-					<Stack direction='row' spacing={2}>
-						<Button onClick={handleEdit} variant='contained'>
-							Save Changes
-						</Button>
-						<Button onClick={handleDelete} variant='contained' color='error'>
-							Delete Task
-						</Button>
-					</Stack>
+						<BoxInModal>
+							<FormControl sx={{ ml: -2 }} fullWidth>
+								<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
+								<Select
+									labelId='reward-dropdown'
+									id='reward-dropdown'
+									value={reward}
+									label='Reward'
+									onChange={(event) => setReward(event.target.value as number)}
+								>
+									<MenuItem value={10}>10g</MenuItem>
+									<MenuItem value={20}>20g</MenuItem>
+									<MenuItem value={30}>30g</MenuItem>
+									<MenuItem value={40}>40g</MenuItem>
+								</Select>
+							</FormControl>
+							{/* </Box> */}
+						</BoxInModal>
+						<br />
+						{/* center the save button */}
+						<Stack direction='row' spacing={2}>
+							<Button type='submit' variant='contained'>
+								Save Changes
+							</Button>
+
+							<Button onClick={handleDelete} variant='contained' color='error'>
+								Delete Task
+							</Button>
+						</Stack>
+					</form>
 				</TaskModalBox>
 				{/* </Box> */}
 			</TeacherModalStyled>

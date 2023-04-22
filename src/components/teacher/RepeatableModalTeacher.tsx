@@ -174,19 +174,25 @@ export default function RepeatableModalTeacher({
 						}}
 					/> */}
 					<ModalTitle onClick={handleClose} text='Overview' />
-					<TextField
-						margin='normal'
-						id='name'
-						label='Task Name'
-						fullWidth
-						variant='standard'
-						value={name}
-						InputProps={{
-							readOnly: !isEditing,
+					<form
+						onSubmit={(e) => {
+							handleEdit()
+							e.preventDefault()
 						}}
-						onChange={(event) => setName(event.target.value)}
-					/>
-					{/* <TextField
+					>
+						<TextField
+							margin='normal'
+							id='name'
+							label='Task Name'
+							fullWidth
+							variant='standard'
+							value={name}
+							InputProps={{
+								readOnly: !isEditing,
+							}}
+							onChange={(event) => setName(event.target.value)}
+						/>
+						{/* <TextField
 						margin='normal'
 						id='description'
 						label='Description'
@@ -201,48 +207,16 @@ export default function RepeatableModalTeacher({
 						}}
 						onChange={(event) => setDescription(event.target.value)}
 					/> */}
-					<ReactQuill
-						theme='snow'
-						style={{ width: '100%' }}
-						value={description}
-						modules={modules}
-						onChange={setDescription}
-						readOnly={!isEditing}
-					/>
-
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
-					<BoxInModal>
-						<TextField
-							type='number'
-							margin='normal'
-							id='maxcompletions'
-							label='Max Completions'
-							fullWidth
-							variant='standard'
-							placeholder=''
-							value={maxCompletions}
-							InputProps={{
-								readOnly: !isEditing,
-							}}
-							error={maxCompletionsIsInvalid(maxCompletions)}
-							helperText={
-								maxCompletionsIsInvalid(maxCompletions)
-									? 'Max completions must be an integer greater than 0'
-									: null
-							}
-							onChange={(event) => setMaxCompletions(event.target.value)}
+						<ReactQuill
+							theme='snow'
+							style={{ width: '100%' }}
+							value={description}
+							modules={modules}
+							onChange={setDescription}
+							readOnly={!isEditing}
 						/>
-						{/* </Box> */}
-					</BoxInModal>
-					{/* <Box
+
+						{/* <Box
 						sx={{
 							width: '100%',
 							display: 'flex',
@@ -251,43 +225,80 @@ export default function RepeatableModalTeacher({
 							m: 2,
 						}}
 					> */}
-					<BoxInModal>
-						<Typography variant='body1'>{`Reward: ${repeatable.reward}g (cannot be edited)`}</Typography>
-						{/* </Box> */}
-					</BoxInModal>
-					<br />
-					<Grid container justifyContent='right'>
-						<Button
-							onClick={toggleIsEditing}
-							sx={{ display: isEditing ? 'none' : 'block' }}
-							// variant='contained'
-						>
-							Edit Repeatable
-						</Button>
-						<Button
-							onClick={handleDelete}
-							sx={{ display: isEditing ? 'block' : 'none' }}
-							// variant='contained'
-							color='error'
-						>
-							Delete
-						</Button>
-						<Button
-							onClick={handleCancel}
-							sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
-							variant='text'
-						>
-							Cancel
-						</Button>
-						<Button
-							onClick={handleEdit}
-							sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
-							variant='contained'
-							color='success'
-						>
-							Save Changes
-						</Button>
-					</Grid>
+						<BoxInModal>
+							<TextField
+								type='number'
+								margin='normal'
+								id='maxcompletions'
+								label='Max Completions'
+								fullWidth
+								variant='standard'
+								placeholder=''
+								sx={{ ml: -2 }}
+								value={maxCompletions}
+								InputProps={{
+									readOnly: !isEditing,
+								}}
+								error={maxCompletionsIsInvalid(maxCompletions)}
+								helperText={
+									maxCompletionsIsInvalid(maxCompletions)
+										? 'Max completions must be an integer greater than 0'
+										: null
+								}
+								onChange={(event) => setMaxCompletions(event.target.value)}
+							/>
+							{/* </Box> */}
+						</BoxInModal>
+						{/* <Box
+						sx={{
+							width: '100%',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'space-between',
+							m: 2,
+						}}
+					> */}
+						<BoxInModal>
+							<Typography
+								sx={{ ml: -2 }}
+								variant='body1'
+							>{`Reward: ${repeatable.reward}g (cannot be edited)`}</Typography>
+							{/* </Box> */}
+						</BoxInModal>
+						<br />
+						<Grid container justifyContent='right'>
+							<Button
+								onClick={toggleIsEditing}
+								sx={{ display: isEditing ? 'none' : 'block' }}
+								// variant='contained'
+							>
+								Edit Repeatable
+							</Button>
+							<Button
+								onClick={handleDelete}
+								sx={{ display: isEditing ? 'block' : 'none' }}
+								// variant='contained'
+								color='error'
+							>
+								Delete
+							</Button>
+							<Button
+								onClick={handleCancel}
+								sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
+								variant='text'
+							>
+								Cancel
+							</Button>
+							<Button
+								type='submit'
+								sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
+								variant='contained'
+								color='success'
+							>
+								Save Changes
+							</Button>
+						</Grid>
+					</form>
 					{/* </Box> */}
 				</TaskModalBox>
 			</TeacherModalStyled>
