@@ -56,7 +56,6 @@ export default function ForumPostList({
 						}
 					}),
 				)
-				console.log(postList)
 				setForumPosts(postList)
 				setOriginalPosts(postList)
 				newFuse(new Fuse(postList, options))

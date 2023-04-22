@@ -33,7 +33,6 @@ function percentDone(task: Task) {
 }
 
 function LinearProgressWithLabel({ task }: { task: Task }) {
-	console.log(task)
 	return (
 		<Box sx={{ display: 'flex', alignItems: 'center' }}>
 			<Box sx={{ minWidth: 100 }}>

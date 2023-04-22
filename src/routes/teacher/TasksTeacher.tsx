@@ -12,7 +12,13 @@ import { Tab, Tabs, Stack } from '@mui/material'
 import RepeatableTableTeacher from '../../components/teacher/RepeatableTableTeacher'
 import { Classroom, Player } from '../../types'
 
-export default function Tasks({ player, classroom }: { player: Player; classroom: Classroom }) {
+export default function TasksTeacher({
+	player,
+	classroom,
+}: {
+	player: Player
+	classroom: Classroom
+}) {
 	//   const [teacher, setTeacher] = React.useState();
 
 	const [page, setPage] = React.useState<0 | 1>(0)

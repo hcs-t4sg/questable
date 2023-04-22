@@ -88,15 +88,6 @@ export default function CreateTaskModal({
 				enqueueSnackbar('Max completions must be a positive integer', { variant: 'error' })
 				return
 			}
-			if (!dueDate) {
-				enqueueSnackbar('You need to provide a due date', { variant: 'error' })
-				return
-			}
-
-			if (dueDate < new Date()) {
-				enqueueSnackbar('You cannot set a due date in the past!', { variant: 'error' })
-				return
-			}
 
 			const newTask = {
 				name,
@@ -126,6 +117,11 @@ export default function CreateTaskModal({
 
 			if (!dueDate) {
 				enqueueSnackbar('You need to provide a due date', { variant: 'error' })
+				return
+			}
+
+			if (dueDate < new Date()) {
+				enqueueSnackbar('You cannot set a due date in the past!', { variant: 'error' })
 				return
 			}
 

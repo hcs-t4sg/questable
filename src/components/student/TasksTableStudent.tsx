@@ -1,6 +1,5 @@
-import { Box, Tab, Tabs } from '@mui/material'
+import { Box, IconButton, Tab, Tabs } from '@mui/material'
 // import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
@@ -13,14 +12,15 @@ import TableRow from '@mui/material/TableRow'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
-import { completeTask, UnsendTask } from '../../utils/mutations'
+import { UnsendTask, completeTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
-import { useSnackbar } from 'notistack'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import Paper from '@mui/material/Paper'
-import { truncate } from '../../utils/helperFunctions'
-import TaskModalStudent from './TaskModalStudent'
-import { rewardPotion } from './AssignmentContentStudent'
 import Fuse from 'fuse.js'
+import { useSnackbar } from 'notistack'
+import { truncate } from '../../utils/helperFunctions'
+import { rewardPotion } from './AssignmentContentStudent'
+import TaskModalStudent from './TaskModalStudent'
 
 function a11yProps(index: number) {
 	return {
@@ -178,10 +178,9 @@ export default function TasksTableStudent({
 										</TableCell>
 										{taskCategory === 0 ? (
 											<TableCell align='center'>
-												{/* <IconButton onClick={() => handleTaskComplete(task)}>
+												<IconButton onClick={() => handleTaskComplete(task)}>
 													<CheckBoxIcon />
-												</IconButton> */}
-												<Checkbox onChange={() => handleTaskComplete(task)} />
+												</IconButton>
 											</TableCell>
 										) : null}
 										{taskCategory === 1 && task.due.toDate() >= new Date() ? (

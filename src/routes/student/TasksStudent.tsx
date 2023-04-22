@@ -40,7 +40,13 @@ function a11yProps(index: number) {
 	}
 }
 
-export default function Main({ classroom, player }: { classroom: Classroom; player: Player }) {
+export default function TasksStudent({
+	classroom,
+	player,
+}: {
+	classroom: Classroom
+	player: Player
+}) {
 	const [assigned, setAssigned] = useState<TaskWithStatus[] | null>(null)
 	const [completed, setCompleted] = useState<TaskWithStatus[] | null>(null)
 	const [confirmed, setConfirmed] = useState<TaskWithStatus[] | null>(null)
