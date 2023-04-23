@@ -71,6 +71,8 @@ export interface Classroom {
 	name: string
 	playerList: string[]
 	teacherList: string[]
+	doLeaderboard: boolean
+	leaderboardSize: number
 }
 
 export interface Player {
@@ -86,6 +88,7 @@ export interface Player {
 	avaShoes?: number
 	avaAccessories?: number
 	avaHairSubtype?: string
+	xp: number
 }
 
 export interface DatabaseInventoryItem {

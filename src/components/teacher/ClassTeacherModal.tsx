@@ -72,6 +72,13 @@ import { ClassStudentContent } from '../../routes/student/ClassStudentContent'
 import { updateMoney, updatePlayer } from '../../utils/mutations'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import { Cluster } from '../student/AssignmentContentStudent'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import { levelUp } from '../../utils/helperFunctions'
 
 export default function ClassTeacherModal({
 	player,
@@ -84,9 +91,7 @@ export default function ClassTeacherModal({
 
 	const toggleOpen = () => {
 		setOpen(!open)
-	}
-	const toggleClose = () => {
-		setOpen(!open)
+		setOpenEdit(false)
 	}
 
 	const [money, setMoney] = useState(player.money)
@@ -104,44 +109,65 @@ export default function ClassTeacherModal({
 		}
 
 		updatePlayer(player.id, classroom.id, newPlayer).catch(console.error)
-		toggleClose()
+		handleClose()
+	}
+
+	const [openEdit, setOpenEdit] = useState(false)
+
+	const handleClickOpen = () => {
+		setOpenEdit(true)
+		setName(name)
+		setMoney(money)
+	}
+
+	const handleClose = () => {
+		setOpenEdit(false)
 	}
 
 	return (
 		<ClassStudentContent player={player} isOpen={open} toggleIsOpen={toggleOpen}>
+			<ClassStudentContent player={player} isOpen={open} toggleIsOpen={toggleOpen}>
+				<Cluster title='Student Name' data={player.name} />
+				<Cluster title='Student Email' data={player.email} />
+				<Cluster title='Student Gold' data={`${player.money}g`} />
+				<Cluster title='Student Level' data={levelUp(player.xp)} />
+				<Button onClick={handleClickOpen} endIcon={<OpenInNewIcon />}>
+					Edit Profile
+				</Button>
+			</ClassStudentContent>
+
 			{/* this should display actual name like student modal but I have an error in displayName
 			that Im looking at rn */}
 			{/* <Cluster title='Student Email' data={player.email} /> */}
-			<TextField
-				margin='normal'
-				id='name'
-				label='Player Name'
-				fullWidth
-				variant='standard'
-				value={name}
-				onChange={(event) => setName(event.target.value)}
-			/>
-			<TextField
-				margin='normal'
-				id='email'
-				label='Email'
-				fullWidth
-				variant='standard'
-				value={player.email}
-				disabled={true}
-			/>
-			<TextField
-				margin='normal'
-				id='money'
-				label='Player Money'
-				fullWidth
-				variant='standard'
-				value={money}
-				onChange={(event) => setMoney(event.target.value)}
-			/>
-			<Button variant='contained' onClick={() => handleEdit()}>
-				Edit
-			</Button>
+			<Dialog open={openEdit} onClose={handleClose}>
+				<DialogTitle>Edit Profile</DialogTitle>
+				<DialogContent>
+					<TextField
+						margin='normal'
+						id='name'
+						label='Player Name'
+						fullWidth
+						variant='standard'
+						value={name}
+						onChange={(event) => setName(event.target.value)}
+					/>
+					<TextField
+						margin='normal'
+						id='money'
+						label='Player Money'
+						fullWidth
+						variant='standard'
+						value={money}
+						onChange={(event) => setMoney(event.target.value)}
+					/>
+					<DialogActions>
+						<Button onClick={handleClose}>Cancel</Button>
+						<Button variant='contained' onClick={() => handleEdit()}>
+							Edit
+						</Button>
+					</DialogActions>
+				</DialogContent>
+			</Dialog>
 		</ClassStudentContent>
 	)
 }

@@ -15,6 +15,8 @@ import {
 	Timestamp,
 	updateDoc,
 	where,
+	limit,
+	orderBy,
 } from 'firebase/firestore'
 import { Classroom, CompletionTime, ForumPost, Item, Player } from '../types'
 import { db } from './firebase'
@@ -34,6 +36,8 @@ export async function addClassroom(name: string, user: User) {
 		name: name,
 		playerList: [user.uid],
 		teacherList: [user.uid],
+		doLeaderboard: true,
+		leaderboardSize: 3,
 		// studentList: [],
 	}
 	// NOTE: I made a slight change here. Instead of storing the teacher in the playersList,
@@ -76,6 +80,20 @@ export async function getClassrooms(user: User) {
 	return classrooms
 }
 
+// Get money of students in classroom
+export async function getMoney(classID: string) {
+	const playerRef = collection(db, `classrooms/${classID}/players`)
+	const q = query(playerRef, orderBy('money'), limit(5))
+	const moneySnapshot = await getDocs(q)
+
+	const rankings = moneySnapshot.docs.map((doc) => ({
+		...doc.data(),
+		id: doc.id,
+	}))
+
+	return rankings as Player[]
+}
+
 // Add user to existing classroom and set as student
 export async function joinClassroom(classID: string, user: User) {
 	const classroomRef = doc(db, 'classrooms', classID)
@@ -110,6 +128,7 @@ export async function joinClassroom(classID: string, user: User) {
 	await setDoc(newPlayerRef, {
 		avatar: 0,
 		money: 0,
+		xp: 0,
 		name: 'Adventurer',
 		role: 'student',
 		id: user.uid,
@@ -283,7 +302,7 @@ export async function updateMoney(
 	playerID: string,
 	classroomID: string,
 	newMoney: {
-		money: string | number
+		money: number | string
 	},
 ) {
 	console.log(playerID)
@@ -293,6 +312,7 @@ export async function updateMoney(
 
 	await updateDoc(playerRef, {
 		money: newMoney.money,
+		xp: newMoney.money,
 	})
 }
 
@@ -367,7 +387,6 @@ export async function completeRepeatable(
 		if (confirmations >= repeatableSnap.data().maxCompletions) {
 			throw new Error('The maximum number of completions has been confirmed by the teacher')
 		}
-
 		updateDoc(completionsDocRef, {
 			completions: increment(1),
 		})
@@ -919,5 +938,35 @@ export async function addComment(
 		content: comment.content,
 		likes: 0,
 		postTime: serverTimestamp(),
+	})
+}
+
+// Mutation to toggle Leaderboard
+export async function updateDoLeaderboard(
+	classroomID: string,
+	newDoLeaderboard: {
+		doLeaderboard: boolean
+	},
+) {
+	console.log(classroomID)
+	const classRef = doc(db, `classrooms/${classroomID}`)
+
+	await updateDoc(classRef, {
+		doLeaderboard: newDoLeaderboard.doLeaderboard,
+	})
+}
+
+// Mutation to change leaderboard size
+export async function updateLeaderboardSize(
+	classroomID: string,
+	newLeaderboardSize: {
+		leaderboardSize: number | string
+	},
+) {
+	console.log(classroomID)
+	const classRef = doc(db, `classrooms/${classroomID}`)
+
+	await updateDoc(classRef, {
+		leaderboardSize: newLeaderboardSize.leaderboardSize,
 	})
 }

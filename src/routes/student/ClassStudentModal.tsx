@@ -2,6 +2,7 @@ import { PlayerWithEmail } from '../../types'
 import { Cluster } from '../../components/student/AssignmentContentStudent'
 import { useState } from 'react'
 import { ClassStudentContent } from './ClassStudentContent'
+import { levelUp } from '../../utils/helperFunctions'
 
 export default function ClassStudentModal({ player }: { player: PlayerWithEmail }) {
 	const [open, setOpen] = useState(false)
@@ -15,6 +16,7 @@ export default function ClassStudentModal({ player }: { player: PlayerWithEmail 
 			<Cluster title='Student Name' data={player.name} />
 			<Cluster title='Student Email' data={player.email} />
 			<Cluster title='Student Gold' data={`${player.money}g`} />
+			<Cluster title='Student Level' data={levelUp(player.xp)} />
 		</ClassStudentContent>
 	)
 }

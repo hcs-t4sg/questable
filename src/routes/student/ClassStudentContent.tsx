@@ -29,8 +29,15 @@ export function ClassStudentContent({
 						<Grid item xs={6}>
 							<StudentBoxInModal>{children}</StudentBoxInModal>
 						</Grid>
-						<Grid item xs={3.5} marginTop={6.5}>
-							<Avatar outfit={currentAvatar(player)} />
+						<Grid item xs={6} marginTop={6} marginBottom={3}>
+							<Box
+								sx={{
+									height: 150,
+									width: 150,
+								}}
+							>
+								<Avatar outfit={currentAvatar(player)} />
+							</Box>
 						</Grid>
 					</Grid>
 				</StudentTaskModalBox>
