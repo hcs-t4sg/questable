@@ -1,4 +1,4 @@
-import { Grid, Tab, Tabs } from '@mui/material'
+import { Grid, Tab, Tabs, Stack } from '@mui/material'
 import { Box } from '@mui/system'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import * as React from 'react'
@@ -8,6 +8,7 @@ import TasksTableStudent from '../../components/student/TasksTableStudent'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { db } from '../../utils/firebase'
 import Loading from '../../components/global/Loading'
+import TextField from '@mui/material/TextField'
 
 // TODO Rewrite this component, it's very inefficient and unmaintainable
 interface TabPanelProps {
@@ -39,13 +40,20 @@ function a11yProps(index: number) {
 	}
 }
 
-export default function Main({ classroom, player }: { classroom: Classroom; player: Player }) {
+export default function TasksStudent({
+	classroom,
+	player,
+}: {
+	classroom: Classroom
+	player: Player
+}) {
 	const [assigned, setAssigned] = useState<TaskWithStatus[] | null>(null)
 	const [completed, setCompleted] = useState<TaskWithStatus[] | null>(null)
 	const [confirmed, setConfirmed] = useState<TaskWithStatus[] | null>(null)
 	//   const [filter, setFilter] = useState("all");
 	//   const [filteredTasks, setFilteredTasks] = useState(null);
 	const [overdue, setOverdue] = useState<TaskWithStatus[] | null>(null)
+	const [searchInput, setSearchInput] = useState('')
 
 	const [taskRepTab, setTaskRepTab] = useState<0 | 1>(0)
 	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
@@ -67,6 +75,7 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 			// TODO rewrite using Promise.all
 			snapshot.forEach((doc) => {
 				// if task is overdue, add to overdue list
+
 				if (doc.data().due.toDate() < new Date()) {
 					overdue.push(Object.assign({ id: doc.id, status: 3 }, doc.data()) as TaskWithStatus)
 				}
@@ -79,6 +88,7 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
 				}
 			})
+			console.log(assigned)
 			setAssigned(assigned)
 			setCompleted(completed)
 			setConfirmed(confirmed)
@@ -90,10 +100,19 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 	return (
 		<Grid item xs={12}>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-				<Tabs value={taskRepTab} onChange={handleChangeTaskRep} aria-label='Task/repeatable tabs'>
-					<Tab label='Tasks' {...a11yProps(0)} />
-					<Tab label='Repeatables' {...a11yProps(1)} />
-				</Tabs>
+				<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
+					<Tabs value={taskRepTab} onChange={handleChangeTaskRep} aria-label='Task/repeatable tabs'>
+						<Tab label='Tasks' {...a11yProps(0)} />
+						<Tab label='Repeatables' {...a11yProps(1)} />
+					</Tabs>
+					<TextField
+						id='standard-basic'
+						label='Search'
+						variant='standard'
+						onChange={(event) => setSearchInput(event.target.value)}
+						sx={{ mt: -1 }}
+					/>
+				</Stack>
 			</Box>
 			<TabPanel value={taskRepTab} index={0}>
 				{assigned && completed && confirmed && overdue ? (
@@ -104,13 +123,14 @@ export default function Main({ classroom, player }: { classroom: Classroom; play
 						overdue={overdue}
 						classroom={classroom}
 						player={player}
+						searchInput={searchInput}
 					/>
 				) : (
 					<Loading>Loading tasks...</Loading>
 				)}
 			</TabPanel>
 			<TabPanel value={taskRepTab} index={1}>
-				<RepeatableTableStudent classroom={classroom} player={player} />
+				<RepeatableTableStudent searchInput={searchInput} classroom={classroom} player={player} />
 			</TabPanel>
 		</Grid>
 	)

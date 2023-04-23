@@ -2,7 +2,7 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import TeacherSettings from '../../routes/teacher/TeacherSettings'
 import ClassTeacher from '../../routes/teacher/ClassTeacher'
 import Requests from '../../routes/teacher/Requests'
-import Tasks from '../../routes/teacher/Tasks'
+import TasksTeacher from '../../routes/teacher/TasksTeacher'
 import Layout from '../global/Layout'
 import { Box, Grid, Typography } from '@mui/material'
 
@@ -59,14 +59,11 @@ export default function TeacherView({
 				</Grid>
 				<Routes>
 					<Route path='/' element={<Navigate to='tasks' />} />
-					<Route path='tasks' element={<Tasks player={player} classroom={classroom} />} />
+					<Route path='tasks' element={<TasksTeacher player={player} classroom={classroom} />} />
 					<Route path='requests' element={<Requests classroom={classroom} />} />
+					<Route path='class' element={<ClassTeacher player={player} classroom={classroom} />} />
 					<Route
-						path='class-teacher'
-						element={<ClassTeacher player={player} classroom={classroom} />}
-					/>
-					<Route
-						path='teacher-settings'
+						path='settings'
 						element={<TeacherSettings player={player} user={user} classroom={classroom} />}
 					/>
 

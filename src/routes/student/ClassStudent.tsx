@@ -71,7 +71,7 @@ export default function ClassStudent({
 		<>
 			<Grid item xs={12}>
 				<Typography variant='h2' component='div'>
-					{classroom.name}
+					Class Page
 				</Typography>
 			</Grid>
 			<Grid item xs={12}>
@@ -91,20 +91,22 @@ export default function ClassStudent({
 			{/* <Grid item xs={12}> */}
 			{students ? (
 				students.map((student) => (
-					<Card sx={{ width: 0.22, m: 2 }} key={student.id}>
-						<CardContent>
-							<Box
-								sx={{
-									height: 300,
-									width: 200,
-								}}
-							>
-								<Avatar outfit={currentAvatar(student)} />
-							</Box>
-							<Typography variant='body1'>Name: {student.name}</Typography>
-							<Typography variant='body1'>{student.email}</Typography>
-						</CardContent>
-					</Card>
+					<Grid item xs={3} key={student.id}>
+						<Card sx={{ width: '100%' }}>
+							<CardContent>
+								<Box
+									sx={{
+										height: 300,
+										width: 200,
+									}}
+								>
+									<Avatar outfit={currentAvatar(student)} />
+								</Box>
+								<Typography variant='body1'>Name: {student.name}</Typography>
+								<Typography variant='body1'>{student.email}</Typography>
+							</CardContent>
+						</Card>
+					</Grid>
 				))
 			) : (
 				<Grid item xs={12}>
