@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
-import { UnsendTask, completeTask } from '../../utils/mutations'
+import { unsendTask, completeTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import Paper from '@mui/material/Paper'
@@ -98,7 +98,7 @@ export default function TasksTableStudent({
 		}
 
 		if (window.confirm('Are you sure you want to unsend this task?')) {
-			UnsendTask(classroom.id, task.id, player.id)
+			unsendTask(classroom.id, task.id, player.id)
 				.then(() => {
 					enqueueSnackbar(`Task "${task.name}" was unsent!`, { variant: 'success' })
 				})

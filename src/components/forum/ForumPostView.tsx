@@ -78,7 +78,7 @@ const handleStar = (
 	comment: Comment,
 	forumPost: ForumPost,
 	classroom: Classroom,
-	enqueueSnackbar: (_param1: string, _param2: object) => any,
+	enqueueSnackbar: (_param1: string, _param2: object) => void,
 ) => {
 	updateForumPostPinned(
 		classroom.id,
@@ -127,7 +127,7 @@ const IncomingComment = ({
 							sx={{ mt: 0.65 }}
 							icon={<FavoriteIcon />}
 							onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}
-							label={comment.likes}
+							label={comment.likers.length}
 						/>
 						{(player.role == 'teacher' || player.id == post.author.id) && (
 							<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
@@ -204,7 +204,7 @@ const OutgoingComment = ({
 							sx={{ mt: 0.65 }}
 							icon={<FavoriteIcon />}
 							onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}
-							label={comment.likes}
+							label={comment.likers.length}
 						/>
 
 						{(player.role == 'teacher' || player.id == post.author.id) && (

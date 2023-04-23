@@ -28,108 +28,106 @@ export default function ConfirmRepeatablesTable({
 		return <Loading>Loading repeatables...</Loading>
 	}
 	return (
-		<div>
-			<TableContainer component={Paper}>
-				<Table aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							{/* align='center' before theme */}
-							<TableCell>Repeatable</TableCell>
-							<TableCell>Completion Time</TableCell>
-							<TableCell>Description</TableCell>
-							<TableCell>Reward</TableCell>
-							<TableCell>Student</TableCell>
-							<TableCell>Confirm?</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
-						{completedRepeatables.map((completion) => (
-							<StyledTableRow key={completion.id}>
-								<TableCell align='center'>{completion.repeatable.name}</TableCell>
-								<TableCell align='center'>
-									{format(completion.time.toDate(), 'MM/dd/yyyy h:mm a')}
-								</TableCell>
-								<TableCell>
-									<div
-										dangerouslySetInnerHTML={{
-											__html: truncate(completion.repeatable.description),
-										}}
-									/>{' '}
-								</TableCell>
-								<TableCell>{`${completion.repeatable.reward}g`}</TableCell>
-								<TableCell component='th' scope='row'>
-									{completion.player.name}
-								</TableCell>
-								<TableCell align='center'>
-									<Grid container columnSpacing={1}>
-										<Grid item>
-											<Button
-												onClick={() =>
-													confirmRepeatable(
-														classroom.id,
-														completion.player.id,
-														completion.repeatable.id,
-														completion.id,
-													)
-														.then(() => {
-															enqueueSnackbar(
-																`Confirmed task completion "${completion.repeatable.name}" from ${completion.player.name}!`,
-																{ variant: 'success' },
-															)
-														})
-														.catch((err) => {
-															console.error(err)
-															enqueueSnackbar(
-																'There was an error confirming the repeatable completion.',
-																{
-																	variant: 'error',
-																},
-															)
-														})
-												}
-												color='success'
-											>
-												Confirm
-											</Button>
-										</Grid>
-										<Grid item>
-											<Button
-												onClick={() =>
-													denyRepeatable(
-														classroom.id,
-														completion.player.id,
-														completion.repeatable.id,
-														completion.id,
-													)
-														.then(() => {
-															enqueueSnackbar(
-																`Denied repeatable completion "${completion.repeatable.name}" from ${completion.player.name}!`,
-																{ variant: 'default' },
-															)
-														})
-														.catch((err) => {
-															console.error(err)
-															enqueueSnackbar(
-																'There was an error denying the repeatable completion.',
-																{
-																	variant: 'error',
-																},
-															)
-														})
-												}
-												color='error'
-											>
-												Deny
-											</Button>
-										</Grid>
+		<TableContainer component={Paper}>
+			<Table aria-label='simple table'>
+				<TableHead>
+					<TableRow>
+						{/* align='center' before theme */}
+						<TableCell>Repeatable</TableCell>
+						<TableCell>Completion Time</TableCell>
+						<TableCell>Description</TableCell>
+						<TableCell>Reward</TableCell>
+						<TableCell>Student</TableCell>
+						<TableCell>Confirm?</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
+					{completedRepeatables.map((completion) => (
+						<StyledTableRow key={completion.id}>
+							<TableCell align='center'>{completion.repeatable.name}</TableCell>
+							<TableCell align='center'>
+								{format(completion.time.toDate(), 'MM/dd/yyyy h:mm a')}
+							</TableCell>
+							<TableCell>
+								<div
+									dangerouslySetInnerHTML={{
+										__html: truncate(completion.repeatable.description),
+									}}
+								/>{' '}
+							</TableCell>
+							<TableCell>{`${completion.repeatable.reward}g`}</TableCell>
+							<TableCell component='th' scope='row'>
+								{completion.player.name}
+							</TableCell>
+							<TableCell align='center'>
+								<Grid container columnSpacing={1}>
+									<Grid item>
+										<Button
+											onClick={() =>
+												confirmRepeatable(
+													classroom.id,
+													completion.player.id,
+													completion.repeatable.id,
+													completion.id,
+												)
+													.then(() => {
+														enqueueSnackbar(
+															`Confirmed task completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+															{ variant: 'success' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar(
+															'There was an error confirming the repeatable completion.',
+															{
+																variant: 'error',
+															},
+														)
+													})
+											}
+											color='success'
+										>
+											Confirm
+										</Button>
 									</Grid>
-								</TableCell>
-							</StyledTableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
-		</div>
+									<Grid item>
+										<Button
+											onClick={() =>
+												denyRepeatable(
+													classroom.id,
+													completion.player.id,
+													completion.repeatable.id,
+													completion.id,
+												)
+													.then(() => {
+														enqueueSnackbar(
+															`Denied repeatable completion "${completion.repeatable.name}" from ${completion.player.name}!`,
+															{ variant: 'default' },
+														)
+													})
+													.catch((err) => {
+														console.error(err)
+														enqueueSnackbar(
+															'There was an error denying the repeatable completion.',
+															{
+																variant: 'error',
+															},
+														)
+													})
+											}
+											color='error'
+										>
+											Deny
+										</Button>
+									</Grid>
+								</Grid>
+							</TableCell>
+						</StyledTableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
 	)
 }

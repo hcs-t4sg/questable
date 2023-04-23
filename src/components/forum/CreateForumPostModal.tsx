@@ -84,7 +84,7 @@ export default function CreateForumPostModal({
 			postType: category,
 			content: description,
 			author: player,
-			anonymous: (anonymous ? 1 : 0) as 0 | 1,
+			anonymous: anonymous,
 		}
 
 		handleClose()
@@ -102,16 +102,6 @@ export default function CreateForumPostModal({
 			})
 	}
 
-	const submitButton = (
-		<DialogActions sx={{ justifyContent: 'center' }}>
-			{/* <Button variant='text' onClick={handleClose}>
-				Cancel
-			</Button> */}
-			<Button variant='contained' color='success' type='submit'>
-				Submit
-			</Button>
-		</DialogActions>
-	)
 	return (
 		<div>
 			{/* <Dialog open={isOpen}> */}
@@ -187,7 +177,11 @@ export default function CreateForumPostModal({
 								</FormGroup>
 							)}
 						</DialogContent>
-						{submitButton}
+						<DialogActions sx={{ justifyContent: 'center' }}>
+							<Button variant='contained' color='success' type='submit'>
+								Submit
+							</Button>
+						</DialogActions>
 					</form>
 				</TaskModalBox>
 				{/* </Dialog> */}

@@ -96,30 +96,6 @@ export default function EditForumPostModal({
 			})
 	}
 
-	const submitButton = (
-		<DialogActions sx={{ justifyContent: 'center' }}>
-			{/* <Button variant='text' onClick={handleClose}>
-				Cancel
-			</Button> */}
-
-			{isDisabled ? (
-				<Button
-					variant='contained'
-					color='success'
-					onClick={(event) => {
-						setIsDisabled(false)
-						event.preventDefault()
-					}}
-				>
-					Edit
-				</Button>
-			) : (
-				<Button variant='contained' color='success' type='submit'>
-					Submit
-				</Button>
-			)}
-		</DialogActions>
-	)
 	return (
 		<div>
 			{/* <Dialog open={isOpen}> */}
@@ -183,7 +159,28 @@ export default function EditForumPostModal({
 								</Select>
 							</FormControl>
 						</DialogContent>
-						{submitButton}
+						<DialogActions sx={{ justifyContent: 'center' }}>
+							{/* <Button variant='text' onClick={handleClose}>
+								Cancel
+							</Button> */}
+
+							{isDisabled ? (
+								<Button
+									variant='contained'
+									color='success'
+									onClick={(event) => {
+										setIsDisabled(false)
+										event.preventDefault()
+									}}
+								>
+									Edit
+								</Button>
+							) : (
+								<Button variant='contained' color='success' type='submit'>
+									Submit
+								</Button>
+							)}
+						</DialogActions>
 					</form>
 				</TaskModalBox>
 				{/* </Dialog> */}

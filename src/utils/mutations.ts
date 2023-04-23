@@ -313,12 +313,10 @@ export async function updateForumPostLikes(
 	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
 	if (add) {
 		await updateDoc(postRef, {
-			likes: increment(1),
 			likers: arrayUnion(likerID),
 		})
 	} else {
 		await updateDoc(postRef, {
-			likes: increment(-1),
 			likers: arrayRemove(likerID),
 		})
 	}
@@ -334,12 +332,10 @@ export async function updateForumCommentLikes(
 	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`)
 	if (add) {
 		await updateDoc(postRef, {
-			likes: increment(1),
 			likers: arrayUnion(likerID),
 		})
 	} else {
 		await updateDoc(postRef, {
-			likes: increment(-1),
 			likers: arrayRemove(likerID),
 		})
 	}
@@ -399,7 +395,7 @@ export async function completeTask(classroomID: string, taskID: string, playerID
 	})
 }
 
-export async function UnsendTask(classroomID: string, taskID: string, playerID: string) {
+export async function unsendTask(classroomID: string, taskID: string, playerID: string) {
 	// Remove `playerID` from assigned array
 
 	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
@@ -1086,7 +1082,7 @@ export async function addForumPost(
 		postType: 0 | 1 | 2 | 3
 		content: string
 		author: Player
-		anonymous: 0 | 1
+		anonymous: boolean
 	},
 	classroom: Classroom,
 ) {
@@ -1097,7 +1093,6 @@ export async function addForumPost(
 		content: thread.content,
 		author: thread.author.id,
 		postTime: serverTimestamp(),
-		likes: 0,
 		anonymous: thread.anonymous,
 		likers: [],
 		pinnedComments: [],
@@ -1120,7 +1115,6 @@ export async function addComment(
 	await addDoc(commentRef, {
 		author: comment.author.id,
 		content: comment.content,
-		likes: 0,
 		postTime: serverTimestamp(),
 		likers: [],
 	})
