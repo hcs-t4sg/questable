@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow'
 import { formatDistance } from 'date-fns'
 
 import { Classroom, CompletedTask } from '../../types'
-import { confirmTask, denyTask } from '../../utils/mutations'
+import { confirmTasks, denyTask } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import { Grid } from '@mui/material'
 import Loading from '../global/Loading'
@@ -73,7 +73,7 @@ export default function ConfirmTasksTable({
 									<Grid item>
 										<Button
 											onClick={() =>
-												confirmTask(classroom.id, completedTask.player.id, completedTask.id)
+												confirmTasks([completedTask], classroom.id)
 													.then(() => {
 														enqueueSnackbar(
 															`Confirmed task completion "${completedTask.name}" from ${completedTask.player.name}!`,

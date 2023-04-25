@@ -25,6 +25,9 @@ import Loading from '../global/Loading'
 import { enqueueSnackbar } from 'notistack'
 import { truncate } from '../../utils/helperFunctions'
 
+import createDOMPurify from 'dompurify'
+const DOMPurify = createDOMPurify(window)
+
 function percentDone(task: Task) {
 	const numCompleted = task.completed?.length
 	const numAssigned = task.assigned?.length
@@ -132,7 +135,9 @@ export default function TasksTableTeacher({
 										{' '}
 										<div
 											dangerouslySetInnerHTML={{
-												__html: truncate(task.description.replace(/<[^>]+>/g, '')),
+												__html: truncate(
+													DOMPurify.sanitize(task.description).replace(/<[^>]+>/g, ''),
+												),
 											}}
 										/>
 									</TableCell>

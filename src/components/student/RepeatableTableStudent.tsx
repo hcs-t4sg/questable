@@ -17,6 +17,8 @@ import RepeatableModalStudent from './RepeatableModalStudent'
 import { rewardPotion } from './AssignmentContentStudent'
 import Fuse from 'fuse.js'
 
+import createDOMPurify from 'dompurify'
+const DOMPurify = createDOMPurify(window)
 // export function truncate(description: string) {
 // 	if (description.length > 50) {
 // 		return description.slice(0, 50) + '...'
@@ -78,7 +80,9 @@ function RepeatableTableRow({
 			{/* <TableCell align='left'>{truncate(repeatable.description)}</TableCell> */}
 			<TableCell>
 				{' '}
-				<div dangerouslySetInnerHTML={{ __html: truncate(repeatable.description) }} />
+				<div
+					dangerouslySetInnerHTML={{ __html: truncate(DOMPurify.sanitize(repeatable.description)) }}
+				/>
 			</TableCell>
 			<TableCell align='left'>
 				{completions || completions === 0 ? `${completions}` : 'Loading'}

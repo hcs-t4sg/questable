@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { format } from 'date-fns'
 import { Classroom, RepeatableCompletion } from '../../types'
-import { confirmRepeatable, denyRepeatable } from '../../utils/mutations'
+import { confirmRepeatables, denyRepeatable } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import { Grid } from '@mui/material'
 import Loading from '../global/Loading'
@@ -65,12 +65,7 @@ export default function ConfirmRepeatablesTable({
 									<Grid item>
 										<Button
 											onClick={() =>
-												confirmRepeatable(
-													classroom.id,
-													completion.player.id,
-													completion.repeatable.id,
-													completion.id,
-												)
+												confirmRepeatables([completion], classroom.id)
 													.then(() => {
 														enqueueSnackbar(
 															`Confirmed task completion "${completion.repeatable.name}" from ${completion.player.name}!`,

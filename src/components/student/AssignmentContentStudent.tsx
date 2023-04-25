@@ -7,6 +7,9 @@ import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
 import green3 from '/src/assets/spriteSheets/potions/green3.png'
 import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
 import red3 from '/src/assets/spriteSheets/potions/red3.png'
+
+import createDOMPurify from 'dompurify'
+const DOMPurify = createDOMPurify(window)
 // import { rewardsMatch } from './RewardItems'
 
 export function rewardPotion(rewardAmount: number) {
@@ -54,7 +57,7 @@ export const Cluster = ({
 			{title}
 		</Typography>
 		{isHtml && typeof data == 'string' ? (
-			<div dangerouslySetInnerHTML={{ __html: data }} />
+			<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data) }} />
 		) : (
 			<Typography fontWeight='light' variant='body1'>
 				{data}

@@ -22,6 +22,9 @@ import EditForumPostModal from './EditForumPostModal'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import Chip from '@mui/material/Chip'
 
+import createDOMPurify from 'dompurify'
+const DOMPurify = createDOMPurify(window)
+
 export default function ForumPostCard({
 	forumPost,
 	isLink,
@@ -124,7 +127,7 @@ export default function ForumPostCard({
 				</Typography>
 			</Box>
 			<Divider sx={{ margin: '10px 0' }} />
-			<div dangerouslySetInnerHTML={{ __html: forumPost.content }} />
+			<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(forumPost.content) }} />
 
 			{/* <Typography variant='body2'>{forumPost.content}</Typography> */}
 		</CardContent>
