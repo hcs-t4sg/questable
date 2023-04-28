@@ -27,7 +27,6 @@ import { addTask } from '../../utils/mutations'
 import { useSnackbar } from 'notistack'
 import { Player, Classroom } from '../../types'
 import { db } from '../../utils/firebase'
-// import { useQuery } from 'react-query'
 
 export default function CreateGCRTask({
 	classroom,
@@ -48,6 +47,7 @@ export default function CreateGCRTask({
 	const [classID, setClassId] = useState('')
 	const [clientLoaded, setClientLoaded] = useState(false)
 	const [tasks, setTasks] = useState<any[]>([])
+	const [taskID, setTaskID] = useState('')
 
 	useEffect(() => {
 		const tokenRef = doc(db, 'users', player.id)
@@ -123,6 +123,7 @@ export default function CreateGCRTask({
 		const classroomList = await getCourses()
 		setClassrooms(classroomList)
 		console.log(classroomList)
+		return true
 	}
 
 	const fetchCourseWork = async () => {
@@ -155,6 +156,7 @@ export default function CreateGCRTask({
 			description,
 			reward,
 			due: Timestamp.fromDate(dueDate),
+			gcrID: taskID,
 		}
 
 		handleClose()
@@ -224,26 +226,56 @@ export default function CreateGCRTask({
 					<Button onClick={fetchCourseWork}>Fetch Tasks</Button>
 					<BoxInModal>
 						<FormControl fullWidth>
-							<InputLabel id='gcr-task-dropdown-label'>Task</InputLabel>
+							<InputLabel id='gcr-task-dropdown-label'>Selected Google Classroom Task</InputLabel>
 							<Select
 								defaultValue=''
 								labelId='gcr-task-dropdown'
 								id='gcr-task-dropdown'
-								value={name}
-								label='Task'
+								value={taskID}
+								label='Selected Google Classroom Task'
 								onChange={(event) => {
-									setName(event.target.value as string)
+									setTaskID(event.target.value as string)
 									console.log(event.target.value)
 								}}
 							>
 								{tasks.map((task) => (
-									<MenuItem key={task.title} value={task.title}>
+									<MenuItem
+										key={task.title}
+										value={task.id}
+										onClick={() => {
+											setName(task.title)
+											setDescription(task.description)
+											const gcrDueDate = new Date(
+												Date.UTC(
+													task.dueDate.year,
+													// because months are 0-indexed in Javascript ugh
+													task.dueDate.month - 1,
+													task.dueDate.day,
+													task.dueTime.hours,
+													task.dueTime.minutes,
+												),
+											)
+											setDueDate(gcrDueDate)
+										}}
+									>
 										{task.title}
 									</MenuItem>
 								))}
 							</Select>
 						</FormControl>
 					</BoxInModal>
+					<TextField
+						margin='normal'
+						id='name'
+						label='Name'
+						fullWidth
+						variant='standard'
+						placeholder=''
+						multiline
+						maxRows={8}
+						value={name}
+						onChange={(event) => setName(event.target.value)}
+					/>
 					<TextField
 						margin='normal'
 						id='description'
