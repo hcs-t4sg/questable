@@ -1,31 +1,34 @@
 import Button from '@mui/material/Button'
-import { Classroom, Item, Outfit, Player } from '../../types'
-import { updateAvatar } from '../../utils/mutations'
+import { Item, Outfit } from '../../types'
 import { ItemInfoCard } from '../global/ItemInfoCard'
 
 export function OnboardingItemCard({
 	item,
-	player,
-	classroom,
 	bodyOutfit,
+	selectItemCallback,
+	isEquipped,
 }: {
 	item: Item
-	player: Player
-	classroom: Classroom
 	itemPrice?: string
 	bodyOutfit?: Outfit
+	selectItemCallback: () => void
+	isEquipped: boolean
 }) {
-	const handleEquip = async () => {
-		const res = await updateAvatar(player, item, classroom)
-		window.alert(res)
-		window.location.reload()
-		// User should only be allowed to equip one outfit...
-	}
+	// const handleEquip = async () => {
+	// 	const res = await updateAvatar(player, item, classroom)
+	// 	window.alert(res)
+	// 	window.location.reload()
+	// }
 
 	return (
 		<ItemInfoCard item={item} bodyOutfit={bodyOutfit}>
-			<Button variant='contained' color='success' size='small' onClick={handleEquip}>
-				Equip
+			<Button
+				variant='contained'
+				color={isEquipped ? 'primary' : 'success'}
+				size='small'
+				onClick={selectItemCallback}
+			>
+				{isEquipped ? 'Equipped' : 'Equip'}
 			</Button>
 		</ItemInfoCard>
 	)

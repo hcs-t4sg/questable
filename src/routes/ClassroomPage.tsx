@@ -73,10 +73,10 @@ export default function ClassroomPage({ user }: { user: User }) {
 	}, [])
 
 	if (classroom) {
-		if (!onboarded) {
+		if (!onboarded && player) {
 			return <OnboardingPage classroom={classroom} user={user} />
 		}
-		if (onboarded && classID) {
+		if (onboarded && classID && player) {
 			if (onboarded.includes(classID) == false) {
 				return <OnboardingPage classroom={classroom} user={user} />
 			}
