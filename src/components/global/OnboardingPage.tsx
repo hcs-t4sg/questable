@@ -93,19 +93,20 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 				<h5>Customize your character!</h5>
 			</Grid>
 			<div>
-				<Grid container spacing={3}>
+				<Grid item xs={12}>
+					<TextField
+						id='classroom-name'
+						label='Your Name'
+						value={name}
+						onChange={(event) => setName(event.target.value)}
+					/>
+				</Grid>
+				<Grid display='flex' justifyContent='flex-start' alignItems='flex-start'>
 					<Grid item xs={12}>
-						<TextField
-							id='classroom-name'
-							label='Your Name'
-							value={name}
-							onChange={(event) => setName(event.target.value)}
-						/>
+						{enterClassButton}
 					</Grid>
-					{enterClassButton}
 				</Grid>
 			</div>
-
 			<Grid item xs={12}>
 				<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
 					<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
