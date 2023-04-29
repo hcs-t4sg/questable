@@ -45,9 +45,11 @@ export default function ClassroomPage({ user }: { user: User }) {
 				const playerRef = doc(db, `classrooms/${classID}/players/${user.uid}`)
 				const unsub = onSnapshot(playerRef, (doc) => {
 					if (doc.exists()) {
+						console.log('player exists')
 						setPlayer({ ...doc.data(), id: doc.id } as Player)
 					}
 				})
+				console.log('player does not exist')
 				return unsub
 				// const playerData = await getPlayerData(classID, user.uid)
 
@@ -73,15 +75,10 @@ export default function ClassroomPage({ user }: { user: User }) {
 	}, [])
 
 	if (classroom) {
-		if (!onboarded && player) {
-			return <OnboardingPage classroom={classroom} user={user} />
-		}
-		if (onboarded && classID && player) {
-			if (onboarded.includes(classID) == false) {
+		if (player) {
+			if (!onboarded?.includes(classroom.id)) {
 				return <OnboardingPage classroom={classroom} user={user} />
 			}
-		}
-		if (player) {
 			if (player.role === 'teacher') {
 				return <TeacherView player={player} classroom={classroom} user={user} />
 			} else if (player.role === 'student') {

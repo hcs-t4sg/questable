@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { User } from 'firebase/auth'
 import Button from '@mui/material/Button'
 import { enqueueSnackbar } from 'notistack'
-// import { getHairItems, getShirtItems, getPantsItems, getShoesItems } from '../../utils/items'
 import Layout from './Layout'
 import { onboardClassroom, updatePlayer } from '../../utils/mutations'
 import { OnboardingItemCard } from '../student/OnboardingItemCard'
@@ -65,11 +64,30 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 			enqueueSnackbar('Name cannot be empty', { variant: 'error' })
 			return
 		}
+		console.log(hair)
+		if (!hair) {
+			enqueueSnackbar('Please select hair for your character', { variant: 'error' })
+			return
+		}
+		console.log(shirt)
+		if (!shirt) {
+			enqueueSnackbar('Please select a shirt for your character', { variant: 'error' })
+			return
+		}
+		console.log(shoe)
+		if (!shoe) {
+			enqueueSnackbar('Please select shoes for your character', { variant: 'error' })
+			return
+		}
+		console.log(pant)
+		if (!pant) {
+			enqueueSnackbar('Please select pants for your character', { variant: 'error' })
+			return
+		}
 		updatePlayer(user.uid, classroom.id, { name })
 		onboardClassroom(user.uid, classroom.id)
 	}
 
-	// Button - Enter Classroom: only show if it has alphanumeric characters and (TODO) avatar should have body hair pants and shoes
 	const enterClassButton = (
 		<DialogActions>
 			<Button variant='contained' onClick={handleSubmit}>
@@ -86,7 +104,6 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 	}
 
 	return (
-		// Allow user to set their name
 		<Layout>
 			<Grid item xs={12}>
 				<Typography variant='h2'>Your Character</Typography>
