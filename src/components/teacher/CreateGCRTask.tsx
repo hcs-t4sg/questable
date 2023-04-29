@@ -56,6 +56,8 @@ export default function CreateGCRTask({
 				const tokenData = getToken.data()
 				setToken(tokenData.gcrToken)
 				console.log(token)
+			} else {
+				window.confirm('Log into Google on the Settings page!')
 			}
 		}
 		fetchToken()
@@ -66,7 +68,6 @@ export default function CreateGCRTask({
 
 		// asking for variable before loaded (error upon refresh)
 		if (token) {
-			console.log(`access ${token}`)
 			// loadClient()
 
 			const response = fetch('https://classroom.googleapis.com/v1/courses/', {
@@ -118,13 +119,20 @@ export default function CreateGCRTask({
 
 	const fetchCourseWork = async () => {
 		console.log(classID)
-		const coursework = await getCourseWork()
-		// console.log(coursework)
-		setTasks(coursework.courseWork)
-		console.log(tasks)
+		if (classID) {
+			const coursework = await getCourseWork()
+			// console.log(coursework)
+			setTasks(coursework.courseWork)
+			console.log(tasks)
+		} else {
+			window.confirm('Select a classroom first!')
+		}
 	}
 
 	const handleClick = () => {
+		if (!token) {
+			window.confirm('Log into Google with Settings first!')
+		}
 		setOpen(true)
 		fetchGoogleClassrooms()
 		// fetchCourseWork()
@@ -201,9 +209,18 @@ export default function CreateGCRTask({
 								onChange={(event) => {
 									setClassId(event.target.value as string)
 									console.log(event.target.value)
+									// fetchCourseWork()
 								}}
 							>
-								<MenuItem key='select' value='select'>
+								<MenuItem
+									key='select'
+									value=''
+									onClick={() => {
+										setName('')
+										setDescription('')
+										setDueDate(null)
+									}}
+								>
 									Select Classroom
 								</MenuItem>
 								{classroomList.map((classroom) => (
@@ -217,44 +234,54 @@ export default function CreateGCRTask({
 					<Button onClick={fetchCourseWork}>Fetch Tasks</Button>
 					<BoxInModal>
 						<FormControl fullWidth>
-							<InputLabel id='gcr-task-dropdown-label'>Selected Google Classroom Task</InputLabel>
+							<InputLabel id='gcr-task-dropdown-label'>Google Classroom Task</InputLabel>
 							<Select
 								defaultValue=''
 								labelId='gcr-task-dropdown'
 								id='gcr-task-dropdown'
 								value={taskID}
-								label='Selected Google Classroom Task'
+								label='Google Classroom Task'
 								onChange={(event) => {
 									setTaskID(event.target.value as string)
 									console.log(event.target.value)
 								}}
 							>
-								<MenuItem key='select' value='select'>
+								<MenuItem
+									key='select'
+									value='select'
+									onClick={() => {
+										setName('')
+										setDescription('')
+										setDueDate(null)
+									}}
+								>
 									Select Task
 								</MenuItem>
-								{tasks.map((task) => (
-									<MenuItem
-										key={task.title}
-										value={task.id}
-										onClick={() => {
-											setName(task.title)
-											setDescription(task.description)
-											const gcrDueDate = new Date(
-												Date.UTC(
-													task.dueDate.year,
-													// because months are 0-indexed in Javascript ugh
-													task.dueDate.month - 1,
-													task.dueDate.day,
-													task.dueTime.hours,
-													task.dueTime.minutes,
-												),
-											)
-											setDueDate(gcrDueDate)
-										}}
-									>
-										{task.title}
-									</MenuItem>
-								))}
+								{classID != ''
+									? tasks.map((task) => (
+											<MenuItem
+												key={task.title}
+												value={task.id}
+												onClick={() => {
+													setName(task.title)
+													setDescription(task.description)
+													const gcrDueDate = new Date(
+														Date.UTC(
+															task.dueDate.year,
+															// because months are 0-indexed in Javascript ugh
+															task.dueDate.month - 1,
+															task.dueDate.day,
+															task.dueTime.hours,
+															task.dueTime.minutes,
+														),
+													)
+													setDueDate(gcrDueDate)
+												}}
+											>
+												{task.title}
+											</MenuItem>
+									  ))
+									: null}
 							</Select>
 						</FormControl>
 					</BoxInModal>

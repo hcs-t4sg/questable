@@ -48,15 +48,7 @@ const uiConfig = {
 	callbacks: {
 		// Avoid redirects after sign-in.
 		signInSuccessWithAuthResult: (authResult: any) => {
-			// accessToken = authResult.credential.accessToken
 			console.log(authResult)
-
-			// const user = authResult.user
-			// const userRef = doc(db, 'users', user.uid)
-			// const data = {
-			// 	gcrToken: accessToken,
-			// }
-			// setDoc(userRef, data, { merge: true })
 		},
 	},
 }

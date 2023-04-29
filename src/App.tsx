@@ -18,7 +18,6 @@ import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 
 import 'virtual:fonts.css'
-import { gapi } from 'gapi-script'
 
 // MUI styling constants
 
@@ -161,7 +160,6 @@ export default function App() {
 								}}
 								onClick={() => {
 									auth.signOut()
-									gapi.auth2.getAuthInstance().signOut()
 								}}
 							>
 								Log out

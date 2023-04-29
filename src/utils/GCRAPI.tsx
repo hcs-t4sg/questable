@@ -1,3 +1,4 @@
+// ! NOT USING AT THE MOMENT BECAUSE GAPI AUTH2 IS OUTDATED
 import { gapi } from 'gapi-script'
 
 // Store as env variables at some point
