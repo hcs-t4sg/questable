@@ -1,4 +1,3 @@
-import { gapi } from 'gapi-script'
 // import { loadGapiInsideDOM } from 'gapi-script'
 // const gapi = await loadGapiInsideDOM()
 import {
@@ -12,7 +11,6 @@ import {
 	TextField,
 } from '@mui/material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { loadClient } from '../../utils/GCRAPI'
 import {
 	BoxInModal,
 	ModalTitle,
@@ -45,7 +43,7 @@ export default function CreateGCRTask({
 	const [token, setToken] = useState('')
 	const [classroomList, setClassrooms] = useState<any[]>([])
 	const [classID, setClassId] = useState('')
-	const [clientLoaded, setClientLoaded] = useState(false)
+	// const [clientLoaded, setClientLoaded] = useState(false)
 	const [tasks, setTasks] = useState<any[]>([])
 	const [taskID, setTaskID] = useState('')
 
@@ -63,15 +61,6 @@ export default function CreateGCRTask({
 		fetchToken()
 	}, [token])
 
-	// useEffect(() => {
-	// 	/* global google */
-	// 	google.accounts.id.initialize({
-	// 		// eslint-disable-next-line camelcase
-	// 		client_id: clientID,
-	// 		callback: handleCallbackResponse,
-	// 	})
-	// })
-
 	async function getCourses() {
 		// return response.result.courses
 
@@ -80,56 +69,58 @@ export default function CreateGCRTask({
 			console.log(`access ${token}`)
 			// loadClient()
 
-			// const response = fetch('https://classroom.googleapis.com/v1/courses/', {
-			// 	method: 'GET',
-			// 	headers: {
-			// 		'Content-Type': 'application/json',
-			// 		Authorization: `Bearer ${token}`,
-			// 	},
-			// })
+			const response = fetch('https://classroom.googleapis.com/v1/courses/', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			// console.log((await response).json())
 
-			const response = await gapi.client.classroom.courses.list({})
-			console.log(response.result.courses)
-			return response.result.courses
+			// const response = await gapi.client.classroom.courses.list({})
+			// console.log(response.result.courses)
+			// return response.result.courses
 
-			// return response
+			return (await response).json()
 		}
 	}
 
 	async function getCourseWork() {
 		console.log(classID)
-		console.log(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`)
-		const response = await gapi.client.classroom.courses.courseWork.list({
-			courseId: classID,
-		})
-		console.log(response)
-		return response.result.courseWork
-		// const response = fetch(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`, {
-		// 	method: 'GET',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 		Authorization: `Bearer ${token}`,
-		// 	},
+		// console.log(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`)
+		// const response = await gapi.client.classroom.courses.courseWork.list({
+		// 	courseId: classID,
 		// })
 		// console.log(response)
+		// return response.result.courseWork
+		const response = fetch(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		console.log(response)
+		return (await response).json()
 	}
 
 	// async function which will make the API call and then set the state variable with the result.
 	const fetchGoogleClassrooms = async () => {
-		if (!clientLoaded) {
-			loadClient()
-			setClientLoaded(true)
-		}
+		// if (!clientLoaded) {
+		// 	loadClient()
+		// 	setClientLoaded(true)
+		// }
 		const classroomList = await getCourses()
-		setClassrooms(classroomList)
-		console.log(classroomList)
-		return true
+		console.log(classroomList.courses)
+		setClassrooms(classroomList.courses)
 	}
 
 	const fetchCourseWork = async () => {
 		console.log(classID)
 		const coursework = await getCourseWork()
-		setTasks(coursework)
+		// console.log(coursework)
+		setTasks(coursework.courseWork)
 		console.log(tasks)
 	}
 
@@ -238,6 +229,9 @@ export default function CreateGCRTask({
 									console.log(event.target.value)
 								}}
 							>
+								<MenuItem key='select' value='select'>
+									Select Task
+								</MenuItem>
 								{tasks.map((task) => (
 									<MenuItem
 										key={task.title}

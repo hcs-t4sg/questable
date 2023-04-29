@@ -4,7 +4,7 @@ import { getAuth } from 'firebase/auth'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
-import { doc, getFirestore, setDoc } from 'firebase/firestore'
+import { getFirestore } from 'firebase/firestore'
 import Layout from '../components/global/Layout'
 import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
 import { clientID } from './GCRAPI'
@@ -17,7 +17,7 @@ import { clientID } from './GCRAPI'
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
-export let accessToken: any
+// export let accessToken: any
 
 // ! TRY THIS: https://stackoverflow.com/questions/72209749/react-google-identity-services
 
@@ -48,15 +48,15 @@ const uiConfig = {
 	callbacks: {
 		// Avoid redirects after sign-in.
 		signInSuccessWithAuthResult: (authResult: any) => {
-			accessToken = authResult.credential.accessToken
+			// accessToken = authResult.credential.accessToken
 			console.log(authResult)
 
-			const user = authResult.user
-			const userRef = doc(db, 'users', user.uid)
-			const data = {
-				gcrToken: accessToken,
-			}
-			setDoc(userRef, data, { merge: true })
+			// const user = authResult.user
+			// const userRef = doc(db, 'users', user.uid)
+			// const data = {
+			// 	gcrToken: accessToken,
+			// }
+			// setDoc(userRef, data, { merge: true })
 		},
 	},
 }

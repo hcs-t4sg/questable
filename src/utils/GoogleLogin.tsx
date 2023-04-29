@@ -2,8 +2,13 @@
 import { Button, Typography } from '@mui/material'
 import { SCOPES, clientID, clientSecret, googleProvider } from './google'
 import { useState } from 'react'
+import { doc, setDoc } from 'firebase/firestore'
+import { db } from './firebase'
+import { User } from 'firebase/auth'
 
-export default function GoogleLogin() {
+export let accessToken: any
+
+export default function GoogleLogin({ user }: { user: User }) {
 	const [isSignedIn, setIsSignedIn] = useState(false)
 	// const [email, setEmail] = useState('')
 
@@ -24,6 +29,8 @@ export default function GoogleLogin() {
 
 		const data = await response.json()
 		console.log(data)
+		accessToken = data.access_token
+		console.log(accessToken)
 		return
 	}
 
@@ -34,6 +41,13 @@ export default function GoogleLogin() {
 			console.log('Logged in with google', res)
 			setIsSignedIn(true)
 			fetchAccessTokens(res.code).catch(console.error)
+			console.log(res.code)
+
+			const userRef = doc(db, 'users', user.uid)
+			const data = {
+				gcrToken: accessToken,
+			}
+			setDoc(userRef, data, { merge: true })
 		},
 		onError: (err) => console.error('Failed to login with google', err),
 	})
