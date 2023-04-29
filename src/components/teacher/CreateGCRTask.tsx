@@ -50,6 +50,7 @@ export default function CreateGCRTask({
 	useEffect(() => {
 		const tokenRef = doc(db, 'users', player.id)
 		const fetchToken = async () => {
+			// why is this outdated?
 			const getToken = await getDoc(tokenRef)
 
 			if (getToken.exists()) {
@@ -57,27 +58,27 @@ export default function CreateGCRTask({
 				setToken(tokenData.gcrToken)
 				console.log(token)
 			} else {
-				window.confirm('Log into Google on the Settings page!')
+				window.alert('Log into Google on the Settings page!')
 			}
 		}
 		fetchToken()
 	}, [token])
 
 	async function getCourses() {
-		// return response.result.courses
-
 		// asking for variable before loaded (error upon refresh)
 		if (token) {
 			// loadClient()
 
 			const response = fetch('https://classroom.googleapis.com/v1/courses/', {
+				// mode: 'no-cors',
 				method: 'GET',
+				// credentials: 'include',
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			// console.log((await response).json())
+			console.log(response)
 
 			// const response = await gapi.client.classroom.courses.list({})
 			// console.log(response.result.courses)
@@ -121,20 +122,22 @@ export default function CreateGCRTask({
 		console.log(classID)
 		if (classID) {
 			const coursework = await getCourseWork()
-			// console.log(coursework)
+			console.log(coursework)
 			setTasks(coursework.courseWork)
 			console.log(tasks)
 		} else {
-			window.confirm('Select a classroom first!')
+			window.alert('Select a classroom first!')
 		}
 	}
 
 	const handleClick = () => {
 		if (!token) {
-			window.confirm('Log into Google with Settings first!')
+			window.alert('Log into Google with Settings first!')
+		} else {
+			setOpen(true)
+			fetchGoogleClassrooms()
 		}
-		setOpen(true)
-		fetchGoogleClassrooms()
+
 		// fetchCourseWork()
 	}
 
@@ -265,17 +268,21 @@ export default function CreateGCRTask({
 												onClick={() => {
 													setName(task.title)
 													setDescription(task.description)
-													const gcrDueDate = new Date(
-														Date.UTC(
-															task.dueDate.year,
-															// because months are 0-indexed in Javascript ugh
-															task.dueDate.month - 1,
-															task.dueDate.day,
-															task.dueTime.hours,
-															task.dueTime.minutes,
-														),
-													)
-													setDueDate(gcrDueDate)
+													if (task.dueDate) {
+														const gcrDueDate = new Date(
+															Date.UTC(
+																task.dueDate.year,
+																// because months are 0-indexed in Javascript ugh
+																task.dueDate.month - 1,
+																task.dueDate.day,
+																task.dueTime.hours,
+																task.dueTime.minutes,
+															),
+														)
+														if (gcrDueDate) {
+															setDueDate(gcrDueDate)
+														}
+													}
 												}}
 											>
 												{task.title}

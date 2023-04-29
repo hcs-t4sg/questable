@@ -2,7 +2,7 @@
 import { Button, Typography } from '@mui/material'
 import { SCOPES, clientID, clientSecret, googleProvider } from './google'
 import { useState } from 'react'
-import { doc, setDoc } from 'firebase/firestore'
+import { doc, updateDoc } from 'firebase/firestore'
 import { db } from './firebase'
 import { User } from 'firebase/auth'
 
@@ -47,7 +47,7 @@ export default function GoogleLogin({ user }: { user: User }) {
 			const data = {
 				gcrToken: accessToken,
 			}
-			setDoc(userRef, data, { merge: true })
+			updateDoc(userRef, data)
 		},
 		onError: (err) => console.error('Failed to login with google', err),
 	})
