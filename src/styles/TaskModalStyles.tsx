@@ -1,5 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close'
-import { Modal } from '@mui/material'
+import { Dialog } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 // import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -11,7 +11,7 @@ import Box from '@mui/material/Box'
 
 import { styled } from '@mui/material/styles'
 
-export const TeacherModalStyled = styled(Modal)({
+export const TeacherModalStyled = styled(Dialog)({
 	// display: 'flex',
 	// justifyContent: 'center',
 	// alignItems: 'center',
@@ -20,14 +20,15 @@ export const TeacherModalStyled = styled(Modal)({
 	// height: '100%',
 	// top: "0",
 	// left: "0",
-	position: 'fixed',
-	display: 'flex',
-	justifyContent: 'center',
-	top: '0',
-	left: '0',
+	// position: 'fixed',
+	// display: 'flex',
+	// justifyContent: 'center',
+	// top: '0',
+	// left: '0',
+	// width: '100%',
 	width: '100%',
-	height: '100%',
-	overflowY: 'auto',
+	// height: '100%',
+	// overflowY: 'auto',
 })
 
 export const TaskModalBox = styled(Box)({
@@ -41,17 +42,17 @@ export const TaskModalBox = styled(Box)({
 	// backgroundColor: 'white',
 	// marginBottom: '18px',
 	// position: 'absolute'
-	marginTop: '18px',
-	position: 'absolute',
-	backgroundColor: 'white',
-	padding: '40px',
-	paddingTop: '40px',
-	width: '80%',
-	justifyContent: 'center',
-	flexDirection: 'column',
-	display: 'flex',
-	alignItems: 'center',
-	marginBottom: '18px',
+	// marginTop: '18px',
+	// position: 'absolute',
+	// backgroundColor: 'white',
+	// padding: '40px',
+	// paddingTop: '40px',
+	// width: '80%',
+	// justifyContent: 'center',
+	// flexDirection: 'column',
+	// // display: 'flex',
+	// alignItems: 'center',
+	// marginBottom: '18px',
 })
 
 export const StudentTaskModalBox = styled(Box)({
@@ -133,7 +134,7 @@ export function ModalTitle(props: Props) {
 					<CloseIcon />
 				</IconButton>
 			</BoxInModal>
-			<TaskHr />
+			<TaskHr sx={{ width: '100%' }} />
 		</>
 	)
 }
