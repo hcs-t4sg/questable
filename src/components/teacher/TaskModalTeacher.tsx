@@ -1,5 +1,5 @@
 // import CloseIcon from '@mui/icons-material/Close'
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material'
 // import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -99,51 +99,12 @@ export default function TaskModalTeacher({
 	return (
 		<div>
 			{openButton}
-			<TeacherModalStyled
-				// sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-				open={open}
-				onClose={handleClose}
-			>
-				{/* <Box
-					sx={{
-						width: '40%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-						padding: '40px',
-						paddingTop: '40px',
-						backgroundColor: 'white',
-						marginBottom: '18px',
-					}}
-				> */}
+			<TeacherModalStyled open={open} onClose={handleClose}>
 				<TaskModalBox>
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-						}}
-					>
-						<Typography fontWeight='light' variant='h5'>
-							Overview
-						</Typography>
-						<IconButton onClick={handleClose}>
-							<CloseIcon />
-						</IconButton>
-					</Box>
-					<hr
-						style={{
-							backgroundColor: '#D9D9D9',
-							height: '1px',
-							borderWidth: '0px',
-							borderRadius: '5px',
-							width: '100%',
-							marginBottom: '10px',
-						}}
-					/> */}
 					<ModalTitle onClick={handleClose} text='Overview' />
+					{task.gcrName ? (
+						<Typography variant='body1'>Google Classroom Task: {task.gcrName}</Typography>
+					) : null}
 					<TextField
 						margin='normal'
 						id='name'
@@ -165,16 +126,6 @@ export default function TaskModalTeacher({
 						value={description}
 						onChange={(event) => setDescription(event.target.value)}
 					/>
-
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
 					<BoxInModal>
 						<LocalizationProvider dateAdapter={AdapterDateFns}>
 							<DateTimePicker
@@ -183,17 +134,7 @@ export default function TaskModalTeacher({
 								onChange={(newValue) => setDate(newValue)}
 							/>
 						</LocalizationProvider>
-						{/* </Box> */}
 					</BoxInModal>
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
 					<BoxInModal>
 						<FormControl fullWidth>
 							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
@@ -210,7 +151,6 @@ export default function TaskModalTeacher({
 								<MenuItem value={40}>40g</MenuItem>
 							</Select>
 						</FormControl>
-						{/* </Box> */}
 					</BoxInModal>
 					<br />
 					{/* center the save button */}
@@ -218,7 +158,6 @@ export default function TaskModalTeacher({
 						{saveButton}
 					</Grid>
 				</TaskModalBox>
-				{/* </Box> */}
 			</TeacherModalStyled>
 		</div>
 	)

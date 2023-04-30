@@ -25,6 +25,7 @@ import { addTask } from '../../utils/mutations'
 import { useSnackbar } from 'notistack'
 import { Player, Classroom } from '../../types'
 import { db } from '../../utils/firebase'
+import Loading from '../global/Loading'
 
 export default function CreateGCRTask({
 	classroom,
@@ -44,8 +45,9 @@ export default function CreateGCRTask({
 	const [classroomList, setClassrooms] = useState<any[]>([])
 	const [classID, setClassId] = useState('')
 	// const [clientLoaded, setClientLoaded] = useState(false)
-	const [tasks, setTasks] = useState<any[]>([])
+	const [tasks, setTasks] = useState<any[] | 'loading' | null>(null)
 	const [taskID, setTaskID] = useState('')
+	const [taskName, setTaskName] = useState('')
 
 	useEffect(() => {
 		const tokenRef = doc(db, 'users', player.id)
@@ -88,7 +90,7 @@ export default function CreateGCRTask({
 		}
 	}
 
-	async function getCourseWork() {
+	async function getCourseWork(classID: string) {
 		console.log(classID)
 		// console.log(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`)
 		// const response = await gapi.client.classroom.courses.courseWork.list({
@@ -116,29 +118,35 @@ export default function CreateGCRTask({
 		const classroomList = await getCourses()
 		console.log(classroomList.courses)
 		setClassrooms(classroomList.courses)
+		if (classroomList.length == 0) {
+			window.alert('Oops, classrooms not found! Try logging into Google in Settings first!')
+			return false
+		} else {
+			return true
+		}
 	}
 
-	const fetchCourseWork = async () => {
-		console.log(classID)
-		if (classID) {
-			const coursework = await getCourseWork()
+	const fetchCourseWork = async (classID: string) => {
+		setTasks('loading')
+		if (classID != '') {
+			const coursework = await getCourseWork(classID)
 			console.log(coursework)
 			setTasks(coursework.courseWork)
 			console.log(tasks)
-		} else {
-			window.alert('Select a classroom first!')
 		}
 	}
 
-	const handleClick = () => {
+	const handleClick = async () => {
+		console.log(classroomList)
 		if (!token) {
-			window.alert('Log into Google with Settings first!')
+			window.alert('Oops, classrooms not found! Try logging into Google in Settings first!')
 		} else {
-			setOpen(true)
-			fetchGoogleClassrooms()
+			setTasks(null)
+			const fetched = await fetchGoogleClassrooms()
+			if (fetched) {
+				setOpen(true)
+			}
 		}
-
-		// fetchCourseWork()
 	}
 
 	const handleAdd = () => {
@@ -159,6 +167,7 @@ export default function CreateGCRTask({
 			reward,
 			due: Timestamp.fromDate(dueDate),
 			gcrID: taskID,
+			gcrName: taskName,
 		}
 
 		handleClose()
@@ -177,6 +186,14 @@ export default function CreateGCRTask({
 	}
 
 	const handleClose = () => {
+		setName('')
+		setDescription('')
+		setDueDate(null)
+		setTaskID('')
+		setClassrooms([])
+		setClassId('')
+		setTasks([])
+		setTaskName('')
 		setOpen(false)
 	}
 	//	add onclick later
@@ -196,23 +213,21 @@ export default function CreateGCRTask({
 				onClick={handleClick}
 				startIcon={<AddCircleOutlineIcon />}
 			>
-				Create from Google Classroom
+				Import from Google Classroom
 			</Button>
 			<TeacherModalStyled open={open} onClose={handleClose}>
 				<TaskModalBox>
 					<ModalTitle onClick={handleClose} text='Create Task' />
 					<BoxInModal>
 						<FormControl fullWidth>
-							<InputLabel id='classroom-dropdown-label'>Classroom</InputLabel>
+							<InputLabel id='classroom-dropdown-label'>Select Classroom</InputLabel>
 							<Select
 								labelId='classroom-dropdown'
 								id='classroom-dropdown'
 								value={classID}
-								label='Classroom'
+								label='Select Classroom'
 								onChange={(event) => {
-									setClassId(event.target.value as string)
 									console.log(event.target.value)
-									// fetchCourseWork()
 								}}
 							>
 								<MenuItem
@@ -222,76 +237,89 @@ export default function CreateGCRTask({
 										setName('')
 										setDescription('')
 										setDueDate(null)
+										setClassId('')
+										setTasks(null)
 									}}
 								>
 									Select Classroom
 								</MenuItem>
-								{classroomList.map((classroom) => (
-									<MenuItem key={classroom.name} value={classroom.id}>
-										{classroom.name}
-									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-					</BoxInModal>
-					<Button onClick={fetchCourseWork}>Fetch Tasks</Button>
-					<BoxInModal>
-						<FormControl fullWidth>
-							<InputLabel id='gcr-task-dropdown-label'>Google Classroom Task</InputLabel>
-							<Select
-								defaultValue=''
-								labelId='gcr-task-dropdown'
-								id='gcr-task-dropdown'
-								value={taskID}
-								label='Google Classroom Task'
-								onChange={(event) => {
-									setTaskID(event.target.value as string)
-									console.log(event.target.value)
-								}}
-							>
-								<MenuItem
-									key='select'
-									value='select'
-									onClick={() => {
-										setName('')
-										setDescription('')
-										setDueDate(null)
-									}}
-								>
-									Select Task
-								</MenuItem>
-								{classID != ''
-									? tasks.map((task) => (
+								{classroomList
+									? classroomList.map((classroom) => (
 											<MenuItem
-												key={task.title}
-												value={task.id}
+												key={classroom.name}
+												value={classroom.id}
 												onClick={() => {
-													setName(task.title)
-													setDescription(task.description)
-													if (task.dueDate) {
-														const gcrDueDate = new Date(
-															Date.UTC(
-																task.dueDate.year,
-																// because months are 0-indexed in Javascript ugh
-																task.dueDate.month - 1,
-																task.dueDate.day,
-																task.dueTime.hours,
-																task.dueTime.minutes,
-															),
-														)
-														if (gcrDueDate) {
-															setDueDate(gcrDueDate)
-														}
-													}
+													fetchCourseWork(classroom.id)
+													setClassId(classroom.id)
 												}}
 											>
-												{task.title}
+												{classroom.name}
 											</MenuItem>
 									  ))
 									: null}
 							</Select>
 						</FormControl>
 					</BoxInModal>
+					{tasks == 'loading' ? (
+						<Loading>Loading Tasks</Loading>
+					) : tasks == null ? null : (
+						<BoxInModal>
+							<FormControl fullWidth>
+								<InputLabel id='gcr-task-dropdown-label'>Google Classroom Task</InputLabel>
+								<Select
+									defaultValue=''
+									labelId='gcr-task-dropdown'
+									id='gcr-task-dropdown'
+									value={taskID}
+									label='Google Classroom Task'
+									onChange={(event) => {
+										setTaskID(event.target.value as string)
+										console.log(event.target.value)
+									}}
+								>
+									<MenuItem
+										key='select'
+										value='select'
+										onClick={() => {
+											setName('')
+											setDescription('')
+											setDueDate(null)
+										}}
+									>
+										Google Classroom Task
+									</MenuItem>
+									{tasks.map((task) => (
+										<MenuItem
+											key={task.title}
+											value={task.id}
+											onClick={() => {
+												setName(task.title)
+												setTaskName(task.title)
+												setDescription(task.description)
+												if (task.dueDate) {
+													const gcrDueDate = new Date(
+														Date.UTC(
+															task.dueDate.year,
+															// because months are 0-indexed in Javascript ugh
+															task.dueDate.month - 1,
+															task.dueDate.day,
+															task.dueTime.hours,
+															task.dueTime.minutes,
+														),
+													)
+													if (gcrDueDate) {
+														setDueDate(gcrDueDate)
+													}
+												}
+											}}
+										>
+											{task.title}
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+						</BoxInModal>
+					)}
 					<TextField
 						margin='normal'
 						id='name'

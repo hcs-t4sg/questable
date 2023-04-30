@@ -31,6 +31,10 @@ export default function GoogleLogin({ user }: { user: User }) {
 		console.log(data)
 		accessToken = data.access_token
 		console.log(accessToken)
+		const userRef = doc(db, 'users', user.uid)
+		updateDoc(userRef, {
+			gcrToken: accessToken,
+		})
 		return
 	}
 
@@ -42,12 +46,6 @@ export default function GoogleLogin({ user }: { user: User }) {
 			setIsSignedIn(true)
 			fetchAccessTokens(res.code).catch(console.error)
 			console.log(res.code)
-
-			const userRef = doc(db, 'users', user.uid)
-			const data = {
-				gcrToken: accessToken,
-			}
-			updateDoc(userRef, data)
 		},
 		onError: (err) => console.error('Failed to login with google', err),
 	})
@@ -61,6 +59,7 @@ export default function GoogleLogin({ user }: { user: User }) {
 			>
 				Log into Google
 			</Button>
+			{/* how to check when access token is expired? */}
 			<Typography variant='body1'>{isSignedIn ? 'Signed in!' : 'Not signed in'}</Typography>
 		</>
 	)
