@@ -7,10 +7,12 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
-
 import EditIcon from '@mui/icons-material/Edit'
 import { Classroom, Repeatable } from '../../types'
 import { deleteRepeatable, updateRepeatable } from '../../utils/mutations'
+import modules from '../../utils/TextEditor'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
 import {
 	TaskModalBox,
@@ -184,7 +186,7 @@ export default function RepeatableModalTeacher({
 						}}
 						onChange={(event) => setName(event.target.value)}
 					/>
-					<TextField
+					{/* <TextField
 						margin='normal'
 						id='description'
 						label='Description'
@@ -198,6 +200,14 @@ export default function RepeatableModalTeacher({
 							readOnly: !isEditing,
 						}}
 						onChange={(event) => setDescription(event.target.value)}
+					/> */}
+					<ReactQuill
+						theme='snow'
+						style={{ width: '100%' }}
+						value={description}
+						modules={modules}
+						onChange={setDescription}
+						readOnly={!isEditing}
 					/>
 
 					{/* <Box

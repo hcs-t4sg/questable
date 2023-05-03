@@ -72,6 +72,7 @@ export interface Classroom {
 	name: string
 	playerList: string[]
 	teacherList: string[]
+	canEdit: boolean
 }
 
 export interface Player {
@@ -127,6 +128,9 @@ export interface ForumPost {
 	likes: number
 	author: Player
 	postType: 0 | 1 | 2 | 3
+	anonymous: 0 | 1
+	likers: Array<string>
+	pinnedComments: Array<string>
 }
 
 export interface Comment {
@@ -135,4 +139,5 @@ export interface Comment {
 	author: string
 	likes: number
 	postTime: Timestamp
+	likers: Array<string>
 }

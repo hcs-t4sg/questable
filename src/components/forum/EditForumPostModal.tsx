@@ -8,21 +8,17 @@ import {
 	Select,
 } from '@mui/material'
 // import Dialog from '@mui/material/Dialog'
-import Checkbox from '@mui/material/Checkbox'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import { useState } from 'react'
-import { Classroom, Player } from '../../types'
-import { addForumPost } from '../../utils/mutations'
+import { Classroom, Player, ForumPost } from '../../types'
+import { updateForumPost } from '../../utils/mutations'
 import { TaskModalBox, TeacherModalStyled } from '../../styles/TaskModalStyles'
 import { useSnackbar } from 'notistack'
 import modules from '../../utils/TextEditor'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-
 // Notes: onsnapshot, don't implement at database level; implement on frontend, show only ones you filtered for
 // Modal component for individual entries.
 
@@ -33,33 +29,32 @@ type: Type of entry modal being opened.
    "edit" (for opening or editing an existing entry from table).
 user: User making query (The current logged in user). */
 
-export default function CreateForumPostModal({
+export default function EditForumPostModal({
 	isOpen,
 	onClose,
 	player,
 	classroom,
+	forumPost,
 }: {
 	isOpen: boolean
 	onClose: () => void
 	player: Player
 	classroom: Classroom
+	forumPost: ForumPost
 }) {
 	const { enqueueSnackbar } = useSnackbar()
 
 	// State variables for modal status
 
-	const [subject, setSubject] = useState('')
-	const [category, setCategory] = useState<0 | 1 | 2 | 3>(0)
-	const [description, setDescription] = useState('')
-	const [anonymous, setAnonymous] = useState(false)
+	const [subject, setSubject] = useState(forumPost.title)
+	const [category, setCategory] = useState<0 | 1 | 2 | 3>(forumPost.postType)
+	const [description, setDescription] = useState(forumPost.content)
+	const [isDisabled, setIsDisabled] = useState(true)
 
 	// Modal visibility handlers
 
 	const handleClear = () => {
-		setSubject('')
-		setCategory(0)
-		setDescription('')
-		setAnonymous(false)
+		setIsDisabled(true)
 	}
 
 	const handleClose = () => {
@@ -80,24 +75,23 @@ export default function CreateForumPostModal({
 			return
 		}
 
-		const newThread = {
+		const updatedThread = {
 			title: subject,
 			postType: category,
 			content: description,
 			author: player,
-			anonymous: (anonymous ? 1 : 0) as 0 | 1,
 		}
 
 		handleClose()
-		addForumPost(newThread, classroom)
+		updateForumPost(updatedThread, classroom.id, forumPost.id)
 			.then(() => {
-				enqueueSnackbar(`Created post "${subject}"!`, {
+				enqueueSnackbar(`Edited post "${subject}"!`, {
 					variant: 'success',
 				})
 			})
 			.catch((err) => {
 				console.error(err)
-				enqueueSnackbar('There was an error creating the post.', {
+				enqueueSnackbar('There was an error when editing the post.', {
 					variant: 'error',
 				})
 			})
@@ -108,9 +102,16 @@ export default function CreateForumPostModal({
 			<Button variant='text' onClick={handleClose}>
 				Cancel
 			</Button>
-			<Button variant='contained' color='success' onClick={handleSubmit}>
-				Submit
-			</Button>
+
+			{isDisabled ? (
+				<Button variant='contained' color='success' onClick={() => setIsDisabled(false)}>
+					Edit
+				</Button>
+			) : (
+				<Button variant='contained' color='success' onClick={handleSubmit}>
+					Submit
+				</Button>
+			)}
 		</DialogActions>
 	)
 	return (
@@ -118,7 +119,7 @@ export default function CreateForumPostModal({
 			{/* <Dialog open={isOpen}> */}
 			<TeacherModalStyled open={isOpen}>
 				<TaskModalBox>
-					<DialogTitle>New Thread</DialogTitle>
+					<DialogTitle>Edit Thread</DialogTitle>
 					<DialogContent>
 						{/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
 						<TextField
@@ -127,15 +128,16 @@ export default function CreateForumPostModal({
 							label='Subject'
 							fullWidth
 							variant='standard'
-							value={subject}
+							defaultValue={forumPost.title}
+							InputProps={{ readOnly: isDisabled }}
 							onChange={(event) => setSubject(event.target.value)}
 						/>
-
 						<ReactQuill
-							placeholder='Description'
 							theme='snow'
-							modules={modules}
 							onChange={setDescription}
+							value={description}
+							modules={modules}
+							readOnly={isDisabled}
 						/>
 						{/* <TextField
 							margin='normal'
@@ -145,7 +147,8 @@ export default function CreateForumPostModal({
 							variant='standard'
 							multiline
 							maxRows={8}
-							value={description}
+							defaultValue={forumPost.content}
+							InputProps={{ readOnly: isDisabled }}
 							onChange={(event) => setDescription(event.target.value)}
 						/> */}
 						<FormControl fullWidth sx={{ marginTop: 2 }}>
@@ -157,7 +160,8 @@ export default function CreateForumPostModal({
 								label='Category'
 								fullWidth
 								// variant='standard'
-								value={category}
+								defaultValue={forumPost.postType}
+								disabled={isDisabled}
 								onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
 							>
 								<MenuItem value={0}>General</MenuItem>
@@ -166,21 +170,6 @@ export default function CreateForumPostModal({
 								<MenuItem value={3}>Announcements</MenuItem>
 							</Select>
 						</FormControl>
-						{player.role == 'student' && (
-							<FormGroup>
-								<FormControlLabel
-									sx={{ mt: 2 }}
-									control={
-										<Checkbox
-											color='success'
-											checked={anonymous}
-											onChange={() => setAnonymous(!anonymous)}
-										/>
-									}
-									label='Anonymous'
-								/>
-							</FormGroup>
-						)}
 					</DialogContent>
 					{submitButton}
 				</TaskModalBox>

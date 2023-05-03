@@ -43,17 +43,23 @@ export function rewardPotion(rewardAmount: number) {
 export const Cluster = ({
 	title,
 	data,
+	html,
 }: {
 	title: string
 	data: string | number | JSX.Element
+	html: boolean
 }) => (
 	<>
 		<Typography sx={{ marginTop: '25px' }} fontWeight='bold' variant='h6'>
 			{title}
 		</Typography>
-		<Typography fontWeight='light' variant='body1'>
-			{data}
-		</Typography>
+		{html && typeof data == 'string' ? (
+			<div dangerouslySetInnerHTML={{ __html: data }} />
+		) : (
+			<Typography fontWeight='light' variant='body1'>
+				{data}
+			</Typography>
+		)}
 	</>
 )
 
@@ -75,7 +81,20 @@ export function AssignmentContentStudent({
 			<IconButton onClick={toggleIsOpen}>
 				<OpenInNewIcon />
 			</IconButton>
-			<Modal sx={{ overflow: 'scroll' }} open={isOpen} onClose={toggleIsOpen}>
+			<Modal
+				sx={{
+					position: 'fixed',
+					display: 'flex',
+					justifyContent: 'center',
+					top: '0',
+					left: '0',
+					width: '100%',
+					height: '100%',
+					overflowY: 'auto',
+				}}
+				open={isOpen}
+				onClose={toggleIsOpen}
+			>
 				<StudentTaskModalBox>
 					<ModalTitle onClick={toggleIsOpen} text={`${assignmentType} overview`} />
 					<Grid container spacing={2}>

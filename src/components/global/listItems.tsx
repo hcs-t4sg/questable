@@ -1,6 +1,6 @@
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import EmailIcon from '@mui/icons-material/Email'
-import FortIcon from '@mui/icons-material/Fort'
+import ForumIcon from '@mui/icons-material/Forum'
 import GroupIcon from '@mui/icons-material/Group'
 import InventoryIcon from '@mui/icons-material/Inventory'
 import SellIcon from '@mui/icons-material/Sell'
@@ -8,10 +8,9 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import ForumIcon from '@mui/icons-material/Forum'
+import { styled } from '@mui/material/styles'
 import * as React from 'react'
 import { useState } from 'react'
-import { styled } from '@mui/material/styles'
 import { Link } from 'react-router-dom'
 
 // Handles list of pages on sidebar. Edit if you want to add more pages
@@ -65,7 +64,7 @@ export function MainListItemsTeacher() {
 			</ListItemButtonStyled>
 			<ListItemButtonStyled
 				component={Link}
-				to='class-teacher'
+				to='class'
 				onClick={() => setSelected(2)}
 				selected={selected === 2}
 			>
@@ -87,7 +86,7 @@ export function MainListItemsTeacher() {
 			</ListItemButtonStyled>
 			<ListItemButtonStyled
 				component={Link}
-				to='teacher-settings'
+				to='settings'
 				onClick={() => setSelected(4)}
 				selected={selected === 4}
 			>
@@ -107,14 +106,14 @@ export function MainListItemsStudent() {
 		<React.Fragment>
 			<ListItemButtonStyled
 				component={Link}
-				to='main'
+				to='tasks'
 				onClick={() => setSelected(0)}
 				selected={selected === 0}
 			>
 				<ListItemIconStyled>
-					<FortIcon />
+					<AssignmentIcon />
 				</ListItemIconStyled>
-				<ListItemText primary='Main' />
+				<ListItemText primary='Quests' />
 			</ListItemButtonStyled>
 			<ListItemButtonStyled
 				component={Link}
@@ -129,7 +128,7 @@ export function MainListItemsStudent() {
 			</ListItemButtonStyled>
 			<ListItemButtonStyled
 				component={Link}
-				to='class-student'
+				to='class'
 				onClick={() => setSelected(2)}
 				selected={selected === 2}
 			>
@@ -162,7 +161,7 @@ export function MainListItemsStudent() {
 			</ListItemButtonStyled>
 			<ListItemButtonStyled
 				component={Link}
-				to='student-settings'
+				to='settings'
 				onClick={() => setSelected(5)}
 				selected={selected === 5}
 			>

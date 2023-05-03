@@ -4,7 +4,7 @@ import { Box, Grid, Typography } from '@mui/material'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import ClassStudent from '../../routes/student/ClassStudent'
 import Inventory from '../../routes/student/Inventory'
-import Main from '../../routes/student/Main'
+import TasksStudent from '../../routes/student/TasksStudent'
 import Shop from '../../routes/student/Shop'
 import { currentAvatar } from '../../utils/items'
 import Avatar from '../global/Avatar'
@@ -120,16 +120,13 @@ export default function StudentView({
 					</Box>
 				</Grid>
 				<Routes>
-					<Route path='/' element={<Navigate to='main' />} />
-					<Route path='main' element={<Main classroom={classroom} player={player} />} />
+					<Route path='/' element={<Navigate to='tasks' />} />
+					<Route path='tasks' element={<TasksStudent classroom={classroom} player={player} />} />
 					<Route path='shop' element={<Shop classroom={classroom} player={player} />} />
-					<Route
-						path='class-student'
-						element={<ClassStudent player={player} classroom={classroom} />}
-					/>
+					<Route path='class' element={<ClassStudent player={player} classroom={classroom} />} />
 					<Route path='inventory' element={<Inventory player={player} classroom={classroom} />} />
 					<Route
-						path='student-settings'
+						path='settings'
 						element={<StudentSettings player={player} classroom={classroom} user={user} />}
 					/>
 					<Route path='forum/*' element={<ForumView player={player} classroom={classroom} />} />

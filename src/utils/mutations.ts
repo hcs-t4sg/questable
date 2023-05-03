@@ -15,10 +15,18 @@ import {
 	Timestamp,
 	updateDoc,
 	where,
+	writeBatch,
 } from 'firebase/firestore'
-import { Classroom, CompletionTime, ForumPost, Item, Player } from '../types'
+import {
+	Classroom,
+	CompletionTime,
+	ForumPost,
+	Item,
+	Player,
+	CompletedTask,
+	RepeatableCompletion,
+} from '../types'
 import { db } from './firebase'
-
 export async function syncUsers(user: User) {
 	const userRef = doc(db, 'users', user.uid)
 	const data = {
@@ -34,6 +42,7 @@ export async function addClassroom(name: string, user: User) {
 		name: name,
 		playerList: [user.uid],
 		teacherList: [user.uid],
+		canEdit: true,
 		// studentList: [],
 	}
 	// NOTE: I made a slight change here. Instead of storing the teacher in the playersList,
@@ -277,6 +286,83 @@ export async function updatePlayer(
 	})
 }
 
+// Mutation to update Forum Post
+export async function updateForumPost(
+	updatedPost: {
+		title: string
+		content: string
+		postType: number
+	},
+	classroomID: string,
+	postID: string,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
+	await updateDoc(postRef, {
+		title: updatedPost.title,
+		content: updatedPost.content,
+		postType: updatedPost.postType,
+	})
+}
+
+export async function updateForumPostLikes(
+	classroomID: string,
+	postID: string,
+	likerID: string,
+	add: boolean,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
+	if (add) {
+		await updateDoc(postRef, {
+			likes: increment(1),
+			likers: arrayUnion(likerID),
+		})
+	} else {
+		await updateDoc(postRef, {
+			likes: increment(-1),
+			likers: arrayRemove(likerID),
+		})
+	}
+}
+
+export async function updateForumCommentLikes(
+	classroomID: string,
+	postID: string,
+	commentID: string,
+	likerID: string,
+	add: boolean,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`)
+	if (add) {
+		await updateDoc(postRef, {
+			likes: increment(1),
+			likers: arrayUnion(likerID),
+		})
+	} else {
+		await updateDoc(postRef, {
+			likes: increment(-1),
+			likers: arrayRemove(likerID),
+		})
+	}
+}
+
+export async function updateForumPostPinned(
+	classroomID: string,
+	postID: string,
+	commentID: string,
+	add: boolean,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
+	if (add) {
+		await updateDoc(postRef, {
+			pinnedComments: arrayUnion(commentID),
+		})
+	} else {
+		await updateDoc(postRef, {
+			pinnedComments: arrayRemove(commentID),
+		})
+	}
+}
+
 // Mutation to delete tasks
 export async function deleteTask(classroomID: string, taskID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`))
@@ -284,6 +370,16 @@ export async function deleteTask(classroomID: string, taskID: string) {
 // Mutation to delete repeatable
 export async function deleteRepeatable(classroomID: string, repeatableID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`))
+}
+
+// Mutation to delete forum posts
+export async function deleteForumPost(classroomID: string, postID: string) {
+	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}`))
+}
+
+// Mutation to delete forum comments
+export async function deleteForumComment(classroomID: string, postID: string, commentID: string) {
+	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`))
 }
 
 export async function completeTask(classroomID: string, taskID: string, playerID: string) {
@@ -300,6 +396,18 @@ export async function completeTask(classroomID: string, taskID: string, playerID
 	// Add completion timestamp
 	await setDoc(docRef, {
 		time: serverTimestamp(),
+	})
+}
+
+export async function UnsendTask(classroomID: string, taskID: string, playerID: string) {
+	// Remove `playerID` from assigned array
+
+	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
+		assigned: arrayUnion(playerID),
+	})
+	// Add `playerID` to completed array
+	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
+		completed: arrayRemove(playerID),
 	})
 }
 
@@ -518,6 +626,34 @@ export async function denyTask(classID: string, studentID: string, taskID: strin
 			assigned: arrayUnion(studentID),
 		})
 	}
+}
+
+export async function confirmAllTasks(tasks: CompletedTask[], classID: string) {
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		// console.error("Could not find classroom")
+		return 'Could not find classroom'
+	}
+
+	const batch = writeBatch(db)
+	for (const i in tasks) {
+		const taskRef = doc(db, `classrooms/${classID}/tasks/${tasks[i].id}`)
+		const taskSnap = await getDoc(taskRef)
+		if (taskSnap.exists()) {
+			batch.update(taskRef, {
+				completed: arrayRemove(tasks[i].player.id),
+				confirmed: arrayUnion(tasks[i].player.id),
+			})
+		}
+		const playerRef = doc(db, `classrooms/${classID}/players/${tasks[i].player.id}`)
+		const playerSnap = await getDoc(playerRef)
+		if (playerSnap.exists() && taskSnap.exists()) {
+			batch.update(playerRef, { money: increment(taskSnap.data().reward) })
+		}
+	}
+
+	await batch.commit()
 }
 
 export async function purchaseItem(classID: string, studentID: string, item: Item) {
@@ -756,6 +892,88 @@ export async function confirmRepeatable(
 	})
 }
 
+export async function confirmAllRepeatables(tasks: RepeatableCompletion[], classID: string) {
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		// console.error("Could not find classroom")
+		return 'Could not find classroom'
+	}
+
+	const batch = writeBatch(db)
+
+	for (const i in tasks) {
+		const playerID = tasks[i].player.id
+		const repeatableID = tasks[i].repeatable.id
+		const completionTimeID = tasks[i].id
+
+		await refreshRepeatable(classID, playerID, repeatableID)
+		const repeatableRef = doc(db, `classrooms/${classID}/repeatables/${repeatableID}`)
+		const repeatableSnap = await getDoc(repeatableRef)
+		if (!repeatableSnap.exists()) {
+			return Error('Repeatable not found')
+		}
+
+		const completionTimeRef = doc(
+			db,
+			`classrooms/${classID}/repeatables/${repeatableID}/completionTimes/${completionTimeID}`,
+		)
+
+		const completionTimeSnap = await getDoc(completionTimeRef)
+		if (!completionTimeSnap.exists()) {
+			return Error('Corresponding completion time not found')
+		}
+
+		if (completionTimeSnap.data().time.toDate() >= lastSunday()) {
+			// increment confirmations
+			const confirmationsRef = doc(
+				db,
+				`classrooms/${classID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`,
+			)
+			const confirmationsSnap = await getDoc(confirmationsRef)
+			if (confirmationsSnap.exists()) {
+				batch.update(confirmationsRef, { confirmations: increment(1) })
+			} else {
+				batch.set(confirmationsRef, { confirmations: 1 })
+			}
+
+			// decrement completions
+			const completionsRef = doc(
+				db,
+				`classrooms/${classID}/repeatables/${repeatableID}/playerCompletions/${playerID}`,
+			)
+			const completionsSnap = await getDoc(completionsRef)
+			if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
+				batch.update(completionsRef, { completions: increment(-1) })
+			}
+		}
+
+		const playerRef = doc(db, `classrooms/${classID}/players/${playerID}`)
+		const playerSnap = await getDoc(playerRef)
+		if (playerSnap.exists()) {
+			batch.update(playerRef, { money: increment(repeatableSnap.data().reward) })
+		}
+
+		const streaksRef = doc(
+			db,
+			`classrooms/${classID}/repeatables/${repeatableID}/streaks/${playerID}`,
+		)
+		const streaksSnap = await getDoc(streaksRef)
+		if (!streaksSnap.exists()) {
+			batch.set(streaksRef, { streaks: 1 })
+		} else {
+			batch.update(streaksRef, { streak: increment(1) })
+		}
+
+		batch.delete(completionTimeRef)
+
+		// Decrement the requestCount variable
+		batch.update(repeatableRef, { requestCount: increment(-1) })
+	}
+
+	await batch.commit()
+}
+
 // Helper function to get last sunday 11:59 in current timezone
 function lastSunday() {
 	const date = new Date()
@@ -872,6 +1090,7 @@ export async function addForumPost(
 		postType: 0 | 1 | 2 | 3
 		content: string
 		author: Player
+		anonymous: 0 | 1
 	},
 	classroom: Classroom,
 ) {
@@ -883,6 +1102,9 @@ export async function addForumPost(
 		author: thread.author.id,
 		postTime: serverTimestamp(),
 		likes: 0,
+		anonymous: thread.anonymous,
+		likers: [],
+		pinnedComments: [],
 	})
 	console.log('Successfully Added Thread')
 }
@@ -904,5 +1126,6 @@ export async function addComment(
 		content: comment.content,
 		likes: 0,
 		postTime: serverTimestamp(),
+		likers: [],
 	})
 }

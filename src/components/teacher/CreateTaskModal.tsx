@@ -13,6 +13,9 @@ import * as React from 'react'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { addRepeatable, addTask } from '../../utils/mutations'
+import modules from '../../utils/TextEditor'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
 function containsOnlyNumbers(str: string) {
 	return /^\d+$/.test(str)
@@ -60,7 +63,7 @@ export default function CreateTaskModal({
 	const handleOpen = () => {
 		setOpen(true)
 		setName('')
-		setDueDate(new Date())
+		setDueDate(null)
 		setDescription('')
 		setReward(10)
 		setMaxCompletions('1')
@@ -114,6 +117,11 @@ export default function CreateTaskModal({
 
 			if (!dueDate) {
 				enqueueSnackbar('You need to provide a due date', { variant: 'error' })
+				return
+			}
+
+			if (dueDate < new Date()) {
+				enqueueSnackbar('You cannot set a due date in the past!', { variant: 'error' })
 				return
 			}
 
@@ -194,7 +202,7 @@ export default function CreateTaskModal({
 						value={name}
 						onChange={(event) => setName(event.target.value)}
 					/>
-					<TextField
+					{/* <TextField
 						margin='normal'
 						id='description'
 						label='Description'
@@ -205,14 +213,23 @@ export default function CreateTaskModal({
 						maxRows={8}
 						value={description}
 						onChange={(event) => setDescription(event.target.value)}
+					/> */}
+					<ReactQuill
+						style={{ width: '100%' }}
+						placeholder='Description'
+						theme='snow'
+						modules={modules}
+						onChange={setDescription}
 					/>
 					<BoxInModal>
 						{/* either show a due date option or max completions based on if task is repeatable */}
 						{!isRepeatable ? (
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
 								<DateTimePicker
+									sx={{ width: '30%' }}
 									label='Due Date'
 									value={dueDate}
+									minDateTime={new Date()}
 									onChange={(value) => setDueDate(value)}
 								/>
 							</LocalizationProvider>
