@@ -118,7 +118,7 @@ export default function CreateGCRTask({
 		const classroomList = await getCourses()
 		console.log(classroomList.courses)
 		setClassrooms(classroomList.courses)
-		if (classroomList.length == 0) {
+		if (classroomList.length == 0 || typeof classroomList.courses == 'undefined') {
 			window.alert('Oops, classrooms not found! Try logging into Google in Settings first!')
 			return false
 		} else {
@@ -261,7 +261,7 @@ export default function CreateGCRTask({
 						</FormControl>
 					</BoxInModal>
 					{tasks == 'loading' ? (
-						<Loading>Loading Tasks</Loading>
+						<Loading>Loading Tasks...</Loading>
 					) : tasks == null ? null : (
 						<BoxInModal>
 							<FormControl fullWidth>

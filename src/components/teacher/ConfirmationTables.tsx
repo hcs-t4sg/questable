@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 import { useState, useEffect } from 'react'
 import ConfirmRepeatablesTable from './ConfirmRepeatablesTable'
 import ConfirmTasksTable from './ConfirmTasksTable'
-import { Classroom, CompletedTask, RepeatableCompletion, Repeatable } from '../../types'
+import { Classroom, CompletedTask, RepeatableCompletion, Repeatable, Player } from '../../types'
 import { useSnackbar } from 'notistack'
 import {
 	confirmAllTasks,
@@ -17,10 +17,16 @@ import {
 } from '../../utils/mutations'
 // import { truncate } from '../../utils/helperFunctions'
 
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 
-export default function ConfirmationTables({ classroom }: { classroom: Classroom }) {
+export default function ConfirmationTables({
+	classroom,
+	player,
+}: {
+	classroom: Classroom
+	player: Player
+}) {
 	const [page, setPage] = useState(0)
 	const [completedTasks, setCompletedTasks] = useState<CompletedTask[] | null>(null)
 	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[] | null>(
@@ -28,11 +34,26 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 	)
 
 	const { enqueueSnackbar } = useSnackbar()
+	const [token, setToken] = useState('')
 
 	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
 		setPage(newTabIndex)
 	}
 	useEffect(() => {
+		// repeated code - context thing eventually?
+		const tokenRef = doc(db, 'users', player.id)
+		const fetchToken = async () => {
+			const getToken = await getDoc(tokenRef)
+
+			if (getToken.exists()) {
+				const tokenData = getToken.data()
+				setToken(tokenData.gcrToken)
+				console.log(token)
+			} else {
+				window.alert('Log into Google on the Settings page!')
+			}
+		}
+		fetchToken()
 		if (page == 0) {
 			const completedTasksQuery = query(
 				collection(db, `classrooms/${classroom.id}/tasks`),
@@ -119,7 +140,7 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 
 			return unsub
 		}
-	}, [classroom, page])
+	}, [classroom, page, token])
 
 	const handleConfirmAll = () => {
 		if (completedTasks && page == 0) {
@@ -149,6 +170,38 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 		}
 	}
 
+	async function getStudents(courseID: string) {
+		console.log(token)
+		const response = fetch(`https://classroom.googleapis.com/v1/courses/${courseID}/students`, {
+			// mode: 'no-cors',
+			method: 'GET',
+			// credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		console.log(response)
+		return (await response).json()
+	}
+
+	async function processGCRTasks(courseID: string) {
+		// give selection screen for which google classroom task?
+		const students = await getStudents(courseID)
+		console.log(students)
+		if (students.error) {
+			window.alert('Oops, try logging into Google in Settings first!')
+		} else {
+			const studentList = students.students
+			console.log(studentList)
+			// save profile section of array
+		}
+	}
+
+	// if (completedTasks) {
+	// 	const GCRTasks = completedTasks.filter((task) => task.gcrID != '')
+	// }
+
 	return (
 		<Grid item xs={12}>
 			<Typography variant='h4'>Tasks/Repeatables Awaiting Confirmation</Typography>
@@ -157,9 +210,18 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 					<Tab label='One Time' />
 					<Tab label='Repeatable' />
 				</Tabs>
-				<Button sx={{ mb: 2 }} color='primary' onClick={() => handleConfirmAll()}>
-					Confirm All
-				</Button>
+				<Grid container columnSpacing={1} justifyContent='right' maxWidth={500}>
+					<Grid item>
+						<Button sx={{ mb: 2 }} color='primary' onClick={() => handleConfirmAll()}>
+							Confirm All
+						</Button>
+					</Grid>
+					<Grid item>
+						<Button sx={{ mb: 2 }} color='primary' onClick={() => processGCRTasks('604301409202')}>
+							Confirm Google Classroom Tasks
+						</Button>
+					</Grid>
+				</Grid>
 			</Stack>
 
 			{page === 0 ? (
