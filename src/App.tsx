@@ -169,8 +169,7 @@ export default function App() {
 							position: 'fixed',
 							top: 65,
 							bottom: 0,
-							overflowX: 'hidden',
-							overflowY: 'hidden',
+							overflowY: 'auto',
 						}}
 					>
 						{currentUser.data ? (
