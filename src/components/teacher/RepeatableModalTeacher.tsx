@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-// import CloseIcon from '@mui/icons-material/Close'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -15,7 +14,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 
 import {
-	TaskModalBox,
+	TaskModalContent,
 	ModalTitle,
 	BoxInModal,
 	TeacherModalStyled,
@@ -129,52 +128,11 @@ export default function RepeatableModalTeacher({
 			<IconButton onClick={handleClickOpen}>
 				<EditIcon />
 			</IconButton>
-			<TeacherModalStyled
-				// sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-				open={open}
-				onClose={handleClose}
-			>
-				{/* <Box
-					sx={{
-						width: '60%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-						padding: '40px',
-						paddingTop: '40px',
-						backgroundColor: 'white',
-						marginBottom: '18px',
-					}}
-				> */}
-				<TaskModalBox>
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-						}}
-					>
-						<Typography fontWeight='light' variant='h5'>
-							Overview
-						</Typography>
-						<IconButton onClick={handleClose}>
-							<CloseIcon />
-						</IconButton>
-					</Box>
-					<hr
-						style={{
-							backgroundColor: '#D9D9D9',
-							height: '1px',
-							borderWidth: '0px',
-							borderRadius: '5px',
-							width: '100%',
-							marginBottom: '10px',
-						}}
-					/> */}
+			<TeacherModalStyled open={open} onClose={handleClose}>
+				<TaskModalContent>
 					<ModalTitle onClick={handleClose} text='Overview' />
-					<form
+					<Box
+						component='form'
 						onSubmit={(e) => {
 							handleEdit()
 							e.preventDefault()
@@ -192,21 +150,7 @@ export default function RepeatableModalTeacher({
 							}}
 							onChange={(event) => setName(event.target.value)}
 						/>
-						{/* <TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						placeholder=''
-						multiline
-						maxRows={8}
-						value={description}
-						InputProps={{
-							readOnly: !isEditing,
-						}}
-						onChange={(event) => setDescription(event.target.value)}
-					/> */}
+
 						<ReactQuill
 							theme='snow'
 							style={{ width: '100%' }}
@@ -216,15 +160,6 @@ export default function RepeatableModalTeacher({
 							readOnly={!isEditing}
 						/>
 
-						{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
 						<BoxInModal>
 							<TextField
 								type='number'
@@ -249,21 +184,12 @@ export default function RepeatableModalTeacher({
 							/>
 							{/* </Box> */}
 						</BoxInModal>
-						{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
+
 						<BoxInModal>
 							<Typography
 								sx={{ ml: -2 }}
 								variant='body1'
 							>{`Reward: ${repeatable.reward}g (cannot be edited)`}</Typography>
-							{/* </Box> */}
 						</BoxInModal>
 						<br />
 						<Grid container justifyContent='right'>
@@ -277,7 +203,6 @@ export default function RepeatableModalTeacher({
 							<Button
 								onClick={handleDelete}
 								sx={{ display: isEditing ? 'block' : 'none' }}
-								// variant='contained'
 								color='error'
 							>
 								Delete
@@ -298,9 +223,8 @@ export default function RepeatableModalTeacher({
 								Save Changes
 							</Button>
 						</Grid>
-					</form>
-					{/* </Box> */}
-				</TaskModalBox>
+					</Box>
+				</TaskModalContent>
 			</TeacherModalStyled>
 		</Box>
 	)

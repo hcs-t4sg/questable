@@ -1,6 +1,6 @@
 // import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
-import { Box, Grid, IconButton, Modal, Typography } from '@mui/material'
+import { Box, Grid, IconButton, Dialog, Typography } from '@mui/material'
 import { ModalTitle, StudentBoxInModal, StudentTaskModalBox } from '../../styles/TaskModalStyles'
 import { Assignment } from '../../types'
 import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
@@ -84,20 +84,7 @@ export function AssignmentContentStudent({
 			<IconButton onClick={toggleIsOpen}>
 				<OpenInNewIcon />
 			</IconButton>
-			<Modal
-				sx={{
-					position: 'fixed',
-					display: 'flex',
-					justifyContent: 'center',
-					top: '0',
-					left: '0',
-					width: '100%',
-					height: '100%',
-					overflowY: 'auto',
-				}}
-				open={isOpen}
-				onClose={toggleIsOpen}
-			>
+			<Dialog open={isOpen} onClose={toggleIsOpen}>
 				<StudentTaskModalBox>
 					<ModalTitle onClick={toggleIsOpen} text={`${assignmentType} overview`} />
 					<Grid container spacing={2}>
@@ -112,7 +99,7 @@ export function AssignmentContentStudent({
 						</Grid>
 					</Grid>
 				</StudentTaskModalBox>
-			</Modal>
+			</Dialog>
 		</Box>
 	)
 }

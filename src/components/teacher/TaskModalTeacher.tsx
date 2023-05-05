@@ -1,10 +1,7 @@
-// import CloseIcon from '@mui/icons-material/Close'
-import { FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material'
-// import Box from '@mui/material/Box'
+import { FormControl, InputLabel, MenuItem, Select, Stack, Box } from '@mui/material'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
-// import Typography from '@mui/material/Typography'
 import EditIcon from '@mui/icons-material/Edit'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
@@ -17,7 +14,7 @@ import 'react-quill/dist/quill.snow.css'
 import {
 	BoxInModal,
 	ModalTitle,
-	TaskModalBox,
+	TaskModalContent,
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
 import { Classroom, Task } from '../../types'
@@ -115,52 +112,11 @@ export default function TaskModalTeacher({
 	return (
 		<div>
 			{openButton}
-			<TeacherModalStyled
-				// sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-				open={open}
-				onClose={handleClose}
-			>
-				{/* <Box
-					sx={{
-						width: '40%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-						padding: '40px',
-						paddingTop: '40px',
-						backgroundColor: 'white',
-						marginBottom: '18px',
-					}}
-				> */}
-				<TaskModalBox>
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-						}}
-					>
-						<Typography fontWeight='light' variant='h5'>
-							Overview
-						</Typography>
-						<IconButton onClick={handleClose}>
-							<CloseIcon />
-						</IconButton>
-					</Box>
-					<hr
-						style={{
-							backgroundColor: '#D9D9D9',
-							height: '1px',
-							borderWidth: '0px',
-							borderRadius: '5px',
-							width: '100%',
-							marginBottom: '10px',
-						}}
-					/> */}
+			<TeacherModalStyled open={open} onClose={handleClose}>
+				<TaskModalContent>
 					<ModalTitle onClick={handleClose} text='Overview' />
-					<form
+					<Box
+						component='form'
 						onSubmit={(e) => {
 							handleEdit()
 							e.preventDefault()
@@ -175,26 +131,6 @@ export default function TaskModalTeacher({
 							value={name}
 							onChange={(event) => setName(event.target.value)}
 						/>
-						{/* <TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						placeholder=''
-						multiline
-						maxRows={8}
-						value={description}
-						onChange={(event) => setDescription(event.target.value)}
-					/> */}
-						{/* <CKEditor
-						editor={ClassicEditor}
-						data={task.description}
-						onChange={(_event, editor) => {
-							const data = editor.getData()
-							setDescription(data)
-						}}
-					/> */}
 						<ReactQuill
 							theme='snow'
 							style={{ width: '100%' }}
@@ -203,36 +139,18 @@ export default function TaskModalTeacher({
 							onChange={setDescription}
 						/>
 
-						{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
 						<BoxInModal>
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
 								<DateTimePicker
 									label='Due Date'
 									value={date}
-									sx={{ width: '40%', ml: -2 }}
+									sx={{ width: '60%', ml: -2 }}
 									minDateTime={new Date()}
 									onChange={(newValue) => setDate(newValue)}
 								/>
 							</LocalizationProvider>
-							{/* </Box> */}
 						</BoxInModal>
-						{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
+
 						<BoxInModal>
 							<FormControl sx={{ ml: -2 }} fullWidth>
 								<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
@@ -262,9 +180,8 @@ export default function TaskModalTeacher({
 								Delete Task
 							</Button>
 						</Stack>
-					</form>
-				</TaskModalBox>
-				{/* </Box> */}
+					</Box>
+				</TaskModalContent>
 			</TeacherModalStyled>
 		</div>
 	)

@@ -1,10 +1,17 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
+import {
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	Tab,
+	Tabs,
+	DialogActions,
+	Box,
+} from '@mui/material'
 import Button from '@mui/material/Button'
-import DialogActions from '@mui/material/DialogActions'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
-// import Typography from '@mui/material/Typography'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -37,8 +44,8 @@ function maxCompletionsIsInvalid(maxCompletions: string) {
 import {
 	BoxInModal,
 	ModalTitle,
-	TaskModalBox,
 	TeacherModalStyled,
+	TaskModalContent,
 } from '../../styles/TaskModalStyles'
 import { useSnackbar } from 'notistack'
 
@@ -188,50 +195,12 @@ export default function CreateTaskModal({
 		<div>
 			{openButton}
 			<TeacherModalStyled open={open} onClose={handleClose}>
-				{/* <Box
-					sx={{
-						width: '40%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-						padding: '40px',
-						paddingTop: '40px',
-						backgroundColor: 'white',
-						marginBottom: '18px',
-					}}
-				> */}
-				<TaskModalBox>
-					<ModalTitle onClick={handleClose} text='Create Task' />
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-						}}
-					>
-						<Typography fontWeight='light' variant='h5'>
-							Create Task
-						</Typography>
-						<IconButton onClick={handleClose}>
-							<CloseIcon />
-						</IconButton>
-					</Box>
+				<ModalTitle onClick={handleClose} text='Create Task' />
 
-					<hr
-						style={{
-							backgroundColor: '#D9D9D9',
-							height: '1px',
-							borderWidth: '0px',
-							borderRadius: '5px',
-							width: '100%',
-							marginBottom: '10px',
-						}}
-					/> */}
-
-					{repeatableButton}
-					<form
+				{repeatableButton}
+				<TaskModalContent>
+					<Box
+						component='form'
 						onSubmit={(e) => {
 							handleAdd()
 							e.preventDefault()
@@ -246,18 +215,6 @@ export default function CreateTaskModal({
 							value={name}
 							onChange={(event) => setName(event.target.value)}
 						/>
-						{/* <TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						placeholder=''
-						multiline
-						maxRows={8}
-						value={description}
-						onChange={(event) => setDescription(event.target.value)}
-					/> */}
 						<ReactQuill
 							style={{ width: '100%' }}
 							placeholder='Description'
@@ -266,20 +223,11 @@ export default function CreateTaskModal({
 							onChange={setDescription}
 						/>
 						<BoxInModal>
-							{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
 							{/* either show a due date option or max completions based on if task is repeatable */}
 							{!isRepeatable ? (
 								<LocalizationProvider dateAdapter={AdapterDateFns}>
 									<DateTimePicker
-										sx={{ width: '40%', ml: -2 }}
+										sx={{ width: '60%', ml: -2 }}
 										label='Due Date'
 										value={dueDate}
 										minDateTime={new Date()}
@@ -309,16 +257,6 @@ export default function CreateTaskModal({
 								/>
 							)}
 						</BoxInModal>
-						{/* </Box> */}
-						{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
 						<BoxInModal>
 							<FormControl sx={{ ml: -2 }} fullWidth>
 								<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
@@ -342,9 +280,8 @@ export default function CreateTaskModal({
 						<Grid container justifyContent='center'>
 							{actionButtons}
 						</Grid>
-					</form>
-					{/* </Box> */}
-				</TaskModalBox>
+					</Box>
+				</TaskModalContent>
 			</TeacherModalStyled>
 		</div>
 	)
