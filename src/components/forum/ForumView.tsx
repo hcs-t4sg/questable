@@ -1,5 +1,5 @@
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import { Button, Grid, List, ListItem, ListItemButton, Typography } from '@mui/material'
+import { Button, Grid, List, ListItem, ListItemButton, Typography, Stack } from '@mui/material'
 import { useState } from 'react'
 import { Link, Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { Classroom, Player } from '../../types'
@@ -10,103 +10,95 @@ import ForumPostView from './ForumPostView'
 export default function ForumView({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [open, setOpen] = useState(false)
 	const [selectedCategory, setSelectedCategory] = useState<-1 | 0 | 1 | 2 | 3>(-1)
+	const categoryButtons = [
+		{
+			name: 'All Posts',
+			category: -1 as -1 | 0 | 1 | 2 | 3,
+		},
+		{
+			name: 'General',
+			category: 0 as -1 | 0 | 1 | 2 | 3,
+		},
+		{
+			name: 'Assignment',
+			category: 1 as -1 | 0 | 1 | 2 | 3,
+		},
+		{
+			name: 'For Fun',
+			category: 2 as -1 | 0 | 1 | 2 | 3,
+		},
+		{
+			name: 'Announcements',
+			category: 3 as -1 | 0 | 1 | 2 | 3,
+		},
+	]
+
+	const categoryList = (
+		<List>
+			<ListItem>
+				<Button onClick={() => setOpen(true)} variant='contained' disableElevation>
+					<EditOutlinedIcon />
+					New Post
+				</Button>
+			</ListItem>
+			<ListItem>
+				<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+					Categories
+				</Typography>
+			</ListItem>
+			{categoryButtons.map((cat) => (
+				<ListItem key={cat.name}>
+					<ListItemButton
+						component={Link}
+						to='posts'
+						onClick={() => setSelectedCategory(cat.category)}
+						selected={selectedCategory === cat.category}
+					>
+						{cat.name}
+					</ListItemButton>
+				</ListItem>
+			))}
+		</List>
+	)
+
+	const postCards = (
+		<Grid item xs={9.9}>
+			<Routes>
+				<Route path='/' element={<Navigate to='posts' />} />
+				<Route
+					path='posts'
+					element={
+						<ForumPostList
+							player={player}
+							classroom={classroom}
+							categoryFilter={selectedCategory}
+						/>
+					}
+				/>
+				<Route
+					path='/posts/:postID'
+					element={<ForumPostView player={player} classroom={classroom} />}
+				/>
+			</Routes>
+			<Outlet />
+			<CreateForumPostModal
+				player={player}
+				classroom={classroom}
+				onClose={() => setOpen(false)}
+				isOpen={open}
+			/>
+		</Grid>
+	)
 
 	return (
 		<>
 			<Grid item xs={12}>
 				<Typography variant='h2'>Forum</Typography>
 				<h5>Post questions or comments in the class discussion below!</h5>
-			</Grid>
-			<Grid item xs={2.1}>
-				<List>
-					<ListItem>
-						<Button onClick={() => setOpen(true)} variant='contained' disableElevation>
-							<EditOutlinedIcon />
-							New Post
-						</Button>
-					</ListItem>
-					<ListItem>
-						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							Categories
-						</Typography>
-					</ListItem>
-					<ListItem>
-						<ListItemButton
-							component={Link}
-							to='posts'
-							onClick={() => setSelectedCategory(-1)}
-							selected={selectedCategory === -1}
-						>
-							All Posts
-						</ListItemButton>
-					</ListItem>
-					<ListItem>
-						<ListItemButton
-							component={Link}
-							to='posts'
-							onClick={() => setSelectedCategory(0)}
-							selected={selectedCategory === 0}
-						>
-							General
-						</ListItemButton>
-					</ListItem>
-					<ListItem>
-						<ListItemButton
-							component={Link}
-							to='posts'
-							onClick={() => setSelectedCategory(1)}
-							selected={selectedCategory === 1}
-						>
-							Assignment
-						</ListItemButton>
-					</ListItem>
-					<ListItem>
-						<ListItemButton
-							component={Link}
-							to='posts'
-							onClick={() => setSelectedCategory(2)}
-							selected={selectedCategory === 2}
-						>
-							For Fun
-						</ListItemButton>
-					</ListItem>
-					<ListItem>
-						<ListItemButton
-							component={Link}
-							to='posts'
-							onClick={() => setSelectedCategory(3)}
-							selected={selectedCategory === 3}
-						>
-							Announcements
-						</ListItemButton>
-					</ListItem>
-				</List>
-			</Grid>
-			<Grid item xs={9.9}>
-				<Routes>
-					<Route path='/' element={<Navigate to='posts' />} />
-					<Route
-						path='posts'
-						element={
-							<ForumPostList
-								player={player}
-								classroom={classroom}
-								categoryFilter={selectedCategory}
-							/>
-						}
-					/>
-					<Route
-						path='/posts/:postID'
-						element={<ForumPostView player={player} classroom={classroom} />}
-					/>
-				</Routes>
-				<Outlet />
-				<CreateForumPostModal
-					player={player}
-					classroom={classroom}
-					onClose={() => setOpen(false)}
-					isOpen={open}
-				/>
+				<Stack direction='row'>
+					{categoryList}
+					{postCards}
+				</Stack>
 			</Grid>
 		</>
 	)
