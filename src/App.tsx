@@ -106,7 +106,7 @@ export default function App() {
 			<SnackbarProvider maxSnack={3}>
 				<Box sx={{ display: 'flex' }}>
 					<CssBaseline />
-					<AppBar position='absolute'>
+					<AppBar sx={{ height: 65 }} position='fixed'>
 						<Toolbar
 							sx={{
 								pr: '24px', // keep right padding when drawer closed
@@ -163,20 +163,34 @@ export default function App() {
 							</Button>
 						</Toolbar>
 					</AppBar>
-					{currentUser.data ? (
-						/* Navigation routes set by react router. This is placed in
+					<Box
+						sx={{
+							width: '100%',
+							position: 'fixed',
+							top: 65,
+							bottom: 0,
+							overflowX: 'hidden',
+							overflowY: 'hidden',
+						}}
+					>
+						{currentUser.data ? (
+							/* Navigation routes set by react router. This is placed in
           app.js rather than index.js so we can pass relevant top-level
           props to the elements */
-						<Routes>
-							<Route path='/' element={<Home user={currentUser.data} />} />
-							<Route path='settings' element={<Settings />} />
-							<Route path='class/:classID/*' element={<ClassroomPage user={currentUser.data} />} />
-							{/* Catch-all route for any URLs that don't match an existing route */}
-							<Route path='*' element={<Error message={'This page does not exist.'} />} />
-						</Routes>
-					) : (
-						<SignInScreen></SignInScreen>
-					)}
+							<Routes>
+								<Route path='/' element={<Home user={currentUser.data} />} />
+								<Route path='settings' element={<Settings />} />
+								<Route
+									path='class/:classID/*'
+									element={<ClassroomPage user={currentUser.data} />}
+								/>
+								{/* Catch-all route for any URLs that don't match an existing route */}
+								<Route path='*' element={<Error message={'This page does not exist.'} />} />
+							</Routes>
+						) : (
+							<SignInScreen></SignInScreen>
+						)}
+					</Box>
 				</Box>
 			</SnackbarProvider>
 		</ThemeProvider>

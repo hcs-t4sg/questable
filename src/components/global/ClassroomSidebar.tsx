@@ -48,7 +48,7 @@ export default function ClassroomSidebar({ role }: { role: UserRole }) {
 	}
 
 	return (
-		<Drawer variant='permanent' open={open}>
+		<Drawer sx={{ zIndex: (theme) => theme.zIndex.appBar - 1 }} variant='permanent' open={open}>
 			<Toolbar />
 			<Toolbar
 				sx={{
