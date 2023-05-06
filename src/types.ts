@@ -13,8 +13,10 @@ export interface Task extends Assignment {
 	completed: string[]
 	confirmed: string[]
 	due: Timestamp
+	gcrCourseID?: string
 	gcrID?: string
 	gcrName?: string
+	gcrUserId?: string
 }
 
 export interface TaskWithStatus extends Task {

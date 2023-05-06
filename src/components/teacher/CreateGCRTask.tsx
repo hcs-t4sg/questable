@@ -166,6 +166,7 @@ export default function CreateGCRTask({
 			description,
 			reward,
 			due: Timestamp.fromDate(dueDate),
+			gcrCourseID: classID,
 			gcrID: taskID,
 			gcrName: taskName,
 		}

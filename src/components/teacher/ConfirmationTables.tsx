@@ -14,6 +14,7 @@ import {
 	getPlayerData,
 	getPlayerTaskCompletion,
 	getRepeatableCompletionTimes,
+	getUserData,
 } from '../../utils/mutations'
 // import { truncate } from '../../utils/helperFunctions'
 
@@ -32,9 +33,10 @@ export default function ConfirmationTables({
 	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[] | null>(
 		null,
 	)
+	const [token, setToken] = useState('')
+	// const students: any[] = []
 
 	const { enqueueSnackbar } = useSnackbar()
-	const [token, setToken] = useState('')
 
 	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
 		setPage(newTabIndex)
@@ -173,9 +175,7 @@ export default function ConfirmationTables({
 	async function getStudents(courseID: string) {
 		console.log(token)
 		const response = fetch(`https://classroom.googleapis.com/v1/courses/${courseID}/students`, {
-			// mode: 'no-cors',
 			method: 'GET',
-			// credentials: 'include',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${token}`,
@@ -185,22 +185,75 @@ export default function ConfirmationTables({
 		return (await response).json()
 	}
 
-	async function processGCRTasks(courseID: string) {
-		// give selection screen for which google classroom task?
-		const students = await getStudents(courseID)
-		console.log(students)
-		if (students.error) {
-			window.alert('Oops, try logging into Google in Settings first!')
-		} else {
-			const studentList = students.students
-			console.log(studentList)
-			// save profile section of array
-		}
+	async function getSubmissions(courseId: string, courseWorkId: string) {
+		const response = fetch(
+			`https://classroom.googleapis.com/v1/courses/${courseId}/courseWork/${courseWorkId}/studentSubmissions`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+			},
+		)
+		console.log(response)
+		return (await response).json()
 	}
 
-	// if (completedTasks) {
-	// 	const GCRTasks = completedTasks.filter((task) => task.gcrID != '')
-	// }
+	async function processGCRTasks(courseID: string) {
+		// give selection screen for which google classroom task?
+		const gcrStudents = await getStudents(courseID)
+		console.log(gcrStudents)
+		if (gcrStudents.error) {
+			window.alert('Oops, try logging into Google in Settings first!')
+		} else {
+			const studentList = gcrStudents.students
+			console.log(studentList)
+			// save profile section of array
+
+			// https://stackoverflow.com/questions/12710905/how-do-i-dynamically-assign-properties-to-an-object-in-typescript
+			const students: { [key: string]: string } = {}
+			studentList.forEach((student: any) => {
+				students[student.profile.emailAddress] = student.profile.id
+			})
+
+			console.log(students)
+
+			if (completedTasks) {
+				// const GCRTasks = completedTasks.filter((task) => task.gcrID != ''
+				const tasksWithEmails = await Promise.allSettled(
+					completedTasks.map(async (task) => {
+						const playerData = await getUserData(task.player.id)
+						if (!playerData) {
+							throw new Error('Player not found')
+						}
+						const email = playerData.email
+						const gcrUserId = students[email]
+						if (!gcrUserId) {
+							throw new Error('GCR User ID not found')
+						}
+						return {
+							...task,
+							email,
+							gcrUserId,
+						}
+					}),
+				)
+				console.log(tasksWithEmails)
+				const newTasks = tasksWithEmails.map((task: any) => {
+					return task.value
+				})
+				console.log(newTasks)
+
+				newTasks.map(async (task) => {
+					if (task.gcrCourseID && task.gcrID && task.gcrUserId) {
+						const submissions = await getSubmissions(task.gcrCourseID, task.gcrID)
+						console.log(submissions)
+					}
+				})
+			}
+		}
+	}
 
 	return (
 		<Grid item xs={12}>

@@ -489,6 +489,7 @@ export async function addTask(
 		description: string
 		reward: number
 		due: Timestamp
+		gcrCourseID?: string
 		gcrID?: string
 		gcrName?: string
 	},
@@ -510,6 +511,7 @@ export async function addTask(
 		reward: task.reward,
 		created: serverTimestamp(),
 		due: task.due,
+		gcrCourseID: task.gcrCourseID,
 		gcrID: task.gcrID,
 		gcrName: task.gcrName,
 		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
