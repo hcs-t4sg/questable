@@ -15,6 +15,7 @@ import {
 	getPlayerTaskCompletion,
 	getRepeatableCompletionTimes,
 	getUserData,
+	confirmTask,
 } from '../../utils/mutations'
 // import { truncate } from '../../utils/helperFunctions'
 
@@ -34,7 +35,6 @@ export default function ConfirmationTables({
 		null,
 	)
 	const [token, setToken] = useState('')
-	// const students: any[] = []
 
 	const { enqueueSnackbar } = useSnackbar()
 
@@ -244,11 +244,23 @@ export default function ConfirmationTables({
 					return task.value
 				})
 				console.log(newTasks)
+				window.confirm('Confirm Google Classroom Tasks?')
 
 				newTasks.map(async (task) => {
+					console.log(task)
 					if (task.gcrCourseID && task.gcrID && task.gcrUserId) {
 						const submissions = await getSubmissions(task.gcrCourseID, task.gcrID)
 						console.log(submissions)
+						const submission = submissions.studentSubmissions.find(
+							(s: any) => s.userId == task.gcrUserId,
+						)
+						console.log(submission)
+						if (submission && submission.state == 'TURNED_IN') {
+							console.log(task)
+							// THIS DOESN'T WORK - LOOK INTO BATCHED WRITE THING?
+							confirmTask(classroom.id, task.player.id, task.id)
+							console.log('done')
+						}
 					}
 				})
 			}

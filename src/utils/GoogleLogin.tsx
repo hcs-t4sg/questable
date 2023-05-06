@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-import { Button, Typography } from '@mui/material'
+import { Button } from '@mui/material'
 import { SCOPES, clientID, clientSecret, googleProvider } from './google'
-import { useState } from 'react'
+// import { useState } from 'react'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from './firebase'
 import { User } from 'firebase/auth'
@@ -9,7 +9,7 @@ import { User } from 'firebase/auth'
 export let accessToken: any
 
 export default function GoogleLogin({ user }: { user: User }) {
-	const [isSignedIn, setIsSignedIn] = useState(false)
+	// const [isSignedIn, setIsSignedIn] = useState(false)
 	// const [email, setEmail] = useState('')
 
 	const fetchAccessTokens = async (authorizationCode: string) => {
@@ -43,7 +43,7 @@ export default function GoogleLogin({ user }: { user: User }) {
 		scope: SCOPES,
 		onSuccess: (res) => {
 			console.log('Logged in with google', res)
-			setIsSignedIn(true)
+			// setIsSignedIn(true)
 			fetchAccessTokens(res.code).catch(console.error)
 			console.log(res.code)
 		},
@@ -59,8 +59,8 @@ export default function GoogleLogin({ user }: { user: User }) {
 			>
 				Log into Google
 			</Button>
-			{/* how to check when access token is expired? */}
-			<Typography variant='body1'>{isSignedIn ? 'Signed in!' : 'Not signed in'}</Typography>
+			{/* This is confusing */}
+			{/* <Typography variant='body1'>{isSignedIn ? 'Signed in!' : 'Not signed in'}</Typography> */}
 		</>
 	)
 }
