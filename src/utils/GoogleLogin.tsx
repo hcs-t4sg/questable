@@ -5,12 +5,14 @@ import { SCOPES, clientID, clientSecret, googleProvider } from './google'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from './firebase'
 import { User } from 'firebase/auth'
+import { useSnackbar } from 'notistack'
 
 export let accessToken: any
 
 export default function GoogleLogin({ user }: { user: User }) {
 	// const [isSignedIn, setIsSignedIn] = useState(false)
 	// const [email, setEmail] = useState('')
+	const { enqueueSnackbar } = useSnackbar()
 
 	const fetchAccessTokens = async (authorizationCode: string) => {
 		const response = await fetch('https://oauth2.googleapis.com/token', {
@@ -44,7 +46,16 @@ export default function GoogleLogin({ user }: { user: User }) {
 		onSuccess: (res) => {
 			console.log('Logged in with google', res)
 			// setIsSignedIn(true)
-			fetchAccessTokens(res.code).catch(console.error)
+			fetchAccessTokens(res.code)
+				.then(() => {
+					enqueueSnackbar('Signed in!', { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an error signing in.', {
+						variant: 'error',
+					})
+				})
 			console.log(res.code)
 		},
 		onError: (err) => console.error('Failed to login with google', err),
