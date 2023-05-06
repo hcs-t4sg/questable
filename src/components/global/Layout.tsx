@@ -28,7 +28,11 @@ export default function Layout({
 					backgroundImage: `url(${background})`,
 					backgroundSize: 'cover',
 					flexGrow: 1,
-					height: '100vh',
+					top: 65,
+					position: 'fixed',
+					bottom: 0,
+					width: '100%',
+					// height: '100vh',
 					overflow: 'auto',
 					imageRendering: 'pixelated',
 				}}

@@ -49,7 +49,7 @@ export default function ClassroomSidebar({ role }: { role: UserRole }) {
 
 	return (
 		<Drawer
-			sx={{ zIndex: (theme) => theme.zIndex.appBar - 1, height: '100vh', overflowY: 'hidden' }}
+			sx={{ zIndex: (theme) => theme.zIndex.appBar - 1, height: '100vh' }}
 			variant='permanent'
 			open={open}
 		>
