@@ -85,7 +85,10 @@ export default function ForumPostList({
 
 	return (
 		<>
-			<Stack direction='row' sx={{ display: 'flex', justifyContent: 'space-between' }}>
+			<Stack
+				direction={!mobile ? 'row' : 'column'}
+				sx={{ display: 'flex', justifyContent: 'space-between' }}
+			>
 				<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
 					{categoryTitles[categoryFilter]}
 				</Typography>

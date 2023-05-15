@@ -1,7 +1,6 @@
-import { Box, Container } from '@mui/material'
+import { Box, Container, Toolbar } from '@mui/material'
 import React from 'react'
 import ClassroomSidebar from './ClassroomSidebar'
-import Toolbar from '@mui/material/Toolbar'
 import { UserRole } from '../../types'
 import background from '/src/assets/background.png'
 
