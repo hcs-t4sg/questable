@@ -45,10 +45,10 @@ export default function ConfirmationTables({
 		// repeated code - context thing eventually?
 		const tokenRef = doc(db, 'users', player.id)
 		const fetchToken = async () => {
-			const getToken = await getDoc(tokenRef)
+			const googleToken = await getDoc(tokenRef)
 
-			if (getToken.exists()) {
-				const tokenData = getToken.data()
+			if (googleToken.exists()) {
+				const tokenData = googleToken.data()
 				setToken(tokenData.gcrToken)
 				console.log(token)
 			} else {
@@ -172,21 +172,24 @@ export default function ConfirmationTables({
 		}
 	}
 
-	async function getStudents(courseID: string) {
+	async function getGCRStudents(courseID: string) {
 		console.log(token)
-		const response = fetch(`https://classroom.googleapis.com/v1/courses/${courseID}/students`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
+		const response = await fetch(
+			`https://classroom.googleapis.com/v1/courses/${courseID}/students`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
 			},
-		})
+		)
 		console.log(response)
-		return (await response).json()
+		return response.json()
 	}
 
-	async function getSubmissions(courseId: string, courseWorkId: string) {
-		const response = fetch(
+	async function getGCRSubmissions(courseId: string, courseWorkId: string) {
+		const response = await fetch(
 			`https://classroom.googleapis.com/v1/courses/${courseId}/courseWork/${courseWorkId}/studentSubmissions`,
 			{
 				method: 'GET',
@@ -197,74 +200,78 @@ export default function ConfirmationTables({
 			},
 		)
 		console.log(response)
-		return (await response).json()
+		return response.json()
 	}
 
 	async function processGCRTasks(courseID: string) {
 		// give selection screen for which google classroom task?
-		const gcrStudents = await getStudents(courseID)
+		const gcrStudents = await getGCRStudents(courseID)
 		console.log(gcrStudents)
+
 		if (gcrStudents.error) {
 			window.alert('Oops, try logging into Google in Settings first!')
-		} else {
-			const studentList = gcrStudents.students
-			console.log(studentList)
-			// save profile section of array
-
-			// https://stackoverflow.com/questions/12710905/how-do-i-dynamically-assign-properties-to-an-object-in-typescript
-			const students: { [key: string]: string } = {}
-			studentList.forEach((student: any) => {
-				students[student.profile.emailAddress] = student.profile.id
-			})
-
-			console.log(students)
-
-			if (completedTasks) {
-				// const GCRTasks = completedTasks.filter((task) => task.gcrID != ''
-				const tasksWithEmails = await Promise.allSettled(
-					completedTasks.map(async (task) => {
-						const playerData = await getUserData(task.player.id)
-						if (!playerData) {
-							throw new Error('Player not found')
-						}
-						const email = playerData.email
-						const gcrUserId = students[email]
-						if (!gcrUserId) {
-							throw new Error('GCR User ID not found')
-						}
-						return {
-							...task,
-							email,
-							gcrUserId,
-						}
-					}),
-				)
-				console.log(tasksWithEmails)
-				const newTasks = tasksWithEmails.map((task: any) => {
-					return task.value
-				})
-				console.log(newTasks)
-				window.confirm('Confirm Google Classroom Tasks?')
-
-				newTasks.map(async (task) => {
-					console.log(task)
-					if (task.gcrCourseID && task.gcrID && task.gcrUserId) {
-						const submissions = await getSubmissions(task.gcrCourseID, task.gcrID)
-						console.log(submissions)
-						const submission = submissions.studentSubmissions.find(
-							(s: any) => s.userId == task.gcrUserId,
-						)
-						console.log(submission)
-						if (submission && submission.state == 'TURNED_IN') {
-							console.log(task)
-							// THIS DOESN'T WORK - LOOK INTO BATCHED WRITE THING?
-							confirmTask(classroom.id, task.player.id, task.id)
-							console.log('done')
-						}
-					}
-				})
-			}
+			return
 		}
+
+		const studentList = gcrStudents.students
+		console.log(studentList)
+		// save profile section of array
+
+		// https://stackoverflow.com/questions/12710905/how-do-i-dynamically-assign-properties-to-an-object-in-typescript
+		const students: { [key: string]: string } = {}
+		studentList.forEach((student: any) => {
+			students[student.profile.emailAddress] = student.profile.id
+		})
+
+		console.log(students)
+
+		if (!completedTasks) {
+			return
+		}
+
+		// const GCRTasks = completedTasks.filter((task) => task.gcrID != ''
+		const augmentedTasks = await Promise.allSettled(
+			completedTasks.map(async (task) => {
+				const playerData = await getUserData(task.player.id)
+				if (!playerData) {
+					throw new Error('Player not found')
+				}
+				const email = playerData.email
+				const gcrUserId = students[email]
+				if (!gcrUserId) {
+					throw new Error('GCR User ID not found')
+				}
+				return {
+					...task,
+					email,
+					gcrUserId,
+				}
+			}),
+		)
+		console.log(augmentedTasks)
+		const gcrTasks = augmentedTasks.map((task: any) => {
+			return task.value
+		})
+		console.log(gcrTasks)
+		window.confirm('Confirm Google Classroom Tasks?')
+
+		gcrTasks.map(async (task) => {
+			console.log(task)
+			if (task.gcrCourseID && task.gcrID && task.gcrUserId) {
+				const submissions = await getGCRSubmissions(task.gcrCourseID, task.gcrID)
+				console.log(submissions)
+				const submission = submissions.studentSubmissions.find(
+					(s: any) => s.userId == task.gcrUserId,
+				)
+				console.log(submission)
+				if (submission?.state == 'TURNED_IN') {
+					console.log(task)
+					// THIS DOESN'T WORK - LOOK INTO BATCHED WRITE THING?
+					confirmTask(classroom.id, task.player.id, task.id)
+					console.log('done')
+				}
+			}
+		})
 	}
 
 	return (
@@ -275,6 +282,7 @@ export default function ConfirmationTables({
 					<Tab label='One Time' />
 					<Tab label='Repeatable' />
 				</Tabs>
+				{/* TODO this shouldn't need to be a grid container. Try using MUI stack instead */}
 				<Grid container columnSpacing={1} justifyContent='right' maxWidth={500}>
 					<Grid item>
 						<Button sx={{ mb: 2 }} color='primary' onClick={() => handleConfirmAll()}>
