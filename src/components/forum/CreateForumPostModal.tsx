@@ -101,7 +101,7 @@ export default function CreateForumPostModal({
 	}
 
 	return (
-		<TeacherModalStyled open={isOpen} onKeyDown={(e) => console.log(e.key)} onClose={handleClose}>
+		<TeacherModalStyled open={isOpen} onClose={handleClose}>
 			<ModalTitle onClick={handleClose} text='New Thread' />
 			<Box
 				onSubmit={(e) => {

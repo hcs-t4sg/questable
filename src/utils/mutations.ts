@@ -764,7 +764,7 @@ export async function denyRepeatable(
 
 // TODO Rewrite confirm and deny repeatable so that they don't have to refetch the completion time, as it should already be passed in in the confirmation table
 // Mutation to confirm repeatable completion
-export async function confirmRepeatables(tasks: RepeatableCompletion[], classID: string) {
+export async function confirmRepeatables(repeatables: RepeatableCompletion[], classID: string) {
 	const classroomRef = doc(db, 'classrooms', classID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {
@@ -774,11 +774,12 @@ export async function confirmRepeatables(tasks: RepeatableCompletion[], classID:
 
 	const batch = writeBatch(db)
 
-	for (const i in tasks) {
-		const playerID = tasks[i].player.id
-		const repeatableID = tasks[i].repeatable.id
-		const completionTimeID = tasks[i].id
+	for (const i in repeatables) {
+		const playerID = repeatables[i].player.id
+		const repeatableID = repeatables[i].repeatable.id
+		const completionTimeID = repeatables[i].id
 
+		// First refresh repeatable to obtain its most up to date version
 		await refreshRepeatable(classID, playerID, repeatableID)
 		const repeatableRef = doc(db, `classrooms/${classID}/repeatables/${repeatableID}`)
 		const repeatableSnap = await getDoc(repeatableRef)
@@ -786,16 +787,18 @@ export async function confirmRepeatables(tasks: RepeatableCompletion[], classID:
 			return Error('Repeatable not found')
 		}
 
+		// Get the corresponding completion time
 		const completionTimeRef = doc(
 			db,
 			`classrooms/${classID}/repeatables/${repeatableID}/completionTimes/${completionTimeID}`,
 		)
-
 		const completionTimeSnap = await getDoc(completionTimeRef)
 		if (!completionTimeSnap.exists()) {
 			return Error('Corresponding completion time not found')
 		}
 
+		// ! Time checking may not be accurate if lastSunday has not been rewritten
+		// Confirmation and completion augmentation should only occur for repeatable completions in the current refresh cycle
 		if (completionTimeSnap.data().time.toDate() >= lastSunday()) {
 			// increment confirmations
 			const confirmationsRef = doc(
@@ -826,6 +829,7 @@ export async function confirmRepeatables(tasks: RepeatableCompletion[], classID:
 			batch.update(playerRef, { money: increment(repeatableSnap.data().reward) })
 		}
 
+		// increment streaks
 		const streaksRef = doc(
 			db,
 			`classrooms/${classID}/repeatables/${repeatableID}/streaks/${playerID}`,
@@ -837,6 +841,7 @@ export async function confirmRepeatables(tasks: RepeatableCompletion[], classID:
 			batch.update(streaksRef, { streak: increment(1) })
 		}
 
+		// Remove the corresponding completion time
 		batch.delete(completionTimeRef)
 
 		// Decrement the requestCount variable
