@@ -132,7 +132,6 @@ export async function joinClassroom(classID: string, user: User) {
 		name: 'Adventurer',
 		role: 'student',
 		id: user.uid,
-		streak: 0,
 	})
 
 	return 'Successfully joined ' + classroomData.name + '!'

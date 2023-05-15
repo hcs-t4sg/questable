@@ -12,7 +12,6 @@ export interface Assignment {
 export interface Task extends Assignment {
 	completed: string[]
 	confirmed: string[]
-	canvasId?: string
 	due: Timestamp
 }
 
@@ -80,7 +79,6 @@ export interface Player {
 	name: string
 	role: UserRole
 	money: number | string
-	streak: number
 	avaBody?: number
 	avaHair?: number
 	avaShirt?: number
@@ -122,16 +120,6 @@ export interface PlayerWithEmail extends Player {
 	email: string
 }
 
-export interface CanvasAssignment {
-	id: string
-	name: string
-	description: string
-}
-
-export interface CanvasCourse {
-	id: string
-	name: string
-}
 export interface ForumPost {
 	id: string
 	title: string
