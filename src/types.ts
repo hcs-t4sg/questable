@@ -19,6 +19,13 @@ export interface Task extends Assignment {
 	gcrUserId?: string
 }
 
+// export interface GCRTask extends Task {
+// 	gcrCourseID?: string
+// 	gcrID?: string
+// 	gcrName?: string
+// 	gcrUserId?: string
+// }
+
 export interface TaskWithStatus extends Task {
 	status: 0 | 1 | 2 | 3
 }

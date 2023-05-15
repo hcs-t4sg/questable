@@ -50,9 +50,9 @@ export default function CreateGCRTask({
 	const [taskName, setTaskName] = useState('')
 
 	useEffect(() => {
+		// pay attention to dependency array - empty now
 		const tokenRef = doc(db, 'users', player.id)
 		const fetchToken = async () => {
-			// why is this outdated?
 			const getToken = await getDoc(tokenRef)
 
 			if (getToken.exists()) {
@@ -64,7 +64,7 @@ export default function CreateGCRTask({
 			}
 		}
 		fetchToken().catch(console.error)
-	}, [player])
+	}, [])
 
 	async function getCourses() {
 		// asking for variable before loaded (error upon refresh)

@@ -136,9 +136,9 @@ export default function CreateTaskModal({
 				description,
 				reward,
 				due: Timestamp.fromDate(dueDate),
-				gcrCourseID: '',
-				gcrID: '',
-				gcrName: '',
+				// gcrCourseID: '',
+				// gcrID: '',
+				// gcrName: '',
 			}
 
 			handleClose()

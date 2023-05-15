@@ -57,7 +57,7 @@ export default function ConfirmationTables({
 			}
 		}
 		fetchToken().catch(console.error)
-	}, [player])
+	}, [])
 
 	useEffect(() => {
 		if (page == 0) {
@@ -239,7 +239,6 @@ export default function ConfirmationTables({
 			console.log(students)
 
 			if (completedTasks) {
-				// const GCRTasks = completedTasks.filter((task) => task.gcrID != ''
 				const tasksWithEmails = await Promise.allSettled(
 					completedTasks.map(async (task) => {
 						const playerData = await getUserData(task.player.id)
@@ -264,7 +263,7 @@ export default function ConfirmationTables({
 				})
 				console.log(newTasks)
 
-				newTasks.map(async (task) => {
+				newTasks.forEach(async (task) => {
 					console.log(task)
 					if (task.gcrCourseID && task.gcrID && task.gcrUserId) {
 						const submissions = await getSubmissions(task.gcrCourseID, task.gcrID)
