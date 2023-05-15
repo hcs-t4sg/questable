@@ -63,8 +63,8 @@ export default function CreateGCRTask({
 				window.alert('Log into Google on the Settings page!')
 			}
 		}
-		fetchToken()
-	})
+		fetchToken().catch(console.error)
+	}, [player])
 
 	async function getCourses() {
 		// asking for variable before loaded (error upon refresh)
@@ -116,7 +116,7 @@ export default function CreateGCRTask({
 		const classrooms = await getCourses()
 		console.log(classrooms.courses)
 		setClassrooms(classrooms.courses)
-		if (classrooms.courses.length == 0 || typeof classrooms.courses == 'undefined') {
+		if (typeof classrooms.courses == 'undefined' || classrooms.courses.length == 0) {
 			window.alert('Oops, classrooms not found! Try logging into Google in Settings first!')
 			return false
 		} else {
@@ -136,6 +136,7 @@ export default function CreateGCRTask({
 
 	const handleClick = async () => {
 		console.log(classroomList)
+		console.log(token)
 		if (!token) {
 			window.alert('Oops, classrooms not found! Try logging into Google in Settings first!')
 		} else {

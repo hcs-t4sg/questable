@@ -56,8 +56,8 @@ export default function ConfirmationTables({
 				window.alert('Log into Google on the Settings page!')
 			}
 		}
-		fetchToken()
-	})
+		fetchToken().catch(console.error)
+	}, [player])
 
 	useEffect(() => {
 		if (page == 0) {
@@ -307,11 +307,15 @@ export default function ConfirmationTables({
 								// get all GCR courses for the teacher
 								window.confirm('Confirm Google Classroom Tasks?')
 								const classrooms = await getCourses()
-								const courseIDs = classrooms.courses.map((course: any) => {
-									return course.id
-								})
-								console.log(courseIDs)
-								courseIDs.forEach((courseID: string) => processGCRTasks(courseID))
+								if (typeof classrooms.courses == 'undefined' || classrooms.courses.length == 0) {
+									window.alert('Oops, classrooms not found! Try logging into Google in Settings!')
+								} else {
+									const courseIDs = classrooms.courses.map((course: any) => {
+										return course.id
+									})
+									console.log(courseIDs)
+									courseIDs.forEach((courseID: string) => processGCRTasks(courseID))
+								}
 							}}
 						>
 							Confirm Google Classroom Tasks
