@@ -1,10 +1,6 @@
 import MuiAppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
+import { Box, Button, CssBaseline, Typography, Toolbar } from '@mui/material'
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import { useAuthUser } from '@react-query-firebase/auth'
 import { Link, Route, Routes } from 'react-router-dom'
 import './App.css'
@@ -100,6 +96,8 @@ export default function App() {
 			}
 		},
 	})
+
+	// const mobile = useMediaQuery('(max-width:400px)')
 
 	return (
 		<ThemeProvider theme={mdTheme}>

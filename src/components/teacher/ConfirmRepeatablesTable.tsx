@@ -61,7 +61,7 @@ export default function ConfirmRepeatablesTable({
 								{completion.player.name}
 							</TableCell>
 							<TableCell align='center'>
-								<Grid container columnSpacing={1}>
+								<Grid container rowSpacing={1} columnSpacing={1}>
 									<Grid item>
 										<Button
 											onClick={() =>

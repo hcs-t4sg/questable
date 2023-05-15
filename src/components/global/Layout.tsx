@@ -1,5 +1,4 @@
-import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
+import { Box, Container } from '@mui/material'
 import React from 'react'
 import ClassroomSidebar from './ClassroomSidebar'
 import Toolbar from '@mui/material/Toolbar'
@@ -11,6 +10,8 @@ export default function Layout({
 	classroom,
 	role,
 }: React.PropsWithChildren<{ classroom?: boolean; role?: UserRole }>) {
+	// const mobile = useMediaQuery('(max-width:400px)')
+
 	return (
 		<Box
 			sx={{
@@ -28,11 +29,7 @@ export default function Layout({
 					backgroundImage: `url(${background})`,
 					backgroundSize: 'cover',
 					flexGrow: 1,
-					top: 65,
-					position: 'fixed',
-					bottom: 0,
-					width: '100%',
-					// height: '100vh',
+					height: '100vh',
 					overflow: 'auto',
 					imageRendering: 'pixelated',
 				}}

@@ -1,8 +1,4 @@
-import { Tab, Tabs } from '@mui/material'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
+import { Tab, Tabs, Grid, Button, Stack, Typography, useMediaQuery } from '@mui/material'
 import { useState, useEffect } from 'react'
 import ConfirmRepeatablesTable from './ConfirmRepeatablesTable'
 import ConfirmTasksTable from './ConfirmTasksTable'
@@ -28,6 +24,8 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 	)
 
 	const { enqueueSnackbar } = useSnackbar()
+
+	const mobile = useMediaQuery('(max-width:400px)')
 
 	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
 		setPage(newTabIndex)
@@ -151,13 +149,19 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 
 	return (
 		<Grid item xs={12}>
-			<Typography variant='h4'>Tasks/Repeatables Awaiting Confirmation</Typography>
+			<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
+				Tasks/Repeatables Awaiting Confirmation
+			</Typography>
 			<Stack direction='row' sx={{ justifyContent: 'space-between', display: 'flex' }}>
 				<Tabs value={page} onChange={handleTabChange}>
-					<Tab label='One Time' />
-					<Tab label='Repeatable' />
+					<Tab sx={{ fontSize: '14px' }} label='One Time' />
+					<Tab sx={{ fontSize: '14px' }} label='Repeatable' />
 				</Tabs>
-				<Button sx={{ mb: 2 }} color='primary' onClick={() => handleConfirmAll()}>
+				<Button
+					sx={{ mb: 2, fontSize: !mobile ? '14px' : '6px' }}
+					color='primary'
+					onClick={() => handleConfirmAll()}
+				>
 					Confirm All
 				</Button>
 			</Stack>

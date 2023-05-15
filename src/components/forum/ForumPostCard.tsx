@@ -7,6 +7,7 @@ import {
 	Typography,
 	Stack,
 	IconButton,
+	useMediaQuery,
 } from '@mui/material'
 import { useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -68,10 +69,15 @@ export default function ForumPostCard({
 		})
 	}
 
+	const mobile = useMediaQuery('(max-width:400px')
+
 	const cardContent = (
-		<CardContent>
+		<CardContent sx={{ overflow: 'scroll' }}>
 			<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
-				<Typography variant='h5' sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>
+				<Typography
+					variant='h5'
+					sx={{ fontWeight: 'bold', paddingBottom: '10px', fontSize: !mobile ? '20px' : '10px' }}
+				>
 					{forumPost.title}
 				</Typography>
 
@@ -119,10 +125,17 @@ export default function ForumPostCard({
 				>
 					<Avatar outfit={currentAvatar(forumPost.author)} />
 				</Box>
-				<Typography gutterBottom variant='subtitle2' sx={{ marginBottom: 0, marginRight: '5px' }}>
+				<Typography
+					gutterBottom
+					variant='subtitle2'
+					sx={{ marginBottom: 0, marginRight: '5px', fontSize: !mobile ? '13px' : '6px' }}
+				>
 					{forumPost.anonymous ? 'Anonymous' : forumPost.author.name}
 				</Typography>
-				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
+				<Typography
+					variant='caption'
+					style={{ fontStyle: 'italic', fontSize: !mobile ? '13px' : '6px' }}
+				>
 					{forumPost.postTime ? format(forumPost.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
 				</Typography>
 			</Box>
