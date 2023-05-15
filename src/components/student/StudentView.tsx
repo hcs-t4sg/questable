@@ -1,6 +1,5 @@
 import { Box, Grid, Typography, linearProgressClasses } from '@mui/material'
 import LinearProgress from '@mui/material/LinearProgress'
-// import LinearProgress from '@mui/joy/LinearProgress'
 import { styled } from '@mui/material/styles'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import ClassStudent from '../../routes/student/ClassStudent'

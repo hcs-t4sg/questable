@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import CreateTaskModal from '../../components/teacher/CreateTaskModal'
 import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
-import CanvasAssignmentModal from '../../components/teacher/CanvasAssignmentModal'
 
 import { Tab, Tabs } from '@mui/material'
 import RepeatableTableTeacher from '../../components/teacher/RepeatableTableTeacher'
@@ -45,7 +44,6 @@ export default function Tasks({ player, classroom }: { player: Player; classroom
 			<Grid item xs={12}>
 				<Typography variant='h4'>Create a New Task</Typography>
 				<CreateTaskModal classroom={classroom} player={player} />
-				<CanvasAssignmentModal classroom={classroom} player={player} />
 			</Grid>
 
 			<Grid item xs={12}>

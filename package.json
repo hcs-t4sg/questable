@@ -7,7 +7,6 @@
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
 		"@mui/icons-material": "^5.11.11",
-		"@mui/joy": "^5.0.0-alpha.76",
 		"@mui/material": "^5.11.13",
 		"@mui/x-date-pickers": "^6.0.2",
 		"@react-query-firebase/auth": "^1.0.0-dev.2",

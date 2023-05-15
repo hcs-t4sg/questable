@@ -130,7 +130,9 @@ export default function ClassStudent({
 						</Table>
 					</TableContainer>
 				</Grid>
-			) : null}
+			) : (
+				<Loading>Loading class leaderboard...</Loading>
+			)}
 			{students ? (
 				students.map((student) => (
 					<Card sx={{ width: 0.22, m: 2 }} key={student.id}>

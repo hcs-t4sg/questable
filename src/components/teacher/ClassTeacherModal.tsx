@@ -79,6 +79,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import { levelUp } from '../../utils/helperFunctions'
+import { useSnackbar } from 'notistack'
 
 export default function ClassTeacherModal({
 	player,
@@ -87,6 +88,8 @@ export default function ClassTeacherModal({
 	player: PlayerWithEmail
 	classroom: Classroom
 }) {
+	const { enqueueSnackbar } = useSnackbar()
+
 	const [open, setOpen] = useState(false)
 
 	const toggleOpen = () => {
@@ -110,6 +113,7 @@ export default function ClassTeacherModal({
 
 		updatePlayer(player.id, classroom.id, newPlayer).catch(console.error)
 		handleClose()
+		enqueueSnackbar(`Updated player "${player.name}"!`)
 	}
 
 	const [openEdit, setOpenEdit] = useState(false)
@@ -161,6 +165,7 @@ export default function ClassTeacherModal({
 						onChange={(event) => setMoney(event.target.value)}
 					/>
 					<DialogActions>
+						{/* TODO make this a form so that it submits on enter */}
 						<Button onClick={handleClose}>Cancel</Button>
 						<Button variant='contained' onClick={() => handleEdit()}>
 							Edit
