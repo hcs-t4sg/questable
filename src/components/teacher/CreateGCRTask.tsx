@@ -64,7 +64,7 @@ export default function CreateGCRTask({
 			}
 		}
 		fetchToken()
-	}, [token])
+	})
 
 	async function getCourses() {
 		// asking for variable before loaded (error upon refresh)
@@ -72,9 +72,7 @@ export default function CreateGCRTask({
 			// loadClient()
 
 			const response = fetch('https://classroom.googleapis.com/v1/courses/', {
-				// mode: 'no-cors',
 				method: 'GET',
-				// credentials: 'include',
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`,
@@ -115,10 +113,10 @@ export default function CreateGCRTask({
 		// 	loadClient()
 		// 	setClientLoaded(true)
 		// }
-		const classroomList = await getCourses()
-		console.log(classroomList.courses)
-		setClassrooms(classroomList.courses)
-		if (classroomList.length == 0 || typeof classroomList.courses == 'undefined') {
+		const classrooms = await getCourses()
+		console.log(classrooms.courses)
+		setClassrooms(classrooms.courses)
+		if (classrooms.courses.length == 0 || typeof classrooms.courses == 'undefined') {
 			window.alert('Oops, classrooms not found! Try logging into Google in Settings first!')
 			return false
 		} else {

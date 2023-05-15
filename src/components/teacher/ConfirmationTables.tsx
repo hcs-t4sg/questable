@@ -41,6 +41,7 @@ export default function ConfirmationTables({
 	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
 		setPage(newTabIndex)
 	}
+
 	useEffect(() => {
 		// repeated code - context thing eventually?
 		const tokenRef = doc(db, 'users', player.id)
@@ -56,6 +57,9 @@ export default function ConfirmationTables({
 			}
 		}
 		fetchToken()
+	})
+
+	useEffect(() => {
 		if (page == 0) {
 			const completedTasksQuery = query(
 				collection(db, `classrooms/${classroom.id}/tasks`),
@@ -142,7 +146,7 @@ export default function ConfirmationTables({
 
 			return unsub
 		}
-	}, [classroom, page, token])
+	}, [classroom, page])
 
 	const handleConfirmAll = () => {
 		if (completedTasks && page == 0) {
@@ -169,6 +173,22 @@ export default function ConfirmationTables({
 						variant: 'error',
 					})
 				})
+		}
+	}
+
+	async function getCourses() {
+		// asking for variable before loaded (error upon refresh)
+		if (token) {
+			const response = fetch('https://classroom.googleapis.com/v1/courses/', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			console.log(response)
+
+			return (await response).json()
 		}
 	}
 
@@ -201,7 +221,6 @@ export default function ConfirmationTables({
 	}
 
 	async function processGCRTasks(courseID: string) {
-		// give selection screen for which google classroom task?
 		const gcrStudents = await getStudents(courseID)
 		console.log(gcrStudents)
 		if (gcrStudents.error) {
@@ -244,7 +263,6 @@ export default function ConfirmationTables({
 					return task.value
 				})
 				console.log(newTasks)
-				window.confirm('Confirm Google Classroom Tasks?')
 
 				newTasks.map(async (task) => {
 					console.log(task)
@@ -257,7 +275,6 @@ export default function ConfirmationTables({
 						console.log(submission)
 						if (submission && submission.state == 'TURNED_IN') {
 							console.log(task)
-							// THIS DOESN'T WORK - LOOK INTO BATCHED WRITE THING?
 							confirmTask(classroom.id, task.player.id, task.id)
 							console.log('done')
 						}
@@ -275,6 +292,7 @@ export default function ConfirmationTables({
 					<Tab label='One Time' />
 					<Tab label='Repeatable' />
 				</Tabs>
+				{/* STACK MAKES ONE BUTTON MUCH BIGGER THAN OTHER */}
 				<Grid container columnSpacing={1} justifyContent='right' maxWidth={500}>
 					<Grid item>
 						<Button sx={{ mb: 2 }} color='primary' onClick={() => handleConfirmAll()}>
@@ -282,7 +300,20 @@ export default function ConfirmationTables({
 						</Button>
 					</Grid>
 					<Grid item>
-						<Button sx={{ mb: 2 }} color='primary' onClick={() => processGCRTasks('604301409202')}>
+						<Button
+							sx={{ mb: 2 }}
+							color='primary'
+							onClick={async () => {
+								// get all GCR courses for the teacher
+								window.confirm('Confirm Google Classroom Tasks?')
+								const classrooms = await getCourses()
+								const courseIDs = classrooms.courses.map((course: any) => {
+									return course.id
+								})
+								console.log(courseIDs)
+								courseIDs.forEach((courseID: string) => processGCRTasks(courseID))
+							}}
+						>
 							Confirm Google Classroom Tasks
 						</Button>
 					</Grid>
