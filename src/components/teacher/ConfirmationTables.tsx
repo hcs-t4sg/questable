@@ -9,8 +9,8 @@ import ConfirmTasksTable from './ConfirmTasksTable'
 import { Classroom, CompletedTask, RepeatableCompletion, Repeatable } from '../../types'
 import { useSnackbar } from 'notistack'
 import {
-	confirmAllTasks,
-	confirmAllRepeatables,
+	confirmTasks,
+	confirmRepeatables,
 	getPlayerData,
 	getPlayerTaskCompletion,
 	getRepeatableCompletionTimes,
@@ -123,7 +123,7 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 
 	const handleConfirmAll = () => {
 		if (completedTasks && page == 0) {
-			confirmAllTasks(completedTasks, classroom.id)
+			confirmTasks(completedTasks, classroom.id)
 				.then(() => {
 					enqueueSnackbar('All tasks confirmed', { variant: 'success' })
 				})
@@ -136,7 +136,7 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 		}
 
 		if (completedRepeatables && page != 0) {
-			confirmAllRepeatables(completedRepeatables, classroom.id)
+			confirmRepeatables(completedRepeatables, classroom.id)
 				.then(() => {
 					enqueueSnackbar('All tasks confirmed', { variant: 'success' })
 				})

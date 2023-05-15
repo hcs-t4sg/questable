@@ -123,10 +123,9 @@ export interface ForumPost {
 	title: string
 	content: string
 	postTime: Timestamp
-	likes: number
 	author: Player
 	postType: 0 | 1 | 2 | 3
-	anonymous: 0 | 1
+	anonymous: boolean
 	likers: Array<string>
 	pinnedComments: Array<string>
 }
@@ -135,7 +134,6 @@ export interface Comment {
 	id: string
 	content: string
 	author: string
-	likes: number
 	postTime: Timestamp
 	likers: Array<string>
 }

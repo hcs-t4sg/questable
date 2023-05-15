@@ -22,6 +22,9 @@ import EditForumPostModal from './EditForumPostModal'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import Chip from '@mui/material/Chip'
 
+import createDOMPurify from 'dompurify'
+const DOMPurify = createDOMPurify(window)
+
 export default function ForumPostCard({
 	forumPost,
 	isLink,
@@ -80,7 +83,7 @@ export default function ForumPostCard({
 							handleLike(forumPost)
 							e.preventDefault()
 						}}
-						label={forumPost.likes}
+						label={forumPost.likers.length}
 					/>
 					{(player.role === 'teacher' ||
 						(forumPost.author.id === player.id && classroom.canEdit)) && (
@@ -107,33 +110,6 @@ export default function ForumPostCard({
 					)}
 				</Stack>
 			</Stack>
-			{/* 
-				<Stack direction='column'>
-					<IconButton onClick={() => handleLike(forumPost)}>
-						<FavoriteIcon
-							sx={{
-								color: !forumPost.likers
-									? 'black'
-									: forumPost.likers.includes(player.id)
-									? 'red'
-									: 'black',
-							}}
-						/>
-					</IconButton>
-					<Typography variant='h6'>{forumPost.likes}</Typography>
-				</Stack>
-
-				{(player.role === 'teacher' ||
-					(forumPost.author.id === player.id && classroom.canEdit)) && (
-					<Stack direction='row'>
-						<IconButton onClick={() => setOpen(true)}>
-							<EditIcon></EditIcon>
-						</IconButton>
-						<IconButton>
-							<DeleteIcon onClick={() => handleDelete(forumPost)}></DeleteIcon>
-						</IconButton>
-					</Stack>
-				)} */}
 			<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
 				<Box
 					sx={{
@@ -144,14 +120,14 @@ export default function ForumPostCard({
 					<Avatar outfit={currentAvatar(forumPost.author)} />
 				</Box>
 				<Typography gutterBottom variant='subtitle2' sx={{ marginBottom: 0, marginRight: '5px' }}>
-					{forumPost.anonymous == 1 ? 'Anonymous' : forumPost.author.name}
+					{forumPost.anonymous ? 'Anonymous' : forumPost.author.name}
 				</Typography>
 				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
 					{forumPost.postTime ? format(forumPost.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
 				</Typography>
 			</Box>
 			<Divider sx={{ margin: '10px 0' }} />
-			<div dangerouslySetInnerHTML={{ __html: forumPost.content }} />
+			<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(forumPost.content) }} />
 
 			{/* <Typography variant='body2'>{forumPost.content}</Typography> */}
 		</CardContent>

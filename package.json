@@ -3,7 +3,6 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
-		"@ckeditor/ckeditor5-build-classic": "^37.0.1",
 		"@date-io/date-fns": "^2.16.0",
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
@@ -23,6 +22,7 @@
 		"@types/react": "^18.0.27",
 		"@types/react-dom": "^18.0.11",
 		"date-fns": "^2.29.3",
+		"dompurify": "^3.0.2",
 		"firebase": "^9.18.0",
 		"firebaseui": "^6.0.1",
 		"fuse.js": "^6.6.2",
@@ -65,6 +65,7 @@
 		]
 	},
 	"devDependencies": {
+		"@types/dompurify": "^3.0.2",
 		"@types/lodash": "^4.14.191",
 		"@types/react-responsive-spritesheet": "^1.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.55.0",

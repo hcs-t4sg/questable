@@ -313,12 +313,10 @@ export async function updateForumPostLikes(
 	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
 	if (add) {
 		await updateDoc(postRef, {
-			likes: increment(1),
 			likers: arrayUnion(likerID),
 		})
 	} else {
 		await updateDoc(postRef, {
-			likes: increment(-1),
 			likers: arrayRemove(likerID),
 		})
 	}
@@ -334,12 +332,10 @@ export async function updateForumCommentLikes(
 	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`)
 	if (add) {
 		await updateDoc(postRef, {
-			likes: increment(1),
 			likers: arrayUnion(likerID),
 		})
 	} else {
 		await updateDoc(postRef, {
-			likes: increment(-1),
 			likers: arrayRemove(likerID),
 		})
 	}
@@ -399,7 +395,7 @@ export async function completeTask(classroomID: string, taskID: string, playerID
 	})
 }
 
-export async function UnsendTask(classroomID: string, taskID: string, playerID: string) {
+export async function unsendTask(classroomID: string, taskID: string, playerID: string) {
 	// Remove `playerID` from assigned array
 
 	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
@@ -580,51 +576,7 @@ export async function addRepeatable(
 		})
 }
 
-// Remove player ID from completed array and add to confirmed array.
-export async function confirmTask(classID: string, studentID: string, taskID: string) {
-	const classroomRef = doc(db, 'classrooms', classID)
-	const classroomSnap = await getDoc(classroomRef)
-	if (!classroomSnap.exists()) {
-		return 'Could not find classroom'
-	}
-
-	const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`)
-	const taskSnap = await getDoc(taskRef)
-	if (taskSnap.exists()) {
-		updateDoc(taskRef, {
-			completed: arrayRemove(studentID),
-			confirmed: arrayUnion(studentID),
-		})
-	}
-
-	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
-	const playerSnap = await getDoc(playerRef)
-	if (playerSnap.exists() && taskSnap.exists()) {
-		updateDoc(playerRef, {
-			money: parseInt(playerSnap.data().money + taskSnap.data().reward),
-		})
-	}
-}
-
-// Remove player ID from completed array and add to assigned array.
-export async function denyTask(classID: string, studentID: string, taskID: string) {
-	const classroomRef = doc(db, 'classrooms', classID)
-	const classroomSnap = await getDoc(classroomRef)
-	if (!classroomSnap.exists()) {
-		// console.error("Could not find classroom")
-		return 'Could not find classroom'
-	}
-	const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`)
-	const taskSnap = await getDoc(taskRef)
-	if (taskSnap.exists()) {
-		updateDoc(taskRef, {
-			completed: arrayRemove(studentID),
-			assigned: arrayUnion(studentID),
-		})
-	}
-}
-
-export async function confirmAllTasks(tasks: CompletedTask[], classID: string) {
+export async function confirmTasks(tasks: CompletedTask[], classID: string) {
 	const classroomRef = doc(db, 'classrooms', classID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {
@@ -650,6 +602,24 @@ export async function confirmAllTasks(tasks: CompletedTask[], classID: string) {
 	}
 
 	await batch.commit()
+}
+
+// Remove player ID from completed array and add to assigned array.
+export async function denyTask(classID: string, studentID: string, taskID: string) {
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		// console.error("Could not find classroom")
+		return 'Could not find classroom'
+	}
+	const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`)
+	const taskSnap = await getDoc(taskRef)
+	if (taskSnap.exists()) {
+		updateDoc(taskRef, {
+			completed: arrayRemove(studentID),
+			assigned: arrayUnion(studentID),
+		})
+	}
 }
 
 export async function purchaseItem(classID: string, studentID: string, item: Item) {
@@ -794,101 +764,7 @@ export async function denyRepeatable(
 
 // TODO Rewrite confirm and deny repeatable so that they don't have to refetch the completion time, as it should already be passed in in the confirmation table
 // Mutation to confirm repeatable completion
-export async function confirmRepeatable(
-	classroomID: string,
-	playerID: string,
-	repeatableID: string,
-	completionTimeID: string,
-) {
-	// First refresh repeatable to obtain its most up to date version
-	await refreshRepeatable(classroomID, playerID, repeatableID)
-
-	console.log('confirming repeatable')
-	const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
-	const repeatableSnap = await getDoc(repeatableRef)
-
-	if (!repeatableSnap.exists()) {
-		return Error('Repeatable not found')
-	}
-
-	// Get the corresponding completion time
-	const completionTimeRef = doc(
-		db,
-		`classrooms/${classroomID}/repeatables/${repeatableID}/completionTimes/${completionTimeID}`,
-	)
-	const completionTimeSnap = await getDoc(completionTimeRef)
-	if (!completionTimeSnap.exists()) {
-		return Error('Corresponding completion time not found')
-	}
-
-	// ! Time checking may not be accurate if lastSunday has not been rewritten
-	// Confirmation and completion augmentation should only occur for repeatable completions in the current refresh cycle
-	// ! Potential for confirmations and completions to fall out of sync here if completion is made at the exact moment of the refresh cycle turnover. Add a failsafe to maintain confirmations and completions? Or think more deeply about this logic?
-	if (completionTimeSnap.data().time.toDate() >= lastSunday()) {
-		// increment confirmations
-		const confirmationsRef = doc(
-			db,
-			`classrooms/${classroomID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`,
-		)
-		const confirmationsSnap = await getDoc(confirmationsRef)
-		if (confirmationsSnap.exists()) {
-			updateDoc(confirmationsRef, {
-				confirmations: increment(1),
-			})
-		} else {
-			setDoc(confirmationsRef, {
-				confirmations: 1,
-			})
-		}
-
-		// decrement completions
-		const completionsRef = doc(
-			db,
-			`classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`,
-		)
-		const completionsSnap = await getDoc(completionsRef)
-		if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
-			updateDoc(completionsRef, {
-				completions: increment(-1),
-			})
-		}
-	}
-
-	// increment money
-	const playerRef = doc(db, `classrooms/${classroomID}/players/${playerID}`)
-	const playerSnap = await getDoc(playerRef)
-	if (playerSnap.exists()) {
-		updateDoc(playerRef, {
-			money: playerSnap.data().money + repeatableSnap.data().reward,
-		})
-	}
-
-	// increment streaks
-	const streaksRef = doc(
-		db,
-		`classrooms/${classroomID}/repeatables/${repeatableID}/streaks/${playerID}`,
-	)
-	const streaksSnap = await getDoc(streaksRef)
-	if (!streaksSnap.exists()) {
-		setDoc(streaksRef, {
-			streak: 1,
-		})
-	} else {
-		updateDoc(streaksRef, {
-			streak: increment(1),
-		})
-	}
-
-	// Remove the corresponding completion time
-	deleteDoc(completionTimeRef)
-
-	// Decrement the requestCount variable
-	updateDoc(repeatableRef, {
-		requestCount: increment(-1),
-	})
-}
-
-export async function confirmAllRepeatables(tasks: RepeatableCompletion[], classID: string) {
+export async function confirmRepeatables(repeatables: RepeatableCompletion[], classID: string) {
 	const classroomRef = doc(db, 'classrooms', classID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {
@@ -898,11 +774,12 @@ export async function confirmAllRepeatables(tasks: RepeatableCompletion[], class
 
 	const batch = writeBatch(db)
 
-	for (const i in tasks) {
-		const playerID = tasks[i].player.id
-		const repeatableID = tasks[i].repeatable.id
-		const completionTimeID = tasks[i].id
+	for (const i in repeatables) {
+		const playerID = repeatables[i].player.id
+		const repeatableID = repeatables[i].repeatable.id
+		const completionTimeID = repeatables[i].id
 
+		// First refresh repeatable to obtain its most up to date version
 		await refreshRepeatable(classID, playerID, repeatableID)
 		const repeatableRef = doc(db, `classrooms/${classID}/repeatables/${repeatableID}`)
 		const repeatableSnap = await getDoc(repeatableRef)
@@ -910,16 +787,18 @@ export async function confirmAllRepeatables(tasks: RepeatableCompletion[], class
 			return Error('Repeatable not found')
 		}
 
+		// Get the corresponding completion time
 		const completionTimeRef = doc(
 			db,
 			`classrooms/${classID}/repeatables/${repeatableID}/completionTimes/${completionTimeID}`,
 		)
-
 		const completionTimeSnap = await getDoc(completionTimeRef)
 		if (!completionTimeSnap.exists()) {
 			return Error('Corresponding completion time not found')
 		}
 
+		// ! Time checking may not be accurate if lastSunday has not been rewritten
+		// Confirmation and completion augmentation should only occur for repeatable completions in the current refresh cycle
 		if (completionTimeSnap.data().time.toDate() >= lastSunday()) {
 			// increment confirmations
 			const confirmationsRef = doc(
@@ -950,6 +829,7 @@ export async function confirmAllRepeatables(tasks: RepeatableCompletion[], class
 			batch.update(playerRef, { money: increment(repeatableSnap.data().reward) })
 		}
 
+		// increment streaks
 		const streaksRef = doc(
 			db,
 			`classrooms/${classID}/repeatables/${repeatableID}/streaks/${playerID}`,
@@ -961,6 +841,7 @@ export async function confirmAllRepeatables(tasks: RepeatableCompletion[], class
 			batch.update(streaksRef, { streak: increment(1) })
 		}
 
+		// Remove the corresponding completion time
 		batch.delete(completionTimeRef)
 
 		// Decrement the requestCount variable
@@ -1086,7 +967,7 @@ export async function addForumPost(
 		postType: 0 | 1 | 2 | 3
 		content: string
 		author: Player
-		anonymous: 0 | 1
+		anonymous: boolean
 	},
 	classroom: Classroom,
 ) {
@@ -1097,7 +978,6 @@ export async function addForumPost(
 		content: thread.content,
 		author: thread.author.id,
 		postTime: serverTimestamp(),
-		likes: 0,
 		anonymous: thread.anonymous,
 		likers: [],
 		pinnedComments: [],
@@ -1120,7 +1000,6 @@ export async function addComment(
 	await addDoc(commentRef, {
 		author: comment.author.id,
 		content: comment.content,
-		likes: 0,
 		postTime: serverTimestamp(),
 		likers: [],
 	})

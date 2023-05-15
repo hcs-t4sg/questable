@@ -1,10 +1,17 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
+import {
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	Tab,
+	Tabs,
+	DialogActions,
+	Box,
+} from '@mui/material'
 import Button from '@mui/material/Button'
-import DialogActions from '@mui/material/DialogActions'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
-// import Typography from '@mui/material/Typography'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -37,8 +44,8 @@ function maxCompletionsIsInvalid(maxCompletions: string) {
 import {
 	BoxInModal,
 	ModalTitle,
-	TaskModalBox,
 	TeacherModalStyled,
+	TaskModalContent,
 } from '../../styles/TaskModalStyles'
 import { useSnackbar } from 'notistack'
 
@@ -178,7 +185,7 @@ export default function CreateTaskModal({
 
 	const actionButtons = (
 		<DialogActions>
-			<Button variant='contained' onClick={handleAdd}>
+			<Button variant='contained' type='submit'>
 				Add Task
 			</Button>
 		</DialogActions>
@@ -188,156 +195,93 @@ export default function CreateTaskModal({
 		<div>
 			{openButton}
 			<TeacherModalStyled open={open} onClose={handleClose}>
-				{/* <Box
-					sx={{
-						width: '40%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-						padding: '40px',
-						paddingTop: '40px',
-						backgroundColor: 'white',
-						marginBottom: '18px',
-					}}
-				> */}
-				<TaskModalBox>
-					<ModalTitle onClick={handleClose} text='Create Task' />
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
+				<ModalTitle onClick={handleClose} text='Create Task' />
+
+				{repeatableButton}
+				<TaskModalContent>
+					<Box
+						component='form'
+						onSubmit={(e) => {
+							handleAdd()
+							e.preventDefault()
 						}}
 					>
-						<Typography fontWeight='light' variant='h5'>
-							Create Task
-						</Typography>
-						<IconButton onClick={handleClose}>
-							<CloseIcon />
-						</IconButton>
-					</Box>
-
-					<hr
-						style={{
-							backgroundColor: '#D9D9D9',
-							height: '1px',
-							borderWidth: '0px',
-							borderRadius: '5px',
-							width: '100%',
-							marginBottom: '10px',
-						}}
-					/> */}
-
-					{repeatableButton}
-
-					<TextField
-						margin='normal'
-						id='name'
-						label={isRepeatable ? 'Repeatable Name' : 'Task Name'}
-						fullWidth
-						variant='standard'
-						value={name}
-						onChange={(event) => setName(event.target.value)}
-					/>
-					{/* <TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						placeholder=''
-						multiline
-						maxRows={8}
-						value={description}
-						onChange={(event) => setDescription(event.target.value)}
-					/> */}
-					<ReactQuill
-						style={{ width: '100%' }}
-						placeholder='Description'
-						theme='snow'
-						modules={modules}
-						onChange={setDescription}
-					/>
-					<BoxInModal>
-						{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
-						{/* either show a due date option or max completions based on if task is repeatable */}
-						{!isRepeatable ? (
-							<LocalizationProvider dateAdapter={AdapterDateFns}>
-								<DateTimePicker
-									sx={{ width: '30%' }}
-									label='Due Date'
-									value={dueDate}
-									minDateTime={new Date()}
-									onChange={(value) => setDueDate(value)}
+						<TextField
+							margin='normal'
+							id='name'
+							label={isRepeatable ? 'Repeatable Name' : 'Task Name'}
+							fullWidth
+							variant='standard'
+							value={name}
+							onChange={(event) => setName(event.target.value)}
+						/>
+						<ReactQuill
+							style={{ width: '100%' }}
+							placeholder='Description'
+							theme='snow'
+							modules={modules}
+							onChange={setDescription}
+						/>
+						<BoxInModal>
+							{/* either show a due date option or max completions based on if task is repeatable */}
+							{!isRepeatable ? (
+								<LocalizationProvider dateAdapter={AdapterDateFns}>
+									<DateTimePicker
+										sx={{ width: '60%', ml: -2 }}
+										label='Due Date'
+										value={dueDate}
+										minDateTime={new Date()}
+										onChange={(value) => setDueDate(value)}
+									/>
+								</LocalizationProvider>
+							) : (
+								<TextField
+									type='number'
+									sx={{ ml: -2 }}
+									margin='normal'
+									id='description'
+									label='Max Completions'
+									fullWidth
+									variant='standard'
+									placeholder=''
+									multiline
+									maxRows={8}
+									value={maxCompletions}
+									error={maxCompletionsIsInvalid(maxCompletions)}
+									helperText={
+										maxCompletionsIsInvalid(maxCompletions)
+											? 'Max completions must be a positive integer'
+											: null
+									}
+									onChange={(event) => setMaxCompletions(event.target.value)}
 								/>
-							</LocalizationProvider>
-						) : (
-							<TextField
-								type='number'
-								margin='normal'
-								id='description'
-								label='Max Completions'
-								fullWidth
-								variant='standard'
-								placeholder=''
-								multiline
-								maxRows={8}
-								value={maxCompletions}
-								error={maxCompletionsIsInvalid(maxCompletions)}
-								helperText={
-									maxCompletionsIsInvalid(maxCompletions)
-										? 'Max completions must be a positive integer'
-										: null
-								}
-								onChange={(event) => setMaxCompletions(event.target.value)}
-							/>
-						)}
-					</BoxInModal>
-					{/* </Box> */}
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
-					<BoxInModal>
-						<FormControl fullWidth>
-							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
-							<Select
-								labelId='reward-dropdown'
-								id='reward-dropdown'
-								value={reward}
-								label='Reward'
-								onChange={(event) => setReward(event.target.value as number)}
-							>
-								<MenuItem value={10}>10g</MenuItem>
-								<MenuItem value={20}>20g</MenuItem>
-								<MenuItem value={30}>30g</MenuItem>
-								<MenuItem value={40}>40g</MenuItem>
-							</Select>
-						</FormControl>
-						{/* </Box> */}
-					</BoxInModal>
-					<br />
-					{/* center the save button */}
-					<Grid container justifyContent='center'>
-						{actionButtons}
-					</Grid>
-					{/* </Box> */}
-				</TaskModalBox>
+							)}
+						</BoxInModal>
+						<BoxInModal>
+							<FormControl sx={{ ml: -2 }} fullWidth>
+								<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
+								<Select
+									labelId='reward-dropdown'
+									id='reward-dropdown'
+									value={reward}
+									label='Reward'
+									onChange={(event) => setReward(event.target.value as number)}
+								>
+									<MenuItem value={10}>10g</MenuItem>
+									<MenuItem value={20}>20g</MenuItem>
+									<MenuItem value={30}>30g</MenuItem>
+									<MenuItem value={40}>40g</MenuItem>
+								</Select>
+							</FormControl>
+							{/* </Box> */}
+						</BoxInModal>
+						<br />
+						{/* center the save button */}
+						<Grid container justifyContent='center'>
+							{actionButtons}
+						</Grid>
+					</Box>
+				</TaskModalContent>
 			</TeacherModalStyled>
 		</div>
 	)

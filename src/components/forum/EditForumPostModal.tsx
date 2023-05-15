@@ -1,5 +1,5 @@
 import {
-	// Box,
+	Box,
 	Button,
 	DialogActions,
 	FormControl,
@@ -7,14 +7,11 @@ import {
 	MenuItem,
 	Select,
 } from '@mui/material'
-// import Dialog from '@mui/material/Dialog'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import { Classroom, Player, ForumPost } from '../../types'
 import { updateForumPost } from '../../utils/mutations'
-import { TaskModalBox, TeacherModalStyled } from '../../styles/TaskModalStyles'
+import { TeacherModalStyled, ModalTitle, TaskModalContent } from '../../styles/TaskModalStyles'
 import { useSnackbar } from 'notistack'
 import modules from '../../utils/TextEditor'
 import ReactQuill from 'react-quill'
@@ -97,31 +94,18 @@ export default function EditForumPostModal({
 			})
 	}
 
-	const submitButton = (
-		<DialogActions>
-			<Button variant='text' onClick={handleClose}>
-				Cancel
-			</Button>
-
-			{isDisabled ? (
-				<Button variant='contained' color='success' onClick={() => setIsDisabled(false)}>
-					Edit
-				</Button>
-			) : (
-				<Button variant='contained' color='success' onClick={handleSubmit}>
-					Submit
-				</Button>
-			)}
-		</DialogActions>
-	)
 	return (
 		<div>
-			{/* <Dialog open={isOpen}> */}
-			<TeacherModalStyled open={isOpen}>
-				<TaskModalBox>
-					<DialogTitle>Edit Thread</DialogTitle>
-					<DialogContent>
-						{/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
+			<TeacherModalStyled open={isOpen} onClose={handleClose}>
+				<ModalTitle onClick={handleClose} text='Edit Thread' />
+				<Box
+					component='form'
+					onSubmit={(e) => {
+						handleSubmit()
+						e.preventDefault()
+					}}
+				>
+					<TaskModalContent>
 						<TextField
 							margin='normal'
 							id='subject'
@@ -139,18 +123,6 @@ export default function EditForumPostModal({
 							modules={modules}
 							readOnly={isDisabled}
 						/>
-						{/* <TextField
-							margin='normal'
-							id='description'
-							label='Description'
-							fullWidth
-							variant='standard'
-							multiline
-							maxRows={8}
-							defaultValue={forumPost.content}
-							InputProps={{ readOnly: isDisabled }}
-							onChange={(event) => setDescription(event.target.value)}
-						/> */}
 						<FormControl fullWidth sx={{ marginTop: 2 }}>
 							<InputLabel id='category-label'>Category</InputLabel>
 							<Select
@@ -170,10 +142,26 @@ export default function EditForumPostModal({
 								<MenuItem value={3}>Announcements</MenuItem>
 							</Select>
 						</FormControl>
-					</DialogContent>
-					{submitButton}
-				</TaskModalBox>
-				{/* </Dialog> */}
+					</TaskModalContent>
+					<DialogActions sx={{ justifyContent: 'center' }}>
+						{isDisabled ? (
+							<Button
+								variant='contained'
+								color='success'
+								onClick={(event) => {
+									setIsDisabled(false)
+									event.preventDefault()
+								}}
+							>
+								Edit
+							</Button>
+						) : (
+							<Button variant='contained' color='success' type='submit'>
+								Submit
+							</Button>
+						)}
+					</DialogActions>
+				</Box>
 			</TeacherModalStyled>
 		</div>
 	)

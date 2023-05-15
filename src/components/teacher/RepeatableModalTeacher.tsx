@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-// import CloseIcon from '@mui/icons-material/Close'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -15,7 +14,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 
 import {
-	TaskModalBox,
+	TaskModalContent,
 	ModalTitle,
 	BoxInModal,
 	TeacherModalStyled,
@@ -129,167 +128,103 @@ export default function RepeatableModalTeacher({
 			<IconButton onClick={handleClickOpen}>
 				<EditIcon />
 			</IconButton>
-			<TeacherModalStyled
-				// sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-				open={open}
-				onClose={handleClose}
-			>
-				{/* <Box
-					sx={{
-						width: '60%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-						padding: '40px',
-						paddingTop: '40px',
-						backgroundColor: 'white',
-						marginBottom: '18px',
-					}}
-				> */}
-				<TaskModalBox>
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
+			<TeacherModalStyled open={open} onClose={handleClose}>
+				<TaskModalContent>
+					<ModalTitle onClick={handleClose} text='Overview' />
+					<Box
+						component='form'
+						onSubmit={(e) => {
+							handleEdit()
+							e.preventDefault()
 						}}
 					>
-						<Typography fontWeight='light' variant='h5'>
-							Overview
-						</Typography>
-						<IconButton onClick={handleClose}>
-							<CloseIcon />
-						</IconButton>
-					</Box>
-					<hr
-						style={{
-							backgroundColor: '#D9D9D9',
-							height: '1px',
-							borderWidth: '0px',
-							borderRadius: '5px',
-							width: '100%',
-							marginBottom: '10px',
-						}}
-					/> */}
-					<ModalTitle onClick={handleClose} text='Overview' />
-					<TextField
-						margin='normal'
-						id='name'
-						label='Task Name'
-						fullWidth
-						variant='standard'
-						value={name}
-						InputProps={{
-							readOnly: !isEditing,
-						}}
-						onChange={(event) => setName(event.target.value)}
-					/>
-					{/* <TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						placeholder=''
-						multiline
-						maxRows={8}
-						value={description}
-						InputProps={{
-							readOnly: !isEditing,
-						}}
-						onChange={(event) => setDescription(event.target.value)}
-					/> */}
-					<ReactQuill
-						theme='snow'
-						style={{ width: '100%' }}
-						value={description}
-						modules={modules}
-						onChange={setDescription}
-						readOnly={!isEditing}
-					/>
-
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
-					<BoxInModal>
 						<TextField
-							type='number'
 							margin='normal'
-							id='maxcompletions'
-							label='Max Completions'
+							id='name'
+							label='Task Name'
 							fullWidth
 							variant='standard'
-							placeholder=''
-							value={maxCompletions}
+							value={name}
 							InputProps={{
 								readOnly: !isEditing,
 							}}
-							error={maxCompletionsIsInvalid(maxCompletions)}
-							helperText={
-								maxCompletionsIsInvalid(maxCompletions)
-									? 'Max completions must be an integer greater than 0'
-									: null
-							}
-							onChange={(event) => setMaxCompletions(event.target.value)}
+							onChange={(event) => setName(event.target.value)}
 						/>
-						{/* </Box> */}
-					</BoxInModal>
-					{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
-					<BoxInModal>
-						<Typography variant='body1'>{`Reward: ${repeatable.reward}g (cannot be edited)`}</Typography>
-						{/* </Box> */}
-					</BoxInModal>
-					<br />
-					<Grid container justifyContent='right'>
-						<Button
-							onClick={toggleIsEditing}
-							sx={{ display: isEditing ? 'none' : 'block' }}
-							// variant='contained'
-						>
-							Edit Repeatable
-						</Button>
-						<Button
-							onClick={handleDelete}
-							sx={{ display: isEditing ? 'block' : 'none' }}
-							// variant='contained'
-							color='error'
-						>
-							Delete
-						</Button>
-						<Button
-							onClick={handleCancel}
-							sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
-							variant='text'
-						>
-							Cancel
-						</Button>
-						<Button
-							onClick={handleEdit}
-							sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
-							variant='contained'
-							color='success'
-						>
-							Save Changes
-						</Button>
-					</Grid>
-					{/* </Box> */}
-				</TaskModalBox>
+
+						<ReactQuill
+							theme='snow'
+							style={{ width: '100%' }}
+							value={description}
+							modules={modules}
+							onChange={setDescription}
+							readOnly={!isEditing}
+						/>
+
+						<BoxInModal>
+							<TextField
+								type='number'
+								margin='normal'
+								id='maxcompletions'
+								label='Max Completions'
+								fullWidth
+								variant='standard'
+								placeholder=''
+								sx={{ ml: -2 }}
+								value={maxCompletions}
+								InputProps={{
+									readOnly: !isEditing,
+								}}
+								error={maxCompletionsIsInvalid(maxCompletions)}
+								helperText={
+									maxCompletionsIsInvalid(maxCompletions)
+										? 'Max completions must be an integer greater than 0'
+										: null
+								}
+								onChange={(event) => setMaxCompletions(event.target.value)}
+							/>
+							{/* </Box> */}
+						</BoxInModal>
+
+						<BoxInModal>
+							<Typography
+								sx={{ ml: -2 }}
+								variant='body1'
+							>{`Reward: ${repeatable.reward}g (cannot be edited)`}</Typography>
+						</BoxInModal>
+						<br />
+						<Grid container justifyContent='right'>
+							<Button
+								onClick={toggleIsEditing}
+								sx={{ display: isEditing ? 'none' : 'block' }}
+								// variant='contained'
+							>
+								Edit Repeatable
+							</Button>
+							<Button
+								onClick={handleDelete}
+								sx={{ display: isEditing ? 'block' : 'none' }}
+								color='error'
+							>
+								Delete
+							</Button>
+							<Button
+								onClick={handleCancel}
+								sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
+								variant='text'
+							>
+								Cancel
+							</Button>
+							<Button
+								type='submit'
+								sx={{ display: isEditing ? 'block' : 'none', marginLeft: '5px' }}
+								variant='contained'
+								color='success'
+							>
+								Save Changes
+							</Button>
+						</Grid>
+					</Box>
+				</TaskModalContent>
 			</TeacherModalStyled>
 		</Box>
 	)
