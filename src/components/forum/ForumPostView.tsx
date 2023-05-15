@@ -40,7 +40,7 @@ const handleDelete = (
 	forumComment: Comment,
 	classroom: Classroom,
 	post: ForumPost,
-	enqueueSnackbar: (_param1: string, _param2: object) => any,
+	enqueueSnackbar: (_param1: string, _param2: object) => void,
 ) => {
 	// message box to confirm deletion
 	if (window.confirm('Are you sure you want to delete this comment?')) {
@@ -60,7 +60,7 @@ const handleLike = (
 	forumPost: ForumPost,
 	classroom: Classroom,
 	player: Player,
-	enqueueSnackbar: (_param1: string, _param2: object) => any,
+	enqueueSnackbar: (_param1: string, _param2: object) => void,
 ) => {
 	updateForumCommentLikes(
 		classroom.id,
