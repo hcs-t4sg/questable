@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { Classroom } from '../../types'
 import ConfirmRepeatablesTable from './ConfirmRepeatablesTable'
 import ConfirmTasksTable from './ConfirmTasksTable'
+import ConfirmRewardsTable from './ConfirmRewardsTable'
 // import { truncate } from '../../utils/helperFunctions'
 
 export default function ConfirmationTables({ classroom }: { classroom: Classroom }) {
@@ -16,17 +17,18 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 
 	return (
 		<Grid item xs={12}>
-			<Typography variant='h4'>Tasks/Repeatables Awaiting Confirmation</Typography>
-
+			<Typography variant='h4'>Tasks/Repeatables/Rewards Awaiting Confirmation</Typography>
 			<Tabs value={page} onChange={handleTabChange}>
 				<Tab label='One Time' />
 				<Tab label='Repeatable' />
+				<Tab label='Reward' />
 			</Tabs>
-
 			{page === 0 ? (
 				<ConfirmTasksTable classroom={classroom} />
-			) : (
+			) : page === 1 ? (
 				<ConfirmRepeatablesTable classroom={classroom} />
+			) : (
+				<ConfirmRewardsTable classroom={classroom} />
 			)}
 		</Grid>
 	)

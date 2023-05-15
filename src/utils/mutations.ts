@@ -18,7 +18,7 @@ import {
 	limit,
 	orderBy,
 } from 'firebase/firestore'
-import { Classroom, CompletionTime, ForumPost, Item, Player } from '../types'
+import { Classroom, CompletionTime, CustomShopItems, ForumPost, Item, Player } from '../types'
 import { db } from './firebase'
 
 export async function syncUsers(user: User) {
@@ -969,4 +969,134 @@ export async function updateLeaderboardSize(
 	await updateDoc(classRef, {
 		leaderboardSize: newLeaderboardSize.leaderboardSize,
 	})
+}
+
+// Mutation to create custom rewards
+export async function addReward(
+	classID: string,
+	reward: {
+		// id: string
+		name: string
+		description: string
+		price: number
+		isActive: boolean
+		// icon: null
+	},
+) {
+	const classRef = doc(db, 'classrooms', classID)
+	const classSnap = await getDoc(classRef)
+
+	if (!classSnap.exists()) {
+		// doc.data() will be undefined in this case
+		return 'No such document!'
+	}
+
+	// Update shop collection
+	await addDoc(collection(db, `classrooms/${classID}/customShopItems`), {
+		// id: reward.id,
+		name: reward.name,
+		description: reward.description,
+		price: reward.price,
+		isActive: reward.isActive,
+		// icon: reward.icon,
+	})
+}
+
+// Mutation to Update Reward Visibility
+export async function updateReward(
+	classroomID: string,
+	reward: {
+		name: string
+		description: string
+		price: number
+		isActive: boolean
+		id: string
+	},
+) {
+	console.log(classroomID)
+	const itemRef = doc(db, `classrooms/${classroomID}/customShopItems/${reward.id}`)
+
+	await updateDoc(itemRef, {
+		name: reward.name,
+		description: reward.description,
+		price: reward.price,
+		isActive: reward.isActive,
+	})
+}
+
+export async function purchaseCustomItem(
+	classID: string,
+	studentID: string,
+	item: CustomShopItems,
+) {
+	// isCustom should be a boolean denoting whether the item being purchased is an item created for a particular classroom/
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		return 'Could not find classroom'
+	}
+	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
+	const playerSnap = await getDoc(playerRef)
+	// Update
+	if (!playerSnap.exists()) {
+		return 'Could not find player'
+	} else {
+		const balance = playerSnap.data().money
+
+		const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
+		const invSnapshot = (await getDocs(inv)).docs
+
+		for (const i in invSnapshot) {
+			if (invSnapshot[i].data().itemId === item.id) {
+				return 'Already owned!'
+			}
+		}
+
+		if (balance < item.price) {
+			return 'Not enough money!'
+		}
+
+		const newItem = {
+			itemId: item.id,
+		}
+
+		const newRequest = {
+			rewardName: item.name,
+			rewardDescription: item.description,
+			rewardPrice: item.price,
+			user: studentID,
+		}
+
+		await addDoc(inv, newItem)
+
+		await updateDoc(playerRef, {
+			money: playerSnap.data().money - item.price,
+		})
+
+		const reqs = collection(db, `classrooms/${classID}/rewardRequests`)
+
+		await addDoc(reqs, newRequest)
+
+		return 'Success!'
+	}
+}
+
+// Mutation to delete Custom Item
+export async function deleteItem(classroomID: string, itemID: string) {
+	await deleteDoc(doc(db, `classrooms/${classroomID}/customShopItems/${itemID}`))
+}
+
+// Mutation to confirm reward purchase
+export async function confirmReward(classID: string, studentID: string, rewardID: string) {
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		return 'Could not find classroom'
+	}
+
+	const rewardRef = doc(db, `classrooms/${classID}/rewardRequests/${rewardID}`)
+	const rewardSnap = await getDoc(rewardRef)
+	if (rewardSnap.exists()) {
+		deleteDoc(rewardRef)
+	}
 }

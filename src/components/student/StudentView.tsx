@@ -4,7 +4,6 @@ import LinearProgress from '@mui/material/LinearProgress'
 import { styled } from '@mui/material/styles'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import ClassStudent from '../../routes/student/ClassStudent'
-import Inventory from '../../routes/student/Inventory'
 import Main from '../../routes/student/Main'
 import Shop from '../../routes/student/Shop'
 import { currentAvatar } from '../../utils/items'
@@ -18,6 +17,7 @@ import ForumView from '../forum/ForumView'
 import { User } from 'firebase/auth'
 import StudentSettings from '../../routes/student/StudentSettings'
 import { levelUp } from '../../utils/helperFunctions'
+import InventoryStudent from '../../routes/student/InventoryStudent'
 
 export default function StudentView({
 	player,
@@ -156,7 +156,10 @@ export default function StudentView({
 						path='class-student'
 						element={<ClassStudent player={player} classroom={classroom} />}
 					/>
-					<Route path='inventory' element={<Inventory player={player} classroom={classroom} />} />
+					<Route
+						path='inventory'
+						element={<InventoryStudent player={player} classroom={classroom} />}
+					/>
 					<Route
 						path='student-settings'
 						element={<StudentSettings player={player} classroom={classroom} user={user} />}

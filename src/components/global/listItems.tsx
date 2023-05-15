@@ -37,7 +37,7 @@ const ListItemIconStyled = styled(ListItemIcon)({
 }) as typeof ListItemButton
 
 export function MainListItemsTeacher() {
-	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4>(0)
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6>(0)
 
 	return (
 		<React.Fragment>
@@ -76,9 +76,31 @@ export function MainListItemsTeacher() {
 			</ListItemButtonStyled>
 			<ListItemButtonStyled
 				component={Link}
-				to='forum'
+				to='inventory'
 				onClick={() => setSelected(3)}
 				selected={selected === 3}
+			>
+				<ListItemIconStyled>
+					<InventoryIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Inventory' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='shop-teacher'
+				onClick={() => setSelected(4)}
+				selected={selected === 4}
+			>
+				<ListItemIconStyled>
+					<InventoryIcon />
+				</ListItemIconStyled>
+				<ListItemText primary='Shop' />
+			</ListItemButtonStyled>
+			<ListItemButtonStyled
+				component={Link}
+				to='forum'
+				onClick={() => setSelected(5)}
+				selected={selected === 5}
 			>
 				<ListItemIconStyled>
 					<ForumIcon />
@@ -88,8 +110,8 @@ export function MainListItemsTeacher() {
 			<ListItemButtonStyled
 				component={Link}
 				to='teacher-settings'
-				onClick={() => setSelected(4)}
-				selected={selected === 4}
+				onClick={() => setSelected(6)}
+				selected={selected === 6}
 			>
 				<ListItemIconStyled>
 					<SettingsIcon />

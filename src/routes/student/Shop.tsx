@@ -4,19 +4,16 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import * as React from 'react'
 // import ShopItemCard from '../../components/student/ShopItemCard'
-import { Classroom, Player } from '../../types'
-import {
-	getHairItems,
-	getPantsItems,
-	getShirtItems,
-	getShoesItems,
-	getArmorItems,
-} from '../../utils/items'
+import { Classroom, CustomShopItems, Player } from '../../types'
+import { getHairItems, getPantsItems, getShirtItems, getShoesItems } from '../../utils/items'
 import { ItemCard } from '../../components/student/ItemCard'
 // import { Classroom, Player } from '../../types'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import wood2 from '/src/assets/Wood2.png'
 import { Typography } from '@mui/material'
+import { collection, onSnapshot, query } from 'firebase/firestore'
+import { db } from '../../utils/firebase'
+import { CustomItemCard } from '../../components/student/CustomItemCard'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -51,15 +48,31 @@ const hairs = getHairItems()
 const shirts = getShirtItems()
 const pants = getPantsItems()
 const shoes = getShoesItems()
-const armor = getArmorItems()
 
 //  const all = bodies.concat(hairs, shirts, pants, shoes)
 
 export default function Shop({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [value, setValue] = useState(0)
+	const [customShopItems, setCustomShopItems] = useState<CustomShopItems[] | null>(null)
 	const handleChange = (event: React.SyntheticEvent, newValue: 0 | 1 | 2 | 3 | 4) => {
 		setValue(newValue)
 	}
+
+	useEffect(() => {
+		const itemsRef = collection(db, `classrooms/${classroom.id}/customShopItems`)
+		const itemsQuery = query(itemsRef)
+
+		const unsub = onSnapshot(itemsQuery, (snapshot) => {
+			const customShopItems = snapshot.docs.map(
+				(doc) => ({ ...doc.data(), id: doc.id } as CustomShopItems),
+			)
+			const activeItems = customShopItems?.filter(
+				(customShopItem) => customShopItem.isActive == true,
+			)
+			setCustomShopItems(activeItems)
+		})
+		return unsub
+	}, [classroom])
 
 	return (
 		<Grid item xs={12}>
@@ -75,7 +88,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 						<Tab label='Shirts' {...a11yProps(1)} />
 						<Tab label='Pants' {...a11yProps(2)} />
 						<Tab label='Shoes' {...a11yProps(3)} />
-						<Tab label='Armor' {...a11yProps(4)} />
+						<Tab label='Custom Rewards' {...a11yProps(4)} />
 					</Tabs>
 				</Box>
 				<Box
@@ -154,13 +167,12 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 					</TabPanel>
 					<TabPanel value={value} index={4}>
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-							{armor.map((item, index) => (
-								<Grid item xs={2} sm={3} md={2} key={index}>
-									<ItemCard
-										item={item}
+							{customShopItems?.map((customShopItem, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									<CustomItemCard
+										item={customShopItem}
 										player={player}
 										classroom={classroom}
-										itemPrice='300g'
 										type='shop'
 										isBody={false}
 									/>
@@ -168,6 +180,7 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 							))}
 						</Grid>
 					</TabPanel>
+					<TabPanel value={value} index={4}></TabPanel>
 				</Box>
 			</Grid>
 		</Grid>

@@ -26,7 +26,7 @@ import wavy from '../assets/spriteSheets/hair/wavy.png'
 import shirt from '../assets/spriteSheets/clothes/basic.png'
 import pants from '../assets/spriteSheets/clothes/pants.png'
 import shoes from '../assets/spriteSheets/clothes/shoes.png'
-import armor from '../assets/spriteSheets/clothes/armor.png'
+import reward from '../assets/spriteSheets/rewards/all_rewards.png'
 import { Item, Player } from '../types'
 
 // Guide to classes in Javascript: https://dmitripavlutin.com/javascript-classes-complete-guide/#32-private-instance-fields
@@ -86,7 +86,7 @@ export default function render(file: string, spriteStart: number, doAnimation: b
 		shirt,
 		pants,
 		shoes,
-		armor,
+		reward,
 	}
 
 	return (
@@ -319,35 +319,31 @@ export function getShoesItems() {
 	return shoesItems
 }
 
-export class Armor implements Item {
+export class Reward {
 	id
 	name
-	description
 	#spriteStart
-	type = 'armor' as const
-	price = 300
 
 	constructor(id: number) {
 		this.id = id
-		this.name = 'Armor' + id.toString()
-		this.description = 'Armor for your avatar!'
+		this.name = 'Reward' + id.toString()
 		this.#spriteStart = 1 * id + 1
 	}
 
 	renderStatic() {
-		return render('armor', this.#spriteStart, false)
+		return render('reward', this.#spriteStart, false)
 	}
 
 	renderAnimated() {
-		return render('armor', this.#spriteStart, true)
+		return render('reward', this.#spriteStart, true)
 	}
 }
 
-export function getArmorItems() {
-	const idList = [...Array(7).keys()]
-	const armorItems = idList.map((id) => new Armor(id))
+export function getRewardItems() {
+	const idList = [...Array(10).keys()]
+	const rewardItems = idList.map((id) => new Reward(id))
 
-	return armorItems
+	return rewardItems
 }
 
 export function currentAvatar(player: Player) {

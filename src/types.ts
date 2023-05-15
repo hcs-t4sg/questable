@@ -101,7 +101,7 @@ export interface Item {
 	id: number
 	name: string
 	description: string
-	type: 'body' | 'hair' | 'shirt' | 'pants' | 'shoes' | 'armor'
+	type: 'body' | 'hair' | 'shirt' | 'pants' | 'shoes'
 	subtype?: string
 	price: number
 	renderStatic: () => JSX.Element
@@ -148,4 +148,17 @@ export interface Comment {
 	author: string
 	likes: number
 	postTime: Timestamp
+}
+
+export interface CustomShopItems {
+	id: string
+	name: string
+	description: string
+	price: number
+	isActive: boolean
+	icon: number | null
+}
+
+export interface PurchasedReward extends CustomShopItems {
+	user: string
 }
