@@ -71,9 +71,31 @@ const ListItems = ({
 	)
 }
 
+const pageSlug = window.location.href.split('/').at(-1)
+
 export function MainListItemsTeacher() {
-	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5>(0)
-	console.log(selected)
+	let selectedInit = 0 as 0 | 1 | 2 | 3 | 4 | 5
+	switch (pageSlug) {
+		case 'tasks':
+			selectedInit = 0
+			break
+		case 'requests':
+			selectedInit = 1
+			break
+		case 'class':
+			selectedInit = 2
+			break
+		case 'posts':
+			selectedInit = 3
+			break
+		case 'settings':
+			selectedInit = 4
+			break
+		default:
+			selectedInit = 0
+	}
+
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5>(selectedInit)
 
 	const teacherItems = [
 		{
@@ -112,7 +134,31 @@ export function MainListItemsTeacher() {
 }
 
 export function MainListItemsStudent() {
-	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5>(0)
+	let selectedInit = 0 as 0 | 1 | 2 | 3 | 4 | 5
+	switch (pageSlug) {
+		case 'tasks':
+			selectedInit = 0
+			break
+		case 'shop':
+			selectedInit = 1
+			break
+		case 'class':
+			selectedInit = 2
+			break
+		case 'inventory':
+			selectedInit = 3
+			break
+		case 'posts':
+			selectedInit = 4
+			break
+		case 'settings':
+			selectedInit = 5
+			break
+		default:
+			selectedInit = 0
+	}
+
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5>(selectedInit)
 
 	const studentItems = [
 		{
