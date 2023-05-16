@@ -1,13 +1,7 @@
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-
+import { Grid, Typography, Box, Card, CardContent, useMediaQuery } from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 import { getUserData } from '../../utils/mutations'
-
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import { useEffect, useState } from 'react'
 import Avatar from '../../components/global/Avatar'
 import { Classroom, Player, PlayerWithEmail } from '../../types'
@@ -22,6 +16,7 @@ export default function ClassStudent({
 	classroom: Classroom
 }) {
 	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
+	const mobile = useMediaQuery('(max-width:400px)')
 
 	useEffect(() => {
 		// If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
@@ -70,7 +65,7 @@ export default function ClassStudent({
 	return (
 		<>
 			<Grid item xs={12}>
-				<Typography variant='h2' component='div'>
+				<Typography sx={{ fontSize: !mobile ? '50px' : '32px' }} variant='h2' component='div'>
 					Class Page
 				</Typography>
 			</Grid>

@@ -103,7 +103,9 @@ export default function ForumView({ player, classroom }: { player: Player; class
 	return (
 		<>
 			<Grid item xs={12}>
-				<Typography variant='h2'>Forum</Typography>
+				<Typography sx={{ fontSize: !mobile ? '50px' : '32px' }} variant='h2'>
+					Forum
+				</Typography>
 				<h5>Post questions or comments in the class discussion below!</h5>
 				<Stack direction={!mobile ? 'row' : 'column'}>
 					{categoryList}

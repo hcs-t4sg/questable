@@ -104,6 +104,7 @@ export default function TasksStudent({
 				<Stack
 					sx={{ display: 'flex', justifyContent: 'space-between' }}
 					direction={!mobile ? 'row' : 'column'}
+					spacing={!mobile ? 0 : 2}
 				>
 					<Tabs value={taskRepTab} onChange={handleChangeTaskRep} aria-label='Task/repeatable tabs'>
 						<Tab label='Tasks' {...a11yProps(0)} />

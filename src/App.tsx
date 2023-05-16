@@ -96,9 +96,6 @@ export default function App() {
 			}
 		},
 	})
-
-	// const mobile = useMediaQuery('(max-width:400px)')
-
 	return (
 		<ThemeProvider theme={mdTheme}>
 			<SnackbarProvider maxSnack={3}>

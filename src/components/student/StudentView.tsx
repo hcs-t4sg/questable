@@ -87,13 +87,14 @@ export default function StudentView({
 						<Box sx={{ display: 'flex', marginTop: '20px' }}>
 							<Box
 								sx={{
-									width: !mobile ? '20%' : '10%',
-									height: !mobile ? '40%' : '20%',
+									width: '20%',
+									height: '40%',
+									mt: !mobile ? 0 : 5,
 									maxHeight: '312px',
 									maxWidth: '313px',
 								}}
 							>
-								<Avatar outfit={playerOutfit} />
+								{!mobile && <Avatar outfit={playerOutfit} />}
 							</Box>
 							{/* <Box
 								sx={{
