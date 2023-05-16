@@ -122,9 +122,58 @@ export default function BottomAppBar({ role }: { role: UserRole }) {
 	]
 
 	const [selected, setSelected] = React.useState<0 | 1 | 2 | 3 | 4 | 5>(0)
-	console.log(selected)
-
 	const items = role === 'teacher' ? teacherItems : studentItems
+
+	React.useEffect(() => {
+		let pageSelected = 0 as 0 | 1 | 2 | 3 | 4 | 5
+		const pageSlug = window.location.href.split('/').at(-1)
+
+		if (role == 'teacher') {
+			switch (pageSlug) {
+				case 'tasks':
+					pageSelected = 0
+					break
+				case 'requests':
+					pageSelected = 1
+					break
+				case 'class':
+					pageSelected = 2
+					break
+				case 'posts':
+					pageSelected = 3
+					break
+				case 'settings':
+					pageSelected = 4
+					break
+				default:
+					pageSelected = 0
+			}
+		} else {
+			switch (pageSlug) {
+				case 'tasks':
+					pageSelected = 0
+					break
+				case 'shop':
+					pageSelected = 1
+					break
+				case 'class':
+					pageSelected = 2
+					break
+				case 'inventory':
+					pageSelected = 3
+					break
+				case 'posts':
+					pageSelected = 4
+					break
+				case 'settings':
+					pageSelected = 5
+					break
+				default:
+					pageSelected = 0
+			}
+		}
+		setSelected(pageSelected)
+	}, [window.location.href.split('/').at(-1)])
 
 	return (
 		<React.Fragment>
@@ -148,7 +197,6 @@ export default function BottomAppBar({ role }: { role: UserRole }) {
 									to={item.link}
 									onClick={() => setSelected(item.number)}
 									selected={selected === item.number}
-									sx={{ width: 'fit-content' }}
 								>
 									<ListItemIconStyled>{item.icon}</ListItemIconStyled>
 								</ListItemButtonStyled>
