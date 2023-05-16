@@ -7,10 +7,12 @@ import Layout from './Layout'
 import { onboardClassroom, updatePlayer } from '../../utils/mutations'
 import { OnboardingItemCard } from '../student/OnboardingItemCard'
 import {
+	getBodyItems,
 	getHairItems,
 	getShirtItems,
 	getPantsItems,
 	getShoesItems,
+	Body,
 	Hair,
 	Pants,
 	Shirt,
@@ -43,6 +45,7 @@ function TabPanel(props: TabPanelProps) {
 export default function OnboardingPage({ classroom, user }: { classroom: Classroom; user: User }) {
 	const [name, setName] = useState('')
 	const [value, setValue] = useState(0)
+	const [body, setBody] = useState<Body | null>(null)
 	const [hair, setHair] = useState<Hair | null>(null)
 	const [shirt, setShirt] = useState<Shirt | null>(null)
 	const [shoe, setShoes] = useState<Shoes | null>(null)
@@ -51,7 +54,7 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 	const handleChange = (event: React.SyntheticEvent, newValue: 0 | 1 | 2 | 3 | 4) => {
 		setValue(newValue)
 	}
-
+	const bodies = getBodyItems()
 	const hairs = getHairItems()
 	const shirts = getShirtItems()
 	const pants = getPantsItems()
@@ -62,6 +65,10 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 		const nameContainsNonWhitespaceChars = name.replace(/\s+/g, '') != ''
 		if (!nameContainsNonWhitespaceChars) {
 			enqueueSnackbar('Name cannot be empty', { variant: 'error' })
+			return
+		}
+		if (!body) {
+			enqueueSnackbar('Please select a skin color for your character', { variant: 'error' })
 			return
 		}
 		console.log(hair)
@@ -128,10 +135,11 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 				<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
 					<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 						<Tabs value={value} onChange={handleChange} aria-label='basic tabs example'>
-							<Tab label='Hair' {...a11yProps(0)} />
-							<Tab label='Shirts' {...a11yProps(1)} />
-							<Tab label='Pants' {...a11yProps(2)} />
-							<Tab label='Shoes' {...a11yProps(3)} />
+							<Tab label='Body' {...a11yProps(0)} />
+							<Tab label='Hair' {...a11yProps(1)} />
+							<Tab label='Shirts' {...a11yProps(2)} />
+							<Tab label='Pants' {...a11yProps(3)} />
+							<Tab label='Shoes' {...a11yProps(4)} />
 						</Tabs>
 					</Box>
 					<Box
@@ -146,6 +154,29 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 						{' '}
 						<TabPanel value={value} index={0}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{bodies.map((item, index) => {
+									// const onboardBodyOutfit = {
+									// 	body: item,
+									// 	hair: hair,
+									// 	shirt: shirt,
+									// 	pants: pants,
+									// 	shoes: shoes }
+									return (
+										<Grid item xs={2} sm={3} md={3} key={index}>
+											<OnboardingItemCard
+												item={item}
+												itemPrice=''
+												// bodyOutfit={onboardBodyOutfit}
+												selectItemCallback={() => setBody(item)}
+												isEquipped={body?.id === item.id}
+											/>
+										</Grid>
+									)
+								})}
+							</Grid>
+						</TabPanel>
+						<TabPanel value={value} index={1}>
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 								{hairs.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
 										<OnboardingItemCard
@@ -158,7 +189,7 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 								))}
 							</Grid>
 						</TabPanel>
-						<TabPanel value={value} index={1}>
+						<TabPanel value={value} index={2}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 								{shirts.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
@@ -172,7 +203,7 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 								))}
 							</Grid>
 						</TabPanel>
-						<TabPanel value={value} index={2}>
+						<TabPanel value={value} index={3}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 								{pants.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
@@ -186,7 +217,7 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 								))}
 							</Grid>
 						</TabPanel>
-						<TabPanel value={value} index={3}>
+						<TabPanel value={value} index={4}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 								{shoes.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>

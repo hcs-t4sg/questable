@@ -9,6 +9,8 @@ import { Box, Grid, Typography } from '@mui/material'
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
 import ForumView from '../forum/ForumView'
+import Avatar from '../global/Avatar'
+import { currentAvatar } from '../../utils/items'
 
 export default function TeacherView({
 	player,
@@ -19,6 +21,8 @@ export default function TeacherView({
 	classroom: Classroom
 	user: User
 }) {
+	const playerOutfit = currentAvatar(player)
+
 	return (
 		<Layout classroom role={player?.role}>
 			<Grid container spacing={3}>
@@ -54,6 +58,16 @@ export default function TeacherView({
 							<Typography variant='h5' component='div'>
 								{classroom.playerList.length} Total Students
 							</Typography>
+							<Box
+								sx={{
+									width: '20%',
+									height: '40%',
+									maxHeight: '312px',
+									maxWidth: '313px',
+								}}
+							>
+								<Avatar outfit={playerOutfit} />
+							</Box>
 						</Grid>
 					</Box>
 				</Grid>
