@@ -150,7 +150,10 @@ export default function ForumPostCard({
 
 	return (
 		<Box>
-			<Card sx={{ marginBottom: '10px' }} variant={isLink ? 'elevation' : 'outlined'}>
+			<Card
+				sx={{ marginBottom: '10px', width: !mobile ? '100%' : '120%' }}
+				variant={isLink ? 'elevation' : 'outlined'}
+			>
 				{isLink ? (
 					<CardActionArea component={Link} to={forumPost.id}>
 						{cardContent}

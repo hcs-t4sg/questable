@@ -9,6 +9,8 @@ import {
 	TextField,
 	Typography,
 	IconButton,
+	useMediaQuery,
+	useTheme,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore'
@@ -106,6 +108,9 @@ const IncomingComment = ({
 
 	const { enqueueSnackbar } = useSnackbar()
 
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
+
 	useEffect(() => {
 		const fetchAuthorData = async () => {
 			const author = await getPlayerData(classroom.id, comment.author)
@@ -116,7 +121,7 @@ const IncomingComment = ({
 	}, [classroom, comment])
 
 	return (
-		<Card variant='outlined' sx={{ backgroundColor: '#FEFAE0', width: '60%' }}>
+		<Card variant='outlined' sx={{ backgroundColor: '#FEFAE0', width: !mobile ? '60%' : '100%' }}>
 			<CardContent>
 				<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
 					<Typography variant='body1' style={{ overflowWrap: 'break-word' }}>
@@ -187,12 +192,14 @@ const OutgoingComment = ({
 	post: ForumPost
 }) => {
 	const { enqueueSnackbar } = useSnackbar()
-	console.log(post.pinnedComments)
+
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	return (
 		<Card
 			variant='outlined'
-			sx={{ backgroundColor: '#F3F8DF', width: '60%', alignSelf: 'flex-end' }}
+			sx={{ backgroundColor: '#F3F8DF', width: !mobile ? '60%' : '100%', alignSelf: 'flex-end' }}
 		>
 			<CardContent>
 				<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
@@ -243,6 +250,9 @@ export default function ForumPostView({
 	const postID = params.postID
 
 	const { enqueueSnackbar } = useSnackbar()
+
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	const [post, setPost] = useState<ForumPost | null>(null)
 	useEffect(() => {
@@ -308,7 +318,7 @@ export default function ForumPostView({
 		return (
 			<>
 				<ForumPostCard forumPost={post} classroom={classroom} player={player} isLink={false} />
-				<Card variant='outlined' sx={{ mb: 2 }}>
+				<Card variant='outlined' sx={{ mb: 2, width: !mobile ? '100%' : '120%' }}>
 					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '16px' }}>
 							Pinned Comments
@@ -335,7 +345,7 @@ export default function ForumPostView({
 					</CardContent>
 				</Card>
 
-				<Card variant='outlined'>
+				<Card sx={{ width: !mobile ? '100%' : '120%' }} variant='outlined'>
 					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '16px' }}>
 							Comments
