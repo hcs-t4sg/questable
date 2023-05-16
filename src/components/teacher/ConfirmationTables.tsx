@@ -265,7 +265,7 @@ export default function ConfirmationTables({
 
 				newTasks.forEach(async (task) => {
 					console.log(task)
-					if (task.gcrCourseID && task.gcrID && task.gcrUserId) {
+					if (task.gcrID && task.gcrCourseID && task.gcrUserId) {
 						const submissions = await getSubmissions(task.gcrCourseID, task.gcrID)
 						console.log(submissions)
 						const submission = submissions.studentSubmissions.find(
