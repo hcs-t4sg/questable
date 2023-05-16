@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select, Stack, Box } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Stack, Box, Typography } from '@mui/material'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
@@ -115,6 +115,9 @@ export default function TaskModalTeacher({
 			<TeacherModalStyled open={open} onClose={handleClose}>
 				<TaskModalContent>
 					<ModalTitle onClick={handleClose} text='Overview' />
+					{task.gcrName ? (
+						<Typography variant='body1'>Google Classroom Task: {task.gcrName}</Typography>
+					) : null}
 					<Box
 						component='form'
 						onSubmit={(e) => {

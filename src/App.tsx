@@ -120,6 +120,7 @@ export default function App() {
 			if (user) {
 				console.log('User is authenticated')
 				syncUsers(user)
+				console.log(currentUser)
 			}
 		},
 	})
@@ -179,7 +180,9 @@ export default function App() {
 									marginBottom: '5px',
 									display: currentUser.data ? 'inline' : 'none',
 								}}
-								onClick={() => auth.signOut()}
+								onClick={() => {
+									auth.signOut()
+								}}
 							>
 								Log out
 							</Button>
@@ -192,7 +195,7 @@ export default function App() {
           props to the elements */
 						<Routes>
 							<Route path='/' element={<Home user={currentUser.data} />} />
-							<Route path='settings' element={<Settings />} />
+							<Route path='settings' element={<Settings user={currentUser.data} />} />
 							<Route path='class/:classID/*' element={<ClassroomPage user={currentUser.data} />} />
 							{/* Catch-all route for any URLs that don't match an existing route */}
 							<Route path='*' element={<Error message={'This page does not exist.'} />} />

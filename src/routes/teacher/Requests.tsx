@@ -5,9 +5,9 @@
 // import CardContent from '@mui/material/CardContent'
 import ConfirmationTables from '../../components/teacher/ConfirmationTables'
 
-import { Classroom } from '../../types'
+import { Classroom, Player } from '../../types'
 
-export default function Requests({ classroom }: { classroom: Classroom }) {
+export default function Requests({ classroom, player }: { classroom: Classroom; player: Player }) {
 	return (
 		<>
 			{/* <Grid item xs={12}>
@@ -29,7 +29,7 @@ export default function Requests({ classroom }: { classroom: Classroom }) {
 				</Card>
 			</Grid> */}
 
-			<ConfirmationTables classroom={classroom} />
+			<ConfirmationTables classroom={classroom} player={player} />
 		</>
 	)
 }

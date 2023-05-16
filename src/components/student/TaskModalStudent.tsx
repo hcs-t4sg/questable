@@ -85,6 +85,9 @@ export default function TaskModalStudent({
 			isOpen={open}
 			toggleIsOpen={toggleOpen}
 		>
+			{task.gcrName ? (
+				<Cluster title='Google Classroom Task' data={task.gcrName} isHtml={false} />
+			) : null}
 			<Cluster title='Task Name' data={task.name} isHtml={false} />
 			<Cluster title='Description' data={task.description} isHtml={true} />
 			<Cluster title='Reward Amount' data={`${task.reward}g`} isHtml={false} />

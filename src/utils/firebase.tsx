@@ -1,17 +1,25 @@
 // Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 import { getFirestore } from 'firebase/firestore'
-import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
 import Layout from '../components/global/Layout'
-import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
+import { clientID } from './google'
+// import { gapi } from 'gapi-script'
+// import GCRLogin from '../components/teacher/GCRLogin'
+// import { Grid } from '@mui/material'
 
 // ! DO NOT CHANGE THIS FILE.
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+// export let accessToken: any
+
+// ! TRY THIS: https://stackoverflow.com/questions/72209749/react-google-identity-services
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyD3v0oikzBtnyz7DHcDool2gtvRw48Z_kk',
@@ -27,10 +35,21 @@ const firebaseConfig = {
 const uiConfig = {
 	// Popup signin flow rather than redirect flow.
 	signInFlow: 'popup',
-	signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+	signInOptions: [
+		{
+			provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+		},
+		{
+			provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+			clientId: clientID,
+			scopes: ['https://www.googleapis.com/auth/classroom.courses'],
+		},
+	],
 	callbacks: {
 		// Avoid redirects after sign-in.
-		signInSuccessWithAuthResult: () => false,
+		signInSuccessWithAuthResult: (authResult: any) => {
+			console.log(authResult)
+		},
 	},
 }
 

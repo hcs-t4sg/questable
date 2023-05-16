@@ -485,6 +485,9 @@ export async function addTask(
 		description: string
 		reward: number
 		due: Timestamp
+		gcrCourseID?: string
+		gcrID?: string
+		gcrName?: string
 	},
 	teacherID: string,
 ) {
@@ -497,17 +500,34 @@ export async function addTask(
 		return 'No such document!'
 	}
 
-	// Update tasks collection
-	await addDoc(collection(db, `classrooms/${classID}/tasks`), {
-		name: task.name,
-		description: task.description,
-		reward: task.reward,
-		created: serverTimestamp(),
-		due: task.due,
-		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
-		completed: [],
-		confirmed: [],
-	})
+	if (task.gcrCourseID && task.gcrID && task.gcrName) {
+		// Update tasks collection
+		await addDoc(collection(db, `classrooms/${classID}/tasks`), {
+			name: task.name,
+			description: task.description,
+			reward: task.reward,
+			created: serverTimestamp(),
+			due: task.due,
+			gcrCourseID: task.gcrCourseID,
+			gcrID: task.gcrID,
+			gcrName: task.gcrName,
+			assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
+			completed: [],
+			confirmed: [],
+		})
+	} else {
+		// Update tasks collection
+		await addDoc(collection(db, `classrooms/${classID}/tasks`), {
+			name: task.name,
+			description: task.description,
+			reward: task.reward,
+			created: serverTimestamp(),
+			due: task.due,
+			assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
+			completed: [],
+			confirmed: [],
+		})
+	}
 }
 
 export async function addRepeatable(

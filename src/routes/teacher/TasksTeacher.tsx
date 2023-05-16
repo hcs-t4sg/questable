@@ -13,6 +13,7 @@ import CreateTaskModal from '../../components/teacher/CreateTaskModal'
 import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
 import RepeatableTableTeacher from '../../components/teacher/RepeatableTableTeacher'
 import { Classroom, Player } from '../../types'
+import CreateGCRTask from '../../components/teacher/CreateGCRTask'
 
 export default function TasksTeacher({
 	player,
@@ -39,9 +40,13 @@ export default function TasksTeacher({
 				<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
 					Create a New Task
 				</Typography>
+			</Grid>
+			<Grid item xs={6}>
 				<CreateTaskModal classroom={classroom} player={player} />
 			</Grid>
-
+			<Grid item xs={6}>
+				<CreateGCRTask classroom={classroom} player={player} />
+			</Grid>
 			<Grid item xs={12}>
 				<Stack direction='row' sx={{ display: 'flex', justifyContent: 'space-between' }}>
 					<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
