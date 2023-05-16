@@ -162,7 +162,7 @@ export default function ClassTeacherModal({
 						fullWidth
 						variant='standard'
 						value={money}
-						onChange={(event) => setMoney(event.target.value)}
+						onChange={(event) => setMoney(parseInt(event.target.value))}
 					/>
 					<DialogActions>
 						{/* TODO make this a form so that it submits on enter */}

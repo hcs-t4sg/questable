@@ -54,21 +54,21 @@ export default function ConfirmRewardsTable({ classroom }: { classroom: Classroo
 							key={'test'}
 							// sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 						>
-							<TableCell>{reward.name}</TableCell>
-							<TableCell>{reward.description}</TableCell>
-							<TableCell>{`${reward.price}g`}</TableCell>
+							<TableCell>{reward.rewardName}</TableCell>
+							<TableCell>{reward.rewardDescription}</TableCell>
+							<TableCell>{`${reward.rewardPrice}g`}</TableCell>
 							<TableCell component='th' scope='row'>
-								{reward.user}
+								{reward.playerName}
 							</TableCell>
 							<TableCell align='center'>
 								<Grid container columnSpacing={1}>
 									<Grid item>
 										<Button
 											onClick={() =>
-												confirmReward(classroom.id, reward.user, reward.id)
+												confirmReward(classroom.id, reward.playerID, reward.id)
 													.then(() => {
 														enqueueSnackbar(
-															`Confirmed purchase "${reward.name}" from ${reward.user}!`,
+															`Confirmed purchase "${reward.name}" from ${reward.playerName}!`,
 															{ variant: 'success' },
 														)
 													})

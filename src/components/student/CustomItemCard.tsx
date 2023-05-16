@@ -72,16 +72,18 @@ export function CustomItemCard(props: Props) {
 		color: '#5c5c5c',
 	})
 
-	const handlePurchase = async () => {
-		const res = await purchaseCustomItem(props.classroom.id, props.player.id, props.item)
-		enqueueSnackbar(res, { variant: res === 'Success!' ? 'success' : 'error' })
+	const handlePurchase = () => {
+		// const res = await purchaseCustomItem(props.classroom.id, props.player.id, props.item)
+		// enqueueSnackbar(res, { variant: res === 'Success!' ? 'success' : 'error' })
+		purchaseCustomItem(props.classroom.id, props.player.id, props.item)
+			.then((value) => {
+				enqueueSnackbar(value, { variant: 'success' })
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar(err.message, { variant: 'error' })
+			})
 	}
-
-	const confirmActions = (
-		<Button variant='contained' color='success' size='small' onClick={handlePurchase}>
-			Purchase
-		</Button>
-	)
 
 	return (
 		<Card sx={{ maxWidth: 345 }}>
@@ -95,7 +97,11 @@ export function CustomItemCard(props: Props) {
 				</ItemTypography>
 				<ItemTypography variant='body2'>{props.item.description}</ItemTypography>
 			</CardContent>
-			<CardActions>{confirmActions}</CardActions>
+			<CardActions>
+				<Button variant='contained' color='success' size='small' onClick={handlePurchase}>
+					Purchase
+				</Button>
+			</CardActions>
 		</Card>
 	)
 }

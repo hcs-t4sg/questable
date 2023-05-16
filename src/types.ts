@@ -78,7 +78,7 @@ export interface Player {
 	id: string
 	name: string
 	role: UserRole
-	money: number | string
+	money: number
 	avaBody?: number
 	avaHair?: number
 	avaShirt?: number
@@ -148,5 +148,10 @@ export interface CustomShopItems {
 }
 
 export interface PurchasedReward extends CustomShopItems {
-	user: string
+	id: string
+	rewardName: string
+	rewardDescription: string
+	rewardPrice: number
+	playerID: string
+	playerName: string
 }

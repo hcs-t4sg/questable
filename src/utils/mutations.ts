@@ -569,16 +569,17 @@ export async function purchaseItem(classID: string, studentID: string, item: Ite
 		const balance = playerSnap.data().money
 
 		const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
-		const invSnapshot = (await getDocs(inv)).docs
+		const invSnapshot = await getDocs(inv)
 
-		for (const i in invSnapshot) {
-			if (
-				invSnapshot[i].data().itemId === item.id &&
-				invSnapshot[i].data().type === item.type &&
-				(!invSnapshot[i].data().subtype || invSnapshot[i].data().subtype === item.subtype)
-			) {
-				return 'Already owned!'
-			}
+		if (
+			invSnapshot.docs.find(
+				(doc) =>
+					doc.data().itemId === item.id &&
+					doc.data().type === item.type &&
+					doc.data().subtype === item.subtype,
+			)
+		) {
+			return 'Already owned!'
 		}
 
 		if (balance < item.price) {
@@ -1032,52 +1033,46 @@ export async function purchaseCustomItem(
 	const classroomRef = doc(db, 'classrooms', classID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {
-		return 'Could not find classroom'
+		throw new Error('Could not find classroom')
 	}
-	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
-	const playerSnap = await getDoc(playerRef)
+
+	const player = await getPlayerData(classID, studentID)
 	// Update
-	if (!playerSnap.exists()) {
-		return 'Could not find player'
-	} else {
-		const balance = playerSnap.data().money
-
-		const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
-		const invSnapshot = (await getDocs(inv)).docs
-
-		for (const i in invSnapshot) {
-			if (invSnapshot[i].data().itemId === item.id) {
-				return 'Already owned!'
-			}
-		}
-
-		if (balance < item.price) {
-			return 'Not enough money!'
-		}
-
-		const newItem = {
-			itemId: item.id,
-		}
-
-		const newRequest = {
-			rewardName: item.name,
-			rewardDescription: item.description,
-			rewardPrice: item.price,
-			user: studentID,
-		}
-
-		await addDoc(inv, newItem)
-
-		await updateDoc(playerRef, {
-			money: playerSnap.data().money - item.price,
-		})
-
-		const reqs = collection(db, `classrooms/${classID}/rewardRequests`)
-
-		await addDoc(reqs, newRequest)
-
-		return 'Success!'
+	if (!player) {
+		throw new Error('Could not find player')
 	}
+
+	const balance = player.money
+
+	if (balance < item.price) {
+		throw new Error('Not enough money!')
+	}
+
+	const newItem = {
+		itemId: item.id,
+	}
+
+	const newRequest = {
+		rewardName: item.name,
+		rewardDescription: item.description,
+		rewardPrice: item.price,
+		playerID: studentID,
+		playerName: player.name,
+	}
+
+	const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
+	await addDoc(inv, newItem)
+
+	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
+	await updateDoc(playerRef, {
+		money: player.money - item.price,
+	})
+
+	const reqs = collection(db, `classrooms/${classID}/rewardRequests`)
+
+	await addDoc(reqs, newRequest)
+
+	return 'Success!'
 }
 
 // Mutation to delete Custom Item
