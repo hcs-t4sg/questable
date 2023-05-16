@@ -1,9 +1,9 @@
-import { Box, Container, Toolbar, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Container, useMediaQuery, useTheme } from '@mui/material'
 import React from 'react'
-import ClassroomSidebar from './ClassroomSidebar'
 import { UserRole } from '../../types'
-import background from '/src/assets/background.png'
 import BottomAppBar from './BottomBar'
+import ClassroomSidebar from './ClassroomSidebar'
+import background from '/src/assets/background.png'
 
 export default function Layout({
 	children,
@@ -37,7 +37,6 @@ export default function Layout({
 					imageRendering: 'pixelated',
 				}}
 			>
-				<Toolbar />
 				<Container maxWidth='lg' sx={{ mt: 4, mb: 4, opacity: 1 }}>
 					{children}
 				</Container>
