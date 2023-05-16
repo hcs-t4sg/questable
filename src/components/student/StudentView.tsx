@@ -48,7 +48,7 @@ export default function StudentView({
 		refreshAllRepeatables(classroom.id, player.id)
 	})
 
-	const mobile = useMediaQuery('(max-width: 400px)')
+	const mobile = useMediaQuery('(max-width: 500px)')
 
 	return (
 		<Layout classroom role={player.role}>

@@ -16,7 +16,7 @@ export default function ClassStudent({
 	classroom: Classroom
 }) {
 	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
-	const mobile = useMediaQuery('(max-width:400px)')
+	const mobile = useMediaQuery('(max-width:500px)')
 
 	useEffect(() => {
 		// If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness

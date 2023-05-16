@@ -18,7 +18,7 @@ export default function TeacherSettings({
 	user: User
 }) {
 	const [editOn, setEditOn] = useState(classroom.canEdit)
-	const mobile = useMediaQuery('(max-width:400px)')
+	const mobile = useMediaQuery('(max-width:500px)')
 	const { enqueueSnackbar } = useSnackbar()
 
 	const handleSwitch = async (classroom: Classroom) => {

@@ -55,7 +55,7 @@ export default function TasksStudent({
 
 	const [taskRepTab, setTaskRepTab] = useState<0 | 1>(0)
 
-	const mobile = useMediaQuery('(max-width:400px')
+	const mobile = useMediaQuery('(max-width:500px')
 
 	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
 		setTaskRepTab(newValue)

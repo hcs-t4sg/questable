@@ -24,7 +24,7 @@ export default function TasksTeacher({
 		setPage(newTabIndex)
 	}
 
-	const mobile = useMediaQuery('(max-width:400px)')
+	const mobile = useMediaQuery('(max-width:500px)')
 
 	return (
 		<>

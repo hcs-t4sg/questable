@@ -10,7 +10,7 @@ export default function Layout({
 	classroom,
 	role,
 }: React.PropsWithChildren<{ classroom?: boolean; role?: UserRole }>) {
-	const mobile = useMediaQuery('(max-width:400px)')
+	const mobile = useMediaQuery('(max-width:950px)')
 
 	return (
 		<Box
@@ -31,6 +31,7 @@ export default function Layout({
 					position: 'fixed',
 					bottom: 0,
 					width: '100%',
+					overflowX: 'scroll',
 					overflow: 'auto',
 					imageRendering: 'pixelated',
 				}}

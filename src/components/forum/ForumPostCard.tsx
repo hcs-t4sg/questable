@@ -69,7 +69,7 @@ export default function ForumPostCard({
 		})
 	}
 
-	const mobile = useMediaQuery('(max-width:400px')
+	const mobile = useMediaQuery('(max-width:500px')
 
 	const cardContent = (
 		<CardContent sx={{ overflow: 'scroll' }}>

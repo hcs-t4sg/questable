@@ -13,7 +13,7 @@ export default function StudentSettings({
 	classroom: Classroom
 	user: User
 }) {
-	const mobile = useMediaQuery('(max-width:400px)')
+	const mobile = useMediaQuery('(max-width:500px)')
 	return (
 		<>
 			<Grid item xs={12}>

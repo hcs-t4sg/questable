@@ -22,7 +22,7 @@ export default function ForumPostList({
 	const [forumPosts, setForumPosts] = useState<ForumPost[] | null>(null)
 	const [fuse, newFuse] = useState(new Fuse<ForumPost>([]))
 	const [searchInput, setInput] = useState('')
-	const mobile = useMediaQuery('(max-width:400px')
+	const mobile = useMediaQuery('(max-width:500px')
 
 	const categoryTitles = {
 		'-1': 'All Posts',
