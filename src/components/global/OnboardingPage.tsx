@@ -154,25 +154,23 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 						{' '}
 						<TabPanel value={value} index={0}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-								{bodies.map((item, index) => {
-									// const onboardBodyOutfit = {
-									// 	body: item,
-									// 	hair: hair,
-									// 	shirt: shirt,
-									// 	pants: pants,
-									// 	shoes: shoes }
-									return (
-										<Grid item xs={2} sm={3} md={3} key={index}>
-											<OnboardingItemCard
-												item={item}
-												itemPrice=''
-												// bodyOutfit={onboardBodyOutfit}
-												selectItemCallback={() => setBody(item)}
-												isEquipped={body?.id === item.id}
-											/>
-										</Grid>
-									)
-								})}
+								{bodies.map((item, index) => (
+									<Grid item xs={2} sm={3} md={3} key={index}>
+										<OnboardingItemCard
+											item={item}
+											itemPrice=''
+											bodyOutfit={{
+												body: item,
+												hair: new Hair(0, 'bob'),
+												shirt: new Shirt(0),
+												pants: new Pants(0),
+												shoes: new Shoes(0),
+											}}
+											selectItemCallback={() => setBody(item)}
+											isEquipped={body?.id === item.id}
+										/>
+									</Grid>
+								))}
 							</Grid>
 						</TabPanel>
 						<TabPanel value={value} index={1}>
