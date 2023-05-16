@@ -71,9 +71,8 @@ const ListItems = ({
 	)
 }
 
-const pageSlug = window.location.href.split('/').at(-1)
-
 export function MainListItemsTeacher() {
+	const pageSlug = window.location.href.split('/').at(-1)
 	let selectedInit = 0 as 0 | 1 | 2 | 3 | 4 | 5
 	switch (pageSlug) {
 		case 'tasks':
@@ -134,6 +133,7 @@ export function MainListItemsTeacher() {
 }
 
 export function MainListItemsStudent() {
+	const pageSlug = window.location.href.split('/').at(-1)
 	let selectedInit = 0 as 0 | 1 | 2 | 3 | 4 | 5
 	switch (pageSlug) {
 		case 'tasks':
