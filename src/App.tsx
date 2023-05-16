@@ -1,10 +1,6 @@
 import MuiAppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
+import { Box, Button, CssBaseline, Typography, Toolbar } from '@mui/material'
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import { useAuthUser } from '@react-query-firebase/auth'
 import { Link, Route, Routes } from 'react-router-dom'
 import './App.css'
@@ -17,6 +13,20 @@ import { SnackbarProvider } from 'notistack'
 import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 
+declare module '@mui/material/styles' {
+	interface BreakpointOverrides {
+		xs: true // removes the `xs` breakpoint
+		sm: true
+		md: true
+		lg: true
+		xl: true
+		mobile: true // adds the `mobile` breakpoint
+		tablet: true
+		laptop: true
+		desktop: true
+	}
+}
+
 import 'virtual:fonts.css'
 
 // MUI styling constants
@@ -26,6 +36,19 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 }))
 
 const mdTheme = createTheme({
+	breakpoints: {
+		values: {
+			xs: 0,
+			sm: 600,
+			md: 900,
+			lg: 1200,
+			xl: 1536,
+			mobile: 500,
+			tablet: 950,
+			laptop: 1024,
+			desktop: 1200,
+		},
+	},
 	palette: {
 		primary: {
 			main: '#4a2511',
@@ -100,13 +123,12 @@ export default function App() {
 			}
 		},
 	})
-
 	return (
 		<ThemeProvider theme={mdTheme}>
 			<SnackbarProvider maxSnack={3}>
 				<Box sx={{ display: 'flex' }}>
 					<CssBaseline />
-					<AppBar position='absolute'>
+					<AppBar position='fixed' sx={{ height: 65 }}>
 						<Toolbar
 							sx={{
 								pr: '24px', // keep right padding when drawer closed
@@ -163,6 +185,7 @@ export default function App() {
 							</Button>
 						</Toolbar>
 					</AppBar>
+
 					{currentUser.data ? (
 						/* Navigation routes set by react router. This is placed in
           app.js rather than index.js so we can pass relevant top-level

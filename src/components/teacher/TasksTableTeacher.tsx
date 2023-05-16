@@ -116,7 +116,8 @@ export default function TasksTableTeacher({
 								<TableCell>Description</TableCell>
 								<TableCell>Deadline</TableCell>
 								<TableCell>Reward </TableCell>
-								<TableCell>Students Confirmed</TableCell>
+								<TableCell>Confirmed</TableCell>
+								<BlankTableCell />
 								<BlankTableCell />
 							</TableRow>
 						</TableHead>
@@ -132,7 +133,6 @@ export default function TasksTableTeacher({
 										{task.name}
 									</TableCell>
 									<TableCell>
-										{' '}
 										<div
 											dangerouslySetInnerHTML={{
 												__html: truncate(
@@ -141,7 +141,6 @@ export default function TasksTableTeacher({
 											}}
 										/>
 									</TableCell>
-									{/* <TableCell align='left'>{truncate(task.description)}</TableCell> */}
 									<TableCell align='left'>
 										{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
 									</TableCell>
@@ -151,7 +150,7 @@ export default function TasksTableTeacher({
 									</TableCell>
 
 									<TableCell align='right'>
-										<IconButton onClick={() => handleDelete(task)}>
+										<IconButton sx={{ ml: 2 }} onClick={() => handleDelete(task)}>
 											<DeleteIcon />
 										</IconButton>
 									</TableCell>

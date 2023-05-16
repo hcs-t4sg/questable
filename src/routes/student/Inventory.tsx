@@ -1,15 +1,11 @@
-import Grid from '@mui/material/Grid'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
+import { Grid, Tab, Tabs, Typography, Box, useMediaQuery, useTheme } from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import React, { useEffect } from 'react'
 import { db } from '../../utils/firebase'
 // import ReactDOM from "react-dom"
-import { Box } from '@mui/system'
 // import InventoryItemCard from '../../components/student/InventoryItemCard'
 import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
 import { currentAvatar, getBodyItems, Hair, Pants, Shirt, Shoes } from '../../utils/items'
-import { Typography } from '@mui/material'
 import wood2 from '/src/assets/Wood2.png'
 import Loading from '../../components/global/Loading'
 import { InventoryItemCard } from '../../components/student/InventoryItemCard'
@@ -46,6 +42,8 @@ function a11yProps(index: number) {
 export default function Inventory({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [value, setValue] = React.useState(0)
 	const [inventoryItems, setInventoryItems] = React.useState<DatabaseInventoryItem[] | null>(null)
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	// Listens for changes in the inventory items
 	useEffect(() => {
@@ -94,7 +92,9 @@ export default function Inventory({ player, classroom }: { player: Player; class
 		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
 				<Grid item xs={12}>
-					<Typography variant='h2'>Inventory</Typography>
+					<Typography sx={{ fontSize: !mobile ? '50px' : '32px' }} variant='h2'>
+						Inventory
+					</Typography>
 					<h5>Equip your avatar with items from your inventory!</h5>
 				</Grid>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

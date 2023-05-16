@@ -1,7 +1,4 @@
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
+import { Box, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material'
 import * as React from 'react'
 // import ShopShopItemCard from '../../components/student/ShopShopItemCard'
 import { Classroom, Player } from '../../types'
@@ -10,7 +7,6 @@ import { ShopItemCard } from '../../components/student/ShopItemCard'
 // import { Classroom, Player } from '../../types'
 import { useState } from 'react'
 import wood2 from '/src/assets/Wood2.png'
-import { Typography } from '@mui/material'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -53,12 +49,17 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 		setValue(newValue)
 	}
 
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
+
 	return (
 		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
 				{/* spacing={3} for above grid? */}
 				<Grid item xs={12}>
-					<Typography variant='h2'>Shop</Typography>
+					<Typography sx={{ fontSize: !mobile ? '50px' : '32px' }} variant='h2'>
+						Shop
+					</Typography>
 					<h5>Purchase avatars, accessories, and special rewards from the shop!</h5>
 				</Grid>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

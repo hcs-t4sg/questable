@@ -7,6 +7,8 @@ import {
 	Typography,
 	Stack,
 	IconButton,
+	useMediaQuery,
+	useTheme,
 } from '@mui/material'
 import { useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -68,10 +70,16 @@ export default function ForumPostCard({
 		})
 	}
 
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
+
 	const cardContent = (
-		<CardContent>
+		<CardContent sx={{ overflow: 'scroll' }}>
 			<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
-				<Typography variant='h5' sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>
+				<Typography
+					variant='h5'
+					sx={{ fontWeight: 'bold', paddingBottom: '10px', fontSize: !mobile ? '20px' : '10px' }}
+				>
 					{forumPost.title}
 				</Typography>
 
@@ -99,13 +107,13 @@ export default function ForumPostCard({
 
 					{(player.role === 'teacher' ||
 						(forumPost.author.id === player.id && classroom.canEdit)) && (
-						<IconButton>
-							<DeleteIcon
-								onClick={(e) => {
-									handleDelete(forumPost)
-									e.preventDefault()
-								}}
-							></DeleteIcon>
+						<IconButton
+							onClick={(e) => {
+								handleDelete(forumPost)
+								e.preventDefault()
+							}}
+						>
+							<DeleteIcon />
 						</IconButton>
 					)}
 				</Stack>
@@ -119,10 +127,17 @@ export default function ForumPostCard({
 				>
 					<Avatar outfit={currentAvatar(forumPost.author)} />
 				</Box>
-				<Typography gutterBottom variant='subtitle2' sx={{ marginBottom: 0, marginRight: '5px' }}>
+				<Typography
+					gutterBottom
+					variant='subtitle2'
+					sx={{ marginBottom: 0, marginRight: '5px', fontSize: !mobile ? '13px' : '6px' }}
+				>
 					{forumPost.anonymous ? 'Anonymous' : forumPost.author.name}
 				</Typography>
-				<Typography variant='caption' style={{ fontStyle: 'italic' }}>
+				<Typography
+					variant='caption'
+					style={{ fontStyle: 'italic', fontSize: !mobile ? '13px' : '6px' }}
+				>
 					{forumPost.postTime ? format(forumPost.postTime.toDate(), 'MM/dd/yyyy h:mm a') : ''}
 				</Typography>
 			</Box>
@@ -135,7 +150,10 @@ export default function ForumPostCard({
 
 	return (
 		<Box>
-			<Card sx={{ marginBottom: '10px' }} variant={isLink ? 'elevation' : 'outlined'}>
+			<Card
+				sx={{ marginBottom: '10px', width: !mobile ? '100%' : '120%' }}
+				variant={isLink ? 'elevation' : 'outlined'}
+			>
 				{isLink ? (
 					<CardActionArea component={Link} to={forumPost.id}>
 						{cardContent}

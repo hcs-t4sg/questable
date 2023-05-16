@@ -1,14 +1,16 @@
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-
-// import Card from '@mui/material/Card'
-// import CardContent from '@mui/material/CardContent'
+import {
+	Grid,
+	Typography,
+	TextField,
+	useMediaQuery,
+	Tab,
+	Tabs,
+	Stack,
+	useTheme,
+} from '@mui/material'
 import * as React from 'react'
 import CreateTaskModal from '../../components/teacher/CreateTaskModal'
 import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
-
-import { Tab, Tabs, Stack } from '@mui/material'
 import RepeatableTableTeacher from '../../components/teacher/RepeatableTableTeacher'
 import { Classroom, Player } from '../../types'
 
@@ -28,35 +30,23 @@ export default function TasksTeacher({
 		setPage(newTabIndex)
 	}
 
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
+
 	return (
 		<>
-			{/* <Grid item xs={12}>
-				<Typography variant='h2' component='div'>
-					{classroom.name}
+			<Grid item xs={12}>
+				<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
+					Create a New Task
 				</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Card sx={{ width: 1 }}>
-					<CardContent>
-						<Typography variant='h5' component='div'>
-							{player.name}
-						</Typography>{' '}
-						{/* Do we want a separate user name?*/}
-			{/* <Typography variant='h5' component='div'>
-							{classroom.playerList.length} Total Students
-						</Typography>
-					</CardContent>
-				</Card>
-			</Grid> */}
-
-			<Grid item xs={12}>
-				<Typography variant='h4'>Create a New Task</Typography>
 				<CreateTaskModal classroom={classroom} player={player} />
 			</Grid>
 
 			<Grid item xs={12}>
 				<Stack direction='row' sx={{ display: 'flex', justifyContent: 'space-between' }}>
-					<Typography variant='h4'>View and Edit Tasks</Typography>
+					<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
+						View and Edit Tasks
+					</Typography>
 					<TextField
 						id='standard-basic'
 						label='Search'

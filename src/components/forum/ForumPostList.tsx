@@ -1,4 +1,4 @@
-import { Typography, Stack } from '@mui/material'
+import { Typography, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, ForumPost, Player } from '../../types'
@@ -22,6 +22,8 @@ export default function ForumPostList({
 	const [forumPosts, setForumPosts] = useState<ForumPost[] | null>(null)
 	const [fuse, newFuse] = useState(new Fuse<ForumPost>([]))
 	const [searchInput, setInput] = useState('')
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	const categoryTitles = {
 		'-1': 'All Posts',
@@ -84,8 +86,13 @@ export default function ForumPostList({
 
 	return (
 		<>
-			<Stack direction='row' sx={{ display: 'flex', justifyContent: 'space-between' }}>
-				<Typography variant='h4'>{categoryTitles[categoryFilter]}</Typography>
+			<Stack
+				direction={!mobile ? 'row' : 'column'}
+				sx={{ display: 'flex', justifyContent: 'space-between' }}
+			>
+				<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
+					{categoryTitles[categoryFilter]}
+				</Typography>
 				<TextField
 					id='id="standard-basic"'
 					label='Search'

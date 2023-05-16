@@ -1,8 +1,5 @@
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import Switch from '@mui/material/Switch'
 import PlayerCard from '../../components/global/PlayerCard'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import { Grid, Typography, Switch, FormControlLabel, useMediaQuery, useTheme } from '@mui/material'
 import { User } from 'firebase/auth'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
@@ -23,6 +20,9 @@ export default function TeacherSettings({
 	const [editOn, setEditOn] = useState(classroom.canEdit)
 	const { enqueueSnackbar } = useSnackbar()
 
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
+
 	const handleSwitch = async (classroom: Classroom) => {
 		const classroomRef = doc(db, 'classrooms', classroom.id)
 		await updateDoc(classroomRef, {
@@ -40,9 +40,11 @@ export default function TeacherSettings({
 	return (
 		<>
 			<Grid item xs={12}>
-				<Typography variant='h4'>Teacher Profile</Typography>
+				<Typography sx={{ fontSize: !mobile ? '32px' : '18px' }} variant='h4'>
+					Teacher Profile
+				</Typography>
 				<PlayerCard player={player} user={user} classroom={classroom} />
-				<Typography sx={{ mt: 2 }} variant='h4'>
+				<Typography sx={{ mt: 2, fontSize: !mobile ? '32px' : '18px' }} variant='h4'>
 					Forum Settings
 				</Typography>
 				<FormControlLabel

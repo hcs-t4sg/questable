@@ -1,5 +1,4 @@
-import { Grid, Tab, Tabs, Stack } from '@mui/material'
-import { Box } from '@mui/system'
+import { Grid, Tab, Tabs, Stack, Box, TextField, useMediaQuery, useTheme } from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -8,7 +7,6 @@ import TasksTableStudent from '../../components/student/TasksTableStudent'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { db } from '../../utils/firebase'
 import Loading from '../../components/global/Loading'
-import TextField from '@mui/material/TextField'
 
 // TODO Rewrite this component, it's very inefficient and unmaintainable
 interface TabPanelProps {
@@ -56,6 +54,10 @@ export default function TasksStudent({
 	const [searchInput, setSearchInput] = useState('')
 
 	const [taskRepTab, setTaskRepTab] = useState<0 | 1>(0)
+
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
+
 	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
 		setTaskRepTab(newValue)
 	}
@@ -100,7 +102,11 @@ export default function TasksStudent({
 	return (
 		<Grid item xs={12}>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-				<Stack sx={{ display: 'flex', justifyContent: 'space-between' }} direction='row'>
+				<Stack
+					sx={{ display: 'flex', justifyContent: 'space-between' }}
+					direction={!mobile ? 'row' : 'column'}
+					spacing={!mobile ? 0 : 2}
+				>
 					<Tabs value={taskRepTab} onChange={handleChangeTaskRep} aria-label='Task/repeatable tabs'>
 						<Tab label='Tasks' {...a11yProps(0)} />
 						<Tab label='Repeatables' {...a11yProps(1)} />
