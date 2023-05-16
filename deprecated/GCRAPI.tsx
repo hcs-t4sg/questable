@@ -1,12 +1,6 @@
 // ! NOT USING LOADCLIENT AT THE MOMENT BECAUSE GAPI AUTH2 IS OUTDATED
 // import { gapi } from 'gapi-script'
 
-// Store as env variables at some point
-export const clientID = '104855113016-3noojc4bmbk66foqac9pjf44vm3lbnlr.apps.googleusercontent.com'
-export const API_KEY = 'AIzaSyDzA5DkKC8gBEv9ImQ8QctoWSZXILTKYkw'
-export const SCOPES =
-	'https://www.googleapis.com/auth/classroom.coursework.students https://www.googleapis.com/auth/classroom.coursework.me.readonly https://www.googleapis.com/auth/classroom.coursework.students.readonly https://www.googleapis.com/auth/classroom.courses https://www.googleapis.com/auth/classroom.coursework.me'
-
 // export function loadClient() {
 // 	gapi.load('client:auth2', () => {
 // 		console.log('loaded gapi client')
