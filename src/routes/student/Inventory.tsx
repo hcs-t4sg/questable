@@ -1,4 +1,4 @@
-import { Grid, Tab, Tabs, Typography, Box, useMediaQuery } from '@mui/material'
+import { Grid, Tab, Tabs, Typography, Box, useMediaQuery, useTheme } from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import React, { useEffect } from 'react'
 import { db } from '../../utils/firebase'
@@ -42,7 +42,8 @@ function a11yProps(index: number) {
 export default function Inventory({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [value, setValue] = React.useState(0)
 	const [inventoryItems, setInventoryItems] = React.useState<DatabaseInventoryItem[] | null>(null)
-	const mobile = useMediaQuery('(max-width:500px)')
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	// Listens for changes in the inventory items
 	useEffect(() => {

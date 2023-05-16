@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
+import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
 // import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
 // import { styled } from '@mui/material/styles'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
@@ -48,7 +48,8 @@ export default function StudentView({
 		refreshAllRepeatables(classroom.id, player.id)
 	})
 
-	const mobile = useMediaQuery('(max-width: 500px)')
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	return (
 		<Layout classroom role={player.role}>

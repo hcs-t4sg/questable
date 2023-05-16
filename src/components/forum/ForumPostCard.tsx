@@ -8,6 +8,7 @@ import {
 	Stack,
 	IconButton,
 	useMediaQuery,
+	useTheme,
 } from '@mui/material'
 import { useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -69,7 +70,8 @@ export default function ForumPostCard({
 		})
 	}
 
-	const mobile = useMediaQuery('(max-width:500px')
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	const cardContent = (
 		<CardContent sx={{ overflow: 'scroll' }}>

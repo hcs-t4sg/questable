@@ -1,7 +1,13 @@
-import { Grid, Typography, TextField, useMediaQuery, Tab, Tabs, Stack } from '@mui/material'
-
-// import Card from '@mui/material/Card'
-// import CardContent from '@mui/material/CardContent'
+import {
+	Grid,
+	Typography,
+	TextField,
+	useMediaQuery,
+	Tab,
+	Tabs,
+	Stack,
+	useTheme,
+} from '@mui/material'
 import * as React from 'react'
 import CreateTaskModal from '../../components/teacher/CreateTaskModal'
 import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
@@ -24,29 +30,11 @@ export default function TasksTeacher({
 		setPage(newTabIndex)
 	}
 
-	const mobile = useMediaQuery('(max-width:500px)')
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	return (
 		<>
-			{/* <Grid item xs={12}>
-				<Typography variant='h2' component='div'>
-					{classroom.name}
-				</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Card sx={{ width: 1 }}>
-					<CardContent>
-						<Typography variant='h5' component='div'>
-							{player.name}
-						</Typography>{' '}
-						{/* Do we want a separate user name?*/}
-			{/* <Typography variant='h5' component='div'>
-							{classroom.playerList.length} Total Students
-						</Typography>
-					</CardContent>
-				</Card>
-			</Grid> */}
-
 			<Grid item xs={12}>
 				<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
 					Create a New Task

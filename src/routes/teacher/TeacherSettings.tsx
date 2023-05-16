@@ -1,5 +1,5 @@
 import PlayerCard from '../../components/global/PlayerCard'
-import { Grid, Typography, Switch, FormControlLabel, useMediaQuery } from '@mui/material'
+import { Grid, Typography, Switch, FormControlLabel, useMediaQuery, useTheme } from '@mui/material'
 import { User } from 'firebase/auth'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
@@ -18,8 +18,10 @@ export default function TeacherSettings({
 	user: User
 }) {
 	const [editOn, setEditOn] = useState(classroom.canEdit)
-	const mobile = useMediaQuery('(max-width:500px)')
 	const { enqueueSnackbar } = useSnackbar()
+
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	const handleSwitch = async (classroom: Classroom) => {
 		const classroomRef = doc(db, 'classrooms', classroom.id)

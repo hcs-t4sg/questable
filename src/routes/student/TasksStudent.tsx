@@ -1,4 +1,4 @@
-import { Grid, Tab, Tabs, Stack, Box, TextField, useMediaQuery } from '@mui/material'
+import { Grid, Tab, Tabs, Stack, Box, TextField, useMediaQuery, useTheme } from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -55,7 +55,8 @@ export default function TasksStudent({
 
 	const [taskRepTab, setTaskRepTab] = useState<0 | 1>(0)
 
-	const mobile = useMediaQuery('(max-width:500px')
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
 		setTaskRepTab(newValue)

@@ -13,6 +13,20 @@ import { SnackbarProvider } from 'notistack'
 import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 
+declare module '@mui/material/styles' {
+	interface BreakpointOverrides {
+		xs: true // removes the `xs` breakpoint
+		sm: true
+		md: true
+		lg: true
+		xl: true
+		mobile: true // adds the `mobile` breakpoint
+		tablet: true
+		laptop: true
+		desktop: true
+	}
+}
+
 import 'virtual:fonts.css'
 
 // MUI styling constants
@@ -22,6 +36,19 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 }))
 
 const mdTheme = createTheme({
+	breakpoints: {
+		values: {
+			xs: 0,
+			sm: 600,
+			md: 900,
+			lg: 1200,
+			xl: 1536,
+			mobile: 500,
+			tablet: 950,
+			laptop: 1024,
+			desktop: 1200,
+		},
+	},
 	palette: {
 		primary: {
 			main: '#4a2511',

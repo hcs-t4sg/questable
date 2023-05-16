@@ -1,4 +1,4 @@
-import { Tab, Tabs, Grid, Button, Stack, Typography, useMediaQuery } from '@mui/material'
+import { Tab, Tabs, Grid, Button, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useState, useEffect } from 'react'
 import ConfirmRepeatablesTable from './ConfirmRepeatablesTable'
 import ConfirmTasksTable from './ConfirmTasksTable'
@@ -25,7 +25,8 @@ export default function ConfirmationTables({ classroom }: { classroom: Classroom
 
 	const { enqueueSnackbar } = useSnackbar()
 
-	const mobile = useMediaQuery('(max-width:400px)')
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	const handleTabChange = (event: React.SyntheticEvent, newTabIndex: number) => {
 		setPage(newTabIndex)

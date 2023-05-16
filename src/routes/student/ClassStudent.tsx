@@ -1,4 +1,4 @@
-import { Grid, Typography, Box, Card, CardContent, useMediaQuery } from '@mui/material'
+import { Grid, Typography, Box, Card, CardContent, useMediaQuery, useTheme } from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 import { getUserData } from '../../utils/mutations'
@@ -16,7 +16,9 @@ export default function ClassStudent({
 	classroom: Classroom
 }) {
 	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
-	const mobile = useMediaQuery('(max-width:500px)')
+
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	useEffect(() => {
 		// If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness

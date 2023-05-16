@@ -1,4 +1,4 @@
-import { Box, Grid, Tab, Tabs, Typography, useMediaQuery } from '@mui/material'
+import { Box, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material'
 import * as React from 'react'
 // import ShopShopItemCard from '../../components/student/ShopShopItemCard'
 import { Classroom, Player } from '../../types'
@@ -49,7 +49,8 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 		setValue(newValue)
 	}
 
-	const mobile = useMediaQuery('(max-width:400px)')
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	return (
 		<Grid item xs={12}>

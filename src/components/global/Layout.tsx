@@ -1,4 +1,4 @@
-import { Box, Container, Toolbar, useMediaQuery } from '@mui/material'
+import { Box, Container, Toolbar, useMediaQuery, useTheme } from '@mui/material'
 import React from 'react'
 import ClassroomSidebar from './ClassroomSidebar'
 import { UserRole } from '../../types'
@@ -10,7 +10,8 @@ export default function Layout({
 	classroom,
 	role,
 }: React.PropsWithChildren<{ classroom?: boolean; role?: UserRole }>) {
-	const mobile = useMediaQuery('(max-width:950px)')
+	const theme = useTheme()
+	const tablet = useMediaQuery(theme.breakpoints.down('tablet'))
 
 	return (
 		<Box
@@ -20,7 +21,7 @@ export default function Layout({
 				// backgroundImage: { background },
 			}}
 		>
-			{classroom && role && !mobile && <ClassroomSidebar role={role} />}
+			{classroom && role && !tablet && <ClassroomSidebar role={role} />}
 			<Box
 				component='main'
 				sx={{
@@ -40,12 +41,12 @@ export default function Layout({
 				<Container maxWidth='lg' sx={{ mt: 4, mb: 4, opacity: 1 }}>
 					{children}
 				</Container>
-				{mobile && (
+				{tablet && (
 					<Box className='spacer' sx={{ height: 40 }}>
 						{' '}
 					</Box>
 				)}
-				{classroom && role && mobile && <BottomAppBar role={role} />}
+				{classroom && role && tablet && <BottomAppBar role={role} />}
 			</Box>
 		</Box>
 	)

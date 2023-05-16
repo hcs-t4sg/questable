@@ -1,4 +1,4 @@
-import { Grid, Typography, useMediaQuery } from '@mui/material'
+import { Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
 import PlayerCard from '../../components/global/PlayerCard'
 
 import { User } from 'firebase/auth'
@@ -13,7 +13,8 @@ export default function StudentSettings({
 	classroom: Classroom
 	user: User
 }) {
-	const mobile = useMediaQuery('(max-width:500px)')
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 	return (
 		<>
 			<Grid item xs={12}>
