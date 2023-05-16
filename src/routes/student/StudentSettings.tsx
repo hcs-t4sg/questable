@@ -1,6 +1,4 @@
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-
+import { Grid, Typography, useMediaQuery } from '@mui/material'
 import PlayerCard from '../../components/global/PlayerCard'
 
 import { User } from 'firebase/auth'
@@ -15,10 +13,13 @@ export default function StudentSettings({
 	classroom: Classroom
 	user: User
 }) {
+	const mobile = useMediaQuery('(max-width:400px)')
 	return (
 		<>
 			<Grid item xs={12}>
-				<Typography variant='h4'>Student Profile</Typography>
+				<Typography sx={{ fontSize: !mobile ? '32px' : '18px' }} variant='h4'>
+					Student Profile
+				</Typography>
 				<PlayerCard player={player} user={user} classroom={classroom} />
 			</Grid>
 		</>

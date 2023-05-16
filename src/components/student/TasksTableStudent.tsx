@@ -1,14 +1,19 @@
-import { Box, IconButton, Tab, Tabs } from '@mui/material'
+import {
+	Box,
+	IconButton,
+	Tab,
+	Tabs,
+	Button,
+	Chip,
+	Grid,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+} from '@mui/material'
 // import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
-import Grid from '@mui/material/Grid'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
@@ -109,7 +114,6 @@ export default function TasksTableStudent({
 		}
 	}
 
-	console.log(assigned)
 	return (
 		<Box>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

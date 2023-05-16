@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material'
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 // import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
 // import { styled } from '@mui/material/styles'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
@@ -48,6 +48,8 @@ export default function StudentView({
 		refreshAllRepeatables(classroom.id, player.id)
 	})
 
+	const mobile = useMediaQuery('(max-width: 400px)')
+
 	return (
 		<Layout classroom role={player.role}>
 			<Grid container spacing={3}>
@@ -70,17 +72,23 @@ export default function StudentView({
 							backgroundColor: '#f3f8df',
 						}}
 					>
-						<Typography variant='h2' sx={{ fontFamily: 'Superscript' }}>
+						<Typography
+							variant='h2'
+							sx={{ fontFamily: 'Superscript', fontSize: !mobile ? '45px' : '20px' }}
+						>
 							{classroom.name}
 						</Typography>
-						<Typography variant='h3' sx={{ fontFamily: 'Superscript' }}>
+						<Typography
+							variant='h3'
+							sx={{ fontFamily: 'Superscript', fontSize: !mobile ? '40px' : '15px' }}
+						>
 							{player.name}
 						</Typography>
 						<Box sx={{ display: 'flex', marginTop: '20px' }}>
 							<Box
 								sx={{
-									width: '20%',
-									height: '40%',
+									width: !mobile ? '20%' : '10%',
+									height: !mobile ? '40%' : '20%',
 									maxHeight: '312px',
 									maxWidth: '313px',
 								}}
@@ -106,13 +114,13 @@ export default function StudentView({
 									marginLeft: '50px',
 								}}
 							>
-								<Typography sx={{ fontSize: '16px', marginTop: '40px' }}>
+								<Typography sx={{ fontSize: !mobile ? '16px' : '8px', marginTop: '40px' }}>
 									Name: {user.displayName}
 								</Typography>
-								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+								<Typography sx={{ fontSize: !mobile ? '16px' : '8px', marginTop: '20px' }}>
 									Email: {user.email}
 								</Typography>
-								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+								<Typography sx={{ fontSize: !mobile ? '16px' : '8px', marginTop: '20px' }}>
 									Gold: {player.money}
 								</Typography>
 							</Box>

@@ -1,11 +1,9 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import Divider from '@mui/material/Divider'
 import MuiDrawer from '@mui/material/Drawer'
-import IconButton from '@mui/material/IconButton'
-import List from '@mui/material/List'
 import { styled } from '@mui/material/styles'
-import Toolbar from '@mui/material/Toolbar'
+import { Toolbar, List, IconButton, Divider } from '@mui/material'
+
 import React from 'react'
 import '../../App.css'
 import { UserRole } from '../../types'
