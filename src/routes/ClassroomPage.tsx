@@ -74,9 +74,9 @@ export default function ClassroomPage({ user }: { user: User }) {
 		return unsub
 	}, [])
 
-	if (classroom) {
+	if (classroom && onboarded) {
 		if (player) {
-			if (!onboarded?.includes(classroom.id)) {
+			if (!onboarded.includes(classroom.id)) {
 				return <OnboardingPage classroom={classroom} user={user} />
 			}
 			if (player.role === 'teacher') {
