@@ -107,13 +107,13 @@ export default function ForumPostCard({
 
 					{(player.role === 'teacher' ||
 						(forumPost.author.id === player.id && classroom.canEdit)) && (
-						<IconButton>
-							<DeleteIcon
-								onClick={(e) => {
-									handleDelete(forumPost)
-									e.preventDefault()
-								}}
-							></DeleteIcon>
+						<IconButton
+							onClick={(e) => {
+								handleDelete(forumPost)
+								e.preventDefault()
+							}}
+						>
+							<DeleteIcon />
 						</IconButton>
 					)}
 				</Stack>
