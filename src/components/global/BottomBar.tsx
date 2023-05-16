@@ -1,5 +1,15 @@
 import * as React from 'react'
-import { styled, CssBaseline, Toolbar, IconButton, List, AppBar, Stack } from '@mui/material'
+import {
+	styled,
+	CssBaseline,
+	Toolbar,
+	IconButton,
+	List,
+	AppBar,
+	Stack,
+	ListItemButton,
+	ListItemIcon,
+} from '@mui/material'
 import MuiDrawer from '@mui/material/Drawer'
 import { UserRole } from '../../types'
 import { MainListItemsStudent, MainListItemsTeacher } from './listItems'
@@ -12,8 +22,22 @@ import GroupIcon from '@mui/icons-material/Group'
 import InventoryIcon from '@mui/icons-material/Inventory'
 import SellIcon from '@mui/icons-material/Sell'
 import SettingsIcon from '@mui/icons-material/Settings'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
+
+const ListItemButtonStyled = styled(ListItemButton)({
+	color: 'white',
+	'&.Mui-selected': {
+		backgroundColor: '#733a1b',
+	},
+	'&.Mui-focusVisible': {
+		backgroundColor: '#733a1b',
+	},
+	':hover': {
+		backgroundColor: '#733a1b',
+	},
+	'&.Mui-selected:hover': {
+		backgroundColor: '#733a1b',
+	},
+}) as typeof ListItemButton
 
 const ListItemIconStyled = styled(ListItemIcon)({
 	color: 'white',
@@ -118,14 +142,16 @@ export default function BottomAppBar({ role }: { role: UserRole }) {
 					<Stack direction='row'>
 						{items.map((item) => {
 							return (
-								<IconButton
+								<ListItemButtonStyled
 									key={item.text}
 									component={Link}
 									to={item.link}
 									onClick={() => setSelected(item.number)}
+									selected={selected === item.number}
+									sx={{ width: 'fit-content' }}
 								>
 									<ListItemIconStyled>{item.icon}</ListItemIconStyled>
-								</IconButton>
+								</ListItemButtonStyled>
 							)
 						})}
 					</Stack>
