@@ -90,11 +90,27 @@ export default function ClassStudent({
 			<Grid item xs={12}>
 				<Card sx={{ width: 1 }}>
 					<CardContent>
-						<Typography variant='h5' component='div'>
+						<Typography
+							sx={{
+								[theme.breakpoints.down('mobile')]: {
+									fontSize: '16px',
+								},
+							}}
+							variant='h5'
+							component='div'
+						>
 							{player.name}
 						</Typography>{' '}
 						{/* Do we want a separate user name?*/}
-						<Typography variant='h5' component='div'>
+						<Typography
+							sx={{
+								[theme.breakpoints.down('mobile')]: {
+									fontSize: '16px',
+								},
+							}}
+							variant='h5'
+							component='div'
+						>
 							{classroom.playerList.length} Total Students
 						</Typography>
 					</CardContent>
@@ -106,7 +122,6 @@ export default function ClassStudent({
 						<Table aria-label='simple table' sx={{ border: 'none' }}>
 							<TableHead>
 								<TableRow>
-									{/* <TableCell sx={{ width: 60 }} /> */}
 									<TableCell align='center'>Ranking</TableCell>
 									<TableCell align='center'>Player</TableCell>
 									<TableCell align='center'>Level</TableCell>
@@ -133,7 +148,7 @@ export default function ClassStudent({
 			{students ? (
 				students.map((student) => (
 					<Grid item xs={3} key={student.id}>
-						<Card sx={{ width: '100%' }}>
+						<Card sx={{ width: !mobile ? '350px' : '300px' }}>
 							<CardContent>
 								<Box
 									sx={{

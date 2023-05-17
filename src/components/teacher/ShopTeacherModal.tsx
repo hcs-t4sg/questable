@@ -15,7 +15,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import {
 	BoxInModal,
 	ModalTitle,
-	TaskModalBox,
+	TaskModalContent,
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
 import { addReward } from '../../utils/mutations'
@@ -81,7 +81,7 @@ export default function ShopTeacherModal({ classroom }: { classroom: Classroom }
 		<div>
 			{openButton}
 			<TeacherModalStyled open={open} onClose={handleClose}>
-				<TaskModalBox>
+				<TaskModalContent>
 					<ModalTitle onClick={handleClose} text='Create Reward' />
 					<TextField
 						margin='normal'
@@ -123,7 +123,7 @@ export default function ShopTeacherModal({ classroom }: { classroom: Classroom }
 					<Grid container justifyContent='center'>
 						{actionButtons}
 					</Grid>
-				</TaskModalBox>
+				</TaskModalContent>
 			</TeacherModalStyled>
 		</div>
 	)

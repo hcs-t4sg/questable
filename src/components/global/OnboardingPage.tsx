@@ -1,4 +1,4 @@
-import { Box, DialogActions, Grid, Tab, Tabs, TextField, Typography } from '@mui/material'
+import { Box, DialogActions, Grid, Tab, Tabs, TextField, Typography, useTheme } from '@mui/material'
 import { useState } from 'react'
 import { User } from 'firebase/auth'
 import Button from '@mui/material/Button'
@@ -52,6 +52,7 @@ export default function OnboardingPage({
 	user: User
 	player: Player
 }) {
+	const theme = useTheme()
 	const [name, setName] = useState('')
 	const [value, setValue] = useState(0)
 	const [body, setBody] = useState<Body | null>(null)
@@ -128,7 +129,16 @@ export default function OnboardingPage({
 	return (
 		<Layout>
 			<Grid item xs={12}>
-				<Typography variant='h2'>Your Character</Typography>
+				<Typography
+					sx={{
+						[theme.breakpoints.down('mobile')]: {
+							fontSize: '30px',
+						},
+					}}
+					variant='h2'
+				>
+					Your Character
+				</Typography>
 				<h5>Customize your character!</h5>
 			</Grid>
 			<div>

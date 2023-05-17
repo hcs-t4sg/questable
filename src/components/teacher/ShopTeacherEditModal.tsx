@@ -11,7 +11,7 @@ import { updateReward } from '../../utils/mutations'
 import EditIcon from '@mui/icons-material/Edit'
 import { Classroom, CustomShopItems } from '../../types'
 import {
-	TaskModalBox,
+	TaskModalContent,
 	ModalTitle,
 	BoxInModal,
 	TeacherModalStyled,
@@ -108,7 +108,7 @@ export default function ShopeTeacherEditModal({
 						marginBottom: '18px',
 					}}
 				> */}
-				<TaskModalBox>
+				<TaskModalContent>
 					{/* <Box
 						sx={{
 							width: '100%',
@@ -206,7 +206,7 @@ export default function ShopeTeacherEditModal({
 					<Grid container justifyContent='center'>
 						{saveButton}
 					</Grid>
-				</TaskModalBox>
+				</TaskModalContent>
 				{/* </Box> */}
 			</TeacherModalStyled>
 		</div>

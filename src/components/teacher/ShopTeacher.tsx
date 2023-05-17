@@ -115,12 +115,51 @@ export default function ShopTeacher({
 			</Grid>
 			{customShopItems
 				? customShopItems.map((customShopItem) => (
-						<Card sx={{ width: 0.22, m: 2 }} key={customShopItem.id}>
+						<Card
+							sx={{
+								width: 0.22,
+								[theme.breakpoints.down('mobile')]: {
+									width: 0.4,
+								},
+								m: 2,
+							}}
+							key={customShopItem.id}
+						>
 							<CardContent>
 								<Box marginLeft={3.3}> {iconPotion(customShopItem.price)}</Box>
-								<Typography variant='body1'> Name: {customShopItem.name} </Typography>
-								<Typography variant='body1'> Description: {customShopItem.description} </Typography>
-								<Typography variant='body1'> Price: {customShopItem.price} </Typography>
+								<Typography
+									sx={{
+										[theme.breakpoints.down('mobile')]: {
+											fontSize: '10px',
+										},
+									}}
+									variant='body1'
+								>
+									{' '}
+									Name: {customShopItem.name}{' '}
+								</Typography>
+								<Typography
+									sx={{
+										[theme.breakpoints.down('mobile')]: {
+											fontSize: '10px',
+										},
+									}}
+									variant='body1'
+								>
+									{' '}
+									Description: {customShopItem.description}{' '}
+								</Typography>
+								<Typography
+									sx={{
+										[theme.breakpoints.down('mobile')]: {
+											fontSize: '10px',
+										},
+									}}
+									variant='body1'
+								>
+									{' '}
+									Price: {customShopItem.price}{' '}
+								</Typography>
 								<Stack spacing={2} direction='row-reverse'>
 									<IconButton onClick={() => handleDelete(customShopItem)}>
 										<DeleteIcon />
