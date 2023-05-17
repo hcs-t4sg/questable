@@ -531,6 +531,7 @@ export async function confirmTask(classID: string, studentID: string, taskID: st
 	if (playerSnap.exists() && taskSnap.exists()) {
 		updateDoc(playerRef, {
 			money: parseInt(playerSnap.data().money + taskSnap.data().reward),
+			xp: parseInt(playerSnap.data().xp + taskSnap.data().reward),
 		})
 	}
 }
