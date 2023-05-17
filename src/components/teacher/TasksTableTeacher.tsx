@@ -28,14 +28,12 @@ import { truncate } from '../../utils/helperFunctions'
 import createDOMPurify from 'dompurify'
 const DOMPurify = createDOMPurify(window)
 
-function percentDone(task: Task) {
-	const numCompleted = task.completed?.length
-	const numAssigned = task.assigned?.length
+function percentDone(task: Task, players: number) {
 	const numConfirmed = task.confirmed?.length
-	return (numConfirmed / (numCompleted + numConfirmed + numAssigned)) * 100
+	return (numConfirmed / players) * 100
 }
 
-function LinearProgressWithLabel({ task }: { task: Task }) {
+function LinearProgressWithLabel({ task, players }: { task: Task; players: number }) {
 	return (
 		<Box sx={{ display: 'flex', alignItems: 'center' }}>
 			<Box sx={{ minWidth: 100 }}>
@@ -44,7 +42,7 @@ function LinearProgressWithLabel({ task }: { task: Task }) {
 				} students`}</Typography>
 			</Box>
 			<Box sx={{ minWidth: '50%', mr: 1, ml: 1 }}>
-				<LinearProgress variant='determinate' value={percentDone(task)} />
+				<LinearProgress variant='determinate' value={percentDone(task, players)} />
 			</Box>
 		</Box>
 	)
@@ -104,6 +102,8 @@ export default function TasksTableTeacher({
 		}
 	}
 
+	console.log(classroom.playerList.length)
+
 	return (
 		<Grid item xs={12}>
 			{tasks ? (
@@ -147,7 +147,10 @@ export default function TasksTableTeacher({
 									</TableCell>
 									<TableCell align='left'>{`${task.reward}g`}</TableCell>
 									<TableCell align='left'>
-										<LinearProgressWithLabel task={task} />
+										<LinearProgressWithLabel
+											task={task}
+											players={classroom.playerList.length - 1}
+										/>
 									</TableCell>
 
 									<TableCell align='right'>
