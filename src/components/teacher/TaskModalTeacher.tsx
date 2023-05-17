@@ -113,8 +113,8 @@ export default function TaskModalTeacher({
 		<div>
 			{openButton}
 			<TeacherModalStyled open={open} onClose={handleClose}>
+				<ModalTitle onClick={handleClose} text='Overview' />
 				<TaskModalContent>
-					<ModalTitle onClick={handleClose} text='Overview' />
 					{task.gcrName ? (
 						<Typography variant='body1'>Google Classroom Task: {task.gcrName}</Typography>
 					) : null}
@@ -147,7 +147,7 @@ export default function TaskModalTeacher({
 								<DateTimePicker
 									label='Due Date'
 									value={date}
-									sx={{ width: '60%', ml: -2 }}
+									sx={{ width: '60%' }}
 									minDateTime={new Date()}
 									onChange={(newValue) => setDate(newValue)}
 								/>
@@ -155,7 +155,7 @@ export default function TaskModalTeacher({
 						</BoxInModal>
 
 						<BoxInModal>
-							<FormControl sx={{ ml: -2 }} fullWidth>
+							<FormControl fullWidth>
 								<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
 								<Select
 									labelId='reward-dropdown'

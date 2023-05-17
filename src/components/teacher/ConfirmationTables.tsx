@@ -309,20 +309,20 @@ export default function ConfirmationTables({
 			<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
 				Tasks/Repeatables Awaiting Confirmation
 			</Typography>
-			<Stack direction='row' sx={{ justifyContent: 'space-between', display: 'flex' }}>
+			<Stack direction='row' alignItems={''}>
 				<Tabs value={page} onChange={handleTabChange}>
 					<Tab sx={{ fontSize: '14px' }} label='One Time' />
 					<Tab sx={{ fontSize: '14px' }} label='Repeatable' />
 				</Tabs>
 				<Button
-					sx={{ mb: 2, fontSize: !mobile ? '14px' : '6px' }}
+					sx={{ m: 1, fontSize: !mobile ? '14px' : '6px' }}
 					color='primary'
 					onClick={() => handleConfirmAll()}
 				>
 					Confirm All
 				</Button>
 				<Button
-					sx={{ mb: 2, fontSize: !mobile ? '14px' : '6px' }}
+					sx={{ m: 1, fontSize: !mobile ? '14px' : '6px' }}
 					color='primary'
 					onClick={async () => {
 						// get all GCR courses for the teacher

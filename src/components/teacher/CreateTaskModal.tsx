@@ -23,6 +23,13 @@ import { addRepeatable, addTask } from '../../utils/mutations'
 import modules from '../../utils/TextEditor'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import {
+	BoxInModal,
+	ModalTitle,
+	TeacherModalStyled,
+	TaskModalContent,
+} from '../../styles/TaskModalStyles'
+import { useSnackbar } from 'notistack'
 
 function containsOnlyNumbers(str: string) {
 	return /^\d+$/.test(str)
@@ -40,14 +47,6 @@ function maxCompletionsIsInvalid(maxCompletions: string) {
 	}
 	return false
 }
-
-import {
-	BoxInModal,
-	ModalTitle,
-	TeacherModalStyled,
-	TaskModalContent,
-} from '../../styles/TaskModalStyles'
-import { useSnackbar } from 'notistack'
 
 export default function CreateTaskModal({
 	classroom,
@@ -180,7 +179,7 @@ export default function CreateTaskModal({
 	}
 
 	const repeatableButton = (
-		<Tabs value={isRepeatable ? 1 : 0} onChange={handleTabChange}>
+		<Tabs variant='fullWidth' value={isRepeatable ? 1 : 0} onChange={handleTabChange}>
 			<Tab label='One Time' />
 			<Tab label='Repeatable' />
 		</Tabs>
@@ -195,7 +194,7 @@ export default function CreateTaskModal({
 	)
 
 	return (
-		<div>
+		<>
 			{openButton}
 			<TeacherModalStyled open={open} onClose={handleClose}>
 				<ModalTitle onClick={handleClose} text='Create Task' />
@@ -230,7 +229,7 @@ export default function CreateTaskModal({
 							{!isRepeatable ? (
 								<LocalizationProvider dateAdapter={AdapterDateFns}>
 									<DateTimePicker
-										sx={{ width: '60%', ml: -2 }}
+										// sx={{ width: '60%', ml: -2 }}
 										label='Due Date'
 										value={dueDate}
 										minDateTime={new Date()}
@@ -240,7 +239,7 @@ export default function CreateTaskModal({
 							) : (
 								<TextField
 									type='number'
-									sx={{ ml: -2 }}
+									// sx={{ ml: -2 }}
 									margin='normal'
 									id='description'
 									label='Max Completions'
@@ -261,7 +260,7 @@ export default function CreateTaskModal({
 							)}
 						</BoxInModal>
 						<BoxInModal>
-							<FormControl sx={{ ml: -2 }} fullWidth>
+							<FormControl fullWidth>
 								<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
 								<Select
 									labelId='reward-dropdown'
@@ -286,6 +285,6 @@ export default function CreateTaskModal({
 					</Box>
 				</TaskModalContent>
 			</TeacherModalStyled>
-		</div>
+		</>
 	)
 }

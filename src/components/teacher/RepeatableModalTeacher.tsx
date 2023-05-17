@@ -129,8 +129,8 @@ export default function RepeatableModalTeacher({
 				<EditIcon />
 			</IconButton>
 			<TeacherModalStyled open={open} onClose={handleClose}>
+				<ModalTitle onClick={handleClose} text='Overview' />
 				<TaskModalContent>
-					<ModalTitle onClick={handleClose} text='Overview' />
 					<Box
 						component='form'
 						onSubmit={(e) => {
@@ -169,7 +169,7 @@ export default function RepeatableModalTeacher({
 								fullWidth
 								variant='standard'
 								placeholder=''
-								sx={{ ml: -2 }}
+								// sx={{ ml: -2 }}
 								value={maxCompletions}
 								InputProps={{
 									readOnly: !isEditing,
@@ -187,7 +187,7 @@ export default function RepeatableModalTeacher({
 
 						<BoxInModal>
 							<Typography
-								sx={{ ml: -2 }}
+								// sx={{ ml: -2 }}
 								variant='body1'
 							>{`Reward: ${repeatable.reward}g (cannot be edited)`}</Typography>
 						</BoxInModal>

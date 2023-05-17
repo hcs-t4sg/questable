@@ -264,7 +264,7 @@ export default function CreateGCRTask({
 						<Loading>Loading Tasks...</Loading>
 					) : tasks == null ? null : (
 						<BoxInModal>
-							<FormControl fullWidth sx={{ ml: -2 }}>
+							<FormControl fullWidth>
 								<InputLabel id='gcr-task-dropdown-label'>Google Classroom Task</InputLabel>
 								<Select
 									defaultValue=''
@@ -350,12 +350,12 @@ export default function CreateGCRTask({
 								label='Due Date'
 								value={dueDate}
 								onChange={(value) => setDueDate(value)}
-								sx={{ ml: -2 }}
+								// sx={{ ml: -2 }}
 							/>
 						</LocalizationProvider>
 					</BoxInModal>
 					<BoxInModal>
-						<FormControl fullWidth sx={{ ml: -2 }}>
+						<FormControl fullWidth>
 							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
 							<Select
 								labelId='reward-dropdown'

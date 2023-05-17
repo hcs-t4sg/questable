@@ -16,8 +16,8 @@ export const BoxInModal = styled(Box)(({ theme }) => ({
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'space-between',
-	margin: theme.spacing(2),
-	// marginBottom: theme.spacing(2),
+	marginTop: theme.spacing(2),
+	marginBottom: theme.spacing(2),
 }))
 
 export const StudentBoxInModal = styled(Box)({

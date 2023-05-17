@@ -85,8 +85,8 @@ export function AssignmentContentStudent({
 				<OpenInNewIcon />
 			</IconButton>
 			<Dialog open={isOpen} onClose={toggleIsOpen}>
+				<ModalTitle onClick={toggleIsOpen} text={`${assignmentType} overview`} />
 				<StudentTaskModalBox>
-					<ModalTitle onClick={toggleIsOpen} text={`${assignmentType} overview`} />
 					<Grid container spacing={2}>
 						<Grid item xs={6}>
 							<StudentBoxInModal>{children}</StudentBoxInModal>
