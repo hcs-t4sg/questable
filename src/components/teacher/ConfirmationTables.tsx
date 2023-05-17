@@ -309,10 +309,10 @@ export default function ConfirmationTables({
 			<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
 				Tasks/Repeatables Awaiting Confirmation
 			</Typography>
-			<Stack direction='row' alignItems={''}>
+			<Stack direction='row'>
 				<Tabs value={page} onChange={handleTabChange}>
-					<Tab sx={{ fontSize: '14px' }} label='One Time' />
-					<Tab sx={{ fontSize: '14px' }} label='Repeatable' />
+					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='One Time' />
+					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='Repeatable' />
 				</Tabs>
 				<Button
 					sx={{ m: 1, fontSize: !mobile ? '14px' : '6px' }}

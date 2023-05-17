@@ -26,6 +26,9 @@ import { useSnackbar } from 'notistack'
 import { Player, Classroom } from '../../types'
 import { db } from '../../utils/firebase'
 import Loading from '../global/Loading'
+import modules from '../../utils/TextEditor'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
 export default function CreateGCRTask({
 	classroom,
@@ -332,17 +335,12 @@ export default function CreateGCRTask({
 						value={name}
 						onChange={(event) => setName(event.target.value)}
 					/>
-					<TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						placeholder=''
-						multiline
-						maxRows={8}
-						value={description}
-						onChange={(event) => setDescription(event.target.value)}
+					<ReactQuill
+						style={{ width: '100%' }}
+						placeholder='Description'
+						theme='snow'
+						modules={modules}
+						onChange={setDescription}
 					/>
 					<BoxInModal>
 						<LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -350,7 +348,7 @@ export default function CreateGCRTask({
 								label='Due Date'
 								value={dueDate}
 								onChange={(value) => setDueDate(value)}
-								// sx={{ ml: -2 }}
+								sx={{ width: '60%' }}
 							/>
 						</LocalizationProvider>
 					</BoxInModal>
