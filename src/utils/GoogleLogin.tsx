@@ -22,7 +22,9 @@ export default function GoogleLogin({ user }: { user: User }) {
 				client_secret: clientSecret,
 				code: authorizationCode,
 				grant_type: 'authorization_code',
-				redirect_uri: 'https://questable.vercel.app',
+				redirect_uri: import.meta.env.DEV
+					? 'http://localhost:5173'
+					: 'https://questable.vercel.app',
 			}),
 			headers: {
 				'Content-type': 'application/json; charset=UTF-8',

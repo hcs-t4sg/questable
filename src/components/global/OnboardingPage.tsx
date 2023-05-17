@@ -18,6 +18,8 @@ import {
 	Shirt,
 	Shoes,
 	currentAvatar,
+	Eyes,
+	getEyesItems,
 } from '../../utils/items'
 import { Classroom, Player } from '../../types'
 
@@ -60,6 +62,7 @@ export default function OnboardingPage({
 	const [shirt, setShirt] = useState<Shirt | null>(null)
 	const [shoe, setShoes] = useState<Shoes | null>(null)
 	const [pant, setPants] = useState<Pants | null>(null)
+	const [eye, setEyes] = useState<Eyes | null>(null)
 
 	const handleChange = (event: React.SyntheticEvent, newValue: 0 | 1 | 2 | 3 | 4) => {
 		setValue(newValue)
@@ -69,6 +72,7 @@ export default function OnboardingPage({
 	const shirts = getShirtItems()
 	const pants = getPantsItems()
 	const shoes = getShoesItems()
+	const eyes = getEyesItems()
 
 	// Check that name is filled AND (TODO) character has been chosen
 	const handleSubmit = () => {
@@ -101,6 +105,11 @@ export default function OnboardingPage({
 			enqueueSnackbar('Please select pants for your character', { variant: 'error' })
 			return
 		}
+		console.log(eye)
+		if (!eye) {
+			enqueueSnackbar('Please select eyes for your character', { variant: 'error' })
+			return
+		}
 		updatePlayer(user.uid, classroom.id, { name })
 		updateAvatar(player, body, classroom)
 		console.log(currentAvatar)
@@ -108,6 +117,7 @@ export default function OnboardingPage({
 		updateAvatar(player, shirt, classroom)
 		updateAvatar(player, shoe, classroom)
 		updateAvatar(player, pant, classroom)
+		updateAvatar(player, eye, classroom)
 		onboardClassroom(user.uid, classroom.id)
 	}
 
@@ -165,6 +175,7 @@ export default function OnboardingPage({
 							<Tab label='Shirts' {...a11yProps(2)} />
 							<Tab label='Pants' {...a11yProps(3)} />
 							<Tab label='Shoes' {...a11yProps(4)} />
+							<Tab label='Eyes' {...a11yProps(5)} />
 						</Tabs>
 					</Box>
 					<Box
@@ -190,6 +201,7 @@ export default function OnboardingPage({
 												shirt: new Shirt(0),
 												pants: new Pants(0),
 												shoes: new Shoes(0),
+												eyes: new Eyes(0),
 											}}
 											selectItemCallback={() => setBody(item)}
 											isEquipped={body?.id === item.id}
@@ -206,7 +218,7 @@ export default function OnboardingPage({
 											item={item}
 											itemPrice=''
 											selectItemCallback={() => setHair(item)}
-											isEquipped={hair?.id === item.id}
+											isEquipped={hair?.id === item.id && hair?.subtype === item.subtype}
 										/>
 									</Grid>
 								))}
@@ -249,6 +261,20 @@ export default function OnboardingPage({
 											itemPrice=''
 											selectItemCallback={() => setShoes(item)}
 											isEquipped={shoe?.id === item.id}
+										/>
+									</Grid>
+								))}
+							</Grid>
+						</TabPanel>
+						<TabPanel value={value} index={5}>
+							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+								{eyes.map((item, index) => (
+									<Grid item xs={2} sm={3} md={3} key={index}>
+										<OnboardingItemCard
+											item={item}
+											itemPrice=''
+											selectItemCallback={() => setEyes(item)}
+											isEquipped={eye?.id === item.id}
 										/>
 									</Grid>
 								))}

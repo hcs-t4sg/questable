@@ -6,18 +6,22 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
+import { collection, doc, onSnapshot, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, Player, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
 // import RepeatableModalStudent from './RepeatableModalStudent'
-import Loading from '../global/Loading'
-import { truncate } from '../../utils/helperFunctions'
-import RepeatableModalStudent from './RepeatableModalStudent'
-import { rewardPotion } from './AssignmentContentStudent'
 import Fuse from 'fuse.js'
+import { truncate } from '../../utils/helperFunctions'
+import Loading from '../global/Loading'
+import { rewardPotion } from './AssignmentContentStudent'
+import RepeatableModalStudent from './RepeatableModalStudent'
 
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import { IconButton } from '@mui/material'
 import createDOMPurify from 'dompurify'
+import { useSnackbar } from 'notistack'
+import { completeRepeatable } from '../../utils/mutations'
 const DOMPurify = createDOMPurify(window)
 // export function truncate(description: string) {
 // 	if (description.length > 50) {
@@ -46,6 +50,8 @@ function RepeatableTableRow({
 		const unsub = onSnapshot(completionsRef, (doc) => {
 			if (doc.exists()) {
 				setCompletions(doc.data().completions)
+			} else {
+				setCompletions(0)
 			}
 		})
 		return unsub
@@ -60,6 +66,8 @@ function RepeatableTableRow({
 		const unsub = onSnapshot(confirmationsRef, (doc) => {
 			if (doc.exists()) {
 				setConfirmations(doc.data().confirmations)
+			} else {
+				setConfirmations(0)
 			}
 		})
 		return unsub
@@ -71,6 +79,30 @@ function RepeatableTableRow({
 		confirmations: confirmations ?? 0,
 	}
 
+	const [modalIsOpen, setModalIsOpen] = useState(false)
+
+	const toggleOpen = () => {
+		setModalIsOpen(!modalIsOpen)
+	}
+
+	const { enqueueSnackbar } = useSnackbar()
+
+	const handleComplete = () => {
+		setModalIsOpen(false)
+		completeRepeatable(classroom.id, repeatable.id, player.id)
+			.then(() => {
+				enqueueSnackbar(`Repeatable completion added for "${repeatable.name}"!`, {
+					variant: 'success',
+				})
+			})
+			.catch((err) => {
+				console.error(err)
+				enqueueSnackbar(err.message, {
+					variant: 'error',
+				})
+			})
+	}
+
 	return (
 		<TableRow key={repeatable.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
 			<TableCell>{rewardPotion(repeatable.reward)}</TableCell>
@@ -79,28 +111,29 @@ function RepeatableTableRow({
 			</TableCell>
 			{/* <TableCell align='left'>{truncate(repeatable.description)}</TableCell> */}
 			<TableCell>
-				{' '}
 				<div
 					dangerouslySetInnerHTML={{
 						__html: truncate(DOMPurify.sanitize(repeatable.description), 40),
 					}}
 				/>
 			</TableCell>
-			<TableCell align='left'>
-				{completions || completions === 0 ? `${completions}` : 'Loading'}
-			</TableCell>
-			<TableCell align='left'>
-				{confirmations || confirmations === 0 ? `${confirmations}` : 'Loading'}
-			</TableCell>
+			<TableCell align='left'>{completions ?? 'Loading'}</TableCell>
+			<TableCell align='left'>{confirmations ?? 'Loading'}</TableCell>
 			<TableCell align='left'>{repeatable.maxCompletions}</TableCell>
 			<TableCell align='left'>{`${repeatable.reward}g`}</TableCell>
 
 			<TableCell align='right' sx={{ width: 0.01 }}>
 				<RepeatableModalStudent
-					classroom={classroom}
-					player={player}
 					repeatable={repeatableWithPlayerData}
+					open={modalIsOpen}
+					toggleOpenCallback={toggleOpen}
+					handleCompleteCallback={handleComplete}
 				/>
+			</TableCell>
+			<TableCell align='left'>
+				<IconButton onClick={handleComplete}>
+					<CheckBoxIcon />
+				</IconButton>
 			</TableCell>
 		</TableRow>
 	)
@@ -129,10 +162,7 @@ export default function RepeatableTableStudent({
 
 	useEffect(() => {
 		// Create a reference to the tasks collection
-		const repeatableCollectionRef = query(
-			collection(db, `classrooms/${classroom.id}/repeatables`),
-			where('assigned', 'array-contains', player.id),
-		)
+		const repeatableCollectionRef = query(collection(db, `classrooms/${classroom.id}/repeatables`))
 		// Attach a listener to the tasks collection
 		const unsub = onSnapshot(repeatableCollectionRef, (snapshot) => {
 			const repeatablesList = snapshot.docs.map(
@@ -142,6 +172,7 @@ export default function RepeatableTableStudent({
 						id: doc.id,
 					} as Repeatable),
 			)
+			console.log(repeatablesList)
 			newFuse(new Fuse(repeatablesList, options))
 			setOriginal(repeatablesList)
 			setRepeatables(repeatablesList)
@@ -172,6 +203,7 @@ export default function RepeatableTableStudent({
 								<TableCell>Max completions</TableCell>
 								<TableCell>Reward </TableCell>
 								<TableCell>Open</TableCell>
+								<TableCell>Mark as Complete</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>

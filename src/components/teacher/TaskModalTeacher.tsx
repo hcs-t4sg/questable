@@ -42,10 +42,12 @@ export default function TaskModalTeacher({
 		setName(task.name)
 		setDate(task.due.toDate())
 		setReward(task.reward)
+		setDescription(task.description)
 	}
 	// Close the task modal
 	const handleClose = () => {
 		setOpen(false)
+		setIsEditing(false)
 	}
 	// Handle the click of an edit button
 	const handleEdit = () => {
@@ -109,6 +111,15 @@ export default function TaskModalTeacher({
 		</IconButton>
 	)
 
+	const [isEditing, setIsEditing] = useState(false)
+	const handleCancel = () => {
+		setIsEditing(false)
+		setName(task.name)
+		setDate(task.due.toDate())
+		setReward(task.reward)
+		setDescription(task.description)
+	}
+
 	return (
 		<div>
 			{openButton}
@@ -133,6 +144,9 @@ export default function TaskModalTeacher({
 							variant='standard'
 							value={name}
 							onChange={(event) => setName(event.target.value)}
+							InputProps={{
+								readOnly: !isEditing,
+							}}
 						/>
 						<ReactQuill
 							theme='snow'
@@ -140,6 +154,7 @@ export default function TaskModalTeacher({
 							value={description}
 							modules={modules}
 							onChange={setDescription}
+							readOnly={!isEditing}
 						/>
 
 						<BoxInModal>
@@ -150,6 +165,7 @@ export default function TaskModalTeacher({
 									sx={{ width: '60%' }}
 									minDateTime={new Date()}
 									onChange={(newValue) => setDate(newValue)}
+									readOnly={!isEditing}
 								/>
 							</LocalizationProvider>
 						</BoxInModal>
@@ -163,6 +179,7 @@ export default function TaskModalTeacher({
 									value={reward}
 									label='Reward'
 									onChange={(event) => setReward(event.target.value as number)}
+									readOnly={!isEditing}
 								>
 									<MenuItem value={10}>10g</MenuItem>
 									<MenuItem value={20}>20g</MenuItem>
@@ -175,9 +192,25 @@ export default function TaskModalTeacher({
 						<br />
 						{/* center the save button */}
 						<Stack direction='row' spacing={2}>
-							<Button type='submit' variant='contained'>
-								Save Changes
-							</Button>
+							{isEditing ? (
+								<>
+									<Button type='submit' variant='contained'>
+										Save Changes
+									</Button>
+									<Button onClick={handleCancel} variant='contained'>
+										Cancel
+									</Button>
+								</>
+							) : (
+								<Button
+									onClick={() => {
+										setIsEditing(true)
+									}}
+									variant='contained'
+								>
+									Edit
+								</Button>
+							)}
 
 							<Button onClick={handleDelete} variant='contained' color='error'>
 								Delete Task
