@@ -119,14 +119,16 @@ export default function ForumPostCard({
 				</Stack>
 			</Stack>
 			<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
-				<Box
-					sx={{
-						width: '30px',
-						height: '30px',
-					}}
-				>
-					<Avatar outfit={currentAvatar(forumPost.author)} />
-				</Box>
+				{forumPost.anonymous ? null : (
+					<Box
+						sx={{
+							width: '30px',
+							height: '30px',
+						}}
+					>
+						<Avatar outfit={currentAvatar(forumPost.author)} />
+					</Box>
+				)}
 				<Typography
 					gutterBottom
 					variant='subtitle2'
