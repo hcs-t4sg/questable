@@ -120,12 +120,14 @@ export default function ClassTeacherModal({
 
 	const handleClickOpen = () => {
 		setOpenEdit(true)
-		setName(name)
-		setMoney(money)
+		setName(player.name)
+		setMoney(player.money)
 	}
 
 	const handleClose = () => {
 		setOpenEdit(false)
+		setName(player.name)
+		setMoney(player.money)
 	}
 
 	return (
@@ -154,6 +156,7 @@ export default function ClassTeacherModal({
 						onChange={(event) => setName(event.target.value)}
 					/>
 					<TextField
+						type='number'
 						margin='normal'
 						id='money'
 						label='Player Money'
