@@ -2,15 +2,7 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 // import Card from '@mui/material/Card'
 
-import {
-	Card,
-	FormControlLabel,
-	MenuItem,
-	Select,
-	Switch,
-	useMediaQuery,
-	useTheme,
-} from '@mui/material'
+import { Card, FormControlLabel, MenuItem, Select, Switch, useTheme } from '@mui/material'
 import Button from '@mui/material/Button'
 import CardContent from '@mui/material/CardContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -56,7 +48,6 @@ export default function TeacherSettings({
 	const { enqueueSnackbar } = useSnackbar()
 
 	const theme = useTheme()
-	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	const handleSwitch = async (classroom: Classroom) => {
 		const classroomRef = doc(db, 'classrooms', classroom.id)
@@ -75,13 +66,28 @@ export default function TeacherSettings({
 	return (
 		<>
 			<Grid item xs={12}>
-				<Typography sx={{ fontSize: !mobile ? '32px' : '18px' }} variant='h4'>
+				<Typography
+					sx={{
+						[theme.breakpoints.down('mobile')]: {
+							fontSize: '18px',
+						},
+					}}
+					variant='h4'
+				>
 					Teacher Profile
 				</Typography>
 				<PlayerCard player={player} user={user} classroom={classroom} />
 			</Grid>
 			<Grid item xs={12}>
-				<Typography sx={{ mt: 2, fontSize: !mobile ? '32px' : '18px' }} variant='h4'>
+				<Typography
+					sx={{
+						mt: 2,
+						[theme.breakpoints.down('mobile')]: {
+							fontSize: '18px',
+						},
+					}}
+					variant='h4'
+				>
 					Forum Settings
 				</Typography>
 				<FormControlLabel
@@ -90,55 +96,39 @@ export default function TeacherSettings({
 				/>
 			</Grid>
 			<Grid item xs={12}>
-				<Typography sx={{ mt: 2, fontSize: !mobile ? '32px' : '18px' }} variant='h4'>
+				<Typography
+					sx={{
+						mt: 2,
+						[theme.breakpoints.down('mobile')]: {
+							fontSize: '18px',
+						},
+					}}
+					variant='h4'
+				>
 					Class Settings
 				</Typography>
 				<Card sx={{ width: 1 }}>
 					<CardContent>
-						<Typography variant='h5' component='div'>
-							{classroom.name}
-						</Typography>
-						<Typography variant='h6' component='div'>
-							Leaderboard Visibility:
-							<Typography>
-								{' '}
-								Off
-								<Switch checked={checked} onChange={handleChange} />
-								On{' '}
-							</Typography>
-						</Typography>
-						<Typography variant='h6' component='div'>
-							Leaderboard Size:
-						</Typography>
-						<Select
-							sx={{ m: 1, minWidth: 180 }}
-							size='small'
-							labelId='demo-simple-select-label'
-							id='demo-simple-select'
-							value={leaderboardSize}
-							label='Leaderboard Size'
-							onChange={(event) => setLeaderBoardSize(event.target.value as number)}
+						<Typography
+							sx={{
+								[theme.breakpoints.down('mobile')]: {
+									fontSize: '18px',
+								},
+							}}
+							variant='h5'
+							component='div'
 						>
-							<MenuItem value={3}>3</MenuItem>
-							<MenuItem value={4}>4</MenuItem>
-							<MenuItem value={5}>5</MenuItem>
-						</Select>
-						<DialogActions>
-							<Button variant='contained' onClick={() => handleEdit()}>
-								Save
-							</Button>
-						</DialogActions>
-					</CardContent>
-				</Card>
-			</Grid>
-			<Grid item xs={12}>
-				<Typography variant='h4'> Class Settings</Typography>
-				<Card sx={{ width: 1 }}>
-					<CardContent>
-						<Typography variant='h5' component='div'>
 							{classroom.name}
 						</Typography>
-						<Typography variant='h6' component='div'>
+						<Typography
+							sx={{
+								[theme.breakpoints.down('mobile')]: {
+									fontSize: '20px',
+								},
+							}}
+							variant='h6'
+							component='div'
+						>
 							Leaderboard Visibility:
 							<Typography>
 								{' '}
@@ -147,7 +137,15 @@ export default function TeacherSettings({
 								On{' '}
 							</Typography>
 						</Typography>
-						<Typography variant='h6' component='div'>
+						<Typography
+							sx={{
+								[theme.breakpoints.down('mobile')]: {
+									fontSize: '20px',
+								},
+							}}
+							variant='h6'
+							component='div'
+						>
 							Leaderboard Size:
 						</Typography>
 						<Select

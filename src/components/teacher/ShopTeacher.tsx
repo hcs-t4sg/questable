@@ -1,7 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Classroom, CustomShopItems } from '../../types'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Box, Card, CardContent, Grid, IconButton, Stack, Typography } from '@mui/material'
+import {
+	Box,
+	Card,
+	CardContent,
+	Grid,
+	IconButton,
+	Stack,
+	Typography,
+	useTheme,
+} from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 import ShopTeacherModal from './ShopTeacherModal'
@@ -50,6 +59,7 @@ export default function ShopTeacher({
 	classroom: Classroom
 	// customShopItem: CustomShopItems
 }) {
+	const theme = useTheme()
 	const [customShopItems, setCustomShopItems] = useState<CustomShopItems[] | null>(null)
 	// const [checked, setChecked] = useState(true)
 
@@ -91,7 +101,16 @@ export default function ShopTeacher({
 	return (
 		<>
 			<Grid item xs={12}>
-				<Typography variant='h4'>Create a New Reward</Typography>
+				<Typography
+					sx={{
+						[theme.breakpoints.down('mobile')]: {
+							fontSize: '18px',
+						},
+					}}
+					variant='h4'
+				>
+					Create a New Reward
+				</Typography>
 				<ShopTeacherModal classroom={classroom}></ShopTeacherModal>
 			</Grid>
 			{customShopItems

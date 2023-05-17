@@ -8,10 +8,11 @@ import {
 	Tabs,
 	DialogActions,
 	Box,
+	Button,
+	Grid,
+	TextField,
+	useTheme,
 } from '@mui/material'
-import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -56,6 +57,8 @@ export default function CreateTaskModal({
 	player: Player
 }) {
 	const { enqueueSnackbar } = useSnackbar()
+
+	const theme = useTheme()
 
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState('')
@@ -166,7 +169,12 @@ export default function CreateTaskModal({
 	const openButton = (
 		<Button
 			variant='contained'
-			sx={{ width: 1 }}
+			sx={{
+				width: 1,
+				[theme.breakpoints.down('mobile')]: {
+					fontSize: '15px',
+				},
+			}}
 			onClick={handleOpen}
 			startIcon={<AddCircleOutlineIcon />}
 		>

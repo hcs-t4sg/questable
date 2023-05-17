@@ -157,7 +157,7 @@ export default function ClassTeacher({
 			{students ? (
 				students.map((student) => (
 					<Grid item xs={3} key={student.id}>
-						<Card sx={{ width: !mobile ? '300px' : '300px' }}>
+						<Card sx={{ width: !mobile ? '350px' : '300px' }}>
 							<CardContent>
 								<Box
 									sx={{
@@ -167,9 +167,36 @@ export default function ClassTeacher({
 								>
 									<Avatar outfit={currentAvatar(student)} />
 								</Box>
-								<Typography variant='body1'>Name: {student.name}</Typography>
-								<Typography variant='body1'>Gold: {student.money}g</Typography>
-								<Typography variant='body1'>{student.email}</Typography>
+								<Typography
+									sx={{
+										[theme.breakpoints.down('mobile')]: {
+											fontSize: '13px',
+										},
+									}}
+									variant='body1'
+								>
+									Name: {student.name}
+								</Typography>
+								<Typography
+									sx={{
+										[theme.breakpoints.down('mobile')]: {
+											fontSize: '13px',
+										},
+									}}
+									variant='body1'
+								>
+									Gold: {student.money}g
+								</Typography>
+								<Typography
+									sx={{
+										[theme.breakpoints.down('mobile')]: {
+											fontSize: '13px',
+										},
+									}}
+									variant='body1'
+								>
+									{student.email}
+								</Typography>
 								<ClassTeacherModal player={student} classroom={classroom} />
 							</CardContent>
 						</Card>

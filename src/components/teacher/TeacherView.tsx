@@ -4,7 +4,7 @@ import ClassTeacher from '../../routes/teacher/ClassTeacher'
 import Requests from '../../routes/teacher/Requests'
 import TasksTeacher from '../../routes/teacher/TasksTeacher'
 import Layout from '../global/Layout'
-import { Box, Divider, Grid, Typography } from '@mui/material'
+import { Box, Divider, Grid, Typography, useTheme, useMediaQuery } from '@mui/material'
 
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
@@ -24,6 +24,9 @@ export default function TeacherView({
 	user: User
 }) {
 	const playerOutfit = currentAvatar(player)
+
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	return (
 		<Layout classroom role={player.role}>
@@ -47,14 +50,20 @@ export default function TeacherView({
 							backgroundColor: '#f3f8df',
 						}}
 					>
-						<Typography variant='h2' sx={{ fontFamily: 'Superscript' }}>
+						<Typography
+							variant='h2'
+							sx={{ fontFamily: 'Superscript', fontSize: !mobile ? '50px' : '25px' }}
+						>
 							{classroom.name}
 						</Typography>
 						<Typography variant='h5' component='div'>
 							{classroom.playerList.length} Total Students
 						</Typography>
 						<Divider sx={{ borderColor: '#373d20', borderBottomWidth: 5, mt: 2, mb: 2 }} />
-						<Typography variant='h3' sx={{ fontFamily: 'Superscript' }}>
+						<Typography
+							variant='h3'
+							sx={{ fontFamily: 'Superscript', fontSize: !mobile ? '45px' : '15px' }}
+						>
 							{player.name}
 						</Typography>
 						<Box sx={{ display: 'flex', marginTop: '20px' }}>
@@ -66,19 +75,8 @@ export default function TeacherView({
 									maxWidth: '313px',
 								}}
 							>
-								<Avatar outfit={playerOutfit} />
+								{!mobile && <Avatar outfit={playerOutfit} />}
 							</Box>
-							{/* <Box
-										sx={{
-											width: '350px',
-											display: 'flex',
-											flexDirection: 'column',
-											marginLeft: '160px',
-										}}
-									>
-										<ThickProgress variant='determinate' value={30} />
-										<ThickProgress variant='determinate' value={60} />
-									</Box> */}
 							<Box
 								sx={{
 									width: '350px',
@@ -87,13 +85,13 @@ export default function TeacherView({
 									marginLeft: '50px',
 								}}
 							>
-								<Typography sx={{ fontSize: '16px', marginTop: '40px' }}>
+								<Typography sx={{ fontSize: !mobile ? '16px' : '10px', marginTop: '40px' }}>
 									Name: {user.displayName}
 								</Typography>
-								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+								<Typography sx={{ fontSize: !mobile ? '16px' : '10px', marginTop: '20px' }}>
 									Email: {user.email}
 								</Typography>
-								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+								<Typography sx={{ fontSize: !mobile ? '16px' : '10px', marginTop: '20px' }}>
 									Gold: {player.money}
 								</Typography>
 							</Box>

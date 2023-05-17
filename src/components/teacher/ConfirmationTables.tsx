@@ -310,7 +310,7 @@ export default function ConfirmationTables({
 			<Typography sx={{ fontSize: !mobile ? '32px' : '15px' }} variant='h4'>
 				Tasks/Repeatables Awaiting Confirmation
 			</Typography>
-			<Stack direction='row'>
+			<Stack direction='row' sx={{ justifyContent: 'space-between' }}>
 				<Tabs value={page} onChange={handleTabChange}>
 					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='One Time' />
 					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='Repeatable' />

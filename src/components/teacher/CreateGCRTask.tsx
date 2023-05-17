@@ -9,6 +9,7 @@ import {
 	MenuItem,
 	Select,
 	TextField,
+	useTheme,
 } from '@mui/material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import {
@@ -38,6 +39,8 @@ export default function CreateGCRTask({
 	player: Player
 }) {
 	const { enqueueSnackbar } = useSnackbar()
+
+	const theme = useTheme()
 
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState('')
@@ -212,7 +215,12 @@ export default function CreateGCRTask({
 		<div>
 			<Button
 				variant='contained'
-				sx={{ width: 1 }}
+				sx={{
+					width: 1,
+					[theme.breakpoints.down('mobile')]: {
+						fontSize: '11.85px',
+					},
+				}}
 				onClick={handleClick}
 				startIcon={<AddCircleOutlineIcon />}
 			>

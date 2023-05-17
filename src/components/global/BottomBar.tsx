@@ -22,6 +22,7 @@ import GroupIcon from '@mui/icons-material/Group'
 import InventoryIcon from '@mui/icons-material/Inventory'
 import SellIcon from '@mui/icons-material/Sell'
 import SettingsIcon from '@mui/icons-material/Settings'
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
 
 const ListItemButtonStyled = styled(ListItemButton)({
 	color: 'white',
@@ -53,31 +54,43 @@ export default function BottomAppBar({ role }: { role: UserRole }) {
 		{
 			text: 'Tasks',
 			link: 'tasks',
-			number: 0 as 0 | 1 | 2 | 3 | 4,
+			number: 0 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <AssignmentIcon />,
 		},
 		{
 			text: 'Requests',
 			link: 'requests',
-			number: 1 as 0 | 1 | 2 | 3 | 4,
+			number: 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <EmailIcon />,
 		},
 		{
 			text: 'Class',
 			link: 'class',
-			number: 2 as 1 as 0 | 1 | 2 | 3 | 4,
+			number: 2 as 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <GroupIcon />,
+		},
+		{
+			text: 'Inventory',
+			link: 'inventory',
+			number: 3 as 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+			icon: <InventoryIcon />,
+		},
+		{
+			text: 'Shop',
+			link: 'shop',
+			number: 4 as 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+			icon: <AddCircleRoundedIcon />,
 		},
 		{
 			text: 'Forum',
 			link: 'forum',
-			number: 3 as 0 | 1 | 2 | 3 | 4,
+			number: 5 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <ForumIcon />,
 		},
 		{
 			text: 'Class Settings',
 			link: 'settings',
-			number: 4 as 0 | 1 | 2 | 3 | 4,
+			number: 6 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <SettingsIcon />,
 		},
 	]
@@ -121,7 +134,7 @@ export default function BottomAppBar({ role }: { role: UserRole }) {
 		},
 	]
 
-	const [selected, setSelected] = React.useState<0 | 1 | 2 | 3 | 4 | 5>(0)
+	const [selected, setSelected] = React.useState<0 | 1 | 2 | 3 | 4 | 5 | 6>(0)
 	const items = role === 'teacher' ? teacherItems : studentItems
 
 	React.useEffect(() => {
