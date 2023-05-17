@@ -81,7 +81,9 @@ function RepeatableTableRow({
 			<TableCell>
 				{' '}
 				<div
-					dangerouslySetInnerHTML={{ __html: truncate(DOMPurify.sanitize(repeatable.description)) }}
+					dangerouslySetInnerHTML={{
+						__html: truncate(DOMPurify.sanitize(repeatable.description), 40),
+					}}
 				/>
 			</TableCell>
 			<TableCell align='left'>

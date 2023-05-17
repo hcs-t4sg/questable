@@ -61,7 +61,9 @@ export default function ConfirmTasksTable({
 						>
 							<TableCell>{completedTask.name}</TableCell>
 							<TableCell>
-								<div dangerouslySetInnerHTML={{ __html: truncate(completedTask.description) }} />{' '}
+								<div
+									dangerouslySetInnerHTML={{ __html: truncate(completedTask.description, 40) }}
+								/>{' '}
 							</TableCell>
 							<TableCell>{formatStatus(completedTask)}</TableCell>
 							<TableCell>{`${completedTask.reward}g`}</TableCell>

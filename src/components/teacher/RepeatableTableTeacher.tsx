@@ -112,7 +112,7 @@ export default function RepeatableTableTeacher({
 										{' '}
 										<div
 											dangerouslySetInnerHTML={{
-												__html: truncate(repeatable.description.replace(/<[^>]+>/g, '')),
+												__html: truncate(repeatable.description.replace(/<[^>]+>/g, ''), 40),
 											}}
 										/>
 									</TableCell>

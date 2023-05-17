@@ -52,7 +52,7 @@ export default function ConfirmRepeatablesTable({
 							<TableCell>
 								<div
 									dangerouslySetInnerHTML={{
-										__html: truncate(completion.repeatable.description),
+										__html: truncate(completion.repeatable.description, 40),
 									}}
 								/>{' '}
 							</TableCell>

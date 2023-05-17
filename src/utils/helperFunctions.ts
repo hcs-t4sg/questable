@@ -1,6 +1,6 @@
-export function truncate(description: string) {
-	if (description.length > 40) {
-		return description.slice(0, 40) + '...'
+export function truncate(description: string, length: number) {
+	if (description.length > length) {
+		return description.slice(0, length) + '...'
 	}
 	return description
 }

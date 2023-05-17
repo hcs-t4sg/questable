@@ -1,4 +1,4 @@
-import { Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 
 import ClassTeacherModal from '../../components/teacher/ClassTeacherModal'
 
@@ -9,19 +9,19 @@ import { getUserData } from '../../utils/mutations'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Avatar from '../../components/global/Avatar'
-import { Classroom, Player, PlayerWithEmail } from '../../types'
-import { currentAvatar } from '../../utils/items'
-import { useEffect, useState } from 'react'
-import Loading from '../../components/global/Loading'
+import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
+import { useEffect, useState } from 'react'
+import Avatar from '../../components/global/Avatar'
+import Loading from '../../components/global/Loading'
+import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { levelUp } from '../../utils/helperFunctions'
+import { currentAvatar } from '../../utils/items'
 
 export default function ClassTeacher({
 	player,
@@ -157,48 +157,55 @@ export default function ClassTeacher({
 			) : null}
 			{students ? (
 				students.map((student) => (
-					<Grid item xs={3} key={student.id}>
-						<Card sx={{ width: !mobile ? '350px' : '300px' }}>
+					<Grid item xs={12} sm={6} md={4} lg={3} key={student.id}>
+						<Card>
 							<CardContent>
-								<Box
-									sx={{
-										height: 300,
-										width: 200,
-									}}
-								>
-									<Avatar outfit={currentAvatar(student)} />
-								</Box>
-								<Typography
-									sx={{
-										[theme.breakpoints.down('mobile')]: {
-											fontSize: '13px',
-										},
-									}}
-									variant='body1'
-								>
-									Name: {student.name}
-								</Typography>
-								<Typography
-									sx={{
-										[theme.breakpoints.down('mobile')]: {
-											fontSize: '13px',
-										},
-									}}
-									variant='body1'
-								>
-									Gold: {student.money}g
-								</Typography>
-								<Typography
-									sx={{
-										[theme.breakpoints.down('mobile')]: {
-											fontSize: '13px',
-										},
-									}}
-									variant='body1'
-								>
-									{student.email}
-								</Typography>
-								<ClassTeacherModal player={student} classroom={classroom} />
+								<Stack direction='column'>
+									<Box
+										sx={{
+											height: 200,
+											width: 200,
+											alignSelf: 'center',
+											mb: 2,
+										}}
+									>
+										<Avatar outfit={currentAvatar(student)} />
+									</Box>
+									<Typography
+										noWrap
+										sx={{
+											[theme.breakpoints.down('mobile')]: {
+												fontSize: '13px',
+											},
+										}}
+										variant='body1'
+									>
+										Name: {student.name}
+									</Typography>
+									<Typography
+										noWrap
+										sx={{
+											[theme.breakpoints.down('mobile')]: {
+												fontSize: '13px',
+											},
+										}}
+										variant='body1'
+									>
+										Gold: {student.money}g
+									</Typography>
+									<Typography
+										noWrap
+										sx={{
+											[theme.breakpoints.down('mobile')]: {
+												fontSize: '13px',
+											},
+										}}
+										variant='body1'
+									>
+										{student.email}
+									</Typography>
+									<ClassTeacherModal player={student} classroom={classroom} />
+								</Stack>
 							</CardContent>
 						</Card>
 					</Grid>

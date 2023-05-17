@@ -137,6 +137,7 @@ export default function TasksTableTeacher({
 											dangerouslySetInnerHTML={{
 												__html: truncate(
 													DOMPurify.sanitize(task.description).replace(/<[^>]+>/g, ''),
+													40,
 												),
 											}}
 										/>

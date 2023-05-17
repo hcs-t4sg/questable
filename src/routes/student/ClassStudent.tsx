@@ -1,4 +1,13 @@
-import { Grid, Typography, Box, Card, CardContent, useMediaQuery, useTheme } from '@mui/material'
+import {
+	Grid,
+	Typography,
+	Box,
+	Card,
+	CardContent,
+	useMediaQuery,
+	useTheme,
+	Stack,
+} from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 import { getUserData } from '../../utils/mutations'
@@ -148,19 +157,25 @@ export default function ClassStudent({
 			)}
 			{students ? (
 				students.map((student) => (
-					<Grid item xs={3} key={student.id}>
-						<Card sx={{ width: !mobile ? '350px' : '300px' }}>
+					<Grid item xs={12} sm={6} md={4} lg={3} key={student.id}>
+						<Card>
 							<CardContent>
-								<Box
-									sx={{
-										height: 300,
-										width: 200,
-									}}
-								>
-									<Avatar outfit={currentAvatar(student)} />
-								</Box>
-								<Typography variant='body1'>Player Name: {student.name}</Typography>
-								<ClassStudentModal player={student}></ClassStudentModal>
+								<Stack direction='column'>
+									<Box
+										sx={{
+											height: 300,
+											width: 200,
+											alignSelf: 'center',
+											mb: 2,
+										}}
+									>
+										<Avatar outfit={currentAvatar(student)} />
+									</Box>
+									<Typography noWrap variant='body1'>
+										Player Name: {student.name}
+									</Typography>
+									<ClassStudentModal player={student}></ClassStudentModal>
+								</Stack>
 							</CardContent>
 						</Card>
 					</Grid>

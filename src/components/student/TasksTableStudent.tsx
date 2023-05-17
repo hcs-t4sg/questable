@@ -155,7 +155,7 @@ export default function TasksTableStudent({
 											{/* {truncate(task.description) || 'None'} */}
 											<div
 												dangerouslySetInnerHTML={{
-													__html: truncate(task.description.replace(/<[^>]+>/g, '')),
+													__html: truncate(task.description.replace(/<[^>]+>/g, ''), 40),
 												}}
 											/>
 										</TableCell>
