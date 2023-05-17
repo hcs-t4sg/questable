@@ -90,8 +90,8 @@ export default function Home({ user }: { user: User }) {
 					boxShadow: 2,
 				}}
 			>
-				<Typography variant='h3' sx={{ mt: 4, mb: 15, flex: '100%' }}>
-					Welcome Back, {user.displayName}!
+				<Typography variant='h2' sx={{ mt: 4, mb: 10, flex: '100%', fontFamily: 'Superscript' }}>
+					Welcome to Questable!
 				</Typography>
 				<Grid spacing={1} container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
 					<Grid item>

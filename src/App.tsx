@@ -13,7 +13,8 @@ import { SnackbarProvider } from 'notistack'
 import { syncUsers } from './utils/mutations'
 // make alias for greater readability
 import { QueryClient, QueryClientProvider } from 'react-query'
-
+import logo from './assets/logo.png'
+import Avatar from '@mui/material/Avatar'
 declare module '@mui/material/styles' {
 	interface BreakpointOverrides {
 		xs: true // removes the `xs` breakpoint
@@ -154,6 +155,9 @@ export default function App() {
 									pr: '24px', // keep right padding when drawer closed
 								}}
 							>
+								<Link to='/'>
+									<Avatar src={logo} />
+								</Link>
 								<Typography
 									component={Link}
 									to='/'
