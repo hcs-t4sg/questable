@@ -23,13 +23,13 @@ export function PlayerInfoModalWrapper({
 				<OpenInNewIcon />
 			</IconButton>
 			<Dialog open={isOpen} onClose={toggleIsOpen}>
+				<ModalTitle onClick={toggleIsOpen} text={'Adventurer Info'} />
 				<StudentTaskModalBox>
-					<ModalTitle onClick={toggleIsOpen} text={'Adventurer'} />
 					<Grid container spacing={2}>
-						<Grid item md={6}>
+						<Grid item md={7}>
 							<StudentBoxInModal>{children}</StudentBoxInModal>
 						</Grid>
-						<Grid item xs={6} marginTop={9} marginBottom={3}>
+						<Grid item xs={5} marginTop={9} marginBottom={3}>
 							<Box
 								sx={{
 									height: 150,

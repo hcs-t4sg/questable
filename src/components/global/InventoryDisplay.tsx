@@ -2,7 +2,7 @@ import { Box, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/
 import React from 'react'
 // import ReactDOM from "react-dom"
 // import InventoryItemCard from '../../components/student/InventoryItemCard'
-import { InventoryItemCard } from '../../components/student/InventoryItemCard'
+import { InventoryItemCard } from '../student/InventoryItemCard'
 import { Classroom, Item, Player } from '../../types'
 import { currentAvatar, getBodyItems } from '../../utils/items'
 import wood2 from '/src/assets/Wood2.png'

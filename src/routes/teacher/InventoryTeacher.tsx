@@ -9,7 +9,7 @@ import {
 	getShirtItems,
 	getShoesItems,
 } from '../../utils/items'
-import InventoryDisplay from '../../routes/student/Inventory'
+import InventoryDisplay from '../../components/global/InventoryDisplay'
 
 const hairs: Item[] = getHairItems()
 const shirts: Item[] = getShirtItems()

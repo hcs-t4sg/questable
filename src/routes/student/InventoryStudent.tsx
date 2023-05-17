@@ -7,7 +7,7 @@ import { db } from '../../utils/firebase'
 import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
 import { getBodyItems, Hair, Pants, Shirt, Shoes } from '../../utils/items'
 import Loading from '../../components/global/Loading'
-import InventoryDisplay from './Inventory'
+import InventoryDisplay from '../../components/global/InventoryDisplay'
 
 export default function InventoryStudent({
 	player,

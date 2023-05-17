@@ -8,8 +8,8 @@ import { Box, Divider, Grid, Typography, useTheme, useMediaQuery } from '@mui/ma
 
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
-import ForumView from '../forum/ForumView'
-import InventoryTeacher from './InventoryTeacher'
+import ForumView from '../../routes/ForumView'
+import InventoryTeacher from '../../routes/teacher/InventoryTeacher'
 import ShopTeacher from './ShopTeacher'
 import Avatar from '../global/Avatar'
 import { currentAvatar } from '../../utils/items'

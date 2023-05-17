@@ -24,7 +24,7 @@ import StudentSettings from '../../routes/student/StudentSettings'
 import { Classroom, Player } from '../../types'
 import { levelUp } from '../../utils/helperFunctions'
 import { refreshAllRepeatables } from '../../utils/mutations'
-import ForumView from '../forum/ForumView'
+import ForumView from '../../routes/ForumView'
 
 export default function StudentView({
 	player,

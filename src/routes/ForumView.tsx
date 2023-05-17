@@ -12,10 +12,10 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { Link, Navigate, Outlet, Route, Routes } from 'react-router-dom'
-import { Classroom, Player } from '../../types'
-import CreateForumPostModal from './CreateForumPostModal'
-import ForumPostList from './ForumPostList'
-import ForumPostView from './ForumPostView'
+import { Classroom, Player } from '../types'
+import CreateForumPostModal from '../components/forum/CreateForumPostModal'
+import ForumPostList from '../components/forum/ForumPostList'
+import ForumPostView from '../components/forum/ForumPostView'
 
 export default function ForumView({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [open, setOpen] = useState(false)
