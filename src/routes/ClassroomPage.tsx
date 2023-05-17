@@ -66,6 +66,8 @@ export default function ClassroomPage({ user }: { user: User }) {
 				const onboardedList = user.data().onboarded
 				if (onboardedList) {
 					setOnboarded(onboardedList)
+				} else {
+					setOnboarded([])
 				}
 			}
 		})
