@@ -314,33 +314,35 @@ export default function ConfirmationTables({
 					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='One Time' />
 					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='Repeatable' />
 				</Tabs>
-				<Button
-					sx={{ mb: 2, fontSize: !mobile ? '14px' : '6px' }}
-					color='primary'
-					onClick={() => handleConfirmAll()}
-				>
-					Confirm All
-				</Button>
-				<Button
-					sx={{ mb: 2, fontSize: !mobile ? '14px' : '6px' }}
-					color='primary'
-					onClick={async () => {
-						// get all GCR courses for the teacher
-						window.confirm('Confirm Google Classroom Tasks?')
-						const classrooms = await getCourses()
-						if (typeof classrooms.courses == 'undefined' || classrooms.courses.length == 0) {
-							window.alert('Oops, classrooms not found! Try logging into Google in Settings!')
-						} else {
-							const courseIDs = classrooms.courses.map((course: any) => {
-								return course.id
-							})
-							console.log(courseIDs)
-							courseIDs.forEach((courseID: string) => processGCRTasks(courseID))
-						}
-					}}
-				>
-					Confirm Google Classroom Tasks
-				</Button>
+				<Stack direction='row'>
+					<Button
+						sx={{ mb: 2, mr: 1, fontSize: !mobile ? '14px' : '6px' }}
+						color='primary'
+						onClick={() => handleConfirmAll()}
+					>
+						Confirm All
+					</Button>
+					<Button
+						sx={{ mb: 2, fontSize: !mobile ? '14px' : '6px' }}
+						color='primary'
+						onClick={async () => {
+							// get all GCR courses for the teacher
+							window.confirm('Confirm Google Classroom Tasks?')
+							const classrooms = await getCourses()
+							if (typeof classrooms.courses == 'undefined' || classrooms.courses.length == 0) {
+								window.alert('Oops, classrooms not found! Try logging into Google in Settings!')
+							} else {
+								const courseIDs = classrooms.courses.map((course: any) => {
+									return course.id
+								})
+								console.log(courseIDs)
+								courseIDs.forEach((courseID: string) => processGCRTasks(courseID))
+							}
+						}}
+					>
+						Confirm Google Classroom Tasks
+					</Button>
+				</Stack>
 			</Stack>
 
 			{page === 0 ? (
