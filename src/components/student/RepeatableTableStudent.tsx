@@ -142,6 +142,7 @@ export default function RepeatableTableStudent({
 						id: doc.id,
 					} as Repeatable),
 			)
+			console.log(repeatablesList)
 			newFuse(new Fuse(repeatablesList, options))
 			setOriginal(repeatablesList)
 			setRepeatables(repeatablesList)

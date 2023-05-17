@@ -58,13 +58,13 @@ export default function RepeatableModalTeacher({
 	const handleClickOpen = () => {
 		setOpen(true)
 		setName(repeatable.name)
-		// setMaxCompletions(repeatable.maxCompletions.toString())
+		setMaxCompletions(repeatable.maxCompletions.toString())
 		setDescription(repeatable.description)
 	}
 
 	const handleCancel = () => {
 		setName(repeatable.name)
-		// setMaxCompletions(repeatable.maxCompletions.toString())
+		setMaxCompletions(repeatable.maxCompletions.toString())
 		setDescription(repeatable.description)
 		setIsEditing(false)
 	}
@@ -72,6 +72,7 @@ export default function RepeatableModalTeacher({
 	// Close the task modal
 	const handleClose = () => {
 		setOpen(false)
+		setIsEditing(false)
 	}
 	// Handle the click of an edit button
 	const handleEdit = () => {
