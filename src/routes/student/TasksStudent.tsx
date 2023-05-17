@@ -78,15 +78,8 @@ export default function TasksStudent({
 			// TODO rewrite using Promise.all
 			snapshot.forEach((doc) => {
 				// if task is overdue, add to overdue list
-
 				if (doc.data().due.toDate() < new Date()) {
 					overdue.push(Object.assign({ id: doc.id, status: 3 }, doc.data()) as TaskWithStatus)
-				} else if (
-					!doc.data().assigned?.includes(player.id) &&
-					!doc.data().completed?.includes(player.id) &&
-					!doc.data().confirmed?.includes(player.id)
-				) {
-					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
 				}
 				// Find assigned, completed, and confirmed tasks using player's id.
 				else if (doc.data().assigned?.includes(player.id)) {
@@ -95,6 +88,10 @@ export default function TasksStudent({
 					completed.push(Object.assign({ id: doc.id, status: 1 }, doc.data()) as TaskWithStatus)
 				} else if (doc.data().confirmed?.includes(player.id)) {
 					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
+				} else {
+					// If player not in any arrays, treat task as assigned
+					// Allows players who join classroom after task creation to still see task
+					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
 				}
 			})
 			console.log(assigned)
