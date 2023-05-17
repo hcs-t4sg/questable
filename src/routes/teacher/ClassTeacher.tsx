@@ -1,5 +1,4 @@
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
+import { Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
 
 import ClassTeacherModal from '../../components/teacher/ClassTeacherModal'
 
@@ -80,10 +79,13 @@ export default function ClassTeacher({
 		return unsub
 	}, [classroom, player])
 
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
+
 	return (
 		<>
 			<Grid item xs={12}>
-				<Typography variant='h2' component='div'>
+				<Typography sx={{ fontSize: !mobile ? '50px' : '32px' }} variant='h2' component='div'>
 					Class Page
 				</Typography>
 			</Grid>
@@ -108,7 +110,7 @@ export default function ClassTeacher({
 			{students ? (
 				students.map((student) => (
 					<Grid item xs={3} key={student.id}>
-						<Card sx={{ width: '100%' }}>
+						<Card sx={{ width: !mobile ? '300px' : '300px' }}>
 							<CardContent>
 								<Box
 									sx={{
