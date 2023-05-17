@@ -68,7 +68,7 @@
 
 import { PlayerWithEmail, Classroom } from '../../types'
 import { useState } from 'react'
-import { ClassStudentContent } from '../../routes/student/ClassStudentContent'
+import { PlayerInfoModalWrapper } from '../global/PlayerInfoModalWrapper'
 import { updateMoney, updatePlayer } from '../../utils/mutations'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
@@ -129,16 +129,14 @@ export default function ClassTeacherModal({
 	}
 
 	return (
-		<ClassStudentContent player={player} isOpen={open} toggleIsOpen={toggleOpen}>
-			<ClassStudentContent player={player} isOpen={open} toggleIsOpen={toggleOpen}>
-				<Cluster title='Player Name' data={player.name} isHtml={false} />
-				<Cluster title='Student Email' data={player.email} isHtml={false} />
-				<Cluster title='Student Gold' data={`${player.money}g`} isHtml={false} />
-				<Cluster title='Student Level' data={levelUp(player.xp)} isHtml={false} />
-				<Button onClick={handleClickOpen} endIcon={<OpenInNewIcon />}>
-					Edit Profile
-				</Button>
-			</ClassStudentContent>
+		<PlayerInfoModalWrapper player={player} isOpen={open} toggleIsOpen={toggleOpen}>
+			<Cluster title='Player Name' data={player.name} isHtml={false} />
+			<Cluster title='Student Email' data={player.email} isHtml={false} />
+			<Cluster title='Student Gold' data={`${player.money}g`} isHtml={false} />
+			<Cluster title='Student Level' data={levelUp(player.xp)} isHtml={false} />
+			<Button onClick={handleClickOpen} endIcon={<OpenInNewIcon />}>
+				Edit Profile
+			</Button>
 
 			{/* this should display actual name like student modal but I have an error in displayName
 			that Im looking at rn */}
@@ -173,6 +171,6 @@ export default function ClassTeacherModal({
 					</DialogActions>
 				</DialogContent>
 			</Dialog>
-		</ClassStudentContent>
+		</PlayerInfoModalWrapper>
 	)
 }

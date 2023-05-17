@@ -3,10 +3,10 @@ import { Box, Dialog, Grid, IconButton } from '@mui/material'
 import { Player } from '../../types'
 
 import { ModalTitle, StudentBoxInModal, StudentTaskModalBox } from '../../styles/TaskModalStyles'
-import Avatar from '../../components/global/Avatar'
+import Avatar from './Avatar'
 import { currentAvatar } from '../../utils/items'
 
-export function ClassStudentContent({
+export function PlayerInfoModalWrapper({
 	children,
 	player,
 	isOpen,
