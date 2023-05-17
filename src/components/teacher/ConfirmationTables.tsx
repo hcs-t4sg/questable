@@ -311,8 +311,8 @@ export default function ConfirmationTables({
 			</Typography>
 			<Stack direction='row' sx={{ justifyContent: 'space-between', display: 'flex' }}>
 				<Tabs value={page} onChange={handleTabChange}>
-					<Tab sx={{ fontSize: '14px' }} label='One Time' />
-					<Tab sx={{ fontSize: '14px' }} label='Repeatable' />
+					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='One Time' />
+					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='Repeatable' />
 				</Tabs>
 				<Button
 					sx={{ mb: 2, fontSize: !mobile ? '14px' : '6px' }}
