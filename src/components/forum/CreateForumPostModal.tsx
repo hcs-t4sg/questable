@@ -1,5 +1,5 @@
 import {
-	// Box,
+	Box,
 	Button,
 	DialogActions,
 	FormControl,
@@ -7,15 +7,19 @@ import {
 	MenuItem,
 	Select,
 } from '@mui/material'
-// import Dialog from '@mui/material/Dialog'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
+import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
+import FormGroup from '@mui/material/FormGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { addForumPost } from '../../utils/mutations'
-import { TaskModalBox, TeacherModalStyled } from '../../styles/TaskModalStyles'
+import { TeacherModalStyled, ModalTitle, TaskModalContent } from '../../styles/TaskModalStyles'
 import { useSnackbar } from 'notistack'
+import modules from '../../utils/TextEditor'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+
 // Notes: onsnapshot, don't implement at database level; implement on frontend, show only ones you filtered for
 // Modal component for individual entries.
 
@@ -44,6 +48,7 @@ export default function CreateForumPostModal({
 	const [subject, setSubject] = useState('')
 	const [category, setCategory] = useState<0 | 1 | 2 | 3>(0)
 	const [description, setDescription] = useState('')
+	const [anonymous, setAnonymous] = useState(false)
 
 	// Modal visibility handlers
 
@@ -51,6 +56,7 @@ export default function CreateForumPostModal({
 		setSubject('')
 		setCategory(0)
 		setDescription('')
+		setAnonymous(false)
 	}
 
 	const handleClose = () => {
@@ -76,6 +82,7 @@ export default function CreateForumPostModal({
 			postType: category,
 			content: description,
 			author: player,
+			anonymous: anonymous,
 		}
 
 		handleClose()
@@ -93,67 +100,73 @@ export default function CreateForumPostModal({
 			})
 	}
 
-	const submitButton = (
-		<DialogActions>
-			<Button variant='text' onClick={handleClose}>
-				Cancel
-			</Button>
-			<Button variant='contained' color='success' onClick={handleSubmit}>
-				Submit
-			</Button>
-		</DialogActions>
-	)
 	return (
-		<div>
-			{/* <Dialog open={isOpen}> */}
-			<TeacherModalStyled open={isOpen}>
-				<TaskModalBox>
-					<DialogTitle>New Thread</DialogTitle>
-					<DialogContent>
-						{/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
-						<TextField
-							margin='normal'
-							id='subject'
-							label='Subject'
+		<TeacherModalStyled open={isOpen} onClose={handleClose}>
+			<ModalTitle onClick={handleClose} text='New Thread' />
+			<Box
+				onSubmit={(e) => {
+					handleSubmit()
+					e.preventDefault()
+				}}
+				component='form'
+			>
+				<TaskModalContent>
+					<TextField
+						margin='normal'
+						id='subject'
+						label='Subject'
+						fullWidth
+						variant='standard'
+						value={subject}
+						onChange={(event) => setSubject(event.target.value)}
+					/>
+
+					<ReactQuill
+						placeholder='Description'
+						theme='snow'
+						modules={modules}
+						onChange={setDescription}
+					/>
+
+					<FormControl fullWidth sx={{ marginTop: 2 }}>
+						<InputLabel id='category-label'>Category</InputLabel>
+						<Select
+							labelId='category-label'
+							id='category'
+							label='Category'
 							fullWidth
-							variant='standard'
-							value={subject}
-							onChange={(event) => setSubject(event.target.value)}
-						/>
-						<TextField
-							margin='normal'
-							id='description'
-							label='Description'
-							fullWidth
-							variant='standard'
-							multiline
-							maxRows={8}
-							value={description}
-							onChange={(event) => setDescription(event.target.value)}
-						/>
-						<FormControl fullWidth sx={{ marginTop: 2 }}>
-							<InputLabel id='category-label'>Category</InputLabel>
-							<Select
-								// margin='normal'
-								labelId='category-label'
-								id='category'
-								label='Category'
-								fullWidth
-								// variant='standard'
-								value={category}
-								onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
-							>
-								<MenuItem value={0}>General</MenuItem>
-								<MenuItem value={1}>Assignments</MenuItem>
-								<MenuItem value={2}>For Fun</MenuItem>
-								<MenuItem value={3}>Announcements</MenuItem>
-							</Select>
-						</FormControl>
-					</DialogContent>
-					{submitButton}
-				</TaskModalBox>
-				{/* </Dialog> */}
-			</TeacherModalStyled>
-		</div>
+							value={category}
+							onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
+						>
+							<MenuItem value={0}>General</MenuItem>
+							<MenuItem value={1}>Assignments</MenuItem>
+							<MenuItem value={2}>For Fun</MenuItem>
+							<MenuItem value={3}>Announcements</MenuItem>
+						</Select>
+					</FormControl>
+
+					{player.role == 'student' && (
+						<FormGroup>
+							<FormControlLabel
+								sx={{ mt: 1 }}
+								control={
+									<Checkbox
+										color='success'
+										checked={anonymous}
+										onChange={() => setAnonymous(!anonymous)}
+									/>
+								}
+								label='Anonymous'
+							/>
+						</FormGroup>
+					)}
+				</TaskModalContent>
+				<DialogActions sx={{ justifyContent: 'center' }}>
+					<Button variant='contained' color='success' type='submit'>
+						Submit
+					</Button>
+				</DialogActions>
+			</Box>
+		</TeacherModalStyled>
 	)
 }

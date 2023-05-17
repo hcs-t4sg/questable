@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Layout from '../components/global/Layout'
 import Loading from '../components/global/Loading'
+import OnboardingPage from '../components/global/OnboardingPage'
 import StudentView from '../components/student/StudentView'
 import TeacherView from '../components/teacher/TeacherView'
 import { Classroom, Player } from '../types'
 import { db } from '../utils/firebase'
-import { syncUsers } from '../utils/mutations'
 
 export default function ClassroomPage({ user }: { user: User }) {
 	// Use react router to fetch class ID from URL params
@@ -39,44 +39,35 @@ export default function ClassroomPage({ user }: { user: User }) {
 		const updatePlayer = async () => {
 			const auth = getAuth()
 			const user = auth.currentUser
-			if (!!user && classID) {
-				syncUsers(user)
+			if (user && classID) {
 				const playerRef = doc(db, `classrooms/${classID}/players/${user.uid}`)
 				const unsub = onSnapshot(playerRef, (doc) => {
 					if (doc.exists()) {
+						console.log('player exists')
 						setPlayer({ ...doc.data(), id: doc.id } as Player)
 					}
 				})
+				console.log('player does not exist')
 				return unsub
-				// const playerData = await getPlayerData(classID, user.uid)
-
-				// if (playerData) setPlayer(playerData)
 			}
 		}
 		updatePlayer().catch(console.error)
 	}, [classID])
 
-	if (classroom) {
-		if (player) {
-			if (player.role === 'teacher') {
-				return <TeacherView player={player} classroom={classroom} user={user} />
-			} else if (player.role === 'student') {
-				return <StudentView player={player} classroom={classroom} user={user} />
-			} else {
-				return <p>Error: Player role does not exist or is invalid.</p>
+	const [onboarded, setOnboarded] = useState<string[] | null>(null)
+	useEffect(() => {
+		const unsub = onSnapshot(doc(db, `users/${user.uid}`), (user) => {
+			if (user.exists()) {
+				const onboardedList = user.data().onboarded
+				if (onboardedList) {
+					setOnboarded(onboardedList)
+				}
 			}
-		} else {
-			return (
-				<Layout>
-					<Grid container spacing={3}>
-						<Grid item xs={12}>
-							<Loading>Loading player data...</Loading>
-						</Grid>
-					</Grid>
-				</Layout>
-			)
-		}
-	} else {
+		})
+		return unsub
+	}, [])
+
+	if (!classroom || !onboarded) {
 		return (
 			<Layout>
 				<Grid container spacing={3}>
@@ -86,5 +77,29 @@ export default function ClassroomPage({ user }: { user: User }) {
 				</Grid>
 			</Layout>
 		)
+	}
+
+	if (!player) {
+		return (
+			<Layout>
+				<Grid container spacing={3}>
+					<Grid item xs={12}>
+						<Loading>Loading player data...</Loading>
+					</Grid>
+				</Grid>
+			</Layout>
+		)
+	}
+
+	if (!onboarded.includes(classroom.id)) {
+		return <OnboardingPage classroom={classroom} user={user} player={player} />
+	}
+
+	if (player.role === 'teacher') {
+		return <TeacherView player={player} classroom={classroom} user={user} />
+	} else if (player.role === 'student') {
+		return <StudentView player={player} classroom={classroom} user={user} />
+	} else {
+		return <p>Error: Player role does not exist or is invalid.</p>
 	}
 }

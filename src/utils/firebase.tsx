@@ -1,36 +1,55 @@
 // Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 import { getFirestore } from 'firebase/firestore'
-import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
 import Layout from '../components/global/Layout'
-import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
+import { clientID } from './google'
+// import { gapi } from 'gapi-script'
+// import GCRLogin from '../components/teacher/GCRLogin'
+// import { Grid } from '@mui/material'
 
 // ! DO NOT CHANGE THIS FILE.
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
+// export let accessToken: any
+
+// ! TRY THIS: https://stackoverflow.com/questions/72209749/react-google-identity-services
+
 const firebaseConfig = {
-	apiKey: 'AIzaSyCMI5wKG6UWHY_qEFajWzr7tQH9HGnIDiw',
-	authDomain: 'questable-backup.firebaseapp.com',
-	projectId: 'questable-backup',
-	storageBucket: 'questable-backup.appspot.com',
-	messagingSenderId: '497509530700',
-	appId: '1:497509530700:web:983cff096893a83bc388e9',
-	measurementId: 'G-3XF4R6ZXBE',
+	apiKey: process.env.VITE_FIREBASE_API_KEY,
+	authDomain: 'questable-34d85.firebaseapp.com',
+	projectId: 'questable-34d85',
+	storageBucket: 'questable-34d85.appspot.com',
+	messagingSenderId: '904433822725',
+	appId: process.env.VITE_FIREBASE_APP_ID,
+	measurementId: 'G-DRESZ3V18Q',
 }
 
 // Configure FirebaseUI.
 const uiConfig = {
 	// Popup signin flow rather than redirect flow.
 	signInFlow: 'popup',
-	signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+	signInOptions: [
+		{
+			provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+		},
+		{
+			provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+			clientId: clientID,
+			scopes: ['https://www.googleapis.com/auth/classroom.courses'],
+		},
+	],
 	callbacks: {
 		// Avoid redirects after sign-in.
-		signInSuccessWithAuthResult: () => false,
+		signInSuccessWithAuthResult: (authResult: any) => {
+			console.log(authResult)
+		},
 	},
 }
 

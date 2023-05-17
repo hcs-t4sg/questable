@@ -1,7 +1,4 @@
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
+import { Card, CardActions, CardContent, Typography, useMediaQuery } from '@mui/material'
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
 import PlayerModal from '../teacher/PlayerModal'
@@ -15,16 +12,18 @@ export default function PlayerCard({
 	user: User
 	classroom: Classroom
 }) {
+	const mobile = useMediaQuery('(max-width:400px)')
+
 	return (
 		<Card sx={{ width: 1 }}>
 			<CardContent>
-				<Typography variant='h5' component='div'>
+				<Typography sx={{ fontSize: !mobile ? '20px' : '12px' }} variant='h5' component='div'>
 					{player.name}
 				</Typography>
-				<Typography variant='h6' component='div'>
+				<Typography sx={{ fontSize: !mobile ? '20px' : '12px' }} variant='h6' component='div'>
 					Email: {user.email}
 				</Typography>
-				<Typography variant='h6' component='div'>
+				<Typography sx={{ fontSize: !mobile ? '20px' : '12px' }} variant='h6' component='div'>
 					Gold: {player.money}g
 				</Typography>
 			</CardContent>

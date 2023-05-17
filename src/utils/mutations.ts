@@ -15,16 +15,41 @@ import {
 	Timestamp,
 	updateDoc,
 	where,
+	limit,
+	orderBy,
+	writeBatch,
+	runTransaction,
 } from 'firebase/firestore'
-import { Classroom, CompletionTime, ForumPost, Item, Player } from '../types'
+import {
+	Classroom,
+	CompletionTime,
+	CustomShopItems,
+	ForumPost,
+	Item,
+	Player,
+	CompletedTask,
+	RepeatableCompletion,
+} from '../types'
 import { db } from './firebase'
-
 export async function syncUsers(user: User) {
 	const userRef = doc(db, 'users', user.uid)
-	const data = {
-		email: user.email,
+
+	try {
+		await runTransaction(db, async (transaction) => {
+			const userDoc = await transaction.get(userRef)
+			if (!userDoc.exists()) {
+				console.log('User doc does not exist!')
+				transaction.set(userRef, {
+					email: user.email,
+					onboarded: [],
+				})
+			}
+			console.log('User doc exists')
+		})
+		console.log('Transaction successfully committed!')
+	} catch (e) {
+		console.log('Transaction failed: ', e)
 	}
-	await setDoc(userRef, data, { merge: true })
 }
 
 // Create new classroom with user as teacher
@@ -34,6 +59,9 @@ export async function addClassroom(name: string, user: User) {
 		name: name,
 		playerList: [user.uid],
 		teacherList: [user.uid],
+		doLeaderboard: true,
+		leaderboardSize: 3,
+		canEdit: true,
 		// studentList: [],
 	}
 	// NOTE: I made a slight change here. Instead of storing the teacher in the playersList,
@@ -76,6 +104,20 @@ export async function getClassrooms(user: User) {
 	return classrooms
 }
 
+// Get money of students in classroom
+export async function getMoney(classID: string) {
+	const playerRef = collection(db, `classrooms/${classID}/players`)
+	const q = query(playerRef, orderBy('money'), limit(5))
+	const moneySnapshot = await getDocs(q)
+
+	const rankings = moneySnapshot.docs.map((doc) => ({
+		...doc.data(),
+		id: doc.id,
+	}))
+
+	return rankings as Player[]
+}
+
 // Add user to existing classroom and set as student
 export async function joinClassroom(classID: string, user: User) {
 	const classroomRef = doc(db, 'classrooms', classID)
@@ -110,6 +152,7 @@ export async function joinClassroom(classID: string, user: User) {
 	await setDoc(newPlayerRef, {
 		avatar: 0,
 		money: 0,
+		xp: 0,
 		name: 'Adventurer',
 		role: 'student',
 		id: user.uid,
@@ -277,6 +320,98 @@ export async function updatePlayer(
 	})
 }
 
+// Mutation to update money
+export async function updateMoney(
+	playerID: string,
+	classroomID: string,
+	newMoney: {
+		money: number | string
+	},
+) {
+	console.log(playerID)
+	console.log(classroomID)
+	console.log(newMoney)
+	const playerRef = doc(db, `classrooms/${classroomID}/players/${playerID}`)
+
+	await updateDoc(playerRef, {
+		money: newMoney.money,
+		xp: newMoney.money,
+	})
+}
+
+// Mutation to update Forum Post
+export async function updateForumPost(
+	updatedPost: {
+		title: string
+		content: string
+		postType: number
+	},
+	classroomID: string,
+	postID: string,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
+	await updateDoc(postRef, {
+		title: updatedPost.title,
+		content: updatedPost.content,
+		postType: updatedPost.postType,
+	})
+}
+
+export async function updateForumPostLikes(
+	classroomID: string,
+	postID: string,
+	likerID: string,
+	add: boolean,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
+	if (add) {
+		await updateDoc(postRef, {
+			likers: arrayUnion(likerID),
+		})
+	} else {
+		await updateDoc(postRef, {
+			likers: arrayRemove(likerID),
+		})
+	}
+}
+
+export async function updateForumCommentLikes(
+	classroomID: string,
+	postID: string,
+	commentID: string,
+	likerID: string,
+	add: boolean,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`)
+	if (add) {
+		await updateDoc(postRef, {
+			likers: arrayUnion(likerID),
+		})
+	} else {
+		await updateDoc(postRef, {
+			likers: arrayRemove(likerID),
+		})
+	}
+}
+
+export async function updateForumPostPinned(
+	classroomID: string,
+	postID: string,
+	commentID: string,
+	add: boolean,
+) {
+	const postRef = doc(db, `classrooms/${classroomID}/forumPosts/${postID}`)
+	if (add) {
+		await updateDoc(postRef, {
+			pinnedComments: arrayUnion(commentID),
+		})
+	} else {
+		await updateDoc(postRef, {
+			pinnedComments: arrayRemove(commentID),
+		})
+	}
+}
+
 // Mutation to delete tasks
 export async function deleteTask(classroomID: string, taskID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`))
@@ -284,6 +419,16 @@ export async function deleteTask(classroomID: string, taskID: string) {
 // Mutation to delete repeatable
 export async function deleteRepeatable(classroomID: string, repeatableID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`))
+}
+
+// Mutation to delete forum posts
+export async function deleteForumPost(classroomID: string, postID: string) {
+	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}`))
+}
+
+// Mutation to delete forum comments
+export async function deleteForumComment(classroomID: string, postID: string, commentID: string) {
+	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`))
 }
 
 export async function completeTask(classroomID: string, taskID: string, playerID: string) {
@@ -300,6 +445,18 @@ export async function completeTask(classroomID: string, taskID: string, playerID
 	// Add completion timestamp
 	await setDoc(docRef, {
 		time: serverTimestamp(),
+	})
+}
+
+export async function unsendTask(classroomID: string, taskID: string, playerID: string) {
+	// Remove `playerID` from assigned array
+
+	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
+		assigned: arrayUnion(playerID),
+	})
+	// Add `playerID` to completed array
+	await updateDoc(doc(db, `classrooms/${classroomID}/tasks/${taskID}`), {
+		completed: arrayRemove(playerID),
 	})
 }
 
@@ -348,7 +505,6 @@ export async function completeRepeatable(
 		if (confirmations >= repeatableSnap.data().maxCompletions) {
 			throw new Error('The maximum number of completions has been confirmed by the teacher')
 		}
-
 		updateDoc(completionsDocRef, {
 			completions: increment(1),
 		})
@@ -381,6 +537,9 @@ export async function addTask(
 		description: string
 		reward: number
 		due: Timestamp
+		gcrCourseID?: string
+		gcrID?: string
+		gcrName?: string
 	},
 	teacherID: string,
 ) {
@@ -393,17 +552,34 @@ export async function addTask(
 		return 'No such document!'
 	}
 
-	// Update tasks collection
-	await addDoc(collection(db, `classrooms/${classID}/tasks`), {
-		name: task.name,
-		description: task.description,
-		reward: task.reward,
-		created: serverTimestamp(),
-		due: task.due,
-		assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
-		completed: [],
-		confirmed: [],
-	})
+	if (task.gcrCourseID && task.gcrID && task.gcrName) {
+		// Update tasks collection
+		await addDoc(collection(db, `classrooms/${classID}/tasks`), {
+			name: task.name,
+			description: task.description,
+			reward: task.reward,
+			created: serverTimestamp(),
+			due: task.due,
+			gcrCourseID: task.gcrCourseID,
+			gcrID: task.gcrID,
+			gcrName: task.gcrName,
+			assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
+			completed: [],
+			confirmed: [],
+		})
+	} else {
+		// Update tasks collection
+		await addDoc(collection(db, `classrooms/${classID}/tasks`), {
+			name: task.name,
+			description: task.description,
+			reward: task.reward,
+			created: serverTimestamp(),
+			due: task.due,
+			assigned: classSnap.data().playerList.filter((id: string) => id !== teacherID), // filter out the teacher's id
+			completed: [],
+			confirmed: [],
+		})
+	}
 }
 
 export async function addRepeatable(
@@ -472,30 +648,35 @@ export async function addRepeatable(
 		})
 }
 
-// Remove player ID from completed array and add to confirmed array.
-export async function confirmTask(classID: string, studentID: string, taskID: string) {
+export async function confirmTasks(tasks: CompletedTask[], classID: string) {
 	const classroomRef = doc(db, 'classrooms', classID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {
+		// console.error("Could not find classroom")
 		return 'Could not find classroom'
 	}
 
-	const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`)
-	const taskSnap = await getDoc(taskRef)
-	if (taskSnap.exists()) {
-		updateDoc(taskRef, {
-			completed: arrayRemove(studentID),
-			confirmed: arrayUnion(studentID),
-		})
+	const batch = writeBatch(db)
+	for (const i in tasks) {
+		const taskRef = doc(db, `classrooms/${classID}/tasks/${tasks[i].id}`)
+		const taskSnap = await getDoc(taskRef)
+		if (taskSnap.exists()) {
+			batch.update(taskRef, {
+				completed: arrayRemove(tasks[i].player.id),
+				confirmed: arrayUnion(tasks[i].player.id),
+			})
+		}
+		const playerRef = doc(db, `classrooms/${classID}/players/${tasks[i].player.id}`)
+		const playerSnap = await getDoc(playerRef)
+		if (playerSnap.exists() && taskSnap.exists()) {
+			batch.update(playerRef, {
+				money: increment(taskSnap.data().reward),
+				xp: increment(taskSnap.data().reward),
+			})
+		}
 	}
 
-	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
-	const playerSnap = await getDoc(playerRef)
-	if (playerSnap.exists() && taskSnap.exists()) {
-		updateDoc(playerRef, {
-			money: parseInt(playerSnap.data().money + taskSnap.data().reward),
-		})
-	}
+	await batch.commit()
 }
 
 // Remove player ID from completed array and add to assigned array.
@@ -532,16 +713,17 @@ export async function purchaseItem(classID: string, studentID: string, item: Ite
 		const balance = playerSnap.data().money
 
 		const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
-		const invSnapshot = (await getDocs(inv)).docs
+		const invSnapshot = await getDocs(inv)
 
-		for (const i in invSnapshot) {
-			if (
-				invSnapshot[i].data().itemId === item.id &&
-				invSnapshot[i].data().type === item.type &&
-				(!invSnapshot[i].data().subtype || invSnapshot[i].data().subtype === item.subtype)
-			) {
-				return 'Already owned!'
-			}
+		if (
+			invSnapshot.docs.find(
+				(doc) =>
+					doc.data().itemId === item.id &&
+					doc.data().type === item.type &&
+					doc.data().subtype === item.subtype,
+			)
+		) {
+			return 'Already owned!'
 		}
 
 		if (balance < item.price) {
@@ -658,98 +840,94 @@ export async function denyRepeatable(
 
 // TODO Rewrite confirm and deny repeatable so that they don't have to refetch the completion time, as it should already be passed in in the confirmation table
 // Mutation to confirm repeatable completion
-export async function confirmRepeatable(
-	classroomID: string,
-	playerID: string,
-	repeatableID: string,
-	completionTimeID: string,
-) {
-	// First refresh repeatable to obtain its most up to date version
-	await refreshRepeatable(classroomID, playerID, repeatableID)
-
-	console.log('confirming repeatable')
-	const repeatableRef = doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`)
-	const repeatableSnap = await getDoc(repeatableRef)
-
-	if (!repeatableSnap.exists()) {
-		return Error('Repeatable not found')
+export async function confirmRepeatables(repeatables: RepeatableCompletion[], classID: string) {
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		// console.error("Could not find classroom")
+		return 'Could not find classroom'
 	}
 
-	// Get the corresponding completion time
-	const completionTimeRef = doc(
-		db,
-		`classrooms/${classroomID}/repeatables/${repeatableID}/completionTimes/${completionTimeID}`,
-	)
-	const completionTimeSnap = await getDoc(completionTimeRef)
-	if (!completionTimeSnap.exists()) {
-		return Error('Corresponding completion time not found')
-	}
+	const batch = writeBatch(db)
 
-	// ! Time checking may not be accurate if lastSunday has not been rewritten
-	// Confirmation and completion augmentation should only occur for repeatable completions in the current refresh cycle
-	// ! Potential for confirmations and completions to fall out of sync here if completion is made at the exact moment of the refresh cycle turnover. Add a failsafe to maintain confirmations and completions? Or think more deeply about this logic?
-	if (completionTimeSnap.data().time.toDate() >= lastSunday()) {
-		// increment confirmations
-		const confirmationsRef = doc(
+	for (const i in repeatables) {
+		const playerID = repeatables[i].player.id
+		const repeatableID = repeatables[i].repeatable.id
+		const completionTimeID = repeatables[i].id
+
+		// First refresh repeatable to obtain its most up to date version
+		await refreshRepeatable(classID, playerID, repeatableID)
+		const repeatableRef = doc(db, `classrooms/${classID}/repeatables/${repeatableID}`)
+		const repeatableSnap = await getDoc(repeatableRef)
+		if (!repeatableSnap.exists()) {
+			return Error('Repeatable not found')
+		}
+
+		// Get the corresponding completion time
+		const completionTimeRef = doc(
 			db,
-			`classrooms/${classroomID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`,
+			`classrooms/${classID}/repeatables/${repeatableID}/completionTimes/${completionTimeID}`,
 		)
-		const confirmationsSnap = await getDoc(confirmationsRef)
-		if (confirmationsSnap.exists()) {
-			updateDoc(confirmationsRef, {
-				confirmations: increment(1),
+		const completionTimeSnap = await getDoc(completionTimeRef)
+		if (!completionTimeSnap.exists()) {
+			return Error('Corresponding completion time not found')
+		}
+
+		// ! Time checking may not be accurate if lastSunday has not been rewritten
+		// Confirmation and completion augmentation should only occur for repeatable completions in the current refresh cycle
+		if (completionTimeSnap.data().time.toDate() >= lastSunday()) {
+			// increment confirmations
+			const confirmationsRef = doc(
+				db,
+				`classrooms/${classID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`,
+			)
+			const confirmationsSnap = await getDoc(confirmationsRef)
+			if (confirmationsSnap.exists()) {
+				batch.update(confirmationsRef, { confirmations: increment(1) })
+			} else {
+				batch.set(confirmationsRef, { confirmations: 1 })
+			}
+
+			// decrement completions
+			const completionsRef = doc(
+				db,
+				`classrooms/${classID}/repeatables/${repeatableID}/playerCompletions/${playerID}`,
+			)
+			const completionsSnap = await getDoc(completionsRef)
+			if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
+				batch.update(completionsRef, { completions: increment(-1) })
+			}
+		}
+
+		const playerRef = doc(db, `classrooms/${classID}/players/${playerID}`)
+		const playerSnap = await getDoc(playerRef)
+		if (playerSnap.exists()) {
+			batch.update(playerRef, {
+				money: increment(repeatableSnap.data().reward),
+				xp: increment(repeatableSnap.data().reward),
 			})
+		}
+
+		// increment streaks
+		const streaksRef = doc(
+			db,
+			`classrooms/${classID}/repeatables/${repeatableID}/streaks/${playerID}`,
+		)
+		const streaksSnap = await getDoc(streaksRef)
+		if (!streaksSnap.exists()) {
+			batch.set(streaksRef, { streaks: 1 })
 		} else {
-			setDoc(confirmationsRef, {
-				confirmations: 1,
-			})
+			batch.update(streaksRef, { streak: increment(1) })
 		}
 
-		// decrement completions
-		const completionsRef = doc(
-			db,
-			`classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`,
-		)
-		const completionsSnap = await getDoc(completionsRef)
-		if (completionsSnap.exists() && completionsSnap.data().completions > 0) {
-			updateDoc(completionsRef, {
-				completions: increment(-1),
-			})
-		}
+		// Remove the corresponding completion time
+		batch.delete(completionTimeRef)
+
+		// Decrement the requestCount variable
+		batch.update(repeatableRef, { requestCount: increment(-1) })
 	}
 
-	// increment money
-	const playerRef = doc(db, `classrooms/${classroomID}/players/${playerID}`)
-	const playerSnap = await getDoc(playerRef)
-	if (playerSnap.exists()) {
-		updateDoc(playerRef, {
-			money: playerSnap.data().money + repeatableSnap.data().reward,
-		})
-	}
-
-	// increment streaks
-	const streaksRef = doc(
-		db,
-		`classrooms/${classroomID}/repeatables/${repeatableID}/streaks/${playerID}`,
-	)
-	const streaksSnap = await getDoc(streaksRef)
-	if (!streaksSnap.exists()) {
-		setDoc(streaksRef, {
-			streak: 1,
-		})
-	} else {
-		updateDoc(streaksRef, {
-			streak: increment(1),
-		})
-	}
-
-	// Remove the corresponding completion time
-	deleteDoc(completionTimeRef)
-
-	// Decrement the requestCount variable
-	updateDoc(repeatableRef, {
-		requestCount: increment(-1),
-	})
+	await batch.commit()
 }
 
 // Helper function to get last sunday 11:59 in current timezone
@@ -868,6 +1046,7 @@ export async function addForumPost(
 		postType: 0 | 1 | 2 | 3
 		content: string
 		author: Player
+		anonymous: boolean
 	},
 	classroom: Classroom,
 ) {
@@ -878,7 +1057,9 @@ export async function addForumPost(
 		content: thread.content,
 		author: thread.author.id,
 		postTime: serverTimestamp(),
-		likes: 0,
+		anonymous: thread.anonymous,
+		likers: [],
+		pinnedComments: [],
 	})
 	console.log('Successfully Added Thread')
 }
@@ -898,7 +1079,183 @@ export async function addComment(
 	await addDoc(commentRef, {
 		author: comment.author.id,
 		content: comment.content,
-		likes: 0,
 		postTime: serverTimestamp(),
+		likers: [],
 	})
+}
+
+// Mutation to toggle Leaderboard
+export async function updateDoLeaderboard(
+	classroomID: string,
+	newDoLeaderboard: {
+		doLeaderboard: boolean
+	},
+) {
+	console.log(classroomID)
+	const classRef = doc(db, `classrooms/${classroomID}`)
+
+	await updateDoc(classRef, {
+		doLeaderboard: newDoLeaderboard.doLeaderboard,
+	})
+}
+
+// Mutation to change leaderboard size
+export async function updateLeaderboardSize(
+	classroomID: string,
+	newLeaderboardSize: {
+		leaderboardSize: number | string
+	},
+) {
+	console.log(classroomID)
+	const classRef = doc(db, `classrooms/${classroomID}`)
+
+	await updateDoc(classRef, {
+		leaderboardSize: newLeaderboardSize.leaderboardSize,
+	})
+}
+
+// Mutation to create custom rewards
+export async function addReward(
+	classID: string,
+	reward: {
+		// id: string
+		name: string
+		description: string
+		price: number
+		isActive: boolean
+		// icon: null
+	},
+) {
+	const classRef = doc(db, 'classrooms', classID)
+	const classSnap = await getDoc(classRef)
+
+	if (!classSnap.exists()) {
+		// doc.data() will be undefined in this case
+		return 'No such document!'
+	}
+
+	// Update shop collection
+	await addDoc(collection(db, `classrooms/${classID}/customShopItems`), {
+		// id: reward.id,
+		name: reward.name,
+		description: reward.description,
+		price: reward.price,
+		isActive: reward.isActive,
+		// icon: reward.icon,
+	})
+}
+
+// Mutation to Update Reward Visibility
+export async function updateReward(
+	classroomID: string,
+	reward: {
+		name: string
+		description: string
+		price: number
+		isActive: boolean
+		id: string
+	},
+) {
+	console.log(classroomID)
+	const itemRef = doc(db, `classrooms/${classroomID}/customShopItems/${reward.id}`)
+
+	await updateDoc(itemRef, {
+		name: reward.name,
+		description: reward.description,
+		price: reward.price,
+		isActive: reward.isActive,
+	})
+}
+
+export async function purchaseCustomItem(
+	classID: string,
+	studentID: string,
+	item: CustomShopItems,
+) {
+	// isCustom should be a boolean denoting whether the item being purchased is an item created for a particular classroom/
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		throw new Error('Could not find classroom')
+	}
+
+	const player = await getPlayerData(classID, studentID)
+	// Update
+	if (!player) {
+		throw new Error('Could not find player')
+	}
+
+	const balance = player.money
+
+	if (balance < item.price) {
+		throw new Error('Not enough money!')
+	}
+
+	const newItem = {
+		itemId: item.id,
+	}
+
+	const newRequest = {
+		rewardName: item.name,
+		rewardDescription: item.description,
+		rewardPrice: item.price,
+		playerID: studentID,
+		playerName: player.name,
+	}
+
+	const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
+	await addDoc(inv, newItem)
+
+	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
+	await updateDoc(playerRef, {
+		money: player.money - item.price,
+	})
+
+	const reqs = collection(db, `classrooms/${classID}/rewardRequests`)
+
+	await addDoc(reqs, newRequest)
+
+	return 'Success!'
+}
+
+// Mutation to delete Custom Item
+export async function deleteItem(classroomID: string, itemID: string) {
+	await deleteDoc(doc(db, `classrooms/${classroomID}/customShopItems/${itemID}`))
+}
+
+// Mutation to confirm reward purchase
+export async function confirmReward(classID: string, studentID: string, rewardID: string) {
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		return 'Could not find classroom'
+	}
+
+	const rewardRef = doc(db, `classrooms/${classID}/rewardRequests/${rewardID}`)
+	const rewardSnap = await getDoc(rewardRef)
+	if (rewardSnap.exists()) {
+		deleteDoc(rewardRef)
+	}
+}
+
+export async function onboardClassroom(userID: string, classID: string) {
+	console.log(userID)
+	console.log(classID)
+	const userRef = doc(db, `users/${userID}`)
+	const onboardedSnap = await getDoc(userRef)
+
+	// Add the classroom ID to the user's list of onboarded classrooms
+	if (onboardedSnap.exists()) {
+		const onboardedClassrooms = onboardedSnap.data().onboarded
+		if (onboardedClassrooms) {
+			onboardedClassrooms.push(classID)
+			updateDoc(userRef, {
+				onboarded: onboardedClassrooms,
+			})
+		} else {
+			updateDoc(userRef, {
+				onboarded: [classID],
+			})
+		}
+	}
 }

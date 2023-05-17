@@ -82,11 +82,11 @@ export default function RepeatableModalStudent({
 			isOpen={open}
 			toggleIsOpen={toggleOpen}
 		>
-			<Cluster title='Task Name' data={repeatable.name} />
-			<Cluster title='Description' data={repeatable.description} />
-			<Cluster title='Reward Amount' data={`${repeatable.reward}g`} />
-			<Cluster title='Completions' data={repeatable.requestCount} />
-			<Cluster title='Max Completions' data={repeatable.maxCompletions} />
+			<Cluster title='Task Name' data={repeatable.name} isHtml={false} />
+			<Cluster title='Description' data={repeatable.description} isHtml={true} />
+			<Cluster title='Reward Amount' data={`${repeatable.reward}g`} isHtml={false} />
+			<Cluster title='Completions' data={repeatable.requestCount} isHtml={false} />
+			<Cluster title='Max Completions' data={repeatable.maxCompletions} isHtml={false} />
 			<Cluster
 				title=''
 				data={
@@ -94,6 +94,7 @@ export default function RepeatableModalStudent({
 						Mark as complete
 					</Button>
 				}
+				isHtml={false}
 			/>
 		</AssignmentContentStudent>
 	)

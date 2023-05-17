@@ -11,7 +11,7 @@ import 'firebaseui/dist/firebaseui.css'
 interface Props {
 	// The Firebase UI Web UI Config object.
 	// See: https://github.com/firebase/firebaseui-web#configuration
-	uiConfig: firebaseui.auth.Config
+	uiConfig: any
 	// Callback that will be passed the FirebaseUi instance before it is
 	// started. This allows access to certain configuration options such as
 	// disableAutoSignIn().

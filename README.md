@@ -23,7 +23,7 @@ git clone git@github.com:hcs-t4sg/questable.git
 
 1. Open the project folder in VSCode.
 
-2. You should see a popup in the bottom right prompting you to install recommended extensions. Please install these, they'll be helpful for code formatting and developing the webapp. You can also view the recommended extensions in the extensions sidebar (`cmd + shift + X`.)
+2. You should see a popup in the bottom right prompting you to install recommended extensions. Please install these, they'll be helpful for code formatting and developing the webapp. You can also view the recommended extensions in the extensions sidebar (`cmd + shift + X`.) You will also get a prompt to use the workspace's Typescript version; accept it.
 
 3. Open a terminal in the project folder by dragging up from the bottom of the code window or by going to `Terminal > New Terminal` in the menu bar.
 

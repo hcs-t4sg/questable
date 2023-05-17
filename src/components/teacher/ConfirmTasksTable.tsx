@@ -7,16 +7,9 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { formatDistance } from 'date-fns'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+
 import { Classroom, CompletedTask } from '../../types'
-import { db } from '../../utils/firebase'
-import {
-	confirmTask,
-	denyTask,
-	getPlayerData,
-	getPlayerTaskCompletion,
-} from '../../utils/mutations'
+import { confirmTasks, denyTask } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import { Grid } from '@mui/material'
 import Loading from '../global/Loading'
@@ -33,50 +26,14 @@ const formatStatus = (task: CompletedTask) => {
 	}
 }
 
-export default function ConfirmTasksTable({ classroom }: { classroom: Classroom }) {
+export default function ConfirmTasksTable({
+	classroom,
+	completedTasks,
+}: {
+	classroom: Classroom
+	completedTasks: CompletedTask[] | null
+}) {
 	const { enqueueSnackbar } = useSnackbar()
-
-	const [completedTasks, setCompletedTasks] = useState<CompletedTask[] | null>(null)
-
-	useEffect(() => {
-		const completedTasksQuery = query(
-			collection(db, `classrooms/${classroom.id}/tasks`),
-			where('completed', '!=', []),
-		)
-		const unsub = onSnapshot(completedTasksQuery, (snapshot) => {
-			const fetchCompletedTasks = async () => {
-				const completedTasksList: CompletedTask[] = []
-
-				await Promise.all(
-					snapshot.docs.map(async (doc) => {
-						const completedPlayerList = doc.data().completed as string[]
-						await Promise.all(
-							completedPlayerList.map(async (playerID) => {
-								const completionTime = await getPlayerTaskCompletion(classroom.id, doc.id, playerID)
-								const player = await getPlayerData(classroom.id, playerID)
-
-								if (completionTime && player) {
-									const completedTask = {
-										...doc.data(),
-										id: doc.id,
-										player,
-										completionTime,
-									}
-									completedTasksList.push(completedTask as CompletedTask)
-								}
-							}),
-						)
-					}),
-				)
-
-				console.log(completedTasksList)
-				setCompletedTasks(completedTasksList)
-			}
-			fetchCompletedTasks().catch(console.error)
-		})
-
-		return unsub
-	}, [classroom])
 
 	if (!completedTasks) {
 		return <Loading>Loading tasks...</Loading>
@@ -103,7 +60,11 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 							// sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 						>
 							<TableCell>{completedTask.name}</TableCell>
-							<TableCell>{truncate(completedTask.description)}</TableCell>
+							<TableCell>
+								<div
+									dangerouslySetInnerHTML={{ __html: truncate(completedTask.description, 40) }}
+								/>{' '}
+							</TableCell>
 							<TableCell>{formatStatus(completedTask)}</TableCell>
 							<TableCell>{`${completedTask.reward}g`}</TableCell>
 							<TableCell component='th' scope='row'>
@@ -114,7 +75,7 @@ export default function ConfirmTasksTable({ classroom }: { classroom: Classroom 
 									<Grid item>
 										<Button
 											onClick={() =>
-												confirmTask(classroom.id, completedTask.player.id, completedTask.id)
+												confirmTasks([completedTask], classroom.id)
 													.then(() => {
 														enqueueSnackbar(
 															`Confirmed task completion "${completedTask.name}" from ${completedTask.player.name}!`,

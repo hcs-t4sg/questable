@@ -85,10 +85,17 @@ export default function TaskModalStudent({
 			isOpen={open}
 			toggleIsOpen={toggleOpen}
 		>
-			<Cluster title='Task Name' data={task.name} />
-			<Cluster title='Description' data={task.description} />
-			<Cluster title='Reward Amount' data={`${task.reward}g`} />
-			<Cluster title='Deadline' data={format(task.due.toDate(), 'MM/dd/yyyy h:mm a')} />
+			{task.gcrName ? (
+				<Cluster title='Google Classroom Task' data={task.gcrName} isHtml={false} />
+			) : null}
+			<Cluster title='Task Name' data={task.name} isHtml={false} />
+			<Cluster title='Description' data={task.description} isHtml={true} />
+			<Cluster title='Reward Amount' data={`${task.reward}g`} isHtml={false} />
+			<Cluster
+				title='Deadline'
+				data={format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
+				isHtml={false}
+			/>
 			{task.status === 0 ? (
 				<Cluster
 					title=''
@@ -97,6 +104,7 @@ export default function TaskModalStudent({
 							Mark as complete
 						</Button>
 					}
+					isHtml={false}
 				/>
 			) : null}
 		</AssignmentContentStudent>

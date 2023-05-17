@@ -66,56 +66,44 @@ export default function Home({ user }: { user: User }) {
 		})
 	}
 
-	if (!(classrooms && pinned))
-		return (
-			<Layout>
-				<Grid container spacing={3}>
-					<Grid item xs={12}>
-						<Box
-							sx={{
-								height: '100%',
-								width: '100%',
-								backgroundImage: `url(${wood1})`,
-								backgroundSize: 'cover',
-								imageRendering: 'pixelated',
-							}}
-						>
-							<Box
-								sx={{
-									width: '100%',
-									height: 300,
-									border: '10px solid',
-									borderColor: 'primary.main',
-									display: 'flex',
-									flexWrap: 'wrap',
-									justifyContent: 'center',
-									alignItems: 'center',
-									textAlign: 'center',
-									boxShadow: 2,
-								}}
-							>
-								<Typography variant='h3' sx={{ flex: '100%' }}>
-									Welcome Back, {user.displayName}!
-								</Typography>
-								<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
-									<Grid item>
-										<JoinClassroomModal user={user} />
-									</Grid>
-									<Grid item>
-										<CreateClassroomModal user={user} />
-									</Grid>
-								</Grid>
-							</Box>
-						</Box>
+	const welcomeBox = (
+		<Box
+			sx={{
+				height: '100%',
+				width: '100%',
+				backgroundImage: `url(${wood1})`,
+				backgroundSize: 'cover',
+				imageRendering: 'pixelated',
+			}}
+		>
+			<Box
+				sx={{
+					width: '100%',
+					height: 'fit-content',
+					border: '10px solid',
+					borderColor: 'primary.main',
+					display: 'flex',
+					flexWrap: 'wrap',
+					justifyContent: 'center',
+					alignItems: 'center',
+					textAlign: 'center',
+					boxShadow: 2,
+				}}
+			>
+				<Typography variant='h2' sx={{ mt: 4, mb: 10, flex: '100%', fontFamily: 'Superscript' }}>
+					Welcome to Questable!
+				</Typography>
+				<Grid spacing={1} container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
+					<Grid item>
+						<JoinClassroomModal user={user} />
 					</Grid>
-					<Grid item xs={12}>
-						<Loading>
-							{!classrooms ? 'Loading classrooms...' : 'Loading pinned classrooms...'}
-						</Loading>
+					<Grid sx={{ mb: 4 }} item>
+						<CreateClassroomModal user={user} />
 					</Grid>
 				</Grid>
-			</Layout>
-		)
+			</Box>
+		</Box>
+	)
 
 	const classroomsSection =
 		classrooms && pinned ? (
@@ -157,46 +145,25 @@ export default function Home({ user }: { user: User }) {
 			</Grid>
 		)
 
+	if (!(classrooms && pinned))
+		return (
+			<Layout>
+				<Grid item xs={12}>
+					{welcomeBox}
+					<Grid item xs={12}>
+						<Loading>
+							{!classrooms ? 'Loading classrooms...' : 'Loading pinned classrooms...'}
+						</Loading>
+					</Grid>
+				</Grid>
+			</Layout>
+		)
+
 	return (
 		<Layout>
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
-					<Box
-						sx={{
-							height: '100%',
-							width: '100%',
-							backgroundImage: `url(${wood1})`,
-							backgroundSize: 'cover',
-							imageRendering: 'pixelated',
-						}}
-					>
-						<Box
-							sx={{
-								width: '100%',
-								height: 300,
-								border: '10px solid',
-								borderColor: 'primary.main',
-								display: 'flex',
-								flexWrap: 'wrap',
-								justifyContent: 'center',
-								alignItems: 'center',
-								textAlign: 'center',
-								boxShadow: 2,
-							}}
-						>
-							<Typography variant='h3' sx={{ flex: '100%' }}>
-								Welcome Back, {user.displayName}!
-							</Typography>
-							<Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='center'>
-								<Grid item>
-									<JoinClassroomModal user={user} />
-								</Grid>
-								<Grid item>
-									<CreateClassroomModal user={user} />
-								</Grid>
-							</Grid>
-						</Box>
-					</Box>
+					{welcomeBox}
 				</Grid>
 				{classroomsSection}
 			</Grid>

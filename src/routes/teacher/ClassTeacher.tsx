@@ -1,5 +1,4 @@
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
+import { Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 
 import ClassTeacherModal from '../../components/teacher/ClassTeacherModal'
 
@@ -10,11 +9,19 @@ import { getUserData } from '../../utils/mutations'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Avatar from '../../components/global/Avatar'
-import { Classroom, Player, PlayerWithEmail } from '../../types'
-import { currentAvatar } from '../../utils/items'
+import Paper from '@mui/material/Paper'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
 import { useEffect, useState } from 'react'
+import Avatar from '../../components/global/Avatar'
 import Loading from '../../components/global/Loading'
+import { Classroom, Player, PlayerWithEmail } from '../../types'
+import { levelUp } from '../../utils/helperFunctions'
+import { currentAvatar } from '../../utils/items'
 
 export default function ClassTeacher({
 	player,
@@ -24,6 +31,8 @@ export default function ClassTeacher({
 	classroom: Classroom
 }) {
 	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
+	const [leaders, setLeaders] = useState<PlayerWithEmail[] | null>(null)
+
 	//   const [teacher, setTeacher] = React.useState();
 
 	useEffect(() => {
@@ -72,6 +81,12 @@ export default function ClassTeacher({
 					const playersWithoutTeacher = players.filter((player) => player.role !== 'teacher')
 
 					setStudents(playersWithoutTeacher)
+					const leadersList = players
+						.filter((player) => player.role !== 'teacher')
+						.sort((player1, player2) => player2.xp - player1.xp)
+						.splice(0, playersWithoutTeacher.length)
+
+					setLeaders(leadersList)
 				}
 			}
 			// Call the async `mapTeacher` function
@@ -80,8 +95,16 @@ export default function ClassTeacher({
 		return unsub
 	}, [classroom, player])
 
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
+
 	return (
 		<>
+			<Grid item xs={12}>
+				<Typography sx={{ fontSize: !mobile ? '50px' : '32px' }} variant='h2' component='div'>
+					Class Page
+				</Typography>
+			</Grid>
 			{/* <Grid item xs={12}>
 				<Typography variant='h2' component='div'>
 					{classroom.name}
@@ -100,24 +123,92 @@ export default function ClassTeacher({
 					</CardContent>
 				</Card>
 			</Grid> */}
+			{classroom.doLeaderboard == true ? (
+				<Grid item xs={12}>
+					<TableContainer component={Paper}>
+						<Table aria-label='simple table' sx={{ border: 'none' }}>
+							<TableHead>
+								<TableRow>
+									{/* <TableCell sx={{ width: 60 }} /> */}
+									<TableCell align='center'>Ranking</TableCell>
+									<TableCell align='center'>Player</TableCell>
+									<TableCell align='center'>Gold</TableCell>
+									<TableCell align='center'>XP</TableCell>
+									<TableCell align='center'>Level</TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{leaders?.map((leader, i: number) => (
+									<TableRow
+										key={leader.id}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+									>
+										<TableCell align='center'>{i + 1}</TableCell>
+										<TableCell align='center'>{leader.name}</TableCell>
+										<TableCell align='center'>{leader.money}</TableCell>
+										<TableCell align='center'>{leader.xp}</TableCell>
+										<TableCell align='center'>{levelUp(leader.xp)}</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
+				</Grid>
+			) : null}
 			{students ? (
 				students.map((student) => (
-					<Card sx={{ width: 0.22, m: 2 }} key={student.id}>
-						<CardContent>
-							<Box
-								sx={{
-									height: 300,
-									width: 200,
-								}}
-							>
-								<Avatar outfit={currentAvatar(student)} />
-							</Box>
-							<Typography variant='body1'>Name: {student.name}</Typography>
-							<Typography variant='body1'>Gold: {student.money}g</Typography>
-							<Typography variant='body1'>{student.email}</Typography>
-							<ClassTeacherModal student={student} />
-						</CardContent>
-					</Card>
+					<Grid item xs={12} sm={6} md={4} lg={3} key={student.id}>
+						<Card>
+							<CardContent>
+								<Stack direction='column'>
+									<Box
+										sx={{
+											height: 200,
+											width: 200,
+											alignSelf: 'center',
+											mb: 2,
+										}}
+									>
+										<Avatar outfit={currentAvatar(student)} />
+									</Box>
+									<Typography
+										noWrap
+										sx={{
+											[theme.breakpoints.down('mobile')]: {
+												fontSize: '13px',
+											},
+										}}
+										variant='body1'
+									>
+										Name: {student.name}
+									</Typography>
+									<Typography
+										noWrap
+										sx={{
+											[theme.breakpoints.down('mobile')]: {
+												fontSize: '13px',
+											},
+										}}
+										variant='body1'
+									>
+										Gold: {student.money}g
+									</Typography>
+									<Typography
+										noWrap
+										sx={{
+											[theme.breakpoints.down('mobile')]: {
+												fontSize: '13px',
+											},
+										}}
+										variant='body1'
+									>
+										{student.email}
+									</Typography>
+									<ClassTeacherModal player={student} classroom={classroom} />
+								</Stack>
+							</CardContent>
+						</Card>
+					</Grid>
 				))
 			) : (
 				<Grid item xs={12}>

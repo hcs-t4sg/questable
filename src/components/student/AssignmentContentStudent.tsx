@@ -1,12 +1,15 @@
 // import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
-import { Box, Grid, IconButton, Modal, Typography } from '@mui/material'
+import { Box, Grid, IconButton, Dialog, Typography } from '@mui/material'
 import { ModalTitle, StudentBoxInModal, StudentTaskModalBox } from '../../styles/TaskModalStyles'
 import { Assignment } from '../../types'
 import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
 import green3 from '/src/assets/spriteSheets/potions/green3.png'
 import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
 import red3 from '/src/assets/spriteSheets/potions/red3.png'
+
+import createDOMPurify from 'dompurify'
+const DOMPurify = createDOMPurify(window)
 // import { rewardsMatch } from './RewardItems'
 
 export function rewardPotion(rewardAmount: number) {
@@ -43,17 +46,23 @@ export function rewardPotion(rewardAmount: number) {
 export const Cluster = ({
 	title,
 	data,
+	isHtml,
 }: {
 	title: string
 	data: string | number | JSX.Element
+	isHtml: boolean
 }) => (
 	<>
 		<Typography sx={{ marginTop: '25px' }} fontWeight='bold' variant='h6'>
 			{title}
 		</Typography>
-		<Typography fontWeight='light' variant='body1'>
-			{data}
-		</Typography>
+		{isHtml && typeof data == 'string' ? (
+			<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data) }} />
+		) : (
+			<Typography fontWeight='light' variant='body1'>
+				{data}
+			</Typography>
+		)}
 	</>
 )
 
@@ -75,9 +84,9 @@ export function AssignmentContentStudent({
 			<IconButton onClick={toggleIsOpen}>
 				<OpenInNewIcon />
 			</IconButton>
-			<Modal sx={{ overflow: 'scroll' }} open={isOpen} onClose={toggleIsOpen}>
+			<Dialog open={isOpen} onClose={toggleIsOpen}>
+				<ModalTitle onClick={toggleIsOpen} text={`${assignmentType} overview`} />
 				<StudentTaskModalBox>
-					<ModalTitle onClick={toggleIsOpen} text={`${assignmentType} overview`} />
 					<Grid container spacing={2}>
 						<Grid item xs={6}>
 							<StudentBoxInModal>{children}</StudentBoxInModal>
@@ -90,7 +99,7 @@ export function AssignmentContentStudent({
 						</Grid>
 					</Grid>
 				</StudentTaskModalBox>
-			</Modal>
+			</Dialog>
 		</Box>
 	)
 }

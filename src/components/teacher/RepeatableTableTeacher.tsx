@@ -19,21 +19,50 @@ import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
 import { truncate } from '../../utils/helperFunctions'
+import Fuse from 'fuse.js'
 
-export default function RepeatableTableTeacher({ classroom }: { classroom: Classroom }) {
+export default function RepeatableTableTeacher({
+	classroom,
+	searchInput,
+}: {
+	classroom: Classroom
+	searchInput: string
+}) {
 	const { enqueueSnackbar } = useSnackbar()
 	// Create a state variable to hold the tasks
+	const [original, setOriginal] = useState<Repeatable[] | null>(null)
 	const [repeatables, setRepeatables] = useState<Repeatable[] | null>(null)
+
+	const [fuse, newFuse] = useState(new Fuse<Repeatable>([]))
+
+	const options = {
+		keys: ['name', 'description'],
+		includeScore: true,
+		threshold: 0.4,
+		minMatchCharLength: 3,
+	}
+
 	useEffect(() => {
 		// Create a reference to the tasks collection
 		const repeatableCollectionRef = collection(db, `classrooms/${classroom.id}/repeatables`)
 		// Attach a listener to the tasks collection
 		const unsub = onSnapshot(repeatableCollectionRef, (snapshot) => {
 			// Store the tasks in the `tasks` state variable
-			setRepeatables(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Repeatable)))
+			const r = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Repeatable))
+			setOriginal(r)
+			setRepeatables(r)
+			newFuse(new Fuse(r, options))
 		})
 		return unsub
 	}, [classroom])
+
+	useEffect(() => {
+		if (searchInput != '') {
+			setRepeatables(fuse.search(searchInput).map((elem) => elem.item))
+		} else {
+			setRepeatables(original)
+		}
+	}, [searchInput])
 
 	const handleDelete = (repeatable: Repeatable) => {
 		// message box to confirm deletion
@@ -78,7 +107,15 @@ export default function RepeatableTableTeacher({ classroom }: { classroom: Class
 									<TableCell component='th' scope='row'>
 										{repeatable.name}
 									</TableCell>
-									<TableCell>{truncate(repeatable.description)}</TableCell>
+									{/* <TableCell>{truncate(repeatable.description)}</TableCell> */}
+									<TableCell>
+										{' '}
+										<div
+											dangerouslySetInnerHTML={{
+												__html: truncate(repeatable.description.replace(/<[^>]+>/g, ''), 40),
+											}}
+										/>
+									</TableCell>
 									<TableCell>{repeatable.maxCompletions}</TableCell>
 									<TableCell>{`${repeatable.reward}g`}</TableCell>
 									<TableCell align='right'>

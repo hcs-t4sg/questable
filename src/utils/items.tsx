@@ -26,6 +26,7 @@ import wavy from '../assets/spriteSheets/hair/wavy.png'
 import shirt from '../assets/spriteSheets/clothes/basic.png'
 import pants from '../assets/spriteSheets/clothes/pants.png'
 import shoes from '../assets/spriteSheets/clothes/shoes.png'
+import reward from '../assets/spriteSheets/rewards/all_rewards.png'
 import { Item, Player } from '../types'
 
 // Guide to classes in Javascript: https://dmitripavlutin.com/javascript-classes-complete-guide/#32-private-instance-fields
@@ -85,6 +86,7 @@ export default function render(file: string, spriteStart: number, doAnimation: b
 		shirt,
 		pants,
 		shoes,
+		reward,
 	}
 
 	return (
@@ -315,6 +317,33 @@ export function getShoesItems() {
 	const shoesItems = idList.map((id) => new Shoes(id))
 
 	return shoesItems
+}
+
+export class Reward {
+	id
+	name
+	#spriteStart
+
+	constructor(id: number) {
+		this.id = id
+		this.name = 'Reward' + id.toString()
+		this.#spriteStart = 1 * id + 1
+	}
+
+	renderStatic() {
+		return render('reward', this.#spriteStart, false)
+	}
+
+	renderAnimated() {
+		return render('reward', this.#spriteStart, true)
+	}
+}
+
+export function getRewardItems() {
+	const idList = [...Array(10).keys()]
+	const rewardItems = idList.map((id) => new Reward(id))
+
+	return rewardItems
 }
 
 export function currentAvatar(player: Player) {

@@ -1,18 +1,11 @@
-import Grid from '@mui/material/Grid'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
-import { collection, onSnapshot, query } from 'firebase/firestore'
-import React, { useEffect } from 'react'
-import { db } from '../../utils/firebase'
+import { Box, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material'
+import React from 'react'
 // import ReactDOM from "react-dom"
-import { Box } from '@mui/system'
 // import InventoryItemCard from '../../components/student/InventoryItemCard'
-import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
-import { getBodyItems, Hair, Pants, Shirt, Shoes } from '../../utils/items'
-import { ItemCard } from '../../components/student/ItemCard'
-import { Typography } from '@mui/material'
+import { InventoryItemCard } from '../student/InventoryItemCard'
+import { Classroom, Item, Player } from '../../types'
+import { currentAvatar, getBodyItems } from '../../utils/items'
 import wood2 from '/src/assets/Wood2.png'
-import Loading from '../../components/global/Loading'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -43,58 +36,30 @@ function a11yProps(index: number) {
 	}
 }
 
-export default function Inventory({ player, classroom }: { player: Player; classroom: Classroom }) {
+export default function InventoryDisplay({
+	player,
+	classroom,
+	inventoryObjects,
+}: {
+	player: Player
+	classroom: Classroom
+	inventoryObjects: Item[]
+}) {
 	const [value, setValue] = React.useState(0)
-	const [inventoryItems, setInventoryItems] = React.useState<DatabaseInventoryItem[] | null>(null)
-
-	// Listens for changes in the inventory items
-	useEffect(() => {
-		const q = query(collection(db, `classrooms/${classroom.id}/players/${player.id}/inventory`))
-
-		const unsub = onSnapshot(q, (snapshot) => {
-			const inventoryList = snapshot.docs.map((doc) => doc.data())
-			setInventoryItems(inventoryList as DatabaseInventoryItem[])
-		})
-		return unsub
-	}, [player, classroom])
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 		setValue(newValue)
 	}
 
-	if (!inventoryItems) {
-		return (
-			<Grid item xs={12}>
-				<Loading>Loading inventory...</Loading>
-			</Grid>
-		)
-	}
-	const inventoryObjects: Item[] = []
-
-	console.log(inventoryItems)
-
-	inventoryItems.forEach((item) => {
-		if (item.type === 'hair') {
-			if (item.subtype) {
-				inventoryObjects.push(new Hair(item.itemId, item.subtype))
-			}
-		} else if (item.type === 'shirt') {
-			inventoryObjects.push(new Shirt(item.itemId))
-		} else if (item.type === 'pants') {
-			inventoryObjects.push(new Pants(item.itemId))
-		} else if (item.type === 'shoes') {
-			inventoryObjects.push(new Shoes(item.itemId))
-		}
-	})
-
-	console.log(inventoryObjects)
-	console.log(getBodyItems())
-
 	return (
 		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
 				<Grid item xs={12}>
-					<Typography variant='h2'>Inventory</Typography>
+					<Typography sx={{ fontSize: !mobile ? '50px' : '32px' }} variant='h2'>
+						Inventory
+					</Typography>
 					<h5>Equip your avatar with items from your inventory!</h5>
 				</Grid>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -125,14 +90,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 								{inventoryObjects.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
-										<ItemCard
-											item={item}
-											player={player}
-											classroom={classroom}
-											itemPrice=''
-											type='inventory'
-											isBody={false}
-										/>
+										<InventoryItemCard item={item} player={player} classroom={classroom} />
 									</Grid>
 								))}
 							</Grid>
@@ -143,13 +101,11 @@ export default function Inventory({ player, classroom }: { player: Player; class
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 							{getBodyItems().map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
-									<ItemCard
+									<InventoryItemCard
 										item={item}
 										player={player}
 										classroom={classroom}
-										itemPrice=''
-										type='inventory'
-										isBody={true}
+										bodyOutfit={currentAvatar(player)}
 									/>
 								</Grid>
 							))}
@@ -167,14 +123,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 									.filter((item) => item.type === 'hair')
 									.map((item, index) => (
 										<Grid item xs={2} sm={3} md={3} key={index}>
-											<ItemCard
-												item={item}
-												player={player}
-												classroom={classroom}
-												itemPrice=''
-												type='inventory'
-												isBody={false}
-											/>
+											<InventoryItemCard item={item} player={player} classroom={classroom} />
 										</Grid>
 									))}
 							</Grid>
@@ -192,14 +141,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 									.filter((item) => item.type === 'shirt')
 									.map((item, index) => (
 										<Grid item xs={2} sm={3} md={3} key={index}>
-											<ItemCard
-												item={item}
-												player={player}
-												classroom={classroom}
-												itemPrice=''
-												type='inventory'
-												isBody={false}
-											/>
+											<InventoryItemCard item={item} player={player} classroom={classroom} />
 										</Grid>
 									))}
 							</Grid>
@@ -217,14 +159,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 									.filter((item) => item.type === 'pants')
 									.map((item, index) => (
 										<Grid item xs={2} sm={3} md={3} key={index}>
-											<ItemCard
-												item={item}
-												player={player}
-												classroom={classroom}
-												itemPrice=''
-												type='inventory'
-												isBody={false}
-											/>
+											<InventoryItemCard item={item} player={player} classroom={classroom} />
 										</Grid>
 									))}
 							</Grid>
@@ -242,14 +177,7 @@ export default function Inventory({ player, classroom }: { player: Player; class
 									.filter((item) => item.type === 'shoes')
 									.map((item, index) => (
 										<Grid item xs={2} sm={3} md={3} key={index}>
-											<ItemCard
-												item={item}
-												player={player}
-												classroom={classroom}
-												itemPrice=''
-												type='inventory'
-												isBody={false}
-											/>
+											<InventoryItemCard item={item} player={player} classroom={classroom} />
 										</Grid>
 									))}
 							</Grid>

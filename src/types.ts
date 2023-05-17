@@ -13,7 +13,18 @@ export interface Task extends Assignment {
 	completed: string[]
 	confirmed: string[]
 	due: Timestamp
+	gcrCourseID?: string
+	gcrID?: string
+	gcrName?: string
+	gcrUserId?: string
 }
+
+// export interface GCRTask extends Task {
+// 	gcrCourseID?: string
+// 	gcrID?: string
+// 	gcrName?: string
+// 	gcrUserId?: string
+// }
 
 export interface TaskWithStatus extends Task {
 	status: 0 | 1 | 2 | 3
@@ -70,6 +81,9 @@ export interface Classroom {
 	name: string
 	playerList: string[]
 	teacherList: string[]
+	doLeaderboard: boolean
+	leaderboardSize: number
+	canEdit: boolean
 }
 
 export interface Player {
@@ -84,6 +98,7 @@ export interface Player {
 	avaShoes?: number
 	avaAccessories?: number
 	avaHairSubtype?: string
+	xp: number
 }
 
 export interface DatabaseInventoryItem {
@@ -122,15 +137,53 @@ export interface ForumPost {
 	title: string
 	content: string
 	postTime: Timestamp
-	likes: number
 	author: Player
 	postType: 0 | 1 | 2 | 3
+	anonymous: boolean
+	likers: Array<string>
+	pinnedComments: Array<string>
 }
 
 export interface Comment {
 	id: string
 	content: string
 	author: string
-	likes: number
 	postTime: Timestamp
+	likers: string[]
+}
+
+export interface CustomShopItems {
+	id: string
+	name: string
+	description: string
+	price: number
+	isActive: boolean
+	icon: number | null
+}
+
+export interface PurchasedReward extends CustomShopItems {
+	id: string
+	rewardName: string
+	rewardDescription: string
+	rewardPrice: number
+	playerID: string
+	playerName: string
+}
+
+export interface CustomShopItems {
+	id: string
+	name: string
+	description: string
+	price: number
+	isActive: boolean
+	icon: number | null
+}
+
+export interface PurchasedReward extends CustomShopItems {
+	id: string
+	rewardName: string
+	rewardDescription: string
+	rewardPrice: number
+	playerID: string
+	playerName: string
 }

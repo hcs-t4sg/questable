@@ -7,70 +7,22 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { format } from 'date-fns'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
-import { Classroom, Repeatable, RepeatableCompletion } from '../../types'
-import { db } from '../../utils/firebase'
-import {
-	confirmRepeatable,
-	denyRepeatable,
-	getPlayerData,
-	getRepeatableCompletionTimes,
-} from '../../utils/mutations'
+import { Classroom, RepeatableCompletion } from '../../types'
+import { confirmRepeatables, denyRepeatable } from '../../utils/mutations'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import { Grid } from '@mui/material'
 import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
 import { truncate } from '../../utils/helperFunctions'
 
-export default function ConfirmRepeatablesTable({ classroom }: { classroom: Classroom }) {
+export default function ConfirmRepeatablesTable({
+	classroom,
+	completedRepeatables,
+}: {
+	classroom: Classroom
+	completedRepeatables: RepeatableCompletion[] | null
+}) {
 	const { enqueueSnackbar } = useSnackbar()
-
-	const [completedRepeatables, setCompletedRepeatables] = useState<RepeatableCompletion[] | null>(
-		null,
-	)
-
-	useEffect(() => {
-		const repeatablesRef = collection(db, `classrooms/${classroom.id}/repeatables`)
-		const repeatablesWithPendingRequestsQuery = query(repeatablesRef, where('requestCount', '>', 0))
-
-		const unsub = onSnapshot(repeatablesWithPendingRequestsQuery, (snapshot) => {
-			const fetchCompletedRepeatables = async () => {
-				const allCompletedRepeatables: RepeatableCompletion[] = []
-
-				console.log(snapshot.docs)
-
-				await Promise.all(
-					snapshot.docs.map(async (doc) => {
-						console.log(doc.data())
-						const completionTimes = await getRepeatableCompletionTimes(classroom.id, doc.id)
-
-						await Promise.all(
-							completionTimes.map(async (completionTime) => {
-								const player = await getPlayerData(classroom.id, completionTime.playerID)
-
-								if (player) {
-									const repeatableCompletion = {
-										id: completionTime.id,
-										repeatable: { ...doc.data(), id: doc.id } as Repeatable,
-										player: player,
-										time: completionTime.time,
-									}
-
-									allCompletedRepeatables.push(repeatableCompletion)
-								}
-							}),
-						)
-					}),
-				)
-
-				setCompletedRepeatables(allCompletedRepeatables)
-			}
-			fetchCompletedRepeatables().catch(console.error)
-		})
-
-		return unsub
-	}, [classroom])
 
 	if (!completedRepeatables) {
 		return <Loading>Loading repeatables...</Loading>
@@ -97,22 +49,23 @@ export default function ConfirmRepeatablesTable({ classroom }: { classroom: Clas
 							<TableCell align='center'>
 								{format(completion.time.toDate(), 'MM/dd/yyyy h:mm a')}
 							</TableCell>
-							<TableCell>{truncate(completion.repeatable.description)}</TableCell>
+							<TableCell>
+								<div
+									dangerouslySetInnerHTML={{
+										__html: truncate(completion.repeatable.description, 40),
+									}}
+								/>{' '}
+							</TableCell>
 							<TableCell>{`${completion.repeatable.reward}g`}</TableCell>
 							<TableCell component='th' scope='row'>
 								{completion.player.name}
 							</TableCell>
 							<TableCell align='center'>
-								<Grid container columnSpacing={1}>
+								<Grid container rowSpacing={1} columnSpacing={1}>
 									<Grid item>
 										<Button
 											onClick={() =>
-												confirmRepeatable(
-													classroom.id,
-													completion.player.id,
-													completion.repeatable.id,
-													completion.id,
-												)
+												confirmRepeatables([completion], classroom.id)
 													.then(() => {
 														enqueueSnackbar(
 															`Confirmed task completion "${completion.repeatable.name}" from ${completion.player.name}!`,

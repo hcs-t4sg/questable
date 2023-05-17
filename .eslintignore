@@ -4,3 +4,4 @@ dist/
 .eslintrc
 env.d.ts
 vite-env.d.ts
+deprecated/

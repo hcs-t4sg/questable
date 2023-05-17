@@ -1,24 +1,31 @@
-import { Box, Tab, Tabs } from '@mui/material'
+import {
+	Box,
+	IconButton,
+	Tab,
+	Tabs,
+	Button,
+	Chip,
+	Grid,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+} from '@mui/material'
 // import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import Checkbox from '@mui/material/Checkbox'
-import Chip from '@mui/material/Chip'
-import Grid from '@mui/material/Grid'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
-import { completeTask } from '../../utils/mutations'
+import { unsendTask, completeTask } from '../../utils/mutations'
 // import TaskModalStudent from './TaskModalStudent'
-import { useSnackbar } from 'notistack'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import Paper from '@mui/material/Paper'
+import Fuse from 'fuse.js'
+import { useSnackbar } from 'notistack'
 import { truncate } from '../../utils/helperFunctions'
-import TaskModalStudent from './TaskModalStudent'
 import { rewardPotion } from './AssignmentContentStudent'
+import TaskModalStudent from './TaskModalStudent'
 
 function a11yProps(index: number) {
 	return {
@@ -34,6 +41,7 @@ export default function TasksTableStudent({
 	overdue,
 	classroom,
 	player,
+	searchInput,
 }: {
 	assigned: TaskWithStatus[]
 	completed: TaskWithStatus[]
@@ -41,12 +49,20 @@ export default function TasksTableStudent({
 	overdue: TaskWithStatus[]
 	classroom: Classroom
 	player: Player
+	searchInput: string
 }) {
 	const { enqueueSnackbar } = useSnackbar()
 
 	const [taskCategory, setTaskCategory] = useState<0 | 1 | 2 | 3>(0)
 	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
 		setTaskCategory(newValue)
+	}
+
+	const options = {
+		keys: ['name', 'description'],
+		includeScore: true,
+		threshold: 0.4,
+		minMatchCharLength: 3,
 	}
 
 	let selectedTasks: TaskWithStatus[]
@@ -58,6 +74,11 @@ export default function TasksTableStudent({
 		selectedTasks = confirmed
 	} else {
 		selectedTasks = overdue
+	}
+	const fuse = new Fuse(selectedTasks, options)
+
+	if (searchInput != '') {
+		selectedTasks = fuse.search(searchInput).map((elem) => elem.item)
 	}
 
 	// Handle task completion
@@ -75,7 +96,24 @@ export default function TasksTableStudent({
 		}
 	}
 
-	console.log(assigned)
+	const handleUnsend = (task: TaskWithStatus) => {
+		if (!task.completed.includes(player.id)) {
+			enqueueSnackbar('There was an issue unsending the task', { variant: 'error' })
+			return
+		}
+
+		if (window.confirm('Are you sure you want to unsend this task?')) {
+			unsendTask(classroom.id, task.id, player.id)
+				.then(() => {
+					enqueueSnackbar(`Task "${task.name}" was unsent!`, { variant: 'success' })
+				})
+				.catch((err) => {
+					console.error(err)
+					enqueueSnackbar('There was an issue completing the task.', { variant: 'error' })
+				})
+		}
+	}
+
 	return (
 		<Box>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -98,6 +136,7 @@ export default function TasksTableStudent({
 								<TableCell align='center'>Reward Amount</TableCell>
 								<TableCell align='center'>Status</TableCell>
 								<TableCell align='center'>Open</TableCell>
+								{taskCategory === 1 ? <TableCell align='center'>Unsend request</TableCell> : null}
 								{taskCategory === 0 ? <TableCell align='center'>Mark as Complete</TableCell> : null}
 							</TableRow>
 						</TableHead>
@@ -113,7 +152,12 @@ export default function TasksTableStudent({
 										<TableCell align='left'>{task.name}</TableCell>
 										<TableCell align='left'>
 											{/* {task.description || 'None'} */}
-											{truncate(task.description) || 'None'}
+											{/* {truncate(task.description) || 'None'} */}
+											<div
+												dangerouslySetInnerHTML={{
+													__html: truncate(task.description.replace(/<[^>]+>/g, ''), 40),
+												}}
+											/>
 										</TableCell>
 										<TableCell align='left'>
 											{format(task.due.toDate(), 'MM/dd/yyyy h:mm a')}
@@ -138,10 +182,16 @@ export default function TasksTableStudent({
 										</TableCell>
 										{taskCategory === 0 ? (
 											<TableCell align='center'>
-												{/* <IconButton onClick={() => handleTaskComplete(task)}>
+												<IconButton onClick={() => handleTaskComplete(task)}>
 													<CheckBoxIcon />
-												</IconButton> */}
-												<Checkbox onChange={() => handleTaskComplete(task)} />
+												</IconButton>
+											</TableCell>
+										) : null}
+										{taskCategory === 1 && task.due.toDate() >= new Date() ? (
+											<TableCell align='center'>
+												<Button onClick={() => handleUnsend(task)} color='error'>
+													Unsend
+												</Button>
 											</TableCell>
 										) : null}
 									</TableRow>
