@@ -4,7 +4,7 @@ import { User } from 'firebase/auth'
 import Button from '@mui/material/Button'
 import { enqueueSnackbar } from 'notistack'
 import Layout from './Layout'
-import { onboardClassroom, updatePlayer } from '../../utils/mutations'
+import { onboardClassroom, updateAvatar, updatePlayer } from '../../utils/mutations'
 import { OnboardingItemCard } from '../student/OnboardingItemCard'
 import {
 	getBodyItems,
@@ -17,8 +17,9 @@ import {
 	Pants,
 	Shirt,
 	Shoes,
+	currentAvatar,
 } from '../../utils/items'
-import { Classroom } from '../../types'
+import { Classroom, Player } from '../../types'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -42,7 +43,15 @@ function TabPanel(props: TabPanelProps) {
 	)
 }
 
-export default function OnboardingPage({ classroom, user }: { classroom: Classroom; user: User }) {
+export default function OnboardingPage({
+	classroom,
+	user,
+	player,
+}: {
+	classroom: Classroom
+	user: User
+	player: Player
+}) {
 	const [name, setName] = useState('')
 	const [value, setValue] = useState(0)
 	const [body, setBody] = useState<Body | null>(null)
@@ -92,6 +101,12 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 			return
 		}
 		updatePlayer(user.uid, classroom.id, { name })
+		updateAvatar(player, body, classroom)
+		console.log(currentAvatar)
+		updateAvatar(player, hair, classroom)
+		updateAvatar(player, shirt, classroom)
+		updateAvatar(player, shoe, classroom)
+		updateAvatar(player, pant, classroom)
 		onboardClassroom(user.uid, classroom.id)
 	}
 
@@ -124,10 +139,10 @@ export default function OnboardingPage({ classroom, user }: { classroom: Classro
 						value={name}
 						onChange={(event) => setName(event.target.value)}
 					/>
-				</Grid>
-				<Grid display='flex' justifyContent='flex-start' alignItems='flex-start'>
-					<Grid item xs={12}>
-						{enterClassButton}
+					<Grid display='flex' justifyContent='flex-start' alignItems='flex-start'>
+						<Grid item xs={12}>
+							{enterClassButton}
+						</Grid>
 					</Grid>
 				</Grid>
 			</div>

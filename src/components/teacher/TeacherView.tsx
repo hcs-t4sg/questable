@@ -24,7 +24,7 @@ export default function TeacherView({
 	const playerOutfit = currentAvatar(player)
 
 	return (
-		<Layout classroom role={player?.role}>
+		<Layout classroom role={player.role}>
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
 					<Box
@@ -45,19 +45,16 @@ export default function TeacherView({
 							backgroundColor: '#f3f8df',
 						}}
 					>
-						<Grid item xs={12}>
-							<Typography variant='h2' component='div'>
-								{classroom.name}
-							</Typography>
-						</Grid>
-						<Grid item xs={12}>
-							<Typography variant='h5' component='div'>
-								{player.name}
-							</Typography>{' '}
-							{/* Do we want a separate user name?*/}
-							<Typography variant='h5' component='div'>
-								{classroom.playerList.length} Total Students
-							</Typography>
+						<Typography variant='h2' sx={{ fontFamily: 'Superscript' }}>
+							{classroom.name}
+						</Typography>
+						<Typography variant='h5' component='div'>
+							{classroom.playerList.length} Total Students
+						</Typography>
+						<Typography variant='h3' sx={{ fontFamily: 'Superscript' }}>
+							{player.name}
+						</Typography>
+						<Box sx={{ display: 'flex', marginTop: '20px' }}>
 							<Box
 								sx={{
 									width: '20%',
@@ -68,7 +65,36 @@ export default function TeacherView({
 							>
 								<Avatar outfit={playerOutfit} />
 							</Box>
-						</Grid>
+							{/* <Box
+										sx={{
+											width: '350px',
+											display: 'flex',
+											flexDirection: 'column',
+											marginLeft: '160px',
+										}}
+									>
+										<ThickProgress variant='determinate' value={30} />
+										<ThickProgress variant='determinate' value={60} />
+									</Box> */}
+							<Box
+								sx={{
+									width: '350px',
+									display: 'flex',
+									flexDirection: 'column',
+									marginLeft: '50px',
+								}}
+							>
+								<Typography sx={{ fontSize: '16px', marginTop: '40px' }}>
+									Name: {user.displayName}
+								</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+									Email: {user.email}
+								</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+									Gold: {player.money}
+								</Typography>
+							</Box>
+						</Box>
 					</Box>
 				</Grid>
 				<Routes>

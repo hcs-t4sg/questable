@@ -911,7 +911,7 @@ export async function onboardClassroom(userID: string, classID: string) {
 
 	// Add the classroom ID to the user's list of onboarded classrooms
 	if (onboardedSnap.exists()) {
-		const onboardedClassrooms = onboardedSnap.data().pinned
+		const onboardedClassrooms = onboardedSnap.data().onboarded
 		if (onboardedClassrooms) {
 			onboardedClassrooms.push(classID)
 			updateDoc(userRef, {

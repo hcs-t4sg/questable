@@ -77,7 +77,7 @@ export default function ClassroomPage({ user }: { user: User }) {
 	if (classroom && onboarded) {
 		if (player) {
 			if (!onboarded.includes(classroom.id)) {
-				return <OnboardingPage classroom={classroom} user={user} />
+				return <OnboardingPage classroom={classroom} user={user} player={player} />
 			}
 			if (player.role === 'teacher') {
 				return <TeacherView player={player} classroom={classroom} user={user} />
