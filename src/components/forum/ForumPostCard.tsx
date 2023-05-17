@@ -119,7 +119,7 @@ export default function ForumPostCard({
 				</Stack>
 			</Stack>
 			<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
-				{forumPost.anonymous ? null : (
+				{forumPost.anonymous && forumPost.author.id !== player.id ? null : (
 					<Box
 						sx={{
 							width: '30px',
