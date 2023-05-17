@@ -43,7 +43,7 @@ export default function ConfirmRewardsTable({ classroom }: { classroom: Classroo
 						<TableCell>Reward</TableCell>
 						<TableCell>Description</TableCell>
 						<TableCell>Price</TableCell>
-						{/* <TableCell>Student</TableCell> */}
+						<TableCell>Student</TableCell>
 						<TableCell>Confirm?</TableCell>
 					</TableRow>
 				</TableHead>

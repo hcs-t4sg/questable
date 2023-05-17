@@ -1,9 +1,23 @@
 import { useState } from 'react'
 import { Classroom } from '../../types'
 import { useSnackbar } from 'notistack'
-import { Button, DialogActions, Grid, MenuItem, Select, TextField } from '@mui/material'
+import {
+	Button,
+	DialogActions,
+	Grid,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+	FormControl,
+} from '@mui/material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { ModalTitle, TaskModalBox, TeacherModalStyled } from '../../styles/TaskModalStyles'
+import {
+	BoxInModal,
+	ModalTitle,
+	TaskModalBox,
+	TeacherModalStyled,
+} from '../../styles/TaskModalStyles'
 import { addReward } from '../../utils/mutations'
 
 export default function ShopTeacherModal({ classroom }: { classroom: Classroom }) {
@@ -89,29 +103,23 @@ export default function ShopTeacherModal({ classroom }: { classroom: Classroom }
 						value={description}
 						onChange={(event) => setDescription(event.target.value)}
 					/>
-					<TextField
-						margin='normal'
-						id='price'
-						label='Price'
-						fullWidth
-						variant='standard'
-						value={price}
-						onChange={(event) => setDescription(event.target.value)}
-					/>
-					<Select
-						sx={{ m: 1, minWidth: 180 }}
-						size='small'
-						labelId='demo-simple-select-label'
-						id='demo-simple-select'
-						value={price}
-						label='Price'
-						onChange={(event) => setPrice(event.target.value as number)}
-					>
-						<MenuItem value={50}>50</MenuItem>
-						<MenuItem value={100}>100</MenuItem>
-						<MenuItem value={150}>150</MenuItem>
-						<MenuItem value={200}>200</MenuItem>
-					</Select>
+					<BoxInModal>
+						<FormControl fullWidth>
+							<InputLabel id='reward-dropdown-label'>Price</InputLabel>
+							<Select
+								labelId='reward-dropdown'
+								id='reward-dropdown'
+								value={price}
+								label='Price'
+								onChange={(event) => setPrice(event.target.value as number)}
+							>
+								<MenuItem value={50}>50g</MenuItem>
+								<MenuItem value={100}>100g</MenuItem>
+								<MenuItem value={150}>150g</MenuItem>
+								<MenuItem value={200}>200g</MenuItem>
+							</Select>
+						</FormControl>
+					</BoxInModal>
 					<Grid container justifyContent='center'>
 						{actionButtons}
 					</Grid>

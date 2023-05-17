@@ -39,7 +39,7 @@ export function iconPotion(priceAmount: number) {
 			}}
 			alt='Potion'
 			src={iconMatch}
-			height='100%'
+			height='120%'
 			width='100%'
 		/>
 	)
@@ -60,7 +60,7 @@ export function CustomItemCard(props: Props) {
 	console.log(props.item)
 
 	const ItemBox = styled(Box)({
-		top: -20,
+		top: 20,
 		left: '18%',
 		position: 'relative',
 		width: '150px',
@@ -87,13 +87,16 @@ export function CustomItemCard(props: Props) {
 
 	return (
 		<Card sx={{ maxWidth: 345 }}>
-			<ItemBox>{iconPotion(props.item.price)}</ItemBox>
+			<ItemBox marginBottom={5}>{iconPotion(props.item.price)}</ItemBox>
 			<CardContent>
+				<Typography variant='body2' sx={{ fontWeight: 'medium', color: 'green' }} component='div'>
+					Custom Reward
+				</Typography>
 				<Typography sx={{ marginTop: '15px', fontWeight: 'bold' }} variant='body1' component='div'>
 					{props.item.name}
 				</Typography>
 				<ItemTypography variant='body1' sx={{ fontWeight: 'bold' }}>
-					{props.item.price}
+					{props.item.price}g
 				</ItemTypography>
 				<ItemTypography variant='body2'>{props.item.description}</ItemTypography>
 			</CardContent>

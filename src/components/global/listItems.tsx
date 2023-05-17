@@ -13,6 +13,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { Link } from 'react-router-dom'
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
 
 // Handles list of pages on sidebar. Edit if you want to add more pages
 
@@ -92,7 +93,7 @@ export function MainListItemsTeacher() {
 				selected={selected === 4}
 			>
 				<ListItemIconStyled>
-					<InventoryIcon />
+					<AddCircleRoundedIcon />
 				</ListItemIconStyled>
 				<ListItemText primary='Shop' />
 			</ListItemButtonStyled>

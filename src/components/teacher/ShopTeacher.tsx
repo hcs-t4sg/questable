@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Classroom, CustomShopItems } from '../../types'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Box, Card, CardContent, Grid, IconButton, Typography } from '@mui/material'
+import { Box, Card, CardContent, Grid, IconButton, Stack, Typography } from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 import ShopTeacherModal from './ShopTeacherModal'
@@ -32,13 +32,13 @@ export function iconPotion(priceAmount: number) {
 				maxHeight: { xs: 140, md: 200 },
 				maxWidth: { xs: 140, md: 200 },
 				minWidth: '28px',
-				minHeight: '31.5px',
+				minHeight: '28px',
 				position: 'relative',
 			}}
 			alt='Potion'
 			src={iconMatch}
 			height='100%'
-			width='100%'
+			width='80%'
 		/>
 	)
 }
@@ -98,17 +98,19 @@ export default function ShopTeacher({
 				? customShopItems.map((customShopItem) => (
 						<Card sx={{ width: 0.22, m: 2 }} key={customShopItem.id}>
 							<CardContent>
-								<Box> {iconPotion(customShopItem.price)}</Box>
+								<Box marginLeft={3.3}> {iconPotion(customShopItem.price)}</Box>
 								<Typography variant='body1'> Name: {customShopItem.name} </Typography>
 								<Typography variant='body1'> Description: {customShopItem.description} </Typography>
 								<Typography variant='body1'> Price: {customShopItem.price} </Typography>
-								<ShopeTeacherEditModal
-									item={customShopItem}
-									classroom={classroom}
-								></ShopeTeacherEditModal>
-								<IconButton onClick={() => handleDelete(customShopItem)}>
-									<DeleteIcon />
-								</IconButton>
+								<Stack spacing={2} direction='row-reverse'>
+									<IconButton onClick={() => handleDelete(customShopItem)}>
+										<DeleteIcon />
+									</IconButton>
+									<ShopeTeacherEditModal
+										item={customShopItem}
+										classroom={classroom}
+									></ShopeTeacherEditModal>
+								</Stack>
 								{/* <Typography variant='body1'>
 									{' '}
 									Reward Display: Inactive

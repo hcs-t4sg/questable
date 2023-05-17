@@ -177,12 +177,12 @@ export default function ShopeTeacherEditModal({
 					> */}
 					<BoxInModal>
 						<FormControl fullWidth>
-							<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
+							<InputLabel id='reward-dropdown-label'>Price</InputLabel>
 							<Select
 								labelId='reward-dropdown'
 								id='reward-dropdown'
 								value={price}
-								label='Reward'
+								label='Price'
 								onChange={(event) => setPrice(event.target.value as number)}
 							>
 								<MenuItem value={50}>50g</MenuItem>
