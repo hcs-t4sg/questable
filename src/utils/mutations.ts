@@ -15,11 +15,14 @@ import {
 	Timestamp,
 	updateDoc,
 	where,
+	limit,
+	orderBy,
 	writeBatch,
 } from 'firebase/firestore'
 import {
 	Classroom,
 	CompletionTime,
+	CustomShopItems,
 	ForumPost,
 	Item,
 	Player,
@@ -42,6 +45,8 @@ export async function addClassroom(name: string, user: User) {
 		name: name,
 		playerList: [user.uid],
 		teacherList: [user.uid],
+		doLeaderboard: true,
+		leaderboardSize: 3,
 		canEdit: true,
 		// studentList: [],
 	}
@@ -85,6 +90,20 @@ export async function getClassrooms(user: User) {
 	return classrooms
 }
 
+// Get money of students in classroom
+export async function getMoney(classID: string) {
+	const playerRef = collection(db, `classrooms/${classID}/players`)
+	const q = query(playerRef, orderBy('money'), limit(5))
+	const moneySnapshot = await getDocs(q)
+
+	const rankings = moneySnapshot.docs.map((doc) => ({
+		...doc.data(),
+		id: doc.id,
+	}))
+
+	return rankings as Player[]
+}
+
 // Add user to existing classroom and set as student
 export async function joinClassroom(classID: string, user: User) {
 	const classroomRef = doc(db, 'classrooms', classID)
@@ -119,6 +138,7 @@ export async function joinClassroom(classID: string, user: User) {
 	await setDoc(newPlayerRef, {
 		avatar: 0,
 		money: 0,
+		xp: 0,
 		name: 'Adventurer',
 		role: 'student',
 		id: user.uid,
@@ -283,6 +303,25 @@ export async function updatePlayer(
 
 	await updateDoc(playerRef, {
 		name: newPlayer.name,
+	})
+}
+
+// Mutation to update money
+export async function updateMoney(
+	playerID: string,
+	classroomID: string,
+	newMoney: {
+		money: number | string
+	},
+) {
+	console.log(playerID)
+	console.log(classroomID)
+	console.log(newMoney)
+	const playerRef = doc(db, `classrooms/${classroomID}/players/${playerID}`)
+
+	await updateDoc(playerRef, {
+		money: newMoney.money,
+		xp: newMoney.money,
 	})
 }
 
@@ -452,7 +491,6 @@ export async function completeRepeatable(
 		if (confirmations >= repeatableSnap.data().maxCompletions) {
 			throw new Error('The maximum number of completions has been confirmed by the teacher')
 		}
-
 		updateDoc(completionsDocRef, {
 			completions: increment(1),
 		})
@@ -617,7 +655,10 @@ export async function confirmTasks(tasks: CompletedTask[], classID: string) {
 		const playerRef = doc(db, `classrooms/${classID}/players/${tasks[i].player.id}`)
 		const playerSnap = await getDoc(playerRef)
 		if (playerSnap.exists() && taskSnap.exists()) {
-			batch.update(playerRef, { money: increment(taskSnap.data().reward) })
+			batch.update(playerRef, {
+				money: increment(taskSnap.data().reward),
+				xp: increment(taskSnap.data().reward),
+			})
 		}
 	}
 
@@ -658,16 +699,17 @@ export async function purchaseItem(classID: string, studentID: string, item: Ite
 		const balance = playerSnap.data().money
 
 		const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
-		const invSnapshot = (await getDocs(inv)).docs
+		const invSnapshot = await getDocs(inv)
 
-		for (const i in invSnapshot) {
-			if (
-				invSnapshot[i].data().itemId === item.id &&
-				invSnapshot[i].data().type === item.type &&
-				(!invSnapshot[i].data().subtype || invSnapshot[i].data().subtype === item.subtype)
-			) {
-				return 'Already owned!'
-			}
+		if (
+			invSnapshot.docs.find(
+				(doc) =>
+					doc.data().itemId === item.id &&
+					doc.data().type === item.type &&
+					doc.data().subtype === item.subtype,
+			)
+		) {
+			return 'Already owned!'
 		}
 
 		if (balance < item.price) {
@@ -846,7 +888,10 @@ export async function confirmRepeatables(repeatables: RepeatableCompletion[], cl
 		const playerRef = doc(db, `classrooms/${classID}/players/${playerID}`)
 		const playerSnap = await getDoc(playerRef)
 		if (playerSnap.exists()) {
-			batch.update(playerRef, { money: increment(repeatableSnap.data().reward) })
+			batch.update(playerRef, {
+				money: increment(repeatableSnap.data().reward),
+				xp: increment(repeatableSnap.data().reward),
+			})
 		}
 
 		// increment streaks
@@ -1023,4 +1068,158 @@ export async function addComment(
 		postTime: serverTimestamp(),
 		likers: [],
 	})
+}
+
+// Mutation to toggle Leaderboard
+export async function updateDoLeaderboard(
+	classroomID: string,
+	newDoLeaderboard: {
+		doLeaderboard: boolean
+	},
+) {
+	console.log(classroomID)
+	const classRef = doc(db, `classrooms/${classroomID}`)
+
+	await updateDoc(classRef, {
+		doLeaderboard: newDoLeaderboard.doLeaderboard,
+	})
+}
+
+// Mutation to change leaderboard size
+export async function updateLeaderboardSize(
+	classroomID: string,
+	newLeaderboardSize: {
+		leaderboardSize: number | string
+	},
+) {
+	console.log(classroomID)
+	const classRef = doc(db, `classrooms/${classroomID}`)
+
+	await updateDoc(classRef, {
+		leaderboardSize: newLeaderboardSize.leaderboardSize,
+	})
+}
+
+// Mutation to create custom rewards
+export async function addReward(
+	classID: string,
+	reward: {
+		// id: string
+		name: string
+		description: string
+		price: number
+		isActive: boolean
+		// icon: null
+	},
+) {
+	const classRef = doc(db, 'classrooms', classID)
+	const classSnap = await getDoc(classRef)
+
+	if (!classSnap.exists()) {
+		// doc.data() will be undefined in this case
+		return 'No such document!'
+	}
+
+	// Update shop collection
+	await addDoc(collection(db, `classrooms/${classID}/customShopItems`), {
+		// id: reward.id,
+		name: reward.name,
+		description: reward.description,
+		price: reward.price,
+		isActive: reward.isActive,
+		// icon: reward.icon,
+	})
+}
+
+// Mutation to Update Reward Visibility
+export async function updateReward(
+	classroomID: string,
+	reward: {
+		name: string
+		description: string
+		price: number
+		isActive: boolean
+		id: string
+	},
+) {
+	console.log(classroomID)
+	const itemRef = doc(db, `classrooms/${classroomID}/customShopItems/${reward.id}`)
+
+	await updateDoc(itemRef, {
+		name: reward.name,
+		description: reward.description,
+		price: reward.price,
+		isActive: reward.isActive,
+	})
+}
+
+export async function purchaseCustomItem(
+	classID: string,
+	studentID: string,
+	item: CustomShopItems,
+) {
+	// isCustom should be a boolean denoting whether the item being purchased is an item created for a particular classroom/
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		throw new Error('Could not find classroom')
+	}
+
+	const player = await getPlayerData(classID, studentID)
+	// Update
+	if (!player) {
+		throw new Error('Could not find player')
+	}
+
+	const balance = player.money
+
+	if (balance < item.price) {
+		throw new Error('Not enough money!')
+	}
+
+	const newItem = {
+		itemId: item.id,
+	}
+
+	const newRequest = {
+		rewardName: item.name,
+		rewardDescription: item.description,
+		rewardPrice: item.price,
+		playerID: studentID,
+		playerName: player.name,
+	}
+
+	const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
+	await addDoc(inv, newItem)
+
+	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
+	await updateDoc(playerRef, {
+		money: player.money - item.price,
+	})
+
+	const reqs = collection(db, `classrooms/${classID}/rewardRequests`)
+
+	await addDoc(reqs, newRequest)
+
+	return 'Success!'
+}
+
+// Mutation to delete Custom Item
+export async function deleteItem(classroomID: string, itemID: string) {
+	await deleteDoc(doc(db, `classrooms/${classroomID}/customShopItems/${itemID}`))
+}
+
+// Mutation to confirm reward purchase
+export async function confirmReward(classID: string, studentID: string, rewardID: string) {
+	const classroomRef = doc(db, 'classrooms', classID)
+	const classroomSnap = await getDoc(classroomRef)
+	if (!classroomSnap.exists()) {
+		return 'Could not find classroom'
+	}
+
+	const rewardRef = doc(db, `classrooms/${classID}/rewardRequests/${rewardID}`)
+	const rewardSnap = await getDoc(rewardRef)
+	if (rewardSnap.exists()) {
+		deleteDoc(rewardRef)
+	}
 }

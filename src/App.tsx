@@ -12,6 +12,21 @@ import Error from './components/global/Error'
 import { SnackbarProvider } from 'notistack'
 import { syncUsers } from './utils/mutations'
 // make alias for greater readability
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+declare module '@mui/material/styles' {
+	interface BreakpointOverrides {
+		xs: true // removes the `xs` breakpoint
+		sm: true
+		md: true
+		lg: true
+		xl: true
+		mobile: true // adds the `mobile` breakpoint
+		tablet: true
+		laptop: true
+		desktop: true
+	}
+}
 
 declare module '@mui/material/styles' {
 	interface BreakpointOverrides {
@@ -112,6 +127,9 @@ const mdTheme = createTheme({
 	},
 })
 
+// Initialize client
+const queryClient = new QueryClient()
+
 // App.js is the homepage and handles top-level functions like user auth.
 
 export default function App() {
@@ -125,86 +143,91 @@ export default function App() {
 		},
 	})
 	return (
-		<ThemeProvider theme={mdTheme}>
-			<SnackbarProvider maxSnack={3}>
-				<Box sx={{ display: 'flex' }}>
-					<CssBaseline />
-					<AppBar position='fixed' sx={{ height: 65 }}>
-						<Toolbar
-							sx={{
-								pr: '24px', // keep right padding when drawer closed
-							}}
-						>
-							<Typography
-								component={Link}
-								to='/'
-								variant='h6'
-								color='inherit'
-								noWrap
-								sx={{ flexGrow: 1, fontFamily: 'Superscript', textDecoration: 'none' }}
-							>
-								Questable
-							</Typography>
-							<Typography
-								component='h1'
-								variant='body1'
-								color='inherit'
-								noWrap
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider theme={mdTheme}>
+				<SnackbarProvider maxSnack={3}>
+					<Box sx={{ display: 'flex' }}>
+						<CssBaseline />
+						<AppBar position='fixed' sx={{ height: 65 }}>
+							<Toolbar
 								sx={{
-									marginRight: '20px',
-									display: currentUser.data ? 'inline' : 'none',
+									pr: '24px', // keep right padding when drawer closed
 								}}
 							>
-								Signed in as {currentUser.data?.displayName ?? ''}
-							</Typography>
-							<Button
-								variant='contained'
-								size='small'
-								color='success'
-								sx={{
-									marginTop: '5px',
-									marginBottom: '5px',
-									marginRight: '20px',
-								}}
-								component={Link}
-								to={'/settings'}
-							>
-								Settings
-							</Button>
-							<Button
-								variant='contained'
-								size='small'
-								color='success'
-								sx={{
-									marginTop: '5px',
-									marginBottom: '5px',
-									display: currentUser.data ? 'inline' : 'none',
-								}}
-								onClick={() => {
-									auth.signOut()
-								}}
-							>
-								Log out
-							</Button>
-						</Toolbar>
-					</AppBar>
+								<Typography
+									component={Link}
+									to='/'
+									variant='h6'
+									color='inherit'
+									noWrap
+									sx={{ flexGrow: 1, fontFamily: 'Superscript', textDecoration: 'none' }}
+								>
+									Questable
+								</Typography>
+								<Typography
+									component='h1'
+									variant='body1'
+									color='inherit'
+									noWrap
+									sx={{
+										marginRight: '20px',
+										display: currentUser.data ? 'inline' : 'none',
+									}}
+								>
+									Signed in as {currentUser.data?.displayName ?? ''}
+								</Typography>
+								<Button
+									variant='contained'
+									size='small'
+									color='success'
+									sx={{
+										marginTop: '5px',
+										marginBottom: '5px',
+										marginRight: '20px',
+									}}
+									component={Link}
+									to={'/settings'}
+								>
+									Settings
+								</Button>
+								<Button
+									variant='contained'
+									size='small'
+									color='success'
+									sx={{
+										marginTop: '5px',
+										marginBottom: '5px',
+										display: currentUser.data ? 'inline' : 'none',
+									}}
+									onClick={() => {
+										auth.signOut()
+									}}
+								>
+									Log out
+								</Button>
+							</Toolbar>
+						</AppBar>
 
-					{currentUser.data ? (
-						/* Navigation routes set by react router. This is placed in
+						{currentUser.data ? (
+							/* Navigation routes set by react router. This is placed in
           app.js rather than index.js so we can pass relevant top-level
           props to the elements */
-						<Routes>
-							<Route path='/' element={<Home user={currentUser.data} />} />
-							<Route path='settings' element={<Settings user={currentUser.data} />} />
-							<Route path='class/:classID/*' element={<ClassroomPage user={currentUser.data} />} />
-							{/* Catch-all route for any URLs that don't match an existing route */}
-							<Route path='*' element={<Error message={'This page does not exist.'} />} />
-						</Routes>
-					) : (
-						<SignInScreen></SignInScreen>
-					)}
-				</Box>
-			</SnackbarProvider>
-		</ThemeProvider>
+							<Routes>
+								<Route path='/' element={<Home user={currentUser.data} />} />
+								<Route path='settings' element={<Settings user={currentUser.data} />} />
+								<Route
+									path='class/:classID/*'
+									element={<ClassroomPage user={currentUser.data} />}
+								/>
+								{/* Catch-all route for any URLs that don't match an existing route */}
+								<Route path='*' element={<Error message={'This page does not exist.'} />} />
+							</Routes>
+						) : (
+							<SignInScreen></SignInScreen>
+						)}
+					</Box>
+				</SnackbarProvider>
+			</ThemeProvider>
+		</QueryClientProvider>
 	)
 }

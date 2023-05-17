@@ -1,22 +1,29 @@
-import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
-// import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
-// import { styled } from '@mui/material/styles'
+import {
+	Box,
+	Grid,
+	Typography,
+	linearProgressClasses,
+	useMediaQuery,
+	useTheme,
+} from '@mui/material'
+import LinearProgress from '@mui/material/LinearProgress'
+import { styled } from '@mui/material/styles'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import ClassStudent from '../../routes/student/ClassStudent'
-import Inventory from '../../routes/student/Inventory'
-import TasksStudent from '../../routes/student/TasksStudent'
 import Shop from '../../routes/student/Shop'
+import TasksStudent from '../../routes/student/TasksStudent'
 import { currentAvatar } from '../../utils/items'
 import Avatar from '../global/Avatar'
 import Layout from '../global/Layout'
-
 // import x from '../../public/static/'
+import { User } from 'firebase/auth'
 import { useEffect } from 'react'
+import InventoryStudent from '../../routes/student/InventoryStudent'
+import StudentSettings from '../../routes/student/StudentSettings'
 import { Classroom, Player } from '../../types'
+import { levelUp } from '../../utils/helperFunctions'
 import { refreshAllRepeatables } from '../../utils/mutations'
 import ForumView from '../forum/ForumView'
-import { User } from 'firebase/auth'
-import StudentSettings from '../../routes/student/StudentSettings'
 
 export default function StudentView({
 	player,
@@ -27,18 +34,18 @@ export default function StudentView({
 	classroom: Classroom
 	user: User
 }) {
-	// const ThickProgress = styled(LinearProgress)(() => ({
-	// 	height: 20,
-	// 	borderRadius: 0,
-	// 	marginTop: 50,
-	// 	[`&.${linearProgressClasses.colorPrimary}`]: {
-	// 		backgroundColor: 'rgba(102, 187, 106, .5)',
-	// 	},
-	// 	[`& .${linearProgressClasses.bar}`]: {
-	// 		borderRadius: 0,
-	// 		backgroundColor: '#1B710D',
-	// 	},
-	// }))
+	const ThickProgress = styled(LinearProgress)(() => ({
+		height: 20,
+		borderRadius: 0,
+		marginTop: 20,
+		[`&.${linearProgressClasses.colorPrimary}`]: {
+			backgroundColor: 'rgba(102, 187, 106, .5)',
+		},
+		[`& .${linearProgressClasses.bar}`]: {
+			borderRadius: 0,
+			backgroundColor: '#1B710D',
+		},
+	}))
 
 	// Given the IDs for the outfit fetched from Firebase (and the hair subtype), you can designate the avatar outfit like so.
 	const playerOutfit = currentAvatar(player)
@@ -50,6 +57,19 @@ export default function StudentView({
 
 	const theme = useTheme()
 	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
+
+	// Calculate xp of player towards next level
+	const now = player.xp - (2.5 * Math.pow(levelUp(player.xp), 2) + 37.5 * levelUp(player.xp) - 40)
+
+	// Calculate xp needed for next level
+	const next =
+		2.5 * Math.pow(levelUp(player.xp) + 1, 2) +
+		37.5 * (levelUp(player.xp) + 1) -
+		40 -
+		(2.5 * Math.pow(levelUp(player.xp), 2) + 37.5 * levelUp(player.xp) - 40)
+
+	// Calculate progress to next level
+	const progress = (now / next) * 100
 
 	return (
 		<Layout classroom role={player.role}>
@@ -66,7 +86,7 @@ export default function StudentView({
 							paddingLeft: '80px',
 							paddingRight: '80px',
 							paddingBottom: '72px',
-							paddingTop: '40px',
+							paddingTop: '10px',
 							borderColor: '#373d20',
 							borderStyle: 'solid',
 							borderWidth: '10px',
@@ -104,10 +124,9 @@ export default function StudentView({
 									flexDirection: 'column',
 									marginLeft: '160px',
 								}}
-							>
-								<ThickProgress variant='determinate' value={30} />
-								<ThickProgress variant='determinate' value={60} />
-							</Box> */}
+							> */}
+							{/* <ThickProgress variant='determinate' value={60} /> */}
+							{/* </Box> */}
 							<Box
 								sx={{
 									width: '350px',
@@ -125,7 +144,23 @@ export default function StudentView({
 								<Typography sx={{ fontSize: !mobile ? '16px' : '8px', marginTop: '20px' }}>
 									Gold: {player.money}
 								</Typography>
+								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+									Level: {levelUp(player.xp)}
+								</Typography>
+								<Typography sx={{ marginTop: '0px' }}>
+									<ThickProgress variant='determinate' value={progress} /> {now}/{next} xp to next
+									level!
+								</Typography>
 							</Box>
+							{/* <Box
+								sx={{
+									width: '350px',
+									display: 'flex',
+									flexDirection: 'column',
+									marginLeft: '160px',
+								}}
+							> */}
+							{/* </Box> */}
 						</Box>
 					</Box>
 				</Grid>
@@ -134,7 +169,10 @@ export default function StudentView({
 					<Route path='tasks' element={<TasksStudent classroom={classroom} player={player} />} />
 					<Route path='shop' element={<Shop classroom={classroom} player={player} />} />
 					<Route path='class' element={<ClassStudent player={player} classroom={classroom} />} />
-					<Route path='inventory' element={<Inventory player={player} classroom={classroom} />} />
+					<Route
+						path='inventory'
+						element={<InventoryStudent player={player} classroom={classroom} />}
+					/>
 					<Route
 						path='settings'
 						element={<StudentSettings player={player} classroom={classroom} user={user} />}

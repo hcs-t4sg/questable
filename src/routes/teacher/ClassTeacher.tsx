@@ -14,6 +14,14 @@ import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { currentAvatar } from '../../utils/items'
 import { useEffect, useState } from 'react'
 import Loading from '../../components/global/Loading'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Paper from '@mui/material/Paper'
+import { levelUp } from '../../utils/helperFunctions'
 
 export default function ClassTeacher({
 	player,
@@ -23,6 +31,8 @@ export default function ClassTeacher({
 	classroom: Classroom
 }) {
 	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
+	const [leaders, setLeaders] = useState<PlayerWithEmail[] | null>(null)
+
 	//   const [teacher, setTeacher] = React.useState();
 
 	useEffect(() => {
@@ -71,6 +81,11 @@ export default function ClassTeacher({
 					const playersWithoutTeacher = players.filter((player) => player.role !== 'teacher')
 
 					setStudents(playersWithoutTeacher)
+					const leadersList = players
+						.sort((player1, player2) => player2.xp - player1.xp)
+						.splice(0, playersWithoutTeacher.length)
+
+					setLeaders(leadersList)
 				}
 			}
 			// Call the async `mapTeacher` function
@@ -107,6 +122,38 @@ export default function ClassTeacher({
 					</CardContent>
 				</Card>
 			</Grid> */}
+			{classroom.doLeaderboard == true ? (
+				<Grid item xs={12}>
+					<TableContainer component={Paper}>
+						<Table aria-label='simple table' sx={{ border: 'none' }}>
+							<TableHead>
+								<TableRow>
+									{/* <TableCell sx={{ width: 60 }} /> */}
+									<TableCell align='center'>Ranking</TableCell>
+									<TableCell align='center'>Player</TableCell>
+									<TableCell align='center'>Gold</TableCell>
+									<TableCell align='center'>XP</TableCell>
+									<TableCell align='center'>Level</TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{leaders?.map((leader, i: number) => (
+									<TableRow
+										key={leader.id}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+									>
+										<TableCell align='center'>{i + 1}</TableCell>
+										<TableCell align='center'>{leader.name}</TableCell>
+										<TableCell align='center'>{leader.money}</TableCell>
+										<TableCell align='center'>{leader.xp}</TableCell>
+										<TableCell align='center'>{levelUp(leader.xp)}</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
+				</Grid>
+			) : null}
 			{students ? (
 				students.map((student) => (
 					<Grid item xs={3} key={student.id}>
@@ -123,7 +170,7 @@ export default function ClassTeacher({
 								<Typography variant='body1'>Name: {student.name}</Typography>
 								<Typography variant='body1'>Gold: {student.money}g</Typography>
 								<Typography variant='body1'>{student.email}</Typography>
-								<ClassTeacherModal student={student} />
+								<ClassTeacherModal player={student} classroom={classroom} />
 							</CardContent>
 						</Card>
 					</Grid>

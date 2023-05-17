@@ -1,14 +1,11 @@
-import { Grid, Tab, Tabs, Typography, Box, useMediaQuery, useTheme } from '@mui/material'
-import { collection, onSnapshot, query } from 'firebase/firestore'
-import React, { useEffect } from 'react'
-import { db } from '../../utils/firebase'
+import { Box, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material'
+import React from 'react'
 // import ReactDOM from "react-dom"
 // import InventoryItemCard from '../../components/student/InventoryItemCard'
-import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
-import { currentAvatar, getBodyItems, Hair, Pants, Shirt, Shoes } from '../../utils/items'
-import wood2 from '/src/assets/Wood2.png'
-import Loading from '../../components/global/Loading'
 import { InventoryItemCard } from '../../components/student/InventoryItemCard'
+import { Classroom, Item, Player } from '../../types'
+import { currentAvatar, getBodyItems } from '../../utils/items'
+import wood2 from '/src/assets/Wood2.png'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -39,54 +36,22 @@ function a11yProps(index: number) {
 	}
 }
 
-export default function Inventory({ player, classroom }: { player: Player; classroom: Classroom }) {
+export default function InventoryDisplay({
+	player,
+	classroom,
+	inventoryObjects,
+}: {
+	player: Player
+	classroom: Classroom
+	inventoryObjects: Item[]
+}) {
 	const [value, setValue] = React.useState(0)
-	const [inventoryItems, setInventoryItems] = React.useState<DatabaseInventoryItem[] | null>(null)
 	const theme = useTheme()
 	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
-
-	// Listens for changes in the inventory items
-	useEffect(() => {
-		const q = query(collection(db, `classrooms/${classroom.id}/players/${player.id}/inventory`))
-
-		const unsub = onSnapshot(q, (snapshot) => {
-			const inventoryList = snapshot.docs.map((doc) => doc.data())
-			setInventoryItems(inventoryList as DatabaseInventoryItem[])
-		})
-		return unsub
-	}, [player, classroom])
 
 	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 		setValue(newValue)
 	}
-
-	if (!inventoryItems) {
-		return (
-			<Grid item xs={12}>
-				<Loading>Loading inventory...</Loading>
-			</Grid>
-		)
-	}
-	const inventoryObjects: Item[] = []
-
-	console.log(inventoryItems)
-
-	inventoryItems.forEach((item) => {
-		if (item.type === 'hair') {
-			if (item.subtype) {
-				inventoryObjects.push(new Hair(item.itemId, item.subtype))
-			}
-		} else if (item.type === 'shirt') {
-			inventoryObjects.push(new Shirt(item.itemId))
-		} else if (item.type === 'pants') {
-			inventoryObjects.push(new Pants(item.itemId))
-		} else if (item.type === 'shoes') {
-			inventoryObjects.push(new Shoes(item.itemId))
-		}
-	})
-
-	console.log(inventoryObjects)
-	console.log(getBodyItems())
 
 	return (
 		<Grid item xs={12}>

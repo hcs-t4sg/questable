@@ -81,6 +81,8 @@ export interface Classroom {
 	name: string
 	playerList: string[]
 	teacherList: string[]
+	doLeaderboard: boolean
+	leaderboardSize: number
 	canEdit: boolean
 }
 
@@ -96,6 +98,7 @@ export interface Player {
 	avaShoes?: number
 	avaAccessories?: number
 	avaHairSubtype?: string
+	xp: number
 }
 
 export interface DatabaseInventoryItem {
@@ -146,5 +149,41 @@ export interface Comment {
 	content: string
 	author: string
 	postTime: Timestamp
-	likers: Array<string>
+	likers: string[]
+}
+
+export interface CustomShopItems {
+	id: string
+	name: string
+	description: string
+	price: number
+	isActive: boolean
+	icon: number | null
+}
+
+export interface PurchasedReward extends CustomShopItems {
+	id: string
+	rewardName: string
+	rewardDescription: string
+	rewardPrice: number
+	playerID: string
+	playerName: string
+}
+
+export interface CustomShopItems {
+	id: string
+	name: string
+	description: string
+	price: number
+	isActive: boolean
+	icon: number | null
+}
+
+export interface PurchasedReward extends CustomShopItems {
+	id: string
+	rewardName: string
+	rewardDescription: string
+	rewardPrice: number
+	playerID: string
+	playerName: string
 }

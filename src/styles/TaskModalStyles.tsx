@@ -32,6 +32,18 @@ interface Props {
 	text: string
 }
 
+export const TaskModalBox = styled(Box)({
+	width: '40%',
+	display: 'flex',
+	flexDirection: 'column',
+	alignItems: 'center',
+	justifyContent: 'center',
+	padding: '40px',
+	paddingTop: '40px',
+	backgroundColor: 'white',
+	marginBottom: '18px',
+})
+
 // eventually - composition??
 /* Similarities between TaskModalTeacher and CreateTaskModal:
 	- same state variables

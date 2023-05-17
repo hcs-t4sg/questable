@@ -7,6 +7,15 @@ import Avatar from '../../components/global/Avatar'
 import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { currentAvatar } from '../../utils/items'
 import Loading from '../../components/global/Loading'
+import ClassStudentModal from './ClassStudentModal'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Paper from '@mui/material/Paper'
+import { levelUp } from '../../utils/helperFunctions'
 
 export default function ClassStudent({
 	player,
@@ -16,17 +25,19 @@ export default function ClassStudent({
 	classroom: Classroom
 }) {
 	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
+	const [leaders, setLeaders] = useState<PlayerWithEmail[] | null>(null)
 
 	const theme = useTheme()
 	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	useEffect(() => {
 		// If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
-		const playersRef = collection(db, `classrooms/${classroom.id}/players`)
-		const playerQuery = query(playersRef)
+		const playerRef = collection(db, `classrooms/${classroom.id}/players`)
+		const playerQuery = query(playerRef)
 
 		// Attach a listener to the teacher document
 		// TODO: Rewrite the promise.all call to prune the rejected users from the output array, not reject everything
+
 		const unsub = onSnapshot(playerQuery, (snapshot) => {
 			const mapTeacher = async () => {
 				const players = await Promise.all(
@@ -55,8 +66,13 @@ export default function ClassStudent({
 				//   }
 				// }
 				const studentList = players.filter((player) => player.role !== 'teacher')
-
 				setStudents(studentList)
+
+				const leadersList = players
+					.sort((player1, player2) => player2.xp - player1.xp)
+					.splice(0, classroom.leaderboardSize)
+
+				setLeaders(leadersList)
 			}
 			// Call the async `mapTeacher` function
 			mapTeacher().catch(console.error)
@@ -84,8 +100,36 @@ export default function ClassStudent({
 					</CardContent>
 				</Card>
 			</Grid>
-
-			{/* <Grid item xs={12}> */}
+			{classroom.doLeaderboard == true ? (
+				<Grid item xs={12}>
+					<TableContainer component={Paper}>
+						<Table aria-label='simple table' sx={{ border: 'none' }}>
+							<TableHead>
+								<TableRow>
+									{/* <TableCell sx={{ width: 60 }} /> */}
+									<TableCell align='center'>Ranking</TableCell>
+									<TableCell align='center'>Player</TableCell>
+									<TableCell align='center'>Level</TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{leaders?.map((leader, i: number) => (
+									<TableRow
+										key={leader.id}
+										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+									>
+										<TableCell align='center'>{i + 1}</TableCell>
+										<TableCell align='center'>{leader.name}</TableCell>
+										<TableCell align='center'>{levelUp(leader.xp)}</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
+				</Grid>
+			) : (
+				<Loading>Loading class leaderboard...</Loading>
+			)}
 			{students ? (
 				students.map((student) => (
 					<Grid item xs={3} key={student.id}>
@@ -100,7 +144,7 @@ export default function ClassStudent({
 									<Avatar outfit={currentAvatar(student)} />
 								</Box>
 								<Typography variant='body1'>Name: {student.name}</Typography>
-								<Typography variant='body1'>{student.email}</Typography>
+								<ClassStudentModal player={student}></ClassStudentModal>
 							</CardContent>
 						</Card>
 					</Grid>

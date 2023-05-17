@@ -12,6 +12,7 @@ import { styled } from '@mui/material/styles'
 import * as React from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
 
 // Handles list of pages on sidebar. Edit if you want to add more pages
 
@@ -38,7 +39,7 @@ const ListItemIconStyled = styled(ListItemIcon)({
 interface Item {
 	text: string
 	link: string
-	number: 0 | 1 | 2 | 3 | 4 | 5
+	number: 0 | 1 | 2 | 3 | 4 | 5 | 6
 	icon: JSX.Element
 }
 
@@ -48,8 +49,8 @@ const ListItems = ({
 	setSelected,
 }: {
 	items: Item[]
-	selected: 0 | 1 | 2 | 3 | 4 | 5
-	setSelected: (_: 0 | 1 | 2 | 3 | 4 | 5) => void
+	selected: 0 | 1 | 2 | 3 | 4 | 5 | 6
+	setSelected: (_: 0 | 1 | 2 | 3 | 4 | 5 | 6) => void
 }) => {
 	return (
 		<React.Fragment>
@@ -73,7 +74,7 @@ const ListItems = ({
 
 export function MainListItemsTeacher() {
 	const pageSlug = window.location.href.split('/').at(-1)
-	let selectedInit = 0 as 0 | 1 | 2 | 3 | 4 | 5
+	let selectedInit = 0 as 0 | 1 | 2 | 3 | 4 | 5 | 6
 	switch (pageSlug) {
 		case 'tasks':
 			selectedInit = 0
@@ -84,47 +85,65 @@ export function MainListItemsTeacher() {
 		case 'class':
 			selectedInit = 2
 			break
-		case 'posts':
+		case 'inventory':
 			selectedInit = 3
 			break
-		case 'settings':
+		case 'shop':
 			selectedInit = 4
+			break
+		case 'posts':
+			selectedInit = 5
+			break
+		case 'settings':
+			selectedInit = 6
 			break
 		default:
 			selectedInit = 0
 	}
 
-	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5>(selectedInit)
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6>(selectedInit)
 
 	const teacherItems = [
 		{
 			text: 'Tasks',
 			link: 'tasks',
-			number: 0 as 0 | 1 | 2 | 3 | 4,
+			number: 0 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <AssignmentIcon />,
 		},
 		{
 			text: 'Requests',
 			link: 'requests',
-			number: 1 as 0 | 1 | 2 | 3 | 4,
+			number: 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <EmailIcon />,
 		},
 		{
 			text: 'Class',
 			link: 'class',
-			number: 2 as 1 as 0 | 1 | 2 | 3 | 4,
+			number: 2 as 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <GroupIcon />,
+		},
+		{
+			text: 'Inventory',
+			link: 'inventory',
+			number: 3 as 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+			icon: <InventoryIcon />,
+		},
+		{
+			text: 'Shop',
+			link: 'shop',
+			number: 4 as 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+			icon: <AddCircleRoundedIcon />,
 		},
 		{
 			text: 'Forum',
 			link: 'forum',
-			number: 3 as 0 | 1 | 2 | 3 | 4,
+			number: 5 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <ForumIcon />,
 		},
 		{
 			text: 'Class Settings',
 			link: 'settings',
-			number: 4 as 0 | 1 | 2 | 3 | 4,
+			number: 6 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <SettingsIcon />,
 		},
 	]
@@ -134,7 +153,7 @@ export function MainListItemsTeacher() {
 
 export function MainListItemsStudent() {
 	const pageSlug = window.location.href.split('/').at(-1)
-	let selectedInit = 0 as 0 | 1 | 2 | 3 | 4 | 5
+	let selectedInit = 0 as 0 | 1 | 2 | 3 | 4 | 5 | 6
 	switch (pageSlug) {
 		case 'tasks':
 			selectedInit = 0
@@ -158,7 +177,7 @@ export function MainListItemsStudent() {
 			selectedInit = 0
 	}
 
-	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5>(selectedInit)
+	const [selected, setSelected] = useState<0 | 1 | 2 | 3 | 4 | 5 | 6>(selectedInit)
 
 	const studentItems = [
 		{

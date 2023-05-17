@@ -2,6 +2,7 @@ import { Tab, Tabs, Grid, Button, Stack, Typography, useMediaQuery, useTheme } f
 import { useState, useEffect } from 'react'
 import ConfirmRepeatablesTable from './ConfirmRepeatablesTable'
 import ConfirmTasksTable from './ConfirmTasksTable'
+import ConfirmRewardsTable from './ConfirmRewardsTable'
 import { Classroom, CompletedTask, RepeatableCompletion, Repeatable, Player } from '../../types'
 import { useSnackbar } from 'notistack'
 import {
@@ -313,6 +314,7 @@ export default function ConfirmationTables({
 				<Tabs value={page} onChange={handleTabChange}>
 					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='One Time' />
 					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='Repeatable' />
+					<Tab sx={{ fontSize: !mobile ? '14px' : '8px' }} label='Reward' />
 				</Tabs>
 				<Stack direction='row'>
 					<Button
@@ -347,11 +349,13 @@ export default function ConfirmationTables({
 
 			{page === 0 ? (
 				<ConfirmTasksTable classroom={classroom} completedTasks={completedTasks} />
-			) : (
+			) : page === 1 ? (
 				<ConfirmRepeatablesTable
 					classroom={classroom}
 					completedRepeatables={completedRepeatables}
 				/>
+			) : (
+				<ConfirmRewardsTable classroom={classroom} />
 			)}
 		</Grid>
 	)

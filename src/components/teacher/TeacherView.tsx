@@ -9,6 +9,8 @@ import { Box, Grid, Typography } from '@mui/material'
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
 import ForumView from '../forum/ForumView'
+import InventoryTeacher from './InventoryTeacher'
+import ShopTeacher from './ShopTeacher'
 
 export default function TeacherView({
 	player,
@@ -62,6 +64,11 @@ export default function TeacherView({
 					<Route path='tasks' element={<TasksTeacher player={player} classroom={classroom} />} />
 					<Route path='requests' element={<Requests player={player} classroom={classroom} />} />
 					<Route path='class' element={<ClassTeacher player={player} classroom={classroom} />} />
+					<Route
+						path='inventory'
+						element={<InventoryTeacher player={player} classroom={classroom} />}
+					/>
+					<Route path='shop' element={<ShopTeacher classroom={classroom} />} />
 					<Route
 						path='settings'
 						element={<TeacherSettings player={player} user={user} classroom={classroom} />}
