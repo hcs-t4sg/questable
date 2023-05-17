@@ -230,7 +230,7 @@ export default function CreateGCRTask({
 				<ModalTitle onClick={handleClose} text='Create Task' />
 				<TaskModalContent>
 					<BoxInModal>
-						<FormControl fullWidth sx={{ ml: -2 }}>
+						<FormControl fullWidth>
 							<InputLabel id='classroom-dropdown-label'>Select Classroom</InputLabel>
 							<Select
 								labelId='classroom-dropdown'
