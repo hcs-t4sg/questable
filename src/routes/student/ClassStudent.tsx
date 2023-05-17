@@ -7,7 +7,7 @@ import Avatar from '../../components/global/Avatar'
 import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { currentAvatar } from '../../utils/items'
 import Loading from '../../components/global/Loading'
-import ClassStudentModal from './ClassStudentModal'
+import ClassStudentModal from '../../components/student/ClassStudentModal'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -69,6 +69,7 @@ export default function ClassStudent({
 				setStudents(studentList)
 
 				const leadersList = players
+					.filter((player) => player.role !== 'teacher')
 					.sort((player1, player2) => player2.xp - player1.xp)
 					.splice(0, classroom.leaderboardSize)
 
@@ -158,7 +159,7 @@ export default function ClassStudent({
 								>
 									<Avatar outfit={currentAvatar(student)} />
 								</Box>
-								<Typography variant='body1'>Name: {student.name}</Typography>
+								<Typography variant='body1'>Player Name: {student.name}</Typography>
 								<ClassStudentModal player={student}></ClassStudentModal>
 							</CardContent>
 						</Card>

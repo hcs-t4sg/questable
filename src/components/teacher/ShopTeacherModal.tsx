@@ -10,6 +10,7 @@ import {
 	Select,
 	TextField,
 	FormControl,
+	Box,
 } from '@mui/material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import {
@@ -72,7 +73,7 @@ export default function ShopTeacherModal({ classroom }: { classroom: Classroom }
 	)
 	const actionButtons = (
 		<DialogActions>
-			<Button variant='contained' onClick={handleAdd}>
+			<Button variant='contained' type='submit'>
 				Add Reward
 			</Button>
 		</DialogActions>
@@ -81,48 +82,57 @@ export default function ShopTeacherModal({ classroom }: { classroom: Classroom }
 		<div>
 			{openButton}
 			<TeacherModalStyled open={open} onClose={handleClose}>
+				<ModalTitle onClick={handleClose} text='Create Reward' />
 				<TaskModalContent>
-					<ModalTitle onClick={handleClose} text='Create Reward' />
-					<TextField
-						margin='normal'
-						id='name'
-						label='Reward Name'
-						fullWidth
-						variant='standard'
-						value={name}
-						onChange={(event) => setName(event.target.value)}
-					/>
-					<TextField
-						margin='normal'
-						id='description'
-						label='Description'
-						fullWidth
-						variant='standard'
-						multiline
-						maxRows={8}
-						value={description}
-						onChange={(event) => setDescription(event.target.value)}
-					/>
-					<BoxInModal>
-						<FormControl fullWidth>
-							<InputLabel id='reward-dropdown-label'>Price</InputLabel>
-							<Select
-								labelId='reward-dropdown'
-								id='reward-dropdown'
-								value={price}
-								label='Price'
-								onChange={(event) => setPrice(event.target.value as number)}
-							>
-								<MenuItem value={50}>50g</MenuItem>
-								<MenuItem value={100}>100g</MenuItem>
-								<MenuItem value={150}>150g</MenuItem>
-								<MenuItem value={200}>200g</MenuItem>
-							</Select>
-						</FormControl>
-					</BoxInModal>
-					<Grid container justifyContent='center'>
-						{actionButtons}
-					</Grid>
+					<Box
+						component='form'
+						onSubmit={(e) => {
+							handleAdd()
+							e.preventDefault()
+						}}
+					>
+						<TextField
+							margin='normal'
+							id='name'
+							label='Reward Name'
+							fullWidth
+							variant='standard'
+							value={name}
+							onChange={(event) => setName(event.target.value)}
+						/>
+						<TextField
+							margin='normal'
+							id='description'
+							label='Description'
+							fullWidth
+							variant='standard'
+							placeholder=''
+							multiline
+							maxRows={8}
+							value={description}
+							onChange={(event) => setDescription(event.target.value)}
+						/>
+						<BoxInModal>
+							<FormControl fullWidth>
+								<InputLabel id='reward-dropdown-label'>Price</InputLabel>
+								<Select
+									labelId='reward-dropdown'
+									id='reward-dropdown'
+									value={price}
+									label='Price'
+									onChange={(event) => setPrice(event.target.value as number)}
+								>
+									<MenuItem value={50}>50g</MenuItem>
+									<MenuItem value={100}>100g</MenuItem>
+									<MenuItem value={150}>150g</MenuItem>
+									<MenuItem value={200}>200g</MenuItem>
+								</Select>
+							</FormControl>
+						</BoxInModal>
+						<Grid container justifyContent='center'>
+							{actionButtons}
+						</Grid>
+					</Box>
 				</TaskModalContent>
 			</TeacherModalStyled>
 		</div>

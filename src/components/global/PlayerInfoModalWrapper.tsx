@@ -1,12 +1,12 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
-import { Box, Grid, IconButton, Modal } from '@mui/material'
+import { Box, Dialog, Grid, IconButton } from '@mui/material'
 import { Player } from '../../types'
 
 import { ModalTitle, StudentBoxInModal, StudentTaskModalBox } from '../../styles/TaskModalStyles'
-import Avatar from '../../components/global/Avatar'
+import Avatar from './Avatar'
 import { currentAvatar } from '../../utils/items'
 
-export function ClassStudentContent({
+export function PlayerInfoModalWrapper({
 	children,
 	player,
 	isOpen,
@@ -22,14 +22,14 @@ export function ClassStudentContent({
 			<IconButton onClick={toggleIsOpen}>
 				<OpenInNewIcon />
 			</IconButton>
-			<Modal sx={{ overflow: 'scroll' }} open={isOpen} onClose={toggleIsOpen}>
+			<Dialog open={isOpen} onClose={toggleIsOpen}>
 				<StudentTaskModalBox>
 					<ModalTitle onClick={toggleIsOpen} text={'Adventurer'} />
 					<Grid container spacing={2}>
-						<Grid item xs={6}>
+						<Grid item md={6}>
 							<StudentBoxInModal>{children}</StudentBoxInModal>
 						</Grid>
-						<Grid item xs={6} marginTop={6} marginBottom={3}>
+						<Grid item xs={6} marginTop={9} marginBottom={3}>
 							<Box
 								sx={{
 									height: 150,
@@ -41,7 +41,7 @@ export function ClassStudentContent({
 						</Grid>
 					</Grid>
 				</StudentTaskModalBox>
-			</Modal>
+			</Dialog>
 		</Box>
 	)
 }

@@ -82,6 +82,7 @@ export default function ClassTeacher({
 
 					setStudents(playersWithoutTeacher)
 					const leadersList = players
+						.filter((player) => player.role !== 'teacher')
 						.sort((player1, player2) => player2.xp - player1.xp)
 						.splice(0, playersWithoutTeacher.length)
 
