@@ -66,6 +66,7 @@ export default function TasksStudent({
 	useEffect(() => {
 		// fetch task information
 		const q = query(collection(db, `classrooms/${classroom.id}/tasks`))
+		console.log(q)
 		const unsub = onSnapshot(q, (snapshot) => {
 			const assigned: TaskWithStatus[] = []
 			const completed: TaskWithStatus[] = []
@@ -77,7 +78,6 @@ export default function TasksStudent({
 			// TODO rewrite using Promise.all
 			snapshot.forEach((doc) => {
 				// if task is overdue, add to overdue list
-
 				if (doc.data().due.toDate() < new Date()) {
 					overdue.push(Object.assign({ id: doc.id, status: 3 }, doc.data()) as TaskWithStatus)
 				}
@@ -88,6 +88,10 @@ export default function TasksStudent({
 					completed.push(Object.assign({ id: doc.id, status: 1 }, doc.data()) as TaskWithStatus)
 				} else if (doc.data().confirmed?.includes(player.id)) {
 					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
+				} else {
+					// If player not in any arrays, treat task as assigned
+					// Allows players who join classroom after task creation to still see task
+					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
 				}
 			})
 			console.log(assigned)
