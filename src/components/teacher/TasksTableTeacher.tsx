@@ -37,9 +37,10 @@ function LinearProgressWithLabel({ task, players }: { task: Task; players: numbe
 	return (
 		<Box sx={{ display: 'flex', alignItems: 'center' }}>
 			<Box sx={{ minWidth: 100 }}>
-				<Typography variant='body2' color='text.secondary'>{`${task.confirmed?.length}/${
-					task.completed?.length + task.assigned?.length + task.confirmed?.length
-				} students`}</Typography>
+				<Typography
+					variant='body2'
+					color='text.secondary'
+				>{`${task.confirmed?.length}/${players} students`}</Typography>
 			</Box>
 			<Box sx={{ minWidth: '50%', mr: 1, ml: 1 }}>
 				<LinearProgress variant='determinate' value={percentDone(task, players)} />
