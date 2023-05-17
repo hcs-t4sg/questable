@@ -1,5 +1,6 @@
 import {
 	Box,
+	Divider,
 	Grid,
 	Typography,
 	linearProgressClasses,
@@ -93,16 +94,11 @@ export default function StudentView({
 							backgroundColor: '#f3f8df',
 						}}
 					>
-						<Typography
-							variant='h2'
-							sx={{ fontFamily: 'Superscript', fontSize: !mobile ? '45px' : '20px' }}
-						>
+						<Typography variant='h2' sx={{ fontFamily: 'Superscript' }}>
 							{classroom.name}
 						</Typography>
-						<Typography
-							variant='h3'
-							sx={{ fontFamily: 'Superscript', fontSize: !mobile ? '40px' : '15px' }}
-						>
+						<Divider sx={{ borderColor: '#373d20', borderBottomWidth: 5, mt: 2, mb: 2 }} />
+						<Typography variant='h3' sx={{ fontFamily: 'Superscript' }}>
 							{player.name}
 						</Typography>
 						<Box sx={{ display: 'flex', marginTop: '20px' }}>
@@ -144,7 +140,7 @@ export default function StudentView({
 								<Typography sx={{ fontSize: !mobile ? '16px' : '8px', marginTop: '20px' }}>
 									Gold: {player.money}
 								</Typography>
-								<Typography sx={{ fontSize: '16px', marginTop: '20px' }}>
+								<Typography sx={{ fontSize: !mobile ? '16px' : '8px', marginTop: '20px' }}>
 									Level: {levelUp(player.xp)}
 								</Typography>
 								<Typography sx={{ marginTop: '0px' }}>

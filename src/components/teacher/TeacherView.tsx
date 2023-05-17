@@ -4,7 +4,7 @@ import ClassTeacher from '../../routes/teacher/ClassTeacher'
 import Requests from '../../routes/teacher/Requests'
 import TasksTeacher from '../../routes/teacher/TasksTeacher'
 import Layout from '../global/Layout'
-import { Box, Grid, Typography } from '@mui/material'
+import { Box, Divider, Grid, Typography } from '@mui/material'
 
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
@@ -53,6 +53,7 @@ export default function TeacherView({
 						<Typography variant='h5' component='div'>
 							{classroom.playerList.length} Total Students
 						</Typography>
+						<Divider sx={{ borderColor: '#373d20', borderBottomWidth: 5, mt: 2, mb: 2 }} />
 						<Typography variant='h3' sx={{ fontFamily: 'Superscript' }}>
 							{player.name}
 						</Typography>
