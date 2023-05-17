@@ -953,7 +953,7 @@ export async function refreshAllRepeatables(classroomID: string, playerID: strin
 	const repeatablesSnap = await getDocs(repeatablesQuery)
 
 	// TODO see if you can rewrite these calls to run in parallel
-	await Promise.all(
+	await Promise.allSettled(
 		repeatablesSnap.docs.map(async (doc) => {
 			await refreshRepeatable(classroomID, playerID, doc.id)
 		}),
@@ -972,37 +972,34 @@ async function refreshRepeatable(classroomID: string, playerID: string, repeatab
 		)
 		const lastRefreshSnap = await getDoc(lastRefreshRef)
 
-		if (!lastRefreshSnap.exists()) {
-			return Error('Last refresh not found')
+		// Skip the refresh if it has been less than a week since the last refresh
+		// Should be >= because if it's >, then refresh will trigger every time (which is not desired)
+		if (lastRefreshSnap.exists() && lastRefreshSnap.data().lastRefresh.toDate() >= lastSunday()) {
+			return
 		}
 
-		// If more than a week has passed since last refresh
-		// ! will need to check if this equality holds (account for imprecisions)
-		// Should be < because if it's <=, then refresh will trigger every time (which is not desired)
-		if (lastRefreshSnap.data().lastRefresh.toDate() < lastSunday()) {
-			// 1. Set the player completions to 0
-			const completionsRef = doc(
-				db,
-				`classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`,
-			)
-			setDoc(completionsRef, {
-				completions: 0,
-			})
+		// 1. Set the player completions to 0
+		const completionsRef = doc(
+			db,
+			`classrooms/${classroomID}/repeatables/${repeatableID}/playerCompletions/${playerID}`,
+		)
+		setDoc(completionsRef, {
+			completions: 0,
+		})
 
-			// 2. Set the confirmations to 0
-			const confirmationsRef = doc(
-				db,
-				`classrooms/${classroomID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`,
-			)
-			setDoc(confirmationsRef, {
-				confirmations: 0,
-			})
+		// 2. Set the confirmations to 0
+		const confirmationsRef = doc(
+			db,
+			`classrooms/${classroomID}/repeatables/${repeatableID}/playerConfirmations/${playerID}`,
+		)
+		setDoc(confirmationsRef, {
+			confirmations: 0,
+		})
 
-			// Update the last refresh
-			setDoc(lastRefreshRef, {
-				lastRefresh: lastSunday(),
-			})
-		}
+		// Update the last refresh
+		setDoc(lastRefreshRef, {
+			lastRefresh: lastSunday(),
+		})
 	}
 }
 

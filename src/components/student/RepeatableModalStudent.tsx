@@ -1,15 +1,12 @@
 // import CloseIcon from '@mui/icons-material/Close'
 import { Box, Button } from '@mui/material'
-import { Classroom, Player, Repeatable } from '../../types'
-import { completeRepeatable } from '../../utils/mutations'
+import { Repeatable } from '../../types'
 import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
 import green3 from '/src/assets/spriteSheets/potions/green3.png'
 import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
 import red3 from '/src/assets/spriteSheets/potions/red3.png'
 // import { rewardsMatch } from './RewardItems'
-import { useSnackbar } from 'notistack'
 import { AssignmentContentStudent, Cluster } from './AssignmentContentStudent'
-import { useState } from 'react'
 
 export function rewardPotion(rewardAmount: number) {
 	const rewardMatch =
@@ -43,44 +40,22 @@ export function rewardPotion(rewardAmount: number) {
 }
 
 export default function RepeatableModalStudent({
-	classroom,
-	player,
 	repeatable,
+	open,
+	toggleOpenCallback,
+	handleCompleteCallback,
 }: {
-	classroom: Classroom
-	player: Player
 	repeatable: Repeatable
+	open: boolean
+	toggleOpenCallback: () => void
+	handleCompleteCallback: () => void
 }) {
-	const [open, setOpen] = useState(false)
-
-	const toggleOpen = () => {
-		setOpen(!open)
-	}
-
-	const { enqueueSnackbar } = useSnackbar()
-
-	const handleComplete = () => {
-		toggleOpen()
-		completeRepeatable(classroom.id, repeatable.id, player.id)
-			.then(() => {
-				enqueueSnackbar(`Repeatable completion added for "${repeatable.name}"!`, {
-					variant: 'success',
-				})
-			})
-			.catch((err) => {
-				console.error(err)
-				enqueueSnackbar('There was an issue adding the repeatable completion.', {
-					variant: 'error',
-				})
-			})
-	}
-
 	return (
 		<AssignmentContentStudent
 			assignment={repeatable}
 			assignmentType='Repeatable'
 			isOpen={open}
-			toggleIsOpen={toggleOpen}
+			toggleIsOpen={toggleOpenCallback}
 		>
 			<Cluster title='Task Name' data={repeatable.name} isHtml={false} />
 			<Cluster title='Description' data={repeatable.description} isHtml={true} />
@@ -90,7 +65,7 @@ export default function RepeatableModalStudent({
 			<Cluster
 				title=''
 				data={
-					<Button onClick={handleComplete} variant='contained' color='success'>
+					<Button onClick={handleCompleteCallback} variant='contained' color='success'>
 						Mark as complete
 					</Button>
 				}
