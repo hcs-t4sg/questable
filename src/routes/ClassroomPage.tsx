@@ -10,7 +10,6 @@ import StudentView from '../components/student/StudentView'
 import TeacherView from '../components/teacher/TeacherView'
 import { Classroom, Player } from '../types'
 import { db } from '../utils/firebase'
-import { syncUsers } from '../utils/mutations'
 
 export default function ClassroomPage({ user }: { user: User }) {
 	// Use react router to fetch class ID from URL params
@@ -40,8 +39,7 @@ export default function ClassroomPage({ user }: { user: User }) {
 		const updatePlayer = async () => {
 			const auth = getAuth()
 			const user = auth.currentUser
-			if (!!user && classID) {
-				syncUsers(user)
+			if (user && classID) {
 				const playerRef = doc(db, `classrooms/${classID}/players/${user.uid}`)
 				const unsub = onSnapshot(playerRef, (doc) => {
 					if (doc.exists()) {
@@ -51,9 +49,6 @@ export default function ClassroomPage({ user }: { user: User }) {
 				})
 				console.log('player does not exist')
 				return unsub
-				// const playerData = await getPlayerData(classID, user.uid)
-
-				// if (playerData) setPlayer(playerData)
 			}
 		}
 		updatePlayer().catch(console.error)
@@ -66,8 +61,6 @@ export default function ClassroomPage({ user }: { user: User }) {
 				const onboardedList = user.data().onboarded
 				if (onboardedList) {
 					setOnboarded(onboardedList)
-				} else {
-					setOnboarded([])
 				}
 			}
 		})

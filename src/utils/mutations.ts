@@ -18,6 +18,7 @@ import {
 	limit,
 	orderBy,
 	writeBatch,
+	runTransaction,
 } from 'firebase/firestore'
 import {
 	Classroom,
@@ -32,10 +33,23 @@ import {
 import { db } from './firebase'
 export async function syncUsers(user: User) {
 	const userRef = doc(db, 'users', user.uid)
-	const data = {
-		email: user.email,
+
+	try {
+		await runTransaction(db, async (transaction) => {
+			const userDoc = await transaction.get(userRef)
+			if (!userDoc.exists()) {
+				console.log('User doc does not exist!')
+				transaction.set(userRef, {
+					email: user.email,
+					onboarded: [],
+				})
+			}
+			console.log('User doc exists')
+		})
+		console.log('Transaction successfully committed!')
+	} catch (e) {
+		console.log('Transaction failed: ', e)
 	}
-	await setDoc(userRef, data, { merge: true })
 }
 
 // Create new classroom with user as teacher
