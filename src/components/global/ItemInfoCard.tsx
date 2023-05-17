@@ -3,6 +3,7 @@ import { capitalize } from 'lodash'
 import { Item, Outfit } from '../../types'
 
 import { styled } from '@mui/system'
+import { Eyes } from '../../utils/items'
 
 export function ItemInfoCard({
 	children,
@@ -41,6 +42,8 @@ export function ItemInfoCard({
 					{bodyOutfit.shoes.renderStatic()}
 					{bodyOutfit.eyes.renderStatic()}
 				</ItemBox>
+			) : item instanceof Eyes ? (
+				item.renderSwatch()
 			) : (
 				<ItemBox>{item.renderStatic()}</ItemBox>
 			)}

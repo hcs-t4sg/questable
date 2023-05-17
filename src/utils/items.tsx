@@ -30,6 +30,7 @@ import reward from '../assets/spriteSheets/rewards/all_rewards.png'
 import { Item, Player } from '../types'
 import eyes from '../assets/spriteSheets/eyes/eyes.png'
 import CircleIcon from '@mui/icons-material/Circle'
+import { Stack } from '@mui/material'
 
 // Guide to classes in Javascript: https://dmitripavlutin.com/javascript-classes-complete-guide/#32-private-instance-fields
 
@@ -317,7 +318,11 @@ export class Eyes implements Item {
 	}
 
 	renderSwatch() {
-		return <CircleIcon style={{ color: eyeColors[this.id].hex }} />
+		return (
+			<Stack justifyContent='center' flexDirection='row' sx={{ pt: 3 }}>
+				<CircleIcon style={{ color: eyeColors[this.id].hex, fontSize: '300%' }} />
+			</Stack>
+		)
 	}
 }
 
