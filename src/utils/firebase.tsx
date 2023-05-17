@@ -22,12 +22,12 @@ import { clientID } from './google'
 // ! TRY THIS: https://stackoverflow.com/questions/72209749/react-google-identity-services
 
 const firebaseConfig = {
-	apiKey: process.env.VITE_FIREBASE_API_KEY,
+	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
 	authDomain: 'questable-34d85.firebaseapp.com',
 	projectId: 'questable-34d85',
 	storageBucket: 'questable-34d85.appspot.com',
 	messagingSenderId: '904433822725',
-	appId: process.env.VITE_FIREBASE_APP_ID,
+	appId: import.meta.env.VITE_FIREBASE_APP_ID,
 	measurementId: 'G-DRESZ3V18Q',
 }
 
