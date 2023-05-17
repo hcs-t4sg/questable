@@ -348,7 +348,7 @@ export default function CreateGCRTask({
 								label='Due Date'
 								value={dueDate}
 								onChange={(value) => setDueDate(value)}
-								sx={{ ml: -2 }}
+								sx={{ width: '60%', ml: -2 }}
 							/>
 						</LocalizationProvider>
 					</BoxInModal>
