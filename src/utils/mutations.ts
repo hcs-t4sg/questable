@@ -1223,3 +1223,25 @@ export async function confirmReward(classID: string, studentID: string, rewardID
 		deleteDoc(rewardRef)
 	}
 }
+
+export async function onboardClassroom(userID: string, classID: string) {
+	console.log(userID)
+	console.log(classID)
+	const userRef = doc(db, `users/${userID}`)
+	const onboardedSnap = await getDoc(userRef)
+
+	// Add the classroom ID to the user's list of onboarded classrooms
+	if (onboardedSnap.exists()) {
+		const onboardedClassrooms = onboardedSnap.data().onboarded
+		if (onboardedClassrooms) {
+			onboardedClassrooms.push(classID)
+			updateDoc(userRef, {
+				onboarded: onboardedClassrooms,
+			})
+		} else {
+			updateDoc(userRef, {
+				onboarded: [classID],
+			})
+		}
+	}
+}
