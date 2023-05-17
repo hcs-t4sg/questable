@@ -527,11 +527,10 @@ export async function confirmTask(classID: string, studentID: string, taskID: st
 	}
 
 	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
-	const playerSnap = await getDoc(playerRef)
-	if (playerSnap.exists() && taskSnap.exists()) {
+	if (taskSnap.exists()) {
 		updateDoc(playerRef, {
-			money: parseInt(playerSnap.data().money + taskSnap.data().reward),
-			xp: parseInt(playerSnap.data().xp + taskSnap.data().reward),
+			money: increment(taskSnap.data().reward),
+			xp: increment(taskSnap.data().reward),
 		})
 	}
 }
@@ -759,12 +758,10 @@ export async function confirmRepeatable(
 
 	// increment money
 	const playerRef = doc(db, `classrooms/${classroomID}/players/${playerID}`)
-	const playerSnap = await getDoc(playerRef)
-	if (playerSnap.exists()) {
-		updateDoc(playerRef, {
-			money: playerSnap.data().money + repeatableSnap.data().reward,
-		})
-	}
+	updateDoc(playerRef, {
+		money: increment(repeatableSnap.data().reward),
+		xp: increment(repeatableSnap.data().reward),
+	})
 
 	// increment streaks
 	const streaksRef = doc(
