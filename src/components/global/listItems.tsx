@@ -129,7 +129,7 @@ export function MainListItemsTeacher() {
 			icon: <InventoryIcon />,
 		},
 		{
-			text: 'Shop',
+			text: 'Add Rewards',
 			link: 'shop',
 			number: 4 as 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
 			icon: <AddCircleRoundedIcon />,
