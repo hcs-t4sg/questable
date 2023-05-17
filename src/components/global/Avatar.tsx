@@ -31,6 +31,7 @@ export default function Avatar({ outfit }: { outfit: Outfit }) {
 			{outfit.shirt.renderStatic()}
 			{outfit.pants.renderStatic()}
 			{outfit.shoes.renderStatic()}
+			{outfit.eyes.renderStatic()}
 		</Box>
 	)
 }

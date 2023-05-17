@@ -39,6 +39,7 @@ export function ItemInfoCard({
 					{bodyOutfit.shirt.renderStatic()}
 					{bodyOutfit.pants.renderStatic()}
 					{bodyOutfit.shoes.renderStatic()}
+					{bodyOutfit.eyes.renderStatic()}
 				</ItemBox>
 			) : (
 				<ItemBox>{item.renderStatic()}</ItemBox>

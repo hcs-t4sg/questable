@@ -4,10 +4,10 @@ import React, { useEffect } from 'react'
 import { db } from '../../utils/firebase'
 // import ReactDOM from "react-dom"
 // import InventoryItemCard from '../../components/student/InventoryItemCard'
-import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
-import { getBodyItems, Hair, Pants, Shirt, Shoes } from '../../utils/items'
-import Loading from '../../components/global/Loading'
 import InventoryDisplay from '../../components/global/InventoryDisplay'
+import Loading from '../../components/global/Loading'
+import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
+import { Hair, Pants, Shirt, Shoes } from '../../utils/items'
 
 export default function InventoryStudent({
 	player,
@@ -55,7 +55,6 @@ export default function InventoryStudent({
 	})
 
 	console.log(inventoryObjects)
-	console.log(getBodyItems())
 
 	return (
 		<InventoryDisplay

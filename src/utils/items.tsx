@@ -28,6 +28,8 @@ import pants from '../assets/spriteSheets/clothes/pants.png'
 import shoes from '../assets/spriteSheets/clothes/shoes.png'
 import reward from '../assets/spriteSheets/rewards/all_rewards.png'
 import { Item, Player } from '../types'
+import eyes from '../assets/spriteSheets/eyes/eyes.png'
+import CircleIcon from '@mui/icons-material/Circle'
 
 // Guide to classes in Javascript: https://dmitripavlutin.com/javascript-classes-complete-guide/#32-private-instance-fields
 
@@ -62,6 +64,40 @@ const hairColors = [
 	'turquoise',
 ]
 
+const eyeColors: { name: string; hex: string }[] = [
+	{ name: 'black', hex: '#362f2d' },
+	{ name: 'dark blue', hex: '#354652' },
+	{ name: 'light blue', hex: '#546e8a' },
+	{ name: 'brown', hex: '#4d3530' },
+	{ name: 'dark brown', hex: '#2e2723' },
+	{ name: 'light brown', hex: '#754b44' },
+	{ name: 'green', hex: '#475c4e' },
+	{ name: 'dark green', hex: '#24382d' },
+	{ name: 'light green', hex: '#637d64' },
+	{ name: 'gray', hex: '#544b4e' },
+	{ name: 'light gray', hex: '#6e656a' },
+	{ name: 'pink', hex: '#b04f63' },
+	{ name: 'light pink', hex: '#c26576' },
+	{ name: 'red', hex: '#a64444' },
+]
+
+// const eyeColors = [
+// 	'black',
+// 	'dark blue',
+// 	'light blue',
+// 	'brown',
+// 	'dark brown',
+// 	'light brown',
+// 	'green',
+// 	'dark green',
+// 	'light green',
+// 	'gray',
+// 	'light gray',
+// 	'pink',
+// 	'light pink',
+// 	'red',
+// ]
+
 // Render function to generate item sprites
 export default function render(file: string, spriteStart: number, doAnimation: boolean) {
 	// Import object to allow the correct image import based on the subtype string.
@@ -87,6 +123,7 @@ export default function render(file: string, spriteStart: number, doAnimation: b
 		pants,
 		shoes,
 		reward,
+		eyes,
 	}
 
 	return (
@@ -256,6 +293,34 @@ export class Shoes implements Item {
 	}
 }
 
+export class Eyes implements Item {
+	id
+	name
+	description
+	#spriteStart
+	type = 'eyes' as const
+	price = 0
+
+	constructor(id: number) {
+		this.id = id
+		this.name = capitalize(eyeColors[id].name) + ' eyes'
+		this.description = capitalize(eyeColors[id].name) + ' eyes for your avatar!'
+		this.#spriteStart = 8 * id + 1
+	}
+
+	renderStatic() {
+		return render('eyes', this.#spriteStart, false)
+	}
+
+	renderAnimated() {
+		return render('eyes', this.#spriteStart, true)
+	}
+
+	renderSwatch() {
+		return <CircleIcon style={{ color: eyeColors[this.id].hex }} />
+	}
+}
+
 // Functions to generate all items of a given type in the game (for use in Shop).
 // Items are returned as an array of Item objects which can then be individually rendered.
 
@@ -319,6 +384,13 @@ export function getShoesItems() {
 	return shoesItems
 }
 
+export function getEyesItems() {
+	const idList = [...Array(14).keys()]
+	const eyesItems = idList.map((id) => new Eyes(id))
+
+	return eyesItems
+}
+
 export class Reward {
 	id
 	name
@@ -368,6 +440,7 @@ export function currentAvatar(player: Player) {
 		hair: playerHair,
 		pants: player.avaPants ? new Pants(player.avaPants) : new Pants(0),
 		shoes: player.avaShoes ? new Shoes(player.avaShoes) : new Shoes(0),
+		eyes: player.avaEyes ? new Eyes(player.avaEyes) : new Eyes(0),
 	}
 
 	return playerOutfit

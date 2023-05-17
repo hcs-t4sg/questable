@@ -4,7 +4,7 @@ import React from 'react'
 // import InventoryItemCard from '../../components/student/InventoryItemCard'
 import { InventoryItemCard } from '../student/InventoryItemCard'
 import { Classroom, Item, Player } from '../../types'
-import { currentAvatar, getBodyItems } from '../../utils/items'
+import { currentAvatar, getBodyItems, getEyesItems } from '../../utils/items'
 import wood2 from '/src/assets/Wood2.png'
 
 interface TabPanelProps {
@@ -70,6 +70,7 @@ export default function InventoryDisplay({
 						<Tab label='Shirts' {...a11yProps(3)} />
 						<Tab label='Pants' {...a11yProps(4)} />
 						<Tab label='Shoes' {...a11yProps(5)} />
+						<Tab label='Eyes' {...a11yProps(6)} />
 					</Tabs>
 				</Box>
 				<Box
@@ -182,6 +183,15 @@ export default function InventoryDisplay({
 									))}
 							</Grid>
 						)}
+					</TabPanel>
+					<TabPanel value={value} index={6}>
+						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+							{getEyesItems().map((item, index) => (
+								<Grid item xs={2} sm={3} md={3} key={index}>
+									<InventoryItemCard item={item} player={player} classroom={classroom} />
+								</Grid>
+							))}
+						</Grid>
 					</TabPanel>
 				</Box>
 			</Grid>

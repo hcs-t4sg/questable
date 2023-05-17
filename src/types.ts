@@ -96,6 +96,7 @@ export interface Player {
 	avaShirt?: number
 	avaPants?: number
 	avaShoes?: number
+	avaEyes?: number
 	avaAccessories?: number
 	avaHairSubtype?: string
 	xp: number
@@ -103,7 +104,7 @@ export interface Player {
 
 export interface DatabaseInventoryItem {
 	itemId: number
-	type: 'body' | 'hair' | 'shirt' | 'pants' | 'shoes'
+	type: 'body' | 'hair' | 'shirt' | 'pants' | 'shoes' | 'eyes'
 	subtype?: string
 }
 
@@ -111,7 +112,7 @@ export interface Item {
 	id: number
 	name: string
 	description: string
-	type: 'body' | 'hair' | 'shirt' | 'pants' | 'shoes'
+	type: 'body' | 'hair' | 'shirt' | 'pants' | 'shoes' | 'eyes'
 	subtype?: string
 	price: number
 	renderStatic: () => JSX.Element
@@ -124,6 +125,7 @@ export interface Outfit {
 	shirt: Item
 	pants: Item
 	shoes: Item
+	eyes: Item
 }
 
 export type UserRole = 'student' | 'teacher'

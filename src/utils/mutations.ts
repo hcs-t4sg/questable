@@ -1032,6 +1032,10 @@ export async function updateAvatar(player: Player, newItem: Item, classroom: Cla
 			? {
 					avaShoes: newItem.id,
 			  }
+			: newItem.type === 'eyes'
+			? {
+					avaEyes: newItem.id,
+			  }
 			: null
 	if (newEquip) {
 		await updateDoc(playerRef, newEquip)
