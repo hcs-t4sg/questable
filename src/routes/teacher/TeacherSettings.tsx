@@ -131,46 +131,6 @@ export default function TeacherSettings({
 					</CardContent>
 				</Card>
 			</Grid>
-			<Grid item xs={12}>
-				<Typography variant='h4'> Class Settings</Typography>
-				<Card sx={{ width: 1 }}>
-					<CardContent>
-						<Typography variant='h5' component='div'>
-							{classroom.name}
-						</Typography>
-						<Typography variant='h6' component='div'>
-							Leaderboard Visibility:
-							<Typography>
-								{' '}
-								Off
-								<Switch checked={checked} onChange={handleChange} />
-								On{' '}
-							</Typography>
-						</Typography>
-						<Typography variant='h6' component='div'>
-							Leaderboard Size:
-						</Typography>
-						<Select
-							sx={{ m: 1, minWidth: 180 }}
-							size='small'
-							labelId='demo-simple-select-label'
-							id='demo-simple-select'
-							value={leaderboardSize}
-							label='Leaderboard Size'
-							onChange={(event) => setLeaderBoardSize(event.target.value as number)}
-						>
-							<MenuItem value={3}>3</MenuItem>
-							<MenuItem value={4}>4</MenuItem>
-							<MenuItem value={5}>5</MenuItem>
-						</Select>
-						<DialogActions>
-							<Button variant='contained' onClick={() => handleEdit()}>
-								Save
-							</Button>
-						</DialogActions>
-					</CardContent>
-				</Card>
-			</Grid>
 		</>
 	)
 }

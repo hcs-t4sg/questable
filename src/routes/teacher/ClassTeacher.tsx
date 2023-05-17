@@ -82,6 +82,7 @@ export default function ClassTeacher({
 
 					setStudents(playersWithoutTeacher)
 					const leadersList = players
+						.filter((player) => player.role !== 'teacher')
 						.sort((player1, player2) => player2.xp - player1.xp)
 						.splice(0, playersWithoutTeacher.length)
 
@@ -167,7 +168,7 @@ export default function ClassTeacher({
 								>
 									<Avatar outfit={currentAvatar(student)} />
 								</Box>
-								<Typography variant='body1'>Name: {student.name}</Typography>
+								<Typography variant='body1'>Player Name: {student.name}</Typography>
 								<Typography variant='body1'>Gold: {student.money}g</Typography>
 								<Typography variant='body1'>{student.email}</Typography>
 								<ClassTeacherModal player={student} classroom={classroom} />

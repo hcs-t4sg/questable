@@ -131,7 +131,7 @@ export default function ClassTeacherModal({
 	return (
 		<ClassStudentContent player={player} isOpen={open} toggleIsOpen={toggleOpen}>
 			<ClassStudentContent player={player} isOpen={open} toggleIsOpen={toggleOpen}>
-				<Cluster title='Student Name' data={player.name} isHtml={false} />
+				<Cluster title='Player Name' data={player.name} isHtml={false} />
 				<Cluster title='Student Email' data={player.email} isHtml={false} />
 				<Cluster title='Student Gold' data={`${player.money}g`} isHtml={false} />
 				<Cluster title='Student Level' data={levelUp(player.xp)} isHtml={false} />

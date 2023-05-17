@@ -69,6 +69,7 @@ export default function ClassStudent({
 				setStudents(studentList)
 
 				const leadersList = players
+					.filter((player) => player.role !== 'teacher')
 					.sort((player1, player2) => player2.xp - player1.xp)
 					.splice(0, classroom.leaderboardSize)
 
@@ -133,7 +134,7 @@ export default function ClassStudent({
 			{students ? (
 				students.map((student) => (
 					<Grid item xs={3} key={student.id}>
-						<Card sx={{ width: '100%' }}>
+						<Card sx={{ width: !mobile ? '300px' : '300px' }}>
 							<CardContent>
 								<Box
 									sx={{
@@ -143,7 +144,7 @@ export default function ClassStudent({
 								>
 									<Avatar outfit={currentAvatar(student)} />
 								</Box>
-								<Typography variant='body1'>Name: {student.name}</Typography>
+								<Typography variant='body1'>Player Name: {student.name}</Typography>
 								<ClassStudentModal player={student}></ClassStudentModal>
 							</CardContent>
 						</Card>
