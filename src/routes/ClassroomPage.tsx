@@ -66,38 +66,13 @@ export default function ClassroomPage({ user }: { user: User }) {
 				const onboardedList = user.data().onboarded
 				if (onboardedList) {
 					setOnboarded(onboardedList)
-				} else {
-					setOnboarded([])
 				}
 			}
 		})
 		return unsub
 	}, [])
 
-	if (classroom && onboarded) {
-		if (player) {
-			if (!onboarded.includes(classroom.id)) {
-				return <OnboardingPage classroom={classroom} user={user} player={player} />
-			}
-			if (player.role === 'teacher') {
-				return <TeacherView player={player} classroom={classroom} user={user} />
-			} else if (player.role === 'student') {
-				return <StudentView player={player} classroom={classroom} user={user} />
-			} else {
-				return <p>Error: Player role does not exist or is invalid.</p>
-			}
-		} else {
-			return (
-				<Layout>
-					<Grid container spacing={3}>
-						<Grid item xs={12}>
-							<Loading>Loading player data...</Loading>
-						</Grid>
-					</Grid>
-				</Layout>
-			)
-		}
-	} else {
+	if (!classroom || !onboarded) {
 		return (
 			<Layout>
 				<Grid container spacing={3}>
@@ -107,5 +82,29 @@ export default function ClassroomPage({ user }: { user: User }) {
 				</Grid>
 			</Layout>
 		)
+	}
+
+	if (!player) {
+		return (
+			<Layout>
+				<Grid container spacing={3}>
+					<Grid item xs={12}>
+						<Loading>Loading player data...</Loading>
+					</Grid>
+				</Grid>
+			</Layout>
+		)
+	}
+
+	if (!onboarded.includes(classroom.id)) {
+		return <OnboardingPage classroom={classroom} user={user} player={player} />
+	}
+
+	if (player.role === 'teacher') {
+		return <TeacherView player={player} classroom={classroom} user={user} />
+	} else if (player.role === 'student') {
+		return <StudentView player={player} classroom={classroom} user={user} />
+	} else {
+		return <p>Error: Player role does not exist or is invalid.</p>
 	}
 }
