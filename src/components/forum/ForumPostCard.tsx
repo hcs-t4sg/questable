@@ -119,7 +119,7 @@ export default function ForumPostCard({
 				</Stack>
 			</Stack>
 			<Box sx={{ display: 'flex', alignItems: 'flex-end', marginLeft: '-5px' }}>
-				{forumPost.anonymous && forumPost.author.id !== player.id ? null : (
+				{!forumPost.anonymous || forumPost.author.id === player.id ? (
 					<Box
 						sx={{
 							width: '30px',
@@ -128,7 +128,7 @@ export default function ForumPostCard({
 					>
 						<Avatar outfit={currentAvatar(forumPost.author)} />
 					</Box>
-				)}
+				) : null}
 				<Typography
 					gutterBottom
 					variant='subtitle2'
