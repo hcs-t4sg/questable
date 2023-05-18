@@ -5,22 +5,20 @@ import Loading from './Loading'
 export default function Error({ message }: { message: string }) {
 	return (
 		<Layout>
-			<Grid container spacing={3}>
-				<Grid item xs={12}>
-					<Loading indicator='cow'>
-						<Loading indicator='chicken'>
-							<Loading indicator='ghost'>
-								<Loading indicator='pig'>
-									<Loading indicator='sheep'>
-										<Loading indicator='bunny'>
-											<Typography variant='body1'>{message}</Typography>
-										</Loading>
+			<Grid item xs={12}>
+				<Loading indicator='cow'>
+					<Loading indicator='chicken'>
+						<Loading indicator='ghost'>
+							<Loading indicator='pig'>
+								<Loading indicator='sheep'>
+									<Loading indicator='bunny'>
+										<Typography variant='body1'>{message}</Typography>
 									</Loading>
 								</Loading>
 							</Loading>
 						</Loading>
 					</Loading>
-				</Grid>
+				</Loading>
 			</Grid>
 		</Layout>
 	)

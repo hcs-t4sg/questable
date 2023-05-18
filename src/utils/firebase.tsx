@@ -8,6 +8,7 @@ import { getFirestore } from 'firebase/firestore'
 import Layout from '../components/global/Layout'
 import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
 import { clientID } from './google'
+import { Grid, Typography } from '@mui/material'
 // import { gapi } from 'gapi-script'
 // import GCRLogin from '../components/teacher/GCRLogin'
 // import { Grid } from '@mui/material'
@@ -66,9 +67,15 @@ export const auth = getAuth(app)
 export function SignInScreen() {
 	return (
 		<Layout>
-			<h1>Sign in to Questable</h1>
-			<p>Please sign-in with your email account:</p>
-			<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+			<Grid item xs={12}>
+				<Typography variant='h3'>Sign in to Questable</Typography>
+			</Grid>
+			<Grid item xs={12}>
+				<Typography variant='body1'>Please sign-in with your email account:</Typography>
+			</Grid>
+			<Grid item xs={12}>
+				<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+			</Grid>
 		</Layout>
 	)
 }

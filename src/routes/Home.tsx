@@ -105,68 +105,55 @@ export default function Home({ user }: { user: User }) {
 		</Box>
 	)
 
-	const classroomsSection =
-		classrooms && pinned ? (
-			<>
-				<Grid item xs={12}>
-					<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
-						Pinned Classrooms
-					</Typography>
-				</Grid>
-				{pinnedClassrooms.map((classroom) => (
-					<Grid item xs={12} sm={6} md={4} key={classroom.id}>
-						<ClassroomCard classroom={classroom} pinned={true} user={user} />
-					</Grid>
-				))}
-				<Grid item xs={12}>
-					<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
-						Joined Classrooms
-					</Typography>
-				</Grid>
-				{studentClassrooms.map((classroom) => (
-					<Grid item xs={12} sm={6} md={4} key={classroom.id}>
-						<ClassroomCard classroom={classroom} pinned={false} user={user} />
-					</Grid>
-				))}
-				<Grid item xs={12}>
-					<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
-						Created Classrooms
-					</Typography>
-				</Grid>
-				{teacherClassrooms.map((classroom) => (
-					<Grid item xs={12} sm={6} md={4} key={classroom.id}>
-						<ClassroomCard classroom={classroom} pinned={false} user={user} />
-					</Grid>
-				))}
-			</>
-		) : (
-			<Grid item xs={12}>
-				<Loading>Loading classrooms...</Loading>
-			</Grid>
-		)
-
 	if (!(classrooms && pinned))
 		return (
 			<Layout>
 				<Grid item xs={12}>
 					{welcomeBox}
-					<Grid item xs={12}>
-						<Loading>
-							{!classrooms ? 'Loading classrooms...' : 'Loading pinned classrooms...'}
-						</Loading>
-					</Grid>
+				</Grid>
+				<Grid item xs={12}>
+					<Loading>
+						{!classrooms ? 'Loading classrooms...' : 'Loading pinned classrooms...'}
+					</Loading>
 				</Grid>
 			</Layout>
 		)
 
 	return (
 		<Layout>
-			<Grid container spacing={3}>
-				<Grid item xs={12}>
-					{welcomeBox}
-				</Grid>
-				{classroomsSection}
+			<Grid item xs={12}>
+				{welcomeBox}
 			</Grid>
+			<Grid item xs={12}>
+				<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
+					Pinned Classrooms
+				</Typography>
+			</Grid>
+			{pinnedClassrooms.map((classroom) => (
+				<Grid item xs={12} sm={6} md={4} key={classroom.id}>
+					<ClassroomCard classroom={classroom} pinned={true} user={user} />
+				</Grid>
+			))}
+			<Grid item xs={12}>
+				<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
+					Joined Classrooms
+				</Typography>
+			</Grid>
+			{studentClassrooms.map((classroom) => (
+				<Grid item xs={12} sm={6} md={4} key={classroom.id}>
+					<ClassroomCard classroom={classroom} pinned={false} user={user} />
+				</Grid>
+			))}
+			<Grid item xs={12}>
+				<Typography variant='h4' sx={{ flex: '100%', fontWeight: 'normal' }}>
+					Created Classrooms
+				</Typography>
+			</Grid>
+			{teacherClassrooms.map((classroom) => (
+				<Grid item xs={12} sm={6} md={4} key={classroom.id}>
+					<ClassroomCard classroom={classroom} pinned={false} user={user} />
+				</Grid>
+			))}
 		</Layout>
 	)
 }

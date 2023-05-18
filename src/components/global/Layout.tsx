@@ -1,4 +1,4 @@
-import { Box, Container, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Container, Grid, useMediaQuery, useTheme } from '@mui/material'
 import React from 'react'
 import { UserRole } from '../../types'
 import BottomAppBar from './BottomBar'
@@ -38,7 +38,9 @@ export default function Layout({
 				}}
 			>
 				<Container maxWidth='lg' sx={{ mt: 4, mb: 4, opacity: 1 }}>
-					{children}
+					<Grid container spacing={3}>
+						{children}
+					</Grid>
 				</Container>
 				{tablet && (
 					<Box className='spacer' sx={{ height: 40 }}>

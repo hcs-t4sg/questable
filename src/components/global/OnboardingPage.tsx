@@ -1,27 +1,27 @@
-import { Box, DialogActions, Grid, Tab, Tabs, TextField, Typography, useTheme } from '@mui/material'
-import { useState } from 'react'
-import { User } from 'firebase/auth'
+import { Box, Grid, Tab, Tabs, TextField, Typography, useTheme } from '@mui/material'
 import Button from '@mui/material/Button'
+import { User } from 'firebase/auth'
 import { enqueueSnackbar } from 'notistack'
-import Layout from './Layout'
-import { onboardClassroom, updateAvatar, updatePlayer } from '../../utils/mutations'
-import { OnboardingItemCard } from '../student/OnboardingItemCard'
+import { useState } from 'react'
+import { Classroom, Player } from '../../types'
 import {
-	getBodyItems,
-	getHairItems,
-	getShirtItems,
-	getPantsItems,
-	getShoesItems,
 	Body,
+	Eyes,
 	Hair,
 	Pants,
 	Shirt,
 	Shoes,
 	currentAvatar,
-	Eyes,
+	getBodyItems,
 	getEyesItems,
+	getHairItems,
+	getPantsItems,
+	getShirtItems,
+	getShoesItems,
 } from '../../utils/items'
-import { Classroom, Player } from '../../types'
+import { onboardClassroom, updateAvatar, updatePlayer } from '../../utils/mutations'
+import { OnboardingItemCard } from '../student/OnboardingItemCard'
+import Layout from './Layout'
 
 interface TabPanelProps {
 	children?: React.ReactNode
@@ -121,14 +121,6 @@ export default function OnboardingPage({
 		onboardClassroom(user.uid, classroom.id)
 	}
 
-	const enterClassButton = (
-		<DialogActions>
-			<Button variant='contained' onClick={handleSubmit}>
-				Enter Classroom
-			</Button>
-		</DialogActions>
-	)
-
 	function a11yProps(index: number) {
 		return {
 			id: `simple-tab-${index}`,
@@ -149,23 +141,24 @@ export default function OnboardingPage({
 				>
 					Your Character
 				</Typography>
-				<h5>Customize your character!</h5>
+				<Typography variant='h5'>
+					Customize your character&apos;s name and outfit, then enter the classroom!
+				</Typography>
 			</Grid>
-			<div>
-				<Grid item xs={12}>
-					<TextField
-						id='classroom-name'
-						label='Your Name'
-						value={name}
-						onChange={(event) => setName(event.target.value)}
-					/>
-					<Grid display='flex' justifyContent='flex-start' alignItems='flex-start'>
-						<Grid item xs={12}>
-							{enterClassButton}
-						</Grid>
-					</Grid>
-				</Grid>
-			</div>
+			<Grid item xs={12}>
+				<Button variant='contained' onClick={handleSubmit}>
+					Enter Classroom
+				</Button>
+			</Grid>
+			<Grid item xs={12}>
+				<TextField
+					id='classroom-name'
+					label='Your Name'
+					value={name}
+					onChange={(event) => setName(event.target.value)}
+				/>
+			</Grid>
+
 			<Grid item xs={12}>
 				<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
 					<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

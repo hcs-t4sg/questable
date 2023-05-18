@@ -70,10 +70,8 @@ export default function ClassroomPage({ user }: { user: User }) {
 	if (!classroom || !onboarded) {
 		return (
 			<Layout>
-				<Grid container spacing={3}>
-					<Grid item xs={12}>
-						<Loading>Loading classroom data...</Loading>
-					</Grid>
+				<Grid item xs={12}>
+					<Loading>Loading classroom data...</Loading>
 				</Grid>
 			</Layout>
 		)
@@ -82,10 +80,8 @@ export default function ClassroomPage({ user }: { user: User }) {
 	if (!player) {
 		return (
 			<Layout>
-				<Grid container spacing={3}>
-					<Grid item xs={12}>
-						<Loading>Loading player data...</Loading>
-					</Grid>
+				<Grid item xs={12}>
+					<Loading>Loading player data...</Loading>
 				</Grid>
 			</Layout>
 		)
