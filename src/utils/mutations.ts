@@ -306,37 +306,14 @@ export async function updateRepeatable(
 export async function updatePlayer(
 	userID: string,
 	classroomID: string,
-	newPlayer: {
-		name: string
+	newPlayerData: {
+		name?: string
+		money?: number
 	},
 ) {
-	console.log(userID)
-	console.log(classroomID)
-	console.log(newPlayer)
 	const playerRef = doc(db, `classrooms/${classroomID}/players/${userID}`)
 
-	await updateDoc(playerRef, {
-		name: newPlayer.name,
-	})
-}
-
-// Mutation to update money
-export async function updateMoney(
-	playerID: string,
-	classroomID: string,
-	newMoney: {
-		money: number | string
-	},
-) {
-	console.log(playerID)
-	console.log(classroomID)
-	console.log(newMoney)
-	const playerRef = doc(db, `classrooms/${classroomID}/players/${playerID}`)
-
-	await updateDoc(playerRef, {
-		money: newMoney.money,
-		xp: newMoney.money,
-	})
+	await updateDoc(playerRef, newPlayerData)
 }
 
 // Mutation to update Forum Post

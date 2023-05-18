@@ -66,20 +66,20 @@
 // 	)
 // }
 
-import { PlayerWithEmail, Classroom } from '../../types'
-import { useState } from 'react'
-import { PlayerInfoModalWrapper } from '../global/PlayerInfoModalWrapper'
-import { updateMoney, updatePlayer } from '../../utils/mutations'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import { Cluster } from '../student/AssignmentContentStudent'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import { levelUp } from '../../utils/helperFunctions'
+import TextField from '@mui/material/TextField'
 import { useSnackbar } from 'notistack'
+import { useState } from 'react'
+import { Classroom, PlayerWithEmail } from '../../types'
+import { levelUp } from '../../utils/helperFunctions'
+import { updatePlayer } from '../../utils/mutations'
+import { PlayerInfoModalWrapper } from '../global/PlayerInfoModalWrapper'
+import { Cluster } from '../student/AssignmentContentStudent'
 
 export default function ClassTeacherModal({
 	player,
@@ -101,17 +101,12 @@ export default function ClassTeacherModal({
 	const [name, setName] = useState(player.name)
 
 	const handleEdit = () => {
-		const newMoney = {
+		const newPlayerData = {
+			name: name,
 			money: money,
 		}
 
-		updateMoney(player.id, classroom.id, newMoney).catch(console.error)
-
-		const newPlayer = {
-			name: name,
-		}
-
-		updatePlayer(player.id, classroom.id, newPlayer).catch(console.error)
+		updatePlayer(player.id, classroom.id, newPlayerData).catch(console.error)
 		handleClose()
 		enqueueSnackbar(`Updated player "${player.name}"!`)
 	}
