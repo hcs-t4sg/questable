@@ -41,11 +41,9 @@ export default function ClassroomPage({ user }: { user: User }) {
 				const playerRef = doc(db, `classrooms/${classID}/players/${user.uid}`)
 				const unsub = onSnapshot(playerRef, (doc) => {
 					if (doc.exists()) {
-						console.log('player exists')
 						setPlayer({ ...doc.data(), id: doc.id } as Player)
 					}
 				})
-				console.log('player does not exist')
 				return unsub
 			}
 		}

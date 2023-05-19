@@ -35,8 +35,6 @@ export default function InventoryStudent({
 	}
 	const inventoryObjects: Item[] = []
 
-	console.log(inventoryItems)
-
 	inventoryItems.forEach((item) => {
 		if (item.type === 'hair') {
 			if (item.subtype) {
@@ -50,8 +48,6 @@ export default function InventoryStudent({
 			inventoryObjects.push(new Shoes(item.itemId))
 		}
 	})
-
-	console.log(inventoryObjects)
 
 	return (
 		<InventoryDisplay

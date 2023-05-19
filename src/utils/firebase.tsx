@@ -43,12 +43,6 @@ const uiConfig = {
 			scopes: ['https://www.googleapis.com/auth/classroom.courses'],
 		},
 	],
-	callbacks: {
-		// Avoid redirects after sign-in.
-		signInSuccessWithAuthResult: (authResult: any) => {
-			console.log(authResult)
-		},
-	},
 }
 
 // Initialize Firebase

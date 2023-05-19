@@ -17,13 +17,10 @@ export default function GCRLogin() {
 	const [email, setEmail] = useState('')
 
 	const handleSuccess = (credentialResponse: CredentialResponse) => {
-		console.log(credentialResponse)
-		console.log('hello')
 		setIsSignedIn(true)
 		const cred = credentialResponse.credential
 		if (cred) {
 			const userObject = jwt_decode<JwtType>(cred)
-			console.log(userObject)
 			setEmail(userObject.email)
 		}
 	}
@@ -34,7 +31,7 @@ export default function GCRLogin() {
 			<GoogleLogin
 				onSuccess={handleSuccess}
 				onError={() => {
-					console.log('Login Failed')
+					window.alert('Login failed. Please contact the system administrator')
 				}}
 			/>
 		</GoogleOAuthProvider>

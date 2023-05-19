@@ -49,7 +49,6 @@ export default function ConfirmationTables({
 			if (getToken.exists()) {
 				const tokenData = getToken.data()
 				setToken(tokenData.gcrToken)
-				console.log(token)
 			} else {
 				window.alert('Log into Google on the Settings page!')
 			}
@@ -93,7 +92,6 @@ export default function ConfirmationTables({
 						}),
 					)
 
-					console.log(completedTasksList)
 					setCompletedTasks(completedTasksList)
 				}
 				fetchCompletedTasks().catch(console.error)
@@ -111,11 +109,8 @@ export default function ConfirmationTables({
 				const fetchCompletedRepeatables = async () => {
 					const allCompletedRepeatables: RepeatableCompletion[] = []
 
-					console.log(snapshot.docs)
-
 					await Promise.all(
 						snapshot.docs.map(async (doc) => {
-							console.log(doc.data())
 							const completionTimes = await getRepeatableCompletionTimes(classroom.id, doc.id)
 
 							await Promise.all(
@@ -184,14 +179,12 @@ export default function ConfirmationTables({
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			console.log(response)
 
 			return (await response).json()
 		}
 	}
 
 	async function getStudents(courseID: string) {
-		console.log(token)
 		const response = fetch(`https://classroom.googleapis.com/v1/courses/${courseID}/students`, {
 			method: 'GET',
 			headers: {
@@ -199,7 +192,6 @@ export default function ConfirmationTables({
 				Authorization: `Bearer ${token}`,
 			},
 		})
-		console.log(response)
 		return (await response).json()
 	}
 
@@ -214,26 +206,21 @@ export default function ConfirmationTables({
 				},
 			},
 		)
-		console.log(response)
 		return (await response).json()
 	}
 
 	async function processGCRTasks(courseID: string) {
 		const gcrStudents = await getStudents(courseID)
-		console.log(gcrStudents)
 		if (gcrStudents.error) {
 			window.alert('Oops, try logging into Google in Settings first!')
 		} else {
 			const studentList = gcrStudents.students
-			console.log(studentList)
 			// save profile section of array
 			// https://stackoverflow.com/questions/12710905/how-do-i-dynamically-assign-properties-to-an-object-in-typescript
 			const students: { [key: string]: string } = {}
 			studentList.forEach((student: any) => {
 				students[student.profile.emailAddress] = student.profile.id
 			})
-
-			console.log(students)
 
 			if (completedTasks) {
 				const tasksWithEmails = await Promise.allSettled(
@@ -254,28 +241,21 @@ export default function ConfirmationTables({
 						}
 					}),
 				)
-				console.log(tasksWithEmails)
 				const newTasks = tasksWithEmails.map((task: any) => {
 					return task.value
 				})
-				console.log(newTasks)
 
 				const confirmList: CompletedTask[] = []
 
 				await Promise.allSettled(
 					newTasks.map(async (task) => {
-						console.log(task)
 						if (task.gcrID && task.gcrCourseID && task.gcrUserId) {
 							const submissions = await getSubmissions(task.gcrCourseID, task.gcrID)
-							console.log(submissions)
 							const submission = submissions.studentSubmissions.find(
 								(s: any) => s.userId == task.gcrUserId,
 							)
-							console.log(submission)
 							if (submission && submission.state == 'TURNED_IN') {
-								console.log(task)
 								confirmList.push(task as CompletedTask)
-								console.log('done')
 							}
 						}
 					}),
@@ -318,7 +298,6 @@ export default function ConfirmationTables({
 								const courseIDs = classrooms.courses.map((course: any) => {
 									return course.id
 								})
-								console.log(courseIDs)
 								courseIDs.forEach((courseID: string) => processGCRTasks(courseID))
 							}
 						}}

@@ -64,14 +64,11 @@ export default function TasksStudent({
 
 	useEffect(() => {
 		const q = query(collection(db, `classrooms/${classroom.id}/tasks`))
-		console.log(q)
 		const unsub = onSnapshot(q, (snapshot) => {
 			const assigned: TaskWithStatus[] = []
 			const completed: TaskWithStatus[] = []
 			const confirmed: TaskWithStatus[] = []
 			const overdue: TaskWithStatus[] = []
-
-			console.log(snapshot.docs)
 
 			// TODO rewrite using Promise.all
 			snapshot.forEach((doc) => {
@@ -92,7 +89,6 @@ export default function TasksStudent({
 					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
 				}
 			})
-			console.log(assigned)
 			setAssigned(assigned)
 			setCompleted(completed)
 			setConfirmed(confirmed)

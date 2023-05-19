@@ -11,7 +11,6 @@ import {
 	Pants,
 	Shirt,
 	Shoes,
-	currentAvatar,
 	getBodyItems,
 	getEyesItems,
 	getHairItems,
@@ -84,34 +83,28 @@ export default function OnboardingPage({
 			enqueueSnackbar('Please select a skin color for your character', { variant: 'error' })
 			return
 		}
-		console.log(hair)
 		if (!hair) {
 			enqueueSnackbar('Please select hair for your character', { variant: 'error' })
 			return
 		}
-		console.log(shirt)
 		if (!shirt) {
 			enqueueSnackbar('Please select a shirt for your character', { variant: 'error' })
 			return
 		}
-		console.log(shoe)
 		if (!shoe) {
 			enqueueSnackbar('Please select shoes for your character', { variant: 'error' })
 			return
 		}
-		console.log(pant)
 		if (!pant) {
 			enqueueSnackbar('Please select pants for your character', { variant: 'error' })
 			return
 		}
-		console.log(eye)
 		if (!eye) {
 			enqueueSnackbar('Please select eyes for your character', { variant: 'error' })
 			return
 		}
 		updatePlayer(user.uid, classroom.id, { name })
 		updateAvatar(player, body, classroom)
-		console.log(currentAvatar)
 		updateAvatar(player, hair, classroom)
 		updateAvatar(player, shirt, classroom)
 		updateAvatar(player, shoe, classroom)

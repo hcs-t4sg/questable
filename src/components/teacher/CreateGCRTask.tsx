@@ -61,7 +61,6 @@ export default function CreateGCRTask({
 			if (getToken.exists()) {
 				const tokenData = getToken.data()
 				setToken(tokenData.gcrToken)
-				console.log(token)
 			} else {
 				window.alert('Log into Google on the Settings page!')
 			}
@@ -79,7 +78,6 @@ export default function CreateGCRTask({
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			console.log(response)
 			return response.json()
 		}
 	}
@@ -92,14 +90,12 @@ export default function CreateGCRTask({
 				Authorization: `Bearer ${token}`,
 			},
 		})
-		console.log(response)
 		return (await response).json()
 	}
 
 	// async function which will make the API call and then set the state variable with the result.
 	const fetchGoogleClassrooms = async () => {
 		const classrooms = await getCourses()
-		console.log(classrooms.courses)
 		setClassrooms(classrooms.courses)
 		if (typeof classrooms.courses == 'undefined' || classrooms.courses.length == 0) {
 			window.alert('Oops, classrooms not found! Try logging into Google in Settings first!')
@@ -113,15 +109,11 @@ export default function CreateGCRTask({
 		setTasks('loading')
 		if (classID != '') {
 			const coursework = await getCourseWork(classID)
-			console.log(coursework)
 			setTasks(coursework.courseWork)
-			console.log(tasks)
 		}
 	}
 
 	const handleClick = async () => {
-		console.log(classroomList)
-		console.log(token)
 		if (!token) {
 			window.alert('Oops, classrooms not found! Try logging into Google in Settings first!')
 		} else {
@@ -216,9 +208,6 @@ export default function CreateGCRTask({
 								id='classroom-dropdown'
 								value={classID}
 								label='Select Classroom'
-								onChange={(event) => {
-									console.log(event.target.value)
-								}}
 							>
 								<MenuItem
 									key='select'
@@ -264,7 +253,6 @@ export default function CreateGCRTask({
 									label='Google Classroom Task'
 									onChange={(event) => {
 										setTaskID(event.target.value as string)
-										console.log(event.target.value)
 									}}
 								>
 									<MenuItem

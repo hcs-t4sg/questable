@@ -38,8 +38,7 @@ export default function ClassroomCard({
 				})
 			})
 			.catch((err) => {
-				console.log(err)
-				enqueueSnackbar('There was an error copying.', {
+				enqueueSnackbar(err.message, {
 					variant: 'error',
 				})
 			})

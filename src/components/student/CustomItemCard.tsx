@@ -56,9 +56,6 @@ interface Props {
 export function CustomItemCard(props: Props) {
 	const { enqueueSnackbar } = useSnackbar()
 
-	console.log('item')
-	console.log(props.item)
-
 	const ItemBox = styled(Box)({
 		top: 20,
 		left: '18%',

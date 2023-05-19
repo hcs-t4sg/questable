@@ -16,8 +16,6 @@ export default function InventoryTeacher({
 }) {
 	const inventoryObjects = hairs.concat(shirts, pants, shoes)
 
-	console.log(inventoryObjects)
-
 	return (
 		<InventoryDisplay
 			player={player}

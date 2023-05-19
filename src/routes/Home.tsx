@@ -18,7 +18,6 @@ export default function Home({ user }: { user: User }) {
 	const [classrooms, setClassrooms] = useState<Classroom[] | null>(null)
 	useEffect(() => {
 		const q = query(collection(db, 'classrooms'), where('playerList', 'array-contains', user.uid))
-		console.log(q)
 
 		const unsub = onSnapshot(q, (snapshot) => {
 			const classroomsList = snapshot.docs.map(

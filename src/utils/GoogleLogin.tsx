@@ -29,9 +29,7 @@ export default function GoogleLogin({ user }: { user: User }) {
 		})
 
 		const data = await response.json()
-		console.log(data)
 		accessToken = data.access_token
-		console.log(accessToken)
 		const userRef = doc(db, 'users', user.uid)
 		updateDoc(userRef, {
 			gcrToken: accessToken,
@@ -43,7 +41,6 @@ export default function GoogleLogin({ user }: { user: User }) {
 		flow: 'auth-code',
 		scope: SCOPES,
 		onSuccess: (res) => {
-			console.log('Logged in with google', res)
 			fetchAccessTokens(res.code)
 				.then(() => {
 					enqueueSnackbar('Signed in!', { variant: 'success' })
@@ -54,7 +51,6 @@ export default function GoogleLogin({ user }: { user: User }) {
 						variant: 'error',
 					})
 				})
-			console.log(res.code)
 		},
 		onError: (err) => console.error('Failed to login with google', err),
 	})

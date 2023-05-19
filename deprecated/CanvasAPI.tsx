@@ -33,7 +33,6 @@ export default function CanvasApiLogin() {
 	}, [])
 
 	useEffect(() => {
-		console.log(currentUser)
 	}, [currentUser])
 
 	return (

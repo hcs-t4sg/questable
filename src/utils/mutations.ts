@@ -1,5 +1,6 @@
 import { User } from 'firebase/auth'
 import {
+	Timestamp,
 	addDoc,
 	arrayRemove,
 	arrayUnion,
@@ -10,27 +11,25 @@ import {
 	getDocs,
 	increment,
 	query,
+	runTransaction,
 	serverTimestamp,
 	setDoc,
-	Timestamp,
 	updateDoc,
 	where,
-	limit,
-	orderBy,
 	writeBatch,
-	runTransaction,
 } from 'firebase/firestore'
 import {
 	Classroom,
+	CompletedTask,
 	CompletionTime,
 	CustomShopItems,
 	ForumPost,
 	Item,
 	Player,
-	CompletedTask,
 	RepeatableCompletion,
 } from '../types'
 import { db } from './firebase'
+
 export async function syncUsers(user: User) {
 	const userRef = doc(db, 'users', user.uid)
 
@@ -38,15 +37,12 @@ export async function syncUsers(user: User) {
 		await runTransaction(db, async (transaction) => {
 			const userDoc = await transaction.get(userRef)
 			if (!userDoc.exists()) {
-				console.log('User doc does not exist!')
 				transaction.set(userRef, {
 					email: user.email,
 					onboarded: [],
 				})
 			}
-			console.log('User doc exists')
 		})
-		console.log('Transaction successfully committed!')
 	} catch (e) {
 		console.log('Transaction failed: ', e)
 	}
@@ -72,7 +68,6 @@ export async function addClassroom(name: string, user: User) {
 	// Update created classroom with new player
 	const newPlayerRef = doc(db, classroomRef.path + '/players', user.uid)
 	await setDoc(newPlayerRef, {
-		avatar: 0,
 		money: 0,
 		name: 'Adventurer',
 		role: 'teacher',
@@ -94,20 +89,6 @@ export async function getClassrooms(user: User) {
 	}))
 
 	return classrooms
-}
-
-// Get money of students in classroom
-export async function getMoney(classID: string) {
-	const playerRef = collection(db, `classrooms/${classID}/players`)
-	const q = query(playerRef, orderBy('money'), limit(5))
-	const moneySnapshot = await getDocs(q)
-
-	const rankings = moneySnapshot.docs.map((doc) => ({
-		...doc.data(),
-		id: doc.id,
-	}))
-
-	return rankings as Player[]
 }
 
 // Add user to existing classroom and set as student
@@ -134,13 +115,9 @@ export async function joinClassroom(classID: string, user: User) {
 		playerList: playerList,
 	})
 
-	console.log('updated classroom playerList')
-
 	// Update classroom with new player
 	const newPlayerRef = doc(db, `classrooms/${classID}/players`, user.uid)
-	// TODO remove useless avatar field
 	await setDoc(newPlayerRef, {
-		avatar: 0,
 		money: 0,
 		xp: 0,
 		name: 'Adventurer',
@@ -685,15 +662,12 @@ export async function purchaseItem(classID: string, studentID: string, item: Ite
 
 // Mutation to add Pin
 export async function addPin(userID: string, classID: string) {
-	console.log(userID)
-	console.log(classID)
 	const userRef = doc(db, `users/${userID}`)
 	const pinnedSnap = await getDoc(userRef)
 	if (pinnedSnap.exists()) {
 		const pinnedClassrooms = pinnedSnap.data().pinned
 		if (pinnedClassrooms) {
 			pinnedClassrooms.push(classID)
-			console.log(pinnedClassrooms)
 			updateDoc(userRef, {
 				pinned: pinnedClassrooms,
 			})
@@ -941,7 +915,6 @@ async function refreshRepeatable(classroomID: string, playerID: string, repeatab
 
 export async function updateAvatar(player: Player, newItem: Item, classroom: Classroom) {
 	const playerRef = doc(db, `classrooms/${classroom.id}/players/${player.id}`)
-	console.log(newItem)
 
 	const newEquip =
 		newItem.type === 'body'
@@ -998,7 +971,6 @@ export async function addForumPost(
 		likers: [],
 		pinnedComments: [],
 	})
-	console.log('Successfully Added Thread')
 }
 
 export async function addComment(
@@ -1028,7 +1000,6 @@ export async function updateDoLeaderboard(
 		doLeaderboard: boolean
 	},
 ) {
-	console.log(classroomID)
 	const classRef = doc(db, `classrooms/${classroomID}`)
 
 	await updateDoc(classRef, {
@@ -1043,7 +1014,6 @@ export async function updateLeaderboardSize(
 		leaderboardSize: number | string
 	},
 ) {
-	console.log(classroomID)
 	const classRef = doc(db, `classrooms/${classroomID}`)
 
 	await updateDoc(classRef, {
@@ -1088,7 +1058,6 @@ export async function updateReward(
 		id: string
 	},
 ) {
-	console.log(classroomID)
 	const itemRef = doc(db, `classrooms/${classroomID}/customShopItems/${reward.id}`)
 
 	await updateDoc(itemRef, {
@@ -1170,8 +1139,6 @@ export async function confirmReward(classID: string, studentID: string, rewardID
 }
 
 export async function onboardClassroom(userID: string, classID: string) {
-	console.log(userID)
-	console.log(classID)
 	const userRef = doc(db, `users/${userID}`)
 	const onboardedSnap = await getDoc(userRef)
 

@@ -100,8 +100,6 @@ export default function TasksTableTeacher({
 		}
 	}
 
-	console.log(classroom.playerList.length)
-
 	return (
 		<Grid item xs={12}>
 			{tasks ? (
