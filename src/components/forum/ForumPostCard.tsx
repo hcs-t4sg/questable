@@ -44,7 +44,6 @@ export default function ForumPostCard({
 	const [open, setOpen] = useState(false)
 
 	const handleDelete = (forumPost: ForumPost) => {
-		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this post?')) {
 			deleteForumPost(classroom.id, forumPost.id)
 				.then(() => {

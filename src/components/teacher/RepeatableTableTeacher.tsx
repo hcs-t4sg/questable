@@ -29,7 +29,7 @@ export default function RepeatableTableTeacher({
 	searchInput: string
 }) {
 	const { enqueueSnackbar } = useSnackbar()
-	// Create a state variable to hold the tasks
+
 	const [original, setOriginal] = useState<Repeatable[] | null>(null)
 	const [repeatables, setRepeatables] = useState<Repeatable[] | null>(null)
 
@@ -43,11 +43,8 @@ export default function RepeatableTableTeacher({
 	}
 
 	useEffect(() => {
-		// Create a reference to the tasks collection
 		const repeatableCollectionRef = collection(db, `classrooms/${classroom.id}/repeatables`)
-		// Attach a listener to the tasks collection
 		const unsub = onSnapshot(repeatableCollectionRef, (snapshot) => {
-			// Store the tasks in the `tasks` state variable
 			const r = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Repeatable))
 			setOriginal(r)
 			setRepeatables(r)
@@ -65,7 +62,6 @@ export default function RepeatableTableTeacher({
 	}, [searchInput])
 
 	const handleDelete = (repeatable: Repeatable) => {
-		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this task?')) {
 			deleteRepeatable(classroom.id, repeatable.id)
 				.then(() => {
@@ -95,21 +91,14 @@ export default function RepeatableTableTeacher({
 						</TableHead>
 						<TableBody>
 							{repeatables.map((repeatable) => (
-								// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
 								<StyledTableRow key={repeatable.id}>
 									<TableCell>
 										<RepeatableModalTeacher classroom={classroom} repeatable={repeatable} />
 									</TableCell>
-									{/* <TableCell sx={{ "paddingTop": 0, "paddingBottom": 0, width: .01 }} align="left">
-                           <RepeatableModalTeacher task={repeatable} classroom={classroom} />
-                        </TableCell> */}
-
 									<TableCell component='th' scope='row'>
 										{repeatable.name}
 									</TableCell>
-									{/* <TableCell>{truncate(repeatable.description)}</TableCell> */}
 									<TableCell>
-										{' '}
 										<div
 											dangerouslySetInnerHTML={{
 												__html: truncate(repeatable.description.replace(/<[^>]+>/g, ''), 40),
@@ -124,7 +113,6 @@ export default function RepeatableTableTeacher({
 										</IconButton>
 									</TableCell>
 								</StyledTableRow>
-								// </TableRow>
 							))}
 						</TableBody>
 					</Table>

@@ -1,11 +1,8 @@
-// import CloseIcon from '@mui/icons-material/Close'
 import { Box, FormControl, InputLabel, MenuItem, Select, Switch, Typography } from '@mui/material'
-// import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
-// import Typography from '@mui/material/Typography'
 import EditIcon from '@mui/icons-material/Edit'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
@@ -26,14 +23,13 @@ export default function ShopeTeacherEditModal({
 	classroom: Classroom
 }) {
 	const { enqueueSnackbar } = useSnackbar()
-	// State variables
+
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState(item.name)
 	const [price, setPrice] = useState(item.price)
 	const [description, setDescription] = useState(item.description)
 	const [isActive, setIsActive] = useState(item.isActive)
 
-	// Open the task modal
 	const handleClickOpen = () => {
 		setOpen(true)
 		setName(item.name)
@@ -41,7 +37,7 @@ export default function ShopeTeacherEditModal({
 		setIsActive(item.isActive)
 		setDescription(item.description)
 	}
-	// Close the task modal
+
 	const handleClose = () => {
 		setOpen(false)
 	}
@@ -50,7 +46,6 @@ export default function ShopeTeacherEditModal({
 		setIsActive(event.target.checked)
 	}
 
-	// Handle the click of an edit button
 	const handleEdit = () => {
 		if (name === '') {
 			enqueueSnackbar('You need to provide a name for the task', { variant: 'error' })
@@ -64,7 +59,7 @@ export default function ShopeTeacherEditModal({
 			isActive: isActive,
 			id: item.id,
 		}
-		// Call the `updateReward` mutation
+
 		updateReward(classroom.id, updatedReward)
 			.then(() => {
 				handleClose()
@@ -76,64 +71,12 @@ export default function ShopeTeacherEditModal({
 			})
 	}
 
-	const openButton = (
-		<IconButton onClick={handleClickOpen}>
-			<EditIcon />
-		</IconButton>
-	)
-
-	const saveButton = (
-		<Button variant='contained' type='submit'>
-			Save Changes
-		</Button>
-	)
-
 	return (
-		<div>
-			{openButton}
-			<TeacherModalStyled
-				// sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-				open={open}
-				onClose={handleClose}
-			>
-				{/* <Box
-					sx={{
-						width: '40%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-						padding: '40px',
-						paddingTop: '40px',
-						backgroundColor: 'white',
-						marginBottom: '18px',
-					}}
-				> */}
-				{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-						}}
-					>
-						<Typography fontWeight='light' variant='h5'>
-							Overview
-						</Typography>
-						<IconButton onClick={handleClose}>
-							<CloseIcon />
-						</IconButton>
-					</Box>
-					<hr
-						style={{
-							backgroundColor: '#D9D9D9',
-							height: '1px',
-							borderWidth: '0px',
-							borderRadius: '5px',
-							width: '100%',
-							marginBottom: '10px',
-						}}
-					/> */}
+		<>
+			<IconButton onClick={handleClickOpen}>
+				<EditIcon />
+			</IconButton>
+			<TeacherModalStyled open={open} onClose={handleClose}>
 				<ModalTitle onClick={handleClose} text='Overview' />
 				<TaskModalContent>
 					<Box
@@ -164,24 +107,6 @@ export default function ShopeTeacherEditModal({
 							value={description}
 							onChange={(event) => setDescription(event.target.value)}
 						/>
-						{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
-						{/* <Box
-						sx={{
-							width: '100%',
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-							m: 2,
-						}}
-					> */}
 						<BoxInModal>
 							<FormControl fullWidth>
 								<InputLabel id='reward-dropdown-label'>Price</InputLabel>
@@ -198,25 +123,23 @@ export default function ShopeTeacherEditModal({
 									<MenuItem value={200}>200g</MenuItem>
 								</Select>
 							</FormControl>
-							{/* </Box> */}
 						</BoxInModal>
 						<BoxInModal>
 							<Typography variant='body1'>
-								{' '}
 								Reward Display: Inactive
 								<Switch checked={isActive} onChange={handleChange} />
-								Active{' '}
+								Active
 							</Typography>
 						</BoxInModal>
 						<br />
-						{/* center the save button */}
 						<Grid container justifyContent='center'>
-							{saveButton}
+							<Button variant='contained' type='submit'>
+								Save Changes
+							</Button>
 						</Grid>
 					</Box>
 				</TaskModalContent>
-				{/* </Box> */}
 			</TeacherModalStyled>
-		</div>
+		</>
 	)
 }

@@ -37,8 +37,6 @@ export default function TeacherView({
 						height: '100%',
 						display: 'flex',
 						flexDirection: 'column',
-						// marginTop: '30px',
-						// marginBottom: '74px',
 						paddingLeft: '80px',
 						paddingRight: '80px',
 						paddingBottom: '72px',

@@ -1,5 +1,3 @@
-// import { loadGapiInsideDOM } from 'gapi-script'
-// const gapi = await loadGapiInsideDOM()
 import {
 	Button,
 	DialogActions,
@@ -50,7 +48,6 @@ export default function CreateGCRTask({
 	const [token, setToken] = useState('')
 	const [classroomList, setClassrooms] = useState<any[]>([])
 	const [classID, setClassId] = useState('')
-	// const [clientLoaded, setClientLoaded] = useState(false)
 	const [tasks, setTasks] = useState<any[] | 'loading' | null>(null)
 	const [taskID, setTaskID] = useState('')
 	const [taskName, setTaskName] = useState('')
@@ -75,9 +72,7 @@ export default function CreateGCRTask({
 	async function getCourses() {
 		// asking for variable before loaded (error upon refresh)
 		if (token) {
-			// loadClient()
-
-			const response = fetch('https://classroom.googleapis.com/v1/courses/', {
+			const response = await fetch('https://classroom.googleapis.com/v1/courses/', {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
@@ -85,23 +80,11 @@ export default function CreateGCRTask({
 				},
 			})
 			console.log(response)
-
-			// const response = await gapi.client.classroom.courses.list({})
-			// console.log(response.result.courses)
-			// return response.result.courses
-
-			return (await response).json()
+			return response.json()
 		}
 	}
 
 	async function getCourseWork(classID: string) {
-		console.log(classID)
-		// console.log(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`)
-		// const response = await gapi.client.classroom.courses.courseWork.list({
-		// 	courseId: classID,
-		// })
-		// console.log(response)
-		// return response.result.courseWork
 		const response = fetch(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`, {
 			method: 'GET',
 			headers: {
@@ -115,10 +98,6 @@ export default function CreateGCRTask({
 
 	// async function which will make the API call and then set the state variable with the result.
 	const fetchGoogleClassrooms = async () => {
-		// if (!clientLoaded) {
-		// 	loadClient()
-		// 	setClientLoaded(true)
-		// }
 		const classrooms = await getCourses()
 		console.log(classrooms.courses)
 		setClassrooms(classrooms.courses)

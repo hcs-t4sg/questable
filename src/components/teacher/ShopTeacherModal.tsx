@@ -28,7 +28,6 @@ export default function ShopTeacherModal({ classroom }: { classroom: Classroom }
 	const [price, setPrice] = useState(0)
 	const [description, setDescription] = useState('')
 	const [isActive, setIsActive] = useState(false)
-	// const [icon, setIcon] = useState(null)
 
 	const handleOpen = () => {
 		setOpen(true)
@@ -36,7 +35,6 @@ export default function ShopTeacherModal({ classroom }: { classroom: Classroom }
 		setDescription('')
 		setPrice(100)
 		setIsActive(true)
-		// setIcon(null)
 	}
 
 	const handleClose = () => {
@@ -54,33 +52,22 @@ export default function ShopTeacherModal({ classroom }: { classroom: Classroom }
 			description,
 			price,
 			isActive,
-			// icon,
 		}
 		addReward(classroom.id, newReward)
 
 		handleClose()
 	}
 
-	const openButton = (
-		<Button
-			variant='contained'
-			sx={{ width: 1 }}
-			onClick={handleOpen}
-			startIcon={<AddCircleOutlineIcon />}
-		>
-			Create Custom Reward
-		</Button>
-	)
-	const actionButtons = (
-		<DialogActions>
-			<Button variant='contained' type='submit'>
-				Add Reward
-			</Button>
-		</DialogActions>
-	)
 	return (
-		<div>
-			{openButton}
+		<>
+			<Button
+				variant='contained'
+				sx={{ width: 1 }}
+				onClick={handleOpen}
+				startIcon={<AddCircleOutlineIcon />}
+			>
+				Create Custom Reward
+			</Button>
 			<TeacherModalStyled open={open} onClose={handleClose}>
 				<ModalTitle onClick={handleClose} text='Create Reward' />
 				<TaskModalContent>
@@ -130,11 +117,15 @@ export default function ShopTeacherModal({ classroom }: { classroom: Classroom }
 							</FormControl>
 						</BoxInModal>
 						<Grid container justifyContent='center'>
-							{actionButtons}
+							<DialogActions>
+								<Button variant='contained' type='submit'>
+									Add Reward
+								</Button>
+							</DialogActions>
 						</Grid>
 					</Box>
 				</TaskModalContent>
 			</TeacherModalStyled>
-		</div>
+		</>
 	)
 }

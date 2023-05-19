@@ -39,7 +39,6 @@ const Drawer = styled(MuiDrawer, {
 }))
 
 export default function ClassroomSidebar({ role }: { role: UserRole }) {
-	// Navbar drawer functionality
 	const [open, setOpen] = React.useState(false)
 	const toggleDrawer = () => {
 		setOpen(!open)

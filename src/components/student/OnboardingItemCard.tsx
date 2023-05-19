@@ -14,12 +14,6 @@ export function OnboardingItemCard({
 	selectItemCallback: () => void
 	isEquipped: boolean
 }) {
-	// const handleEquip = async () => {
-	// 	const res = await updateAvatar(player, item, classroom)
-	// 	window.alert(res)
-	// 	window.location.reload()
-	// }
-
 	return (
 		<ItemInfoCard item={item} bodyOutfit={bodyOutfit}>
 			<Button

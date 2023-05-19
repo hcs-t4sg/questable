@@ -62,9 +62,7 @@ export default function TasksStudent({
 		setTaskRepTab(newValue)
 	}
 
-	// useEffect to fetch task information
 	useEffect(() => {
-		// fetch task information
 		const q = query(collection(db, `classrooms/${classroom.id}/tasks`))
 		console.log(q)
 		const unsub = onSnapshot(q, (snapshot) => {

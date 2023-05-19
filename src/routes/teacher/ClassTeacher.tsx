@@ -33,17 +33,12 @@ export default function ClassTeacher({
 	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
 	const [leaders, setLeaders] = useState<PlayerWithEmail[] | null>(null)
 
-	//   const [teacher, setTeacher] = React.useState();
-
 	useEffect(() => {
-		// If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
 		const playersRef = collection(db, `classrooms/${classroom.id}/players`)
 		const playerQuery = query(playersRef)
 
-		// Attach a listener to the teacher document
 		const unsub = onSnapshot(playerQuery, (snapshot) => {
 			const mapTeacher = async () => {
-				// * Rewritten from a forEach call. old code commented
 				const players = await Promise.all(
 					snapshot.docs.map(async (player) => {
 						const playerData = await getUserData(player.id)
@@ -59,25 +54,11 @@ export default function ClassTeacher({
 					}),
 				)
 
-				// let players = [];
-				// for (const player of snapshot.docs) {
-				//   const playerData = await getUserData(player.id);
-				//   if (playerData) {
-				//     const email = playerData.email;
-				//     players.push({
-				//       ...player.data(),
-				//       id: player.id,
-				//       email: email,
-				//     } as PlayerWithEmail);
-				//   }
-				// }
-
 				if (players) {
 					// Await the resolution of all promises in the returned array
 					// and then store them in the `students` state variable
 					// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
 
-					// remove hte teacher from the playersList
 					const playersWithoutTeacher = players.filter((player) => player.role !== 'teacher')
 
 					setStudents(playersWithoutTeacher)
@@ -89,7 +70,6 @@ export default function ClassTeacher({
 					setLeaders(leadersList)
 				}
 			}
-			// Call the async `mapTeacher` function
 			mapTeacher().catch(console.error)
 		})
 		return unsub
@@ -105,31 +85,12 @@ export default function ClassTeacher({
 					Class Page
 				</Typography>
 			</Grid>
-			{/* <Grid item xs={12}>
-				<Typography variant='h2' component='div'>
-					{classroom.name}
-				</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<Card sx={{ width: 1 }}>
-					<CardContent>
-						<Typography variant='h5' component='div'>
-							{player.name}
-						</Typography>{' '} */}
-			{/* Do we want a separate user name?*/}
-			{/* <Typography variant='h5' component='div'>
-							{classroom.playerList.length} Total Students
-						</Typography>
-					</CardContent>
-				</Card>
-			</Grid> */}
 			{classroom.doLeaderboard == true ? (
 				<Grid item xs={12}>
 					<TableContainer component={Paper}>
 						<Table aria-label='simple table' sx={{ border: 'none' }}>
 							<TableHead>
 								<TableRow>
-									{/* <TableCell sx={{ width: 60 }} /> */}
 									<TableCell align='center'>Ranking</TableCell>
 									<TableCell align='center'>Player</TableCell>
 									<TableCell align='center'>Gold</TableCell>

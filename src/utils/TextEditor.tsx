@@ -1,5 +1,3 @@
-// const TextEditor = ({readonly} : {readonly: boolean}) => {
-
 const modules = {
 	toolbar: [
 		[{ font: [] }],

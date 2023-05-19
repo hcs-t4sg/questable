@@ -52,29 +52,11 @@ export function iconPotion(priceAmount: number) {
 	)
 }
 
-export default function ShopTeacher({
-	classroom,
-}: // customShopItem,
-{
-	classroom: Classroom
-	// customShopItem: CustomShopItems
-}) {
+export default function ShopTeacher({ classroom }: { classroom: Classroom }) {
 	const theme = useTheme()
 	const [customShopItems, setCustomShopItems] = useState<CustomShopItems[] | null>(null)
-	// const [checked, setChecked] = useState(true)
-
-	// const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setChecked(event.target.checked)
-
-	// 	const newIsActive = {
-	// 		isActive: checked,
-	// 	}
-
-	// 	updateIsActive(classroom.id, customShopItem.id, newIsActive).catch(console.error)
-	// }
 
 	const handleDelete = (item: CustomShopItems) => {
-		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this task?')) {
 			deleteItem(classroom.id, item.id)
 				.then(() => {
@@ -169,12 +151,6 @@ export default function ShopTeacher({
 										classroom={classroom}
 									></ShopeTeacherEditModal>
 								</Stack>
-								{/* <Typography variant='body1'>
-									{' '}
-									Reward Display: Inactive
-									<Switch checked={checked} onChange={handleChange} />
-									Active{' '}
-								</Typography> */}
 							</CardContent>
 						</Card>
 				  ))

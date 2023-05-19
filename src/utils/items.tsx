@@ -1,8 +1,6 @@
 /* eslint-disable camelcase */
-// import React, { useState, useEffect, useContext, useReducer } from "react"
 import React from 'react'
 import { Spritesheet } from './Spritesheet'
-// import { Box, ThemeProvider, createTheme, zIndex } from '@mui/system';
 import { capitalize } from 'lodash'
 
 import body from '../assets/spriteSheets/characters/char_all.png'
@@ -82,23 +80,6 @@ const eyeColors: { name: string; hex: string }[] = [
 	{ name: 'red', hex: '#a64444' },
 ]
 
-// const eyeColors = [
-// 	'black',
-// 	'dark blue',
-// 	'light blue',
-// 	'brown',
-// 	'dark brown',
-// 	'light brown',
-// 	'green',
-// 	'dark green',
-// 	'light green',
-// 	'gray',
-// 	'light gray',
-// 	'pink',
-// 	'light pink',
-// 	'red',
-// ]
-
 // Render function to generate item sprites
 export default function render(file: string, spriteStart: number, doAnimation: boolean) {
 	// Import object to allow the correct image import based on the subtype string.
@@ -133,8 +114,6 @@ export default function render(file: string, spriteStart: number, doAnimation: b
 				imageRendering: 'pixelated',
 				position: 'absolute',
 				width: '100%',
-				// height: '100%',
-				// objectFit: 'contain',
 			}}
 			image={imports[file]}
 			widthFrame={32}
@@ -157,7 +136,7 @@ Fields:
 - name: Item name to be displayed on frontend
 - description: Item description to be displayed on frontend
 - #spriteStart: A private field (not accessible outside class) for accessing the correct spritesheet location
-- type: Type of the item ('body', 'shirt', 'pants', 'shoes')
+- type: Type of the item ('body', 'shirt', 'pants', 'shoes', 'eyes')
 
 Methods:
 - renderStatic(): Display an unmoving version of the item

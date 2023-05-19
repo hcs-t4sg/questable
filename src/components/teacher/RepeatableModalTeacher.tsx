@@ -54,7 +54,6 @@ export default function RepeatableModalTeacher({
 
 	const [isEditing, setIsEditing] = useState<boolean>(false)
 
-	// Open the task modal
 	const handleClickOpen = () => {
 		setOpen(true)
 		setName(repeatable.name)
@@ -69,12 +68,11 @@ export default function RepeatableModalTeacher({
 		setIsEditing(false)
 	}
 
-	// Close the task modal
 	const handleClose = () => {
 		setOpen(false)
 		setIsEditing(false)
 	}
-	// Handle the click of an edit button
+
 	const handleEdit = () => {
 		if (name === '') {
 			enqueueSnackbar('You need to provide a name for the repeatable', { variant: 'error' })
@@ -89,7 +87,6 @@ export default function RepeatableModalTeacher({
 
 		const updatedRepeatable = {
 			name: name,
-			// maxCompletions: parseInt(maxCompletions),
 			description: description,
 			id: repeatable.id,
 		}
@@ -111,7 +108,6 @@ export default function RepeatableModalTeacher({
 	}
 
 	const handleDelete = () => {
-		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this repeatable task?')) {
 			deleteRepeatable(classroom.id, repeatable.id)
 				.then(() => {
@@ -170,7 +166,6 @@ export default function RepeatableModalTeacher({
 								fullWidth
 								variant='standard'
 								placeholder=''
-								// sx={{ ml: -2 }}
 								value={maxCompletions}
 								InputProps={{
 									readOnly: !isEditing,
@@ -183,22 +178,14 @@ export default function RepeatableModalTeacher({
 								}
 								onChange={(event) => setMaxCompletions(event.target.value)}
 							/>
-							{/* </Box> */}
 						</BoxInModal>
 
 						<BoxInModal>
-							<Typography
-								// sx={{ ml: -2 }}
-								variant='body1'
-							>{`Reward: ${repeatable.reward}g (cannot be edited)`}</Typography>
+							<Typography variant='body1'>{`Reward: ${repeatable.reward}g (cannot be edited)`}</Typography>
 						</BoxInModal>
 						<br />
 						<Grid container justifyContent='right'>
-							<Button
-								onClick={toggleIsEditing}
-								sx={{ display: isEditing ? 'none' : 'block' }}
-								// variant='contained'
-							>
+							<Button onClick={toggleIsEditing} sx={{ display: isEditing ? 'none' : 'block' }}>
 								Edit Repeatable
 							</Button>
 							<Button

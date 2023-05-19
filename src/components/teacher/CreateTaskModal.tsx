@@ -83,8 +83,6 @@ export default function CreateTaskModal({
 		setOpen(false)
 	}
 
-	// Mutation handlers
-
 	const handleAdd = () => {
 		if (isRepeatable) {
 			if (name === '') {
@@ -145,9 +143,6 @@ export default function CreateTaskModal({
 				description,
 				reward,
 				due: Timestamp.fromDate(dueDate),
-				// gcrCourseID: '',
-				// gcrID: '',
-				// gcrName: '',
 			}
 
 			handleClose()
@@ -237,7 +232,6 @@ export default function CreateTaskModal({
 							{!isRepeatable ? (
 								<LocalizationProvider dateAdapter={AdapterDateFns}>
 									<DateTimePicker
-										// sx={{ width: '60%', ml: -2 }}
 										label='Due Date'
 										value={dueDate}
 										minDateTime={new Date()}
@@ -247,7 +241,6 @@ export default function CreateTaskModal({
 							) : (
 								<TextField
 									type='number'
-									// sx={{ ml: -2 }}
 									margin='normal'
 									id='description'
 									label='Max Completions'

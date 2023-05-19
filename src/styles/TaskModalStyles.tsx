@@ -44,7 +44,7 @@ export const TaskModalBox = styled(Box)({
 	marginBottom: '18px',
 })
 
-// eventually - composition??
+// TODO eventually - composition??
 /* Similarities between TaskModalTeacher and CreateTaskModal:
 	- same state variables
 	- same styled components (in this document)

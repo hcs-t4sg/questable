@@ -73,8 +73,6 @@ export function CustomItemCard(props: Props) {
 	})
 
 	const handlePurchase = () => {
-		// const res = await purchaseCustomItem(props.classroom.id, props.player.id, props.item)
-		// enqueueSnackbar(res, { variant: res === 'Success!' ? 'success' : 'error' })
 		purchaseCustomItem(props.classroom.id, props.player.id, props.item)
 			.then((value) => {
 				enqueueSnackbar(value, { variant: 'success' })

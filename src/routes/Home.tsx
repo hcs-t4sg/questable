@@ -15,7 +15,6 @@ import Loading from '../components/global/Loading'
 import wood1 from '/src/assets/Wood1.png'
 
 export default function Home({ user }: { user: User }) {
-	// Listen to user's classrooms and maintain a corresponding state variable
 	const [classrooms, setClassrooms] = useState<Classroom[] | null>(null)
 	useEffect(() => {
 		const q = query(collection(db, 'classrooms'), where('playerList', 'array-contains', user.uid))
@@ -34,7 +33,6 @@ export default function Home({ user }: { user: User }) {
 		return unsub
 	}, [])
 
-	// Listen to user's pinned list and maintain a corresponding state variable
 	const [pinned, setPinned] = useState<string[] | null>(null)
 	useEffect(() => {
 		const unsub = onSnapshot(doc(db, `users/${user.uid}`), (user) => {
@@ -50,7 +48,6 @@ export default function Home({ user }: { user: User }) {
 		return unsub
 	}, [])
 
-	// Construct the pinned, student, and teacher classroom arrays based on the "classrooms" and "pinned" state variables
 	const pinnedClassrooms: Classroom[] = []
 	const studentClassrooms: Classroom[] = []
 	const teacherClassrooms: Classroom[] = []

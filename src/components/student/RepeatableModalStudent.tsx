@@ -1,11 +1,9 @@
-// import CloseIcon from '@mui/icons-material/Close'
 import { Box, Button } from '@mui/material'
 import { Repeatable } from '../../types'
 import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
 import green3 from '/src/assets/spriteSheets/potions/green3.png'
 import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
 import red3 from '/src/assets/spriteSheets/potions/red3.png'
-// import { rewardsMatch } from './RewardItems'
 import { AssignmentContentStudent, Cluster } from './AssignmentContentStudent'
 
 export function rewardPotion(rewardAmount: number) {

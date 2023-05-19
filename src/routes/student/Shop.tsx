@@ -1,10 +1,8 @@
 import { Box, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material'
 import * as React from 'react'
-// import ShopShopItemCard from '../../components/student/ShopShopItemCard'
 import { Classroom, CustomShopItems, Player } from '../../types'
 import { getHairItems, getPantsItems, getShirtItems, getShoesItems } from '../../utils/items'
 import { ShopItemCard } from '../../components/student/ShopItemCard'
-// import { Classroom, Player } from '../../types'
 import { useState, useEffect } from 'react'
 import wood2 from '/src/assets/Wood2.png'
 import { collection, onSnapshot, query } from 'firebase/firestore'
@@ -45,8 +43,6 @@ const shirts = getShirtItems()
 const pants = getPantsItems()
 const shoes = getShoesItems()
 
-//  const all = bodies.concat(hairs, shirts, pants, shoes)
-
 export default function Shop({ player, classroom }: { player: Player; classroom: Classroom }) {
 	const [value, setValue] = useState(0)
 	const [customShopItems, setCustomShopItems] = useState<CustomShopItems[] | null>(null)
@@ -76,7 +72,6 @@ export default function Shop({ player, classroom }: { player: Player; classroom:
 	return (
 		<Grid item xs={12}>
 			<Grid sx={{ display: 'flex', flexDirection: 'column' }} container>
-				{/* spacing={3} for above grid? */}
 				<Grid item xs={12}>
 					<Typography sx={{ fontSize: !mobile ? '50px' : '32px' }} variant='h2'>
 						Shop

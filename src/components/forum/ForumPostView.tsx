@@ -44,7 +44,6 @@ const handleDelete = (
 	post: ForumPost,
 	enqueueSnackbar: (_param1: string, _param2: object) => void,
 ) => {
-	// message box to confirm deletion
 	if (window.confirm('Are you sure you want to delete this comment?')) {
 		deleteForumComment(classroom.id, post.id, forumComment.id)
 			.then(() => {
@@ -117,7 +116,6 @@ const IncomingComment = ({
 			setAuthor(author)
 		}
 		fetchAuthorData().catch(console.error)
-		console.log('fetched author data')
 	}, [classroom, comment])
 
 	return (
@@ -285,14 +283,13 @@ export default function ForumPostView({
 			author: player,
 		}
 
-		// Only posts comment if it contains non-whitespace characters
-		if (newComment.content.replace(/\s+/g, '') != '') {
+		const commentContainsNonWhitespaceChars = newComment.content.replace(/\s+/g, '') != ''
+		if (commentContainsNonWhitespaceChars) {
 			if (post) {
 				addComment(newComment, classroom, post).catch((err) => {
 					console.error(err)
 					enqueueSnackbar('There was an error adding the comment.', { variant: 'error' })
 				})
-				// Clears TextInputField
 				setComment('')
 			}
 		} else {

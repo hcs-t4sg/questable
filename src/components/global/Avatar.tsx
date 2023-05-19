@@ -9,21 +9,13 @@ Ex:
 <Box sx={{ width: '40px', height: '40px', }}>
 */
 export default function Avatar({ outfit }: { outfit: Outfit }) {
-	console.log(outfit)
-
 	return (
 		<Box
 			sx={{
 				width: '140%',
 				position: 'relative',
 				marginTop: '-40%',
-				// marginBottom: '-30%',
 				marginLeft: '-20%',
-				// marginRight: '-30%',
-				// paddingBottom: '-30%',
-				// objectFit: 'cover',
-				// marginLeft: '-20%',
-				// marginRight: '-20%',
 			}}
 		>
 			{outfit.body.renderStatic()}

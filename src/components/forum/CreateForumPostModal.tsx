@@ -20,16 +20,6 @@ import modules from '../../utils/TextEditor'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 
-// Notes: onsnapshot, don't implement at database level; implement on frontend, show only ones you filtered for
-// Modal component for individual entries.
-
-/* EntryModal parameters:
-entry: Data about the entry in question
-type: Type of entry modal being opened.
-   This can be "add" (for adding a new entry) or
-   "edit" (for opening or editing an existing entry from table).
-user: User making query (The current logged in user). */
-
 export default function CreateForumPostModal({
 	isOpen,
 	onClose,
@@ -43,14 +33,10 @@ export default function CreateForumPostModal({
 }) {
 	const { enqueueSnackbar } = useSnackbar()
 
-	// State variables for modal status
-
 	const [subject, setSubject] = useState('')
 	const [category, setCategory] = useState<0 | 1 | 2 | 3>(0)
 	const [description, setDescription] = useState('')
 	const [anonymous, setAnonymous] = useState(false)
-
-	// Modal visibility handlers
 
 	const handleClear = () => {
 		setSubject('')

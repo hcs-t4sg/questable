@@ -36,7 +36,6 @@ export default function ForumPostList({
 	useEffect(() => {
 		const forumPostsRef = collection(db, `classrooms/${classroom.id}/forumPosts`)
 		const forumPostsQuery = query(forumPostsRef, orderBy('postTime', 'desc'))
-		console.log(forumPostsQuery)
 
 		const options = {
 			keys: ['title', 'content'],

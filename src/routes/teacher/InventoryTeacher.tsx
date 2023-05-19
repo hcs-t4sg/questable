@@ -1,5 +1,3 @@
-// import ReactDOM from "react-dom"
-// import InventoryItemCard from '../../components/student/InventoryItemCard'
 import InventoryDisplay from '../../components/global/InventoryDisplay'
 import { Classroom, Item, Player } from '../../types'
 import { getHairItems, getPantsItems, getShirtItems, getShoesItems } from '../../utils/items'

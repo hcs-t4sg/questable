@@ -6,11 +6,9 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import * as React from 'react'
 import { useState } from 'react'
-// import Grid from '@mui/material/Grid'
 import { addClassroom } from '../../utils/mutations'
 import { User } from 'firebase/auth'
 import { useSnackbar } from 'notistack'
-// import ClassroomModalContent from './ClassroomModalContent'
 
 export default function CreateClassroomModal({ user }: { user: User }) {
 	const { enqueueSnackbar } = useSnackbar()
@@ -27,7 +25,6 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 		setOpen(false)
 	}
 
-	// Mutation handlers
 	const handleAddClassroom = () => {
 		const classNameContainsNonWhitespaceChars = newClassroomName.replace(/\s+/g, '') != ''
 		if (!classNameContainsNonWhitespaceChars) {

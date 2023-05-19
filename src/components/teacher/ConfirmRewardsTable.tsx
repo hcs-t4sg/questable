@@ -48,12 +48,8 @@ export default function ConfirmRewardsTable({ classroom }: { classroom: Classroo
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
 					{rewards.map((reward) => (
-						<StyledTableRow
-							key={'test'}
-							// sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-						>
+						<StyledTableRow key={'test'}>
 							<TableCell>{reward.rewardName}</TableCell>
 							<TableCell>{reward.rewardDescription}</TableCell>
 							<TableCell>{`${reward.rewardPrice}g`}</TableCell>
@@ -79,7 +75,6 @@ export default function ConfirmRewardsTable({ classroom }: { classroom: Classroo
 														})
 													})
 											}
-											// variant='contained'
 											color='success'
 										>
 											Confirm

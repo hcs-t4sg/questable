@@ -10,7 +10,6 @@ import Grid from '@mui/material/Grid'
 import { joinClassroom } from '../../utils/mutations'
 import { User } from 'firebase/auth'
 import { useSnackbar } from 'notistack'
-// import ClassroomModalContent from './ClassroomModalContent'
 
 export default function JoinClassroomModal({ user }: { user: User }) {
 	const { enqueueSnackbar } = useSnackbar()
@@ -26,8 +25,6 @@ export default function JoinClassroomModal({ user }: { user: User }) {
 	const handleClose = () => {
 		setOpen(false)
 	}
-
-	// Mutation handlers
 
 	const handleJoinClassroom = () => {
 		if (!signupCode) {

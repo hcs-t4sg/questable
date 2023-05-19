@@ -1,6 +1,7 @@
 import { GoogleOAuthProvider } from 'google-oauth-gsi'
 
-// Store as env variables at some point
+// Store these environment variables in a .env.local file in the root directory.
+// https://vitejs.dev/guide/env-and-mode.html
 export const clientID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 export const clientSecret = import.meta.env.VITE_GOOGLE_CLIENT_SECRET
 export const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY

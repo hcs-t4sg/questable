@@ -16,7 +16,6 @@ import TasksStudent from '../../routes/student/TasksStudent'
 import { currentAvatar } from '../../utils/items'
 import Avatar from '../global/Avatar'
 import Layout from '../global/Layout'
-// import x from '../../public/static/'
 import { User } from 'firebase/auth'
 import { useEffect } from 'react'
 import InventoryStudent from '../../routes/student/InventoryStudent'
@@ -48,10 +47,9 @@ export default function StudentView({
 		},
 	}))
 
-	// Given the IDs for the outfit fetched from Firebase (and the hair subtype), you can designate the avatar outfit like so.
 	const playerOutfit = currentAvatar(player)
 
-	// ! Will need to reinsert refresh repeatables here
+	// ! Refresh repeatables to ensure that student repeatable status is up to date
 	useEffect(() => {
 		refreshAllRepeatables(classroom.id, player.id)
 	})
@@ -59,18 +57,16 @@ export default function StudentView({
 	const theme = useTheme()
 	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
-	// Calculate xp of player towards next level
-	const now = player.xp - (2.5 * Math.pow(levelUp(player.xp), 2) + 37.5 * levelUp(player.xp) - 40)
+	const xpAchievedInCurrentLevel =
+		player.xp - (2.5 * Math.pow(levelUp(player.xp), 2) + 37.5 * levelUp(player.xp) - 40)
 
-	// Calculate xp needed for next level
-	const next =
+	const totalXPNeededInCurrentLevel =
 		2.5 * Math.pow(levelUp(player.xp) + 1, 2) +
 		37.5 * (levelUp(player.xp) + 1) -
 		40 -
 		(2.5 * Math.pow(levelUp(player.xp), 2) + 37.5 * levelUp(player.xp) - 40)
 
-	// Calculate progress to next level
-	const progress = (now / next) * 100
+	const progress = (xpAchievedInCurrentLevel / totalXPNeededInCurrentLevel) * 100
 
 	return (
 		<Layout classroom role={player.role}>
@@ -81,8 +77,6 @@ export default function StudentView({
 						height: '100%',
 						display: 'flex',
 						flexDirection: 'column',
-						// marginTop: '30px',
-						// marginBottom: '74px',
 						paddingLeft: '80px',
 						paddingRight: '80px',
 						paddingBottom: '72px',
@@ -156,8 +150,8 @@ export default function StudentView({
 									},
 								}}
 							>
-								<ThickProgress variant='determinate' value={progress} /> {now}/{next} xp to next
-								level!
+								<ThickProgress variant='determinate' value={progress} /> {xpAchievedInCurrentLevel}/
+								{totalXPNeededInCurrentLevel} xp to next level!
 							</Typography>
 						</Box>
 						{/* <Box

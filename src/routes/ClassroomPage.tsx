@@ -20,7 +20,6 @@ export default function ClassroomPage({ user }: { user: User }) {
 	const [classroom, setClassroom] = useState<Classroom | null>(null)
 	useEffect(() => {
 		// If you don't check for classID you get a 'No overload matches this call' error. Function overloading in Typescript is when there are multiple functions with the same name but different parameter types and return type. Without checking for the existence of classID, the type is string | undefined. Firebase does not have an overload for the doc() function that includes a possible classID (document id) input that is string | undefined.
-		// ! I don't know if the unsub cleanup works here if written in a conditional statement
 		if (classID) {
 			const classroomRef = doc(db, 'classrooms', classID)
 
@@ -33,7 +32,6 @@ export default function ClassroomPage({ user }: { user: User }) {
 		}
 	}, [user, classID])
 
-	// Fetch user's player information for classroom
 	const [player, setPlayer] = useState<Player | null>(null)
 	useEffect(() => {
 		const updatePlayer = async () => {

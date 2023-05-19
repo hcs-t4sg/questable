@@ -62,7 +62,6 @@ export async function addClassroom(name: string, user: User) {
 		doLeaderboard: true,
 		leaderboardSize: 3,
 		canEdit: true,
-		// studentList: [],
 	}
 	// NOTE: I made a slight change here. Instead of storing the teacher in the playersList,
 	// I'm storing it in a separate field called teacher. This is because I want to be able to differntiate the classes
@@ -79,13 +78,6 @@ export async function addClassroom(name: string, user: User) {
 		role: 'teacher',
 		id: user.uid,
 	})
-
-	/* Update user's classrooms list. Not useful at the moment but we may keep
-   for later. Don't delete for now */
-	// const userRef = doc(db, 'users', user.uid);
-	// await updateDoc(userRef, {
-	//    classrooms: arrayUnion(classroomRef.id)
-	// })
 
 	return
 }
@@ -138,10 +130,8 @@ export async function joinClassroom(classID: string, user: User) {
 
 	// Update classroom.playerList
 	playerList.push(user.uid)
-	// studentList.push(user.uid);
 	await updateDoc(classroomRef, {
 		playerList: playerList,
-		// studentList: studentList
 	})
 
 	console.log('updated classroom playerList')
@@ -226,33 +216,6 @@ export async function getPlayerTaskCompletion(classID: string, taskID: string, p
 		return null
 	}
 }
-
-// * Deprecated for now but may need later
-// export async function getRepeatableCompletionCount(
-// 	classID: string,
-// 	repeatableID: string,
-// 	playerID: string,
-// ) {
-// 	console.log(classID)
-// 	console.log(repeatableID)
-// 	console.log(playerID)
-// 	const completionsRef = doc(
-// 		db,
-// 		`classrooms/${classID}/repeatables/${repeatableID}/playerCompletions`,
-// 		playerID,
-// 	)
-// 	const completionsSnap = await getDoc(completionsRef)
-// 	console.log('snap')
-// 	console.log(completionsSnap)
-// 	if (completionsSnap.exists()) {
-// 		console.log('yeet')
-// 		console.log(completionsSnap.data())
-// 		const completionsData = completionsSnap.data().completions
-// 		return completionsData
-// 	} else {
-// 		return null
-// 	}
-// }
 
 export async function getRepeatableCompletionTimes(classroomID: string, repeatableID: string) {
 	const completionTimesQuery = query(
@@ -590,7 +553,6 @@ export async function addRepeatable(
 	})
 
 	// add subcollections
-	// ! When Cole implemented this it was task.classSnap.data()... but I removed the task field becuase I figured it was a bug. Possibly take a second look at this
 	classSnap
 		.data()
 		.playerList.filter((playerID: string) => playerID !== teacherID)
@@ -629,7 +591,6 @@ export async function confirmTasks(tasks: CompletedTask[], classID: string) {
 	const classroomRef = doc(db, 'classrooms', classID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {
-		// console.error("Could not find classroom")
 		return 'Could not find classroom'
 	}
 
@@ -661,7 +622,6 @@ export async function denyTask(classID: string, studentID: string, taskID: strin
 	const classroomRef = doc(db, 'classrooms', classID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {
-		// console.error("Could not find classroom")
 		return 'Could not find classroom'
 	}
 	const taskRef = doc(db, `classrooms/${classID}/tasks/${taskID}`)
@@ -929,7 +889,6 @@ export async function refreshAllRepeatables(classroomID: string, playerID: strin
 	)
 	const repeatablesSnap = await getDocs(repeatablesQuery)
 
-	// TODO see if you can rewrite these calls to run in parallel
 	await Promise.allSettled(
 		repeatablesSnap.docs.map(async (doc) => {
 			await refreshRepeatable(classroomID, playerID, doc.id)
@@ -1096,30 +1055,25 @@ export async function updateLeaderboardSize(
 export async function addReward(
 	classID: string,
 	reward: {
-		// id: string
 		name: string
 		description: string
 		price: number
 		isActive: boolean
-		// icon: null
 	},
 ) {
 	const classRef = doc(db, 'classrooms', classID)
 	const classSnap = await getDoc(classRef)
 
 	if (!classSnap.exists()) {
-		// doc.data() will be undefined in this case
 		return 'No such document!'
 	}
 
 	// Update shop collection
 	await addDoc(collection(db, `classrooms/${classID}/customShopItems`), {
-		// id: reward.id,
 		name: reward.name,
 		description: reward.description,
 		price: reward.price,
 		isActive: reward.isActive,
-		// icon: reward.icon,
 	})
 }
 
@@ -1150,7 +1104,6 @@ export async function purchaseCustomItem(
 	studentID: string,
 	item: CustomShopItems,
 ) {
-	// isCustom should be a boolean denoting whether the item being purchased is an item created for a particular classroom/
 	const classroomRef = doc(db, 'classrooms', classID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {

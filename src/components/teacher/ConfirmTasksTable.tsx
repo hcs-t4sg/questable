@@ -53,17 +53,13 @@ export default function ConfirmTasksTable({
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{/* For each task, map over player IDs in completed array, then map over players with IDs in that array. */}
 					{completedTasks.map((completedTask) => (
-						<StyledTableRow
-							key={'test'}
-							// sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-						>
+						<StyledTableRow key={'test'}>
 							<TableCell>{completedTask.name}</TableCell>
 							<TableCell>
 								<div
 									dangerouslySetInnerHTML={{ __html: truncate(completedTask.description, 40) }}
-								/>{' '}
+								/>
 							</TableCell>
 							<TableCell>{formatStatus(completedTask)}</TableCell>
 							<TableCell>{`${completedTask.reward}g`}</TableCell>
@@ -89,7 +85,6 @@ export default function ConfirmTasksTable({
 														})
 													})
 											}
-											// variant='contained'
 											color='success'
 										>
 											Confirm
@@ -112,7 +107,6 @@ export default function ConfirmTasksTable({
 														})
 													})
 											}
-											// variant='contained'
 											color='error'
 										>
 											Deny

@@ -2,8 +2,6 @@ import Grid from '@mui/material/Grid'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import React, { useEffect } from 'react'
 import { db } from '../../utils/firebase'
-// import ReactDOM from "react-dom"
-// import InventoryItemCard from '../../components/student/InventoryItemCard'
 import InventoryDisplay from '../../components/global/InventoryDisplay'
 import Loading from '../../components/global/Loading'
 import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
@@ -18,7 +16,6 @@ export default function InventoryStudent({
 }) {
 	const [inventoryItems, setInventoryItems] = React.useState<DatabaseInventoryItem[] | null>(null)
 
-	// Listens for changes in the inventory items
 	useEffect(() => {
 		const q = query(collection(db, `classrooms/${classroom.id}/players/${player.id}/inventory`))
 

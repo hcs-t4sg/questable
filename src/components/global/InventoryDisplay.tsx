@@ -1,7 +1,5 @@
 import { Box, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React from 'react'
-// import ReactDOM from "react-dom"
-// import InventoryItemCard from '../../components/student/InventoryItemCard'
 import { InventoryItemCard } from '../student/InventoryItemCard'
 import { Classroom, Item, Player } from '../../types'
 import { currentAvatar, getBodyItems, getEyesItems } from '../../utils/items'
@@ -198,9 +196,3 @@ export default function InventoryDisplay({
 		</Grid>
 	)
 }
-
-// 1) Given an id for a particular item
-// 2) Go to the correct location on the spritesheet
-// Display the item on the inventory page.
-
-// We'll have a final json file that maps the player items to the correct sprite item.

@@ -4,7 +4,6 @@ import Layout from '../components/global/Layout'
 import GoogleLogin from '../utils/GoogleLogin'
 import { User } from 'firebase/auth'
 
-// Call login() on button click
 export default function Settings({ user }: { user: User }) {
 	return (
 		<Layout>

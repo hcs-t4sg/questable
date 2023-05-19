@@ -74,7 +74,6 @@ export default function OnboardingPage({
 	const shoes = getShoesItems()
 	const eyes = getEyesItems()
 
-	// Check that name is filled AND (TODO) character has been chosen
 	const handleSubmit = () => {
 		const nameContainsNonWhitespaceChars = name.replace(/\s+/g, '') != ''
 		if (!nameContainsNonWhitespaceChars) {
@@ -173,7 +172,6 @@ export default function OnboardingPage({
 					</Box>
 					<Box
 						sx={{
-							// backgroundImage: `url(${wood2})`,
 							backgroundSize: '2000px',
 							height: '100%',
 							width: '100%',

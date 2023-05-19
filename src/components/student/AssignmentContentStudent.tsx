@@ -1,4 +1,3 @@
-// import CloseIcon from '@mui/icons-material/Close'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { Box, Grid, IconButton, Dialog, Typography } from '@mui/material'
 import { ModalTitle, StudentBoxInModal, StudentTaskModalBox } from '../../styles/TaskModalStyles'
@@ -10,7 +9,6 @@ import red3 from '/src/assets/spriteSheets/potions/red3.png'
 
 import createDOMPurify from 'dompurify'
 const DOMPurify = createDOMPurify(window)
-// import { rewardsMatch } from './RewardItems'
 
 export function rewardPotion(rewardAmount: number) {
 	const rewardMatch =

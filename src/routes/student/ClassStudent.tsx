@@ -40,13 +40,10 @@ export default function ClassStudent({
 	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
 	useEffect(() => {
-		// If a ref is only used in the onSnapshot call then keep it inside useEffect for cleanliness
 		const playerRef = collection(db, `classrooms/${classroom.id}/players`)
 		const playerQuery = query(playerRef)
 
-		// Attach a listener to the teacher document
 		// TODO: Rewrite the promise.all call to prune the rejected users from the output array, not reject everything
-
 		const unsub = onSnapshot(playerQuery, (snapshot) => {
 			const mapTeacher = async () => {
 				const players = await Promise.all(
@@ -68,12 +65,6 @@ export default function ClassStudent({
 				// and then store them in the `students` state variable
 				// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
 
-				// remove hte teacher from the playersList
-				// for (let i = 0; i < players.length; i++) {
-				//   if (players[i].role == "teacher") {
-				//     players.splice(i, 1);
-				//   }
-				// }
 				const studentList = players.filter((player) => player.role !== 'teacher')
 				setStudents(studentList)
 
@@ -84,7 +75,6 @@ export default function ClassStudent({
 
 				setLeaders(leadersList)
 			}
-			// Call the async `mapTeacher` function
 			mapTeacher().catch(console.error)
 		})
 		return unsub
@@ -111,7 +101,6 @@ export default function ClassStudent({
 						>
 							{player.name}
 						</Typography>{' '}
-						{/* Do we want a separate user name?*/}
 						<Typography
 							sx={{
 								[theme.breakpoints.down('mobile')]: {

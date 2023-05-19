@@ -16,15 +16,6 @@ import { useSnackbar } from 'notistack'
 import modules from '../../utils/TextEditor'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-// Notes: onsnapshot, don't implement at database level; implement on frontend, show only ones you filtered for
-// Modal component for individual entries.
-
-/* EntryModal parameters:
-entry: Data about the entry in question
-type: Type of entry modal being opened.
-   This can be "add" (for adding a new entry) or
-   "edit" (for opening or editing an existing entry from table).
-user: User making query (The current logged in user). */
 
 export default function EditForumPostModal({
 	isOpen,
@@ -41,14 +32,10 @@ export default function EditForumPostModal({
 }) {
 	const { enqueueSnackbar } = useSnackbar()
 
-	// State variables for modal status
-
 	const [subject, setSubject] = useState(forumPost.title)
 	const [category, setCategory] = useState<0 | 1 | 2 | 3>(forumPost.postType)
 	const [description, setDescription] = useState(forumPost.content)
 	const [isDisabled, setIsDisabled] = useState(true)
-
-	// Modal visibility handlers
 
 	const handleClear = () => {
 		setIsDisabled(true)
@@ -126,12 +113,10 @@ export default function EditForumPostModal({
 						<FormControl fullWidth sx={{ marginTop: 2 }}>
 							<InputLabel id='category-label'>Category</InputLabel>
 							<Select
-								// margin='normal'
 								labelId='category-label'
 								id='category'
 								label='Category'
 								fullWidth
-								// variant='standard'
 								defaultValue={forumPost.postType}
 								disabled={isDisabled}
 								onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}

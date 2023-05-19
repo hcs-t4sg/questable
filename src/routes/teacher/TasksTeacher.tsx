@@ -22,8 +22,6 @@ export default function TasksTeacher({
 	player: Player
 	classroom: Classroom
 }) {
-	//   const [teacher, setTeacher] = React.useState();
-
 	const [page, setPage] = React.useState<0 | 1>(0)
 	const [searchInput, setSearchInput] = React.useState('')
 

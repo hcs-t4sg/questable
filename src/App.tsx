@@ -91,6 +91,7 @@ const mdTheme = createTheme({
 			styleOverrides: {
 				root: {
 					minWidth: 650,
+					// Optional corn yellow background color
 					// backgroundColor: '#f3f8df',
 				},
 			},
@@ -98,7 +99,6 @@ const mdTheme = createTheme({
 		MuiTableCell: {
 			defaultProps: {
 				align: 'left',
-				// width: 0.01,
 			},
 		},
 		MuiButton: {
@@ -128,7 +128,6 @@ const mdTheme = createTheme({
 	},
 })
 
-// Initialize client
 const queryClient = new QueryClient()
 
 // App.js is the homepage and handles top-level functions like user auth.
@@ -137,9 +136,7 @@ export default function App() {
 	const currentUser = useAuthUser(['user'], auth, {
 		onSuccess(user) {
 			if (user) {
-				console.log('User is authenticated')
 				syncUsers(user)
-				console.log(currentUser)
 			}
 		},
 	})

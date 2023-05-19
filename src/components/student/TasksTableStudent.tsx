@@ -13,12 +13,10 @@ import {
 	TableHead,
 	TableRow,
 } from '@mui/material'
-// import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { unsendTask, completeTask } from '../../utils/mutations'
-// import TaskModalStudent from './TaskModalStudent'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import Paper from '@mui/material/Paper'
 import Fuse from 'fuse.js'
@@ -81,9 +79,7 @@ export default function TasksTableStudent({
 		selectedTasks = fuse.search(searchInput).map((elem) => elem.item)
 	}
 
-	// Handle task completion
 	const handleTaskComplete = (task: TaskWithStatus) => {
-		// Call the `completeTask` mutation
 		if (window.confirm('Are you sure you want to mark this task as complete?')) {
 			completeTask(classroom.id, task.id, player.id)
 				.then(() => {

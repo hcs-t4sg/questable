@@ -18,7 +18,6 @@ export default function Layout({
 			sx={{
 				display: 'flex',
 				width: '100%',
-				// backgroundImage: { background },
 			}}
 		>
 			{classroom && role && !tablet && <ClassroomSidebar role={role} />}

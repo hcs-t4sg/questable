@@ -56,7 +56,6 @@ export default function TasksTableTeacher({
 	classroom: Classroom
 	searchInput: string
 }) {
-	// Create a state variable to hold the tasks
 	const [originaltasks, setOriginalTasks] = useState<Task[] | null>(null)
 	const [tasks, setTasks] = useState<Task[] | null>(null)
 
@@ -72,7 +71,6 @@ export default function TasksTableTeacher({
 		const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`)
 		const taskCollectionQuery = query(taskCollectionRef, orderBy('created', 'desc'))
 		const unsub = onSnapshot(taskCollectionQuery, (snapshot) => {
-			// Store the tasks in the `tasks` state variable
 			const tasks = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Task))
 			setOriginalTasks(tasks)
 			setTasks(tasks)
@@ -90,7 +88,6 @@ export default function TasksTableTeacher({
 	}, [searchInput])
 
 	const handleDelete = (task: Task) => {
-		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this task?')) {
 			deleteTask(classroom.id, task.id)
 				.then(() => {
@@ -124,7 +121,6 @@ export default function TasksTableTeacher({
 						</TableHead>
 						<TableBody>
 							{tasks.map((task) => (
-								// <TableRow key={task.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
 								<StyledTableRow key={task.id}>
 									<TableCell>
 										<TaskModalTeacher task={task} classroom={classroom} />
@@ -160,7 +156,6 @@ export default function TasksTableTeacher({
 										</IconButton>
 									</TableCell>
 								</StyledTableRow>
-								// </TableRow>
 							))}
 						</TableBody>
 					</Table>

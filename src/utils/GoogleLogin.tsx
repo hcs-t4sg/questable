@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import { Button } from '@mui/material'
 import { SCOPES, clientID, clientSecret, googleProvider } from './google'
-// import { useState } from 'react'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from './firebase'
 import { User } from 'firebase/auth'
@@ -10,8 +9,6 @@ import { useSnackbar } from 'notistack'
 export let accessToken: any
 
 export default function GoogleLogin({ user }: { user: User }) {
-	// const [isSignedIn, setIsSignedIn] = useState(false)
-	// const [email, setEmail] = useState('')
 	const { enqueueSnackbar } = useSnackbar()
 
 	const fetchAccessTokens = async (authorizationCode: string) => {
@@ -47,7 +44,6 @@ export default function GoogleLogin({ user }: { user: User }) {
 		scope: SCOPES,
 		onSuccess: (res) => {
 			console.log('Logged in with google', res)
-			// setIsSignedIn(true)
 			fetchAccessTokens(res.code)
 				.then(() => {
 					enqueueSnackbar('Signed in!', { variant: 'success' })
@@ -72,8 +68,6 @@ export default function GoogleLogin({ user }: { user: User }) {
 			>
 				Log into Google
 			</Button>
-			{/* This is confusing */}
-			{/* <Typography variant='body1'>{isSignedIn ? 'Signed in!' : 'Not signed in'}</Typography> */}
 		</>
 	)
 }

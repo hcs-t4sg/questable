@@ -10,7 +10,6 @@ import { collection, doc, onSnapshot, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, Player, Repeatable } from '../../types'
 import { db } from '../../utils/firebase'
-// import RepeatableModalStudent from './RepeatableModalStudent'
 import Fuse from 'fuse.js'
 import { truncate } from '../../utils/helperFunctions'
 import Loading from '../global/Loading'
@@ -23,12 +22,6 @@ import createDOMPurify from 'dompurify'
 import { useSnackbar } from 'notistack'
 import { completeRepeatable } from '../../utils/mutations'
 const DOMPurify = createDOMPurify(window)
-// export function truncate(description: string) {
-// 	if (description.length > 50) {
-// 		return description.slice(0, 50) + '...'
-// 	}
-// 	return description
-// }
 
 function RepeatableTableRow({
 	repeatable,
@@ -148,7 +141,6 @@ export default function RepeatableTableStudent({
 	player: Player
 	searchInput: string
 }) {
-	// Create a state variable to hold the tasks
 	const [original, setOriginal] = useState<Repeatable[] | null>(null)
 	const [repeatables, setRepeatables] = useState<Repeatable[] | null>(null)
 	const [fuse, newFuse] = useState(new Fuse<Repeatable>([]))
@@ -161,9 +153,7 @@ export default function RepeatableTableStudent({
 	}
 
 	useEffect(() => {
-		// Create a reference to the tasks collection
 		const repeatableCollectionRef = query(collection(db, `classrooms/${classroom.id}/repeatables`))
-		// Attach a listener to the tasks collection
 		const unsub = onSnapshot(repeatableCollectionRef, (snapshot) => {
 			const repeatablesList = snapshot.docs.map(
 				(doc) =>

@@ -9,9 +9,6 @@ import Layout from '../components/global/Layout'
 import StyledFirebaseAuth from '../components/global/StyledFirebaseAuth'
 import { clientID } from './google'
 import { Grid, Typography } from '@mui/material'
-// import { gapi } from 'gapi-script'
-// import GCRLogin from '../components/teacher/GCRLogin'
-// import { Grid } from '@mui/material'
 
 // ! DO NOT CHANGE THIS FILE.
 

@@ -29,14 +29,13 @@ export default function TaskModalTeacher({
 	classroom: Classroom
 }) {
 	const { enqueueSnackbar } = useSnackbar()
-	// State variables
+
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState(task.name)
 	const [reward, setReward] = useState(task.reward)
 	const [date, setDate] = useState<Date | null>(task.due.toDate())
 	const [description, setDescription] = useState(task.description)
 
-	// Open the task modal
 	const handleClickOpen = () => {
 		setOpen(true)
 		setName(task.name)
@@ -44,12 +43,12 @@ export default function TaskModalTeacher({
 		setReward(task.reward)
 		setDescription(task.description)
 	}
-	// Close the task modal
+
 	const handleClose = () => {
 		setOpen(false)
 		setIsEditing(false)
 	}
-	// Handle the click of an edit button
+
 	const handleEdit = () => {
 		if (name === '') {
 			enqueueSnackbar('You need to provide a name for the task', { variant: 'error' })
@@ -78,7 +77,6 @@ export default function TaskModalTeacher({
 			reward: reward,
 			id: task.id,
 		}
-		// Call the `updateTask` mutation
 		updateTask(classroom.id, updatedTask)
 			.then(() => {
 				handleClose()
@@ -91,7 +89,6 @@ export default function TaskModalTeacher({
 	}
 
 	const handleDelete = () => {
-		// message box to confirm deletion
 		if (window.confirm('Are you sure you want to delete this task?')) {
 			handleClose()
 			deleteTask(classroom.id, task.id)
@@ -105,12 +102,6 @@ export default function TaskModalTeacher({
 		}
 	}
 
-	const openButton = (
-		<IconButton onClick={handleClickOpen}>
-			<EditIcon />
-		</IconButton>
-	)
-
 	const [isEditing, setIsEditing] = useState(false)
 	const handleCancel = () => {
 		setIsEditing(false)
@@ -121,8 +112,10 @@ export default function TaskModalTeacher({
 	}
 
 	return (
-		<div>
-			{openButton}
+		<>
+			<IconButton onClick={handleClickOpen}>
+				<EditIcon />
+			</IconButton>
 			<TeacherModalStyled open={open} onClose={handleClose}>
 				<ModalTitle onClick={handleClose} text='Overview' />
 				<TaskModalContent>
@@ -169,7 +162,6 @@ export default function TaskModalTeacher({
 								/>
 							</LocalizationProvider>
 						</BoxInModal>
-
 						<BoxInModal>
 							<FormControl fullWidth>
 								<InputLabel id='reward-dropdown-label'>Reward</InputLabel>
@@ -187,10 +179,8 @@ export default function TaskModalTeacher({
 									<MenuItem value={40}>40g</MenuItem>
 								</Select>
 							</FormControl>
-							{/* </Box> */}
 						</BoxInModal>
 						<br />
-						{/* center the save button */}
 						<Stack direction='row' spacing={2}>
 							{isEditing ? (
 								<>
@@ -219,6 +209,6 @@ export default function TaskModalTeacher({
 					</Box>
 				</TaskModalContent>
 			</TeacherModalStyled>
-		</div>
+		</>
 	)
 }

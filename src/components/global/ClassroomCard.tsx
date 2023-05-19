@@ -33,7 +33,6 @@ export default function ClassroomCard({
 
 		copyTextToClipboard(classroom.id)
 			.then(() => {
-				// If successful
 				enqueueSnackbar('Copied join code to clipboard!', {
 					variant: 'success',
 				})
