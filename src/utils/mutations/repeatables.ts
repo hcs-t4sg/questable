@@ -256,7 +256,7 @@ export async function confirmRepeatables(repeatables: RepeatableCompletion[], cl
 		)
 		const streaksSnap = await getDoc(streaksRef)
 		if (!streaksSnap.exists()) {
-			batch.set(streaksRef, { streaks: 1 })
+			batch.set(streaksRef, { streak: 1 })
 		} else {
 			batch.update(streaksRef, { streak: increment(1) })
 		}
