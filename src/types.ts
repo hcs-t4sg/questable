@@ -171,7 +171,6 @@ export interface CustomShopItems {
 	description: string
 	price: number
 	isActive: boolean
-	icon: number | null
 }
 
 export interface PurchasedReward extends CustomShopItems {
