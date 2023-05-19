@@ -85,7 +85,8 @@ export default function TasksStudent({
 					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
 				} else {
 					// If player not in any arrays, treat task as assigned
-					// Allows players who join classroom after task creation to still see task
+					// ! At the moment, this allows players who join classroom after task creation to still see task.
+					// TODO: Given this logic, the 'assigned' property of tasks and repeatables is unnecessary and should be removed in the future.
 					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
 				}
 			})

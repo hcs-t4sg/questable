@@ -124,10 +124,6 @@ export async function purchaseCustomItem(
 		throw new Error('Not enough money!')
 	}
 
-	const newItem = {
-		itemId: item.id,
-	}
-
 	const newRequest = {
 		rewardName: item.name,
 		rewardDescription: item.description,
@@ -135,9 +131,6 @@ export async function purchaseCustomItem(
 		playerID: studentID,
 		playerName: player.name,
 	}
-
-	const inv = collection(db, `classrooms/${classID}/players/${studentID}/inventory`)
-	await addDoc(inv, newItem)
 
 	const playerRef = doc(db, `classrooms/${classID}/players/${studentID}`)
 	await updateDoc(playerRef, {
