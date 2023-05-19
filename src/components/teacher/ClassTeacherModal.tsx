@@ -9,7 +9,7 @@ import { useSnackbar } from 'notistack'
 import { useState } from 'react'
 import { Classroom, PlayerWithEmail } from '../../types'
 import { levelUp } from '../../utils/helperFunctions'
-import { updatePlayer } from '../../utils/mutations'
+import { updatePlayer } from '../../utils/mutations/users'
 import { PlayerInfoModalWrapper } from '../global/PlayerInfoModalWrapper'
 import { Cluster } from '../student/AssignmentContentStudent'
 

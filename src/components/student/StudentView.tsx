@@ -22,7 +22,7 @@ import InventoryStudent from '../../routes/student/InventoryStudent'
 import StudentSettings from '../../routes/student/StudentSettings'
 import { Classroom, Player } from '../../types'
 import { levelUp } from '../../utils/helperFunctions'
-import { refreshAllRepeatables } from '../../utils/mutations'
+import { refreshAllRepeatables } from '../../utils/mutations/repeatables'
 import ForumView from '../../routes/ForumView'
 
 export default function StudentView({

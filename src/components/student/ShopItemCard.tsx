@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 import { Classroom, Item, Outfit, Player } from '../../types'
-import { purchaseItem } from '../../utils/mutations'
+import { purchaseItem } from '../../utils/mutations/shop'
 import { ItemInfoCard } from '../global/ItemInfoCard'
 import { useSnackbar } from 'notistack'
 

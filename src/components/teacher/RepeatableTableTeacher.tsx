@@ -13,7 +13,7 @@ import { db } from '../../utils/firebase'
 import RepeatableModalTeacher from './RepeatableModalTeacher'
 import { IconButton } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { deleteRepeatable } from '../../utils/mutations'
+import { deleteRepeatable } from '../../utils/mutations/repeatables'
 
 import { BlankTableCell, StyledTableRow } from '../../styles/TaskTableStyles'
 import Loading from '../global/Loading'

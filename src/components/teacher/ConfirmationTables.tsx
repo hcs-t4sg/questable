@@ -5,14 +5,9 @@ import ConfirmTasksTable from './ConfirmTasksTable'
 import ConfirmRewardsTable from './ConfirmRewardsTable'
 import { Classroom, CompletedTask, RepeatableCompletion, Repeatable, Player } from '../../types'
 import { useSnackbar } from 'notistack'
-import {
-	confirmTasks,
-	confirmRepeatables,
-	getPlayerData,
-	getPlayerTaskCompletion,
-	getRepeatableCompletionTimes,
-	getUserData,
-} from '../../utils/mutations'
+import { getPlayerData, getUserData } from '../../utils/mutations/users'
+import { confirmTasks, getPlayerTaskCompletion } from '../../utils/mutations/tasks'
+import { confirmRepeatables, getRepeatableCompletionTimes } from '../../utils/mutations/repeatables'
 
 import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '../../utils/firebase'

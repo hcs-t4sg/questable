@@ -9,7 +9,7 @@ import { User } from 'firebase/auth'
 import { useSnackbar } from 'notistack'
 import { Link } from 'react-router-dom'
 import { Classroom } from '../../types'
-import { addPin, deletePin } from '../../utils/mutations'
+import { addPin, deletePin } from '../../utils/mutations/classroom'
 
 export default function ClassroomCard({
 	classroom,

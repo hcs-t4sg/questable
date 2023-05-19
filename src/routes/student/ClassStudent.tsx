@@ -10,7 +10,7 @@ import {
 } from '@mui/material'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
-import { getUserData } from '../../utils/mutations'
+import { getUserData } from '../../utils/mutations/users'
 import { useEffect, useState } from 'react'
 import Avatar from '../../components/global/Avatar'
 import { Classroom, Player, PlayerWithEmail } from '../../types'

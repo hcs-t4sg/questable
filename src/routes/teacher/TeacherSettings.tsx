@@ -10,7 +10,7 @@ import { useState } from 'react'
 import PlayerCard from '../../components/global/PlayerCard'
 import { Classroom, Player } from '../../types'
 import { db } from '../../utils/firebase'
-import { updateDoLeaderboard, updateLeaderboardSize } from '../../utils/mutations'
+import { updateDoLeaderboard, updateLeaderboardSize } from '../../utils/mutations/classroom'
 
 import { doc, updateDoc } from 'firebase/firestore'
 

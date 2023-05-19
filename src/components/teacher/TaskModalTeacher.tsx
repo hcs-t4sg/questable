@@ -19,7 +19,7 @@ import {
 } from '../../styles/TaskModalStyles'
 import { Classroom, Task } from '../../types'
 import modules from '../../utils/TextEditor'
-import { deleteTask, updateTask } from '../../utils/mutations'
+import { deleteTask, updateTask } from '../../utils/mutations/tasks'
 
 export default function TaskModalTeacher({
 	task,

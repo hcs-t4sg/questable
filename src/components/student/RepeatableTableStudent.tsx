@@ -20,7 +20,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import { IconButton } from '@mui/material'
 import createDOMPurify from 'dompurify'
 import { useSnackbar } from 'notistack'
-import { completeRepeatable } from '../../utils/mutations'
+import { completeRepeatable } from '../../utils/mutations/repeatables'
 const DOMPurify = createDOMPurify(window)
 
 function RepeatableTableRow({

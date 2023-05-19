@@ -10,7 +10,7 @@ import Settings from './routes/Settings'
 import { auth, SignInScreen } from './utils/firebase'
 import Error from './components/global/Error'
 import { SnackbarProvider } from 'notistack'
-import { syncUsers } from './utils/mutations'
+import { syncUsers } from './utils/mutations/users'
 // make alias for greater readability
 import { QueryClient, QueryClientProvider } from 'react-query'
 import logo from './assets/logo.png'

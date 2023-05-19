@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField'
 import { User } from 'firebase/auth'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
-import { updatePlayer } from '../../utils/mutations'
+import { updatePlayer } from '../../utils/mutations/users'
 
 export default function PlayerModal({
 	player,

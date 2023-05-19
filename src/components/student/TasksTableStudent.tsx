@@ -16,7 +16,7 @@ import {
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
-import { unsendTask, completeTask } from '../../utils/mutations'
+import { unsendTask, completeTask } from '../../utils/mutations/tasks'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import Paper from '@mui/material/Paper'
 import Fuse from 'fuse.js'

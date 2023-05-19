@@ -21,13 +21,7 @@ import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
 import { db } from '../../utils/firebase'
 import PushPinIcon from '@mui/icons-material/PushPin'
 import Chip from '@mui/material/Chip'
-import {
-	addComment,
-	getPlayerData,
-	deleteForumComment,
-	updateForumCommentLikes,
-	updateForumPostPinned,
-} from '../../utils/mutations'
+import { getPlayerData } from '../../utils/mutations/users'
 import ForumPostCard from './ForumPostCard'
 import Avatar from '../global/Avatar'
 import { currentAvatar } from '../../utils/items'
@@ -35,6 +29,12 @@ import { format } from 'date-fns'
 import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import {
+	addComment,
+	deleteForumComment,
+	updateForumCommentLikes,
+	updateForumPostPinned,
+} from '../../utils/mutations/forum'
 
 // TODO Fix comment resizing on browser window resizing
 

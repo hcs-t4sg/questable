@@ -18,7 +18,8 @@ import {
 	getShirtItems,
 	getShoesItems,
 } from '../../utils/items'
-import { onboardClassroom, updateAvatar, updatePlayer } from '../../utils/mutations'
+import { updateAvatar, updatePlayer } from '../../utils/mutations/users'
+import { onboardClassroom } from '../../utils/mutations/classroom'
 import { OnboardingItemCard } from '../student/OnboardingItemCard'
 import Layout from './Layout'
 

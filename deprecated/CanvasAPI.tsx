@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { auth } from '../src/utils/firebase'
 // make alias for greater readability
 import { User } from 'firebase/auth'
-import { syncUsers } from '../src/utils/mutations'
+import { syncUsers } from '../src/utils/mutations/users'
 import Grid from '@mui/material/Grid'
 
 const mdTheme = createTheme({

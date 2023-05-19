@@ -5,7 +5,7 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { Classroom, CustomShopItems, Player } from '../../types'
-import { purchaseCustomItem } from '../../utils/mutations'
+import { purchaseCustomItem } from '../../utils/mutations/shop'
 
 import { styled } from '@mui/system'
 import { useSnackbar } from 'notistack'

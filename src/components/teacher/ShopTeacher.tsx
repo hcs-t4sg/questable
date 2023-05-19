@@ -14,7 +14,7 @@ import {
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
 import ShopTeacherModal from './ShopTeacherModal'
-import { deleteItem } from '../../utils/mutations'
+import { deleteItem } from '../../utils/mutations/shop'
 import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
 import green3 from '/src/assets/spriteSheets/potions/green3.png'
 import purple3 from '/src/assets/spriteSheets/potions/purple3.png'

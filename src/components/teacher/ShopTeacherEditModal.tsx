@@ -13,7 +13,7 @@ import {
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
 import { Classroom, CustomShopItems } from '../../types'
-import { updateReward } from '../../utils/mutations'
+import { updateReward } from '../../utils/mutations/shop'
 
 export default function ShopeTeacherEditModal({
 	item,

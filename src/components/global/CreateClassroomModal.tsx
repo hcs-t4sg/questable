@@ -6,7 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import * as React from 'react'
 import { useState } from 'react'
-import { addClassroom } from '../../utils/mutations'
+import { addClassroom } from '../../utils/mutations/classroom'
 import { User } from 'firebase/auth'
 import { useSnackbar } from 'notistack'
 

@@ -1,7 +1,7 @@
 import { Box, Button } from '@mui/material'
 import { format } from 'date-fns'
 import { Classroom, Player, TaskWithStatus } from '../../types'
-import { completeTask } from '../../utils/mutations'
+import { completeTask } from '../../utils/mutations/tasks'
 import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
 import green3 from '/src/assets/spriteSheets/potions/green3.png'
 import purple3 from '/src/assets/spriteSheets/potions/purple3.png'

@@ -16,7 +16,7 @@ import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Classroom, Task } from '../../types'
 import { db } from '../../utils/firebase'
-import { deleteTask } from '../../utils/mutations'
+import { deleteTask } from '../../utils/mutations/tasks'
 import TaskModalTeacher from './TaskModalTeacher'
 import Fuse from 'fuse.js'
 

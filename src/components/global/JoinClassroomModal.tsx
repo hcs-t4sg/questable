@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField'
 import * as React from 'react'
 import { useState } from 'react'
 import Grid from '@mui/material/Grid'
-import { joinClassroom } from '../../utils/mutations'
+import { joinClassroom } from '../../utils/mutations/classroom'
 import { User } from 'firebase/auth'
 import { useSnackbar } from 'notistack'
 

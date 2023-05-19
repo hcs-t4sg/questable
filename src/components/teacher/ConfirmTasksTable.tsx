@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow'
 import { formatDistance } from 'date-fns'
 
 import { Classroom, CompletedTask } from '../../types'
-import { confirmTasks, denyTask } from '../../utils/mutations'
+import { confirmTasks, denyTask } from '../../utils/mutations/tasks'
 import { StyledTableRow } from '../../styles/TaskTableStyles'
 import { Grid } from '@mui/material'
 import Loading from '../global/Loading'

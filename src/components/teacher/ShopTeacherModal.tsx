@@ -19,7 +19,7 @@ import {
 	TaskModalContent,
 	TeacherModalStyled,
 } from '../../styles/TaskModalStyles'
-import { addReward } from '../../utils/mutations'
+import { addReward } from '../../utils/mutations/shop'
 
 export default function ShopTeacherModal({ classroom }: { classroom: Classroom }) {
 	const { enqueueSnackbar } = useSnackbar()

@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 import { Classroom, Item, Outfit, Player } from '../../types'
-import { updateAvatar } from '../../utils/mutations'
+import { updateAvatar } from '../../utils/mutations/users'
 import { ItemInfoCard } from '../global/ItemInfoCard'
 
 export function InventoryItemCard({

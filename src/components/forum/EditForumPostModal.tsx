@@ -10,7 +10,7 @@ import {
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import { Classroom, Player, ForumPost } from '../../types'
-import { updateForumPost } from '../../utils/mutations'
+import { updateForumPost } from '../../utils/mutations/forum'
 import { TeacherModalStyled, ModalTitle, TaskModalContent } from '../../styles/TaskModalStyles'
 import { useSnackbar } from 'notistack'
 import modules from '../../utils/TextEditor'

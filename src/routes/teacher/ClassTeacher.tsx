@@ -4,7 +4,7 @@ import ClassTeacherModal from '../../components/teacher/ClassTeacherModal'
 
 import { collection, onSnapshot, query } from 'firebase/firestore'
 import { db } from '../../utils/firebase'
-import { getUserData } from '../../utils/mutations'
+import { getUserData } from '../../utils/mutations/users'
 
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
