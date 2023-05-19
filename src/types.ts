@@ -76,7 +76,7 @@ export interface Classroom {
 	teacherList: string[]
 	doLeaderboard: boolean
 	leaderboardSize: number
-	canEdit: boolean
+	doForumPostEditing: boolean
 }
 
 export interface Player {

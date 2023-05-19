@@ -42,7 +42,7 @@ export default function TeacherSettings({
 		updateLeaderboardSize(classroom.id, newLeaderboardSize).catch(console.error)
 	}
 
-	const [editOn, setEditOn] = useState(classroom.canEdit)
+	const [editOn, setEditOn] = useState(classroom.doForumPostEditing)
 	const { enqueueSnackbar } = useSnackbar()
 
 	const theme = useTheme()
@@ -50,7 +50,7 @@ export default function TeacherSettings({
 	const handleSwitch = async (classroom: Classroom) => {
 		const classroomRef = doc(db, 'classrooms', classroom.id)
 		await updateDoc(classroomRef, {
-			canEdit: !classroom.canEdit,
+			doForumPostEditing: !classroom.doForumPostEditing,
 		}).catch((err) => {
 			console.error(err)
 			enqueueSnackbar('There was an error creating the post.', {

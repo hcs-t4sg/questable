@@ -93,7 +93,7 @@ export default function ForumPostCard({
 						label={forumPost.likers.length}
 					/>
 					{(player.role === 'teacher' ||
-						(forumPost.author.id === player.id && classroom.canEdit)) && (
+						(forumPost.author.id === player.id && classroom.doForumPostEditing)) && (
 						<IconButton
 							onClick={(e) => {
 								setOpen(true)
@@ -105,7 +105,7 @@ export default function ForumPostCard({
 					)}
 
 					{(player.role === 'teacher' ||
-						(forumPost.author.id === player.id && classroom.canEdit)) && (
+						(forumPost.author.id === player.id && classroom.doForumPostEditing)) && (
 						<IconButton
 							onClick={(e) => {
 								handleDelete(forumPost)

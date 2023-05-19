@@ -13,7 +13,7 @@ export async function addClassroom(name: string, user: User) {
 		teacherList: [user.uid],
 		doLeaderboard: true,
 		leaderboardSize: 3,
-		canEdit: true,
+		doForumPostEditing: true,
 	}
 	// NOTE: I made a slight change here. Instead of storing the teacher in the playersList,
 	// I'm storing it in a separate field called teacher. This is because I want to be able to differntiate the classes
