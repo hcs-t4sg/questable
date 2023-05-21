@@ -5,9 +5,11 @@ import { db } from '../firebase'
 
 // Firestore mutations for user and player management
 
+// Synchronize users table upon login
 export async function syncUsers(user: User) {
 	const userRef = doc(db, 'users', user.uid)
 
+	// If the user does not have an existing entry in the users table, then create it
 	try {
 		await runTransaction(db, async (transaction) => {
 			const userDoc = await transaction.get(userRef)
@@ -43,6 +45,7 @@ export async function getPlayerData(classID: string, userID: string): Promise<Pl
 	}
 }
 
+// Get data of a particular user
 export async function getUserData(userID: string) {
 	const userRef = doc(db, `users/${userID}`)
 	const userSnap = await getDoc(userRef)
@@ -68,6 +71,7 @@ export async function updatePlayer(
 	await updateDoc(playerRef, newPlayerData)
 }
 
+// Update avatar of a given player in a classroom given some new item
 export async function updateAvatar(player: Player, newItem: Item, classroom: Classroom) {
 	const playerRef = doc(db, `classrooms/${classroom.id}/players/${player.id}`)
 

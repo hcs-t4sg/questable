@@ -44,6 +44,8 @@ const ListItemIconStyled = styled(ListItemIcon)({
 	color: 'white',
 }) as typeof ListItemButton
 
+// Bottom app bar displayed in mobile view
+// TODO: teacherItems and studentItems should be refactored into listItems.tsx
 export default function BottomAppBar({ role }: { role: UserRole }) {
 	const [open, setOpen] = React.useState(false)
 	const toggleDrawer = () => {
@@ -189,7 +191,7 @@ export default function BottomAppBar({ role }: { role: UserRole }) {
 	}, [window.location.href.split('/').at(-1)])
 
 	return (
-		<React.Fragment>
+		<>
 			<CssBaseline />
 			<AppBar position='fixed' color='primary' sx={{ top: 'auto', bottom: 0, overflowX: 'scroll' }}>
 				<Toolbar>
@@ -237,6 +239,6 @@ export default function BottomAppBar({ role }: { role: UserRole }) {
 					) : null}
 				</List>
 			</MuiDrawer>
-		</React.Fragment>
+		</>
 	)
 }

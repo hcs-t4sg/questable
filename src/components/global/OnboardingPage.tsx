@@ -12,38 +12,19 @@ import {
 	Shirt,
 	Shoes,
 	getBodyItems,
-	getEyesItems,
+	getAllEyesItems,
 	getHairItems,
-	getPantsItems,
-	getShirtItems,
-	getShoesItems,
+	getAllPantsItems,
+	getAllShirtItems,
+	getAllShoesItems,
 } from '../../utils/items'
 import { updateAvatar, updatePlayer } from '../../utils/mutations/users'
 import { onboardClassroom } from '../../utils/mutations/classroom'
 import { OnboardingItemCard } from '../student/OnboardingItemCard'
 import Layout from './Layout'
+import { TabPanel, a11yProps } from './Tabs'
 
-interface TabPanelProps {
-	children?: React.ReactNode
-	index: number
-	value: number
-}
-
-function TabPanel(props: TabPanelProps) {
-	const { children, value, index, ...other } = props
-
-	return (
-		<div
-			role='tabpanel'
-			hidden={value !== index}
-			id={`simple-tabpanel-${index}`}
-			aria-labelledby={`simple-tab-${index}`}
-			{...other}
-		>
-			{value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-		</div>
-	)
-}
+// Onboarding page prompting user to specify avatar and name upon entering a classroom for the first time
 
 export default function OnboardingPage({
 	classroom,
@@ -67,12 +48,12 @@ export default function OnboardingPage({
 	const handleChange = (event: React.SyntheticEvent, newValue: 0 | 1 | 2 | 3 | 4) => {
 		setValue(newValue)
 	}
-	const bodies = getBodyItems()
-	const hairs = getHairItems()
-	const shirts = getShirtItems()
-	const pants = getPantsItems()
-	const shoes = getShoesItems()
-	const eyes = getEyesItems()
+	const bodyOptions = getBodyItems()
+	const hairOptions = getHairItems()
+	const shirtOptions = getAllShirtItems()
+	const pantsOptions = getAllPantsItems()
+	const shoesOptions = getAllShoesItems()
+	const eyesOptions = getAllEyesItems()
 
 	const handleSubmit = () => {
 		const nameContainsNonWhitespaceChars = name.replace(/\s+/g, '') != ''
@@ -104,6 +85,8 @@ export default function OnboardingPage({
 			enqueueSnackbar('Please select eyes for your character', { variant: 'error' })
 			return
 		}
+
+		// TODO: updateAvatar can be redesigned to avoid having to make many db calls here, or write a new function that sets the entire avatar at once
 		updatePlayer(user.uid, classroom.id, { name })
 		updateAvatar(player, body, classroom)
 		updateAvatar(player, hair, classroom)
@@ -112,13 +95,6 @@ export default function OnboardingPage({
 		updateAvatar(player, pant, classroom)
 		updateAvatar(player, eye, classroom)
 		onboardClassroom(user.uid, classroom.id)
-	}
-
-	function a11yProps(index: number) {
-		return {
-			id: `simple-tab-${index}`,
-			'aria-controls': `simple-tabpanel-${index}`,
-		}
 	}
 
 	return (
@@ -158,7 +134,7 @@ export default function OnboardingPage({
 						<Tabs value={value} onChange={handleChange} aria-label='basic tabs example'>
 							<Tab label='Body' {...a11yProps(0)} />
 							<Tab label='Hair' {...a11yProps(1)} />
-							<Tab label='Shirts' {...a11yProps(2)} />
+							<Tab label='Shirt' {...a11yProps(2)} />
 							<Tab label='Pants' {...a11yProps(3)} />
 							<Tab label='Shoes' {...a11yProps(4)} />
 							<Tab label='Eyes' {...a11yProps(5)} />
@@ -175,7 +151,7 @@ export default function OnboardingPage({
 						{' '}
 						<TabPanel value={value} index={0}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-								{bodies.map((item, index) => (
+								{bodyOptions.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
 										<OnboardingItemCard
 											item={item}
@@ -197,7 +173,7 @@ export default function OnboardingPage({
 						</TabPanel>
 						<TabPanel value={value} index={1}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-								{hairs.map((item, index) => (
+								{hairOptions.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
 										<OnboardingItemCard
 											item={item}
@@ -211,7 +187,7 @@ export default function OnboardingPage({
 						</TabPanel>
 						<TabPanel value={value} index={2}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-								{shirts.map((item, index) => (
+								{shirtOptions.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
 										<OnboardingItemCard
 											item={item}
@@ -225,7 +201,7 @@ export default function OnboardingPage({
 						</TabPanel>
 						<TabPanel value={value} index={3}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-								{pants.map((item, index) => (
+								{pantsOptions.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
 										<OnboardingItemCard
 											item={item}
@@ -239,7 +215,7 @@ export default function OnboardingPage({
 						</TabPanel>
 						<TabPanel value={value} index={4}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-								{shoes.map((item, index) => (
+								{shoesOptions.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
 										<OnboardingItemCard
 											item={item}
@@ -253,7 +229,7 @@ export default function OnboardingPage({
 						</TabPanel>
 						<TabPanel value={value} index={5}>
 							<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-								{eyes.map((item, index) => (
+								{eyesOptions.map((item, index) => (
 									<Grid item xs={2} sm={3} md={3} key={index}>
 										<OnboardingItemCard
 											item={item}

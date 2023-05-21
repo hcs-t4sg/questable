@@ -1,5 +1,7 @@
 import { GoogleOAuthProvider } from 'google-oauth-gsi'
 
+// Google classroom-related constants
+
 // Store these environment variables in a .env.local file in the root directory.
 // https://vitejs.dev/guide/env-and-mode.html
 export const clientID = import.meta.env.VITE_GOOGLE_CLIENT_ID

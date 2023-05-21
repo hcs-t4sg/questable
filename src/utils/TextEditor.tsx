@@ -1,3 +1,5 @@
+// Exports related to the ReactQuill rich text editor used across the app
+
 const modules = {
 	toolbar: [
 		[{ font: [] }],

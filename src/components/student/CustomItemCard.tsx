@@ -15,7 +15,8 @@ import green3 from '/src/assets/spriteSheets/potions/green3.png'
 import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
 import red3 from '/src/assets/spriteSheets/potions/red3.png'
 
-export function iconPotion(priceAmount: number) {
+// TODO: Refactor this into assignmentPotion, since they have similar logic
+function customRewardPotion(priceAmount: number) {
 	const iconMatch =
 		priceAmount === 50
 			? blue3
@@ -45,6 +46,19 @@ export function iconPotion(priceAmount: number) {
 	)
 }
 
+const ItemBox = styled(Box)({
+	top: 20,
+	left: '18%',
+	position: 'relative',
+	width: '150px',
+	height: '120px',
+})
+
+const ItemTypography = styled(Typography)({
+	marginTop: '15px',
+	color: '#5c5c5c',
+})
+
 interface Props {
 	item: CustomShopItems
 	player: Player
@@ -53,21 +67,10 @@ interface Props {
 	isBody: boolean
 }
 
+// Card displaying a custom shop reward
+
 export function CustomItemCard(props: Props) {
 	const { enqueueSnackbar } = useSnackbar()
-
-	const ItemBox = styled(Box)({
-		top: 20,
-		left: '18%',
-		position: 'relative',
-		width: '150px',
-		height: '120px',
-	})
-
-	const ItemTypography = styled(Typography)({
-		marginTop: '15px',
-		color: '#5c5c5c',
-	})
 
 	const handlePurchase = () => {
 		purchaseCustomItem(props.classroom.id, props.player.id, props.item)
@@ -82,7 +85,7 @@ export function CustomItemCard(props: Props) {
 
 	return (
 		<Card sx={{ maxWidth: 345 }}>
-			<ItemBox marginBottom={5}>{iconPotion(props.item.price)}</ItemBox>
+			<ItemBox marginBottom={5}>{customRewardPotion(props.item.price)}</ItemBox>
 			<CardContent>
 				<Typography variant='body2' sx={{ fontWeight: 'medium', color: 'green' }} component='div'>
 					Custom Reward

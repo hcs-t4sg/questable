@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom'
 import { Classroom } from '../../types'
 import { addPin, deletePin } from '../../utils/mutations/classroom'
 
+// Card for a user's classroom in home view
+
 export default function ClassroomCard({
 	classroom,
 	user,

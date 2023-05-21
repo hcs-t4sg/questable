@@ -38,7 +38,7 @@ import {
 
 // TODO Fix comment resizing on browser window resizing
 
-const handleDelete = (
+const handleDeleteComment = (
 	forumComment: Comment,
 	classroom: Classroom,
 	post: ForumPost,
@@ -56,7 +56,7 @@ const handleDelete = (
 	}
 }
 
-const handleLike = (
+const handleLikeComment = (
 	comment: Comment,
 	forumPost: ForumPost,
 	classroom: Classroom,
@@ -75,7 +75,7 @@ const handleLike = (
 	})
 }
 
-const handleStar = (
+const handleStarComment = (
 	comment: Comment,
 	forumPost: ForumPost,
 	classroom: Classroom,
@@ -92,7 +92,8 @@ const handleStar = (
 	})
 }
 
-const IncomingComment = ({
+// Component for incoming (non author) comments/chat bubbles
+function IncomingComment({
 	comment,
 	classroom,
 	player,
@@ -102,7 +103,7 @@ const IncomingComment = ({
 	classroom: Classroom
 	player: Player
 	post: ForumPost
-}) => {
+}) {
 	const [author, setAuthor] = useState<Player | null>(null)
 
 	const { enqueueSnackbar } = useSnackbar()
@@ -110,6 +111,7 @@ const IncomingComment = ({
 	const theme = useTheme()
 	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
+	// Listen to author data
 	useEffect(() => {
 		const fetchAuthorData = async () => {
 			const author = await getPlayerData(classroom.id, comment.author)
@@ -129,11 +131,13 @@ const IncomingComment = ({
 						<Chip
 							sx={{ mt: 0.65 }}
 							icon={<FavoriteIcon />}
-							onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}
+							onClick={() => handleLikeComment(comment, post, classroom, player, enqueueSnackbar)}
 							label={comment.likers.length}
 						/>
 						{(player.role == 'teacher' || player.id == post.author.id) && (
-							<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
+							<IconButton
+								onClick={() => handleStarComment(comment, post, classroom, enqueueSnackbar)}
+							>
 								{post.pinnedComments.includes(comment.id) ? (
 									<PushPinIcon />
 								) : (
@@ -142,7 +146,9 @@ const IncomingComment = ({
 							</IconButton>
 						)}
 						{player.role == 'teacher' && (
-							<IconButton onClick={() => handleDelete(comment, classroom, post, enqueueSnackbar)}>
+							<IconButton
+								onClick={() => handleDeleteComment(comment, classroom, post, enqueueSnackbar)}
+							>
 								<DeleteIcon />
 							</IconButton>
 						)}
@@ -178,7 +184,8 @@ const IncomingComment = ({
 	)
 }
 
-const OutgoingComment = ({
+// Component for outgoing (author) comments/chat bubbles
+function OutgoingComment({
 	comment,
 	classroom,
 	player,
@@ -188,7 +195,7 @@ const OutgoingComment = ({
 	classroom: Classroom
 	player: Player
 	post: ForumPost
-}) => {
+}) {
 	const { enqueueSnackbar } = useSnackbar()
 
 	const theme = useTheme()
@@ -208,12 +215,14 @@ const OutgoingComment = ({
 						<Chip
 							sx={{ mt: 0.65 }}
 							icon={<FavoriteIcon />}
-							onClick={() => handleLike(comment, post, classroom, player, enqueueSnackbar)}
+							onClick={() => handleLikeComment(comment, post, classroom, player, enqueueSnackbar)}
 							label={comment.likers.length}
 						/>
 
 						{(player.role == 'teacher' || player.id == post.author.id) && (
-							<IconButton onClick={() => handleStar(comment, post, classroom, enqueueSnackbar)}>
+							<IconButton
+								onClick={() => handleStarComment(comment, post, classroom, enqueueSnackbar)}
+							>
 								{post.pinnedComments.includes(comment.id) ? (
 									<PushPinIcon />
 								) : (
@@ -222,7 +231,9 @@ const OutgoingComment = ({
 							</IconButton>
 						)}
 						{player.role == 'teacher' && (
-							<IconButton onClick={() => handleDelete(comment, classroom, post, enqueueSnackbar)}>
+							<IconButton
+								onClick={() => handleDeleteComment(comment, classroom, post, enqueueSnackbar)}
+							>
 								<DeleteIcon />
 							</IconButton>
 						)}
@@ -237,6 +248,7 @@ const OutgoingComment = ({
 	)
 }
 
+// Component for detailed view of a forum post
 export default function ForumPostView({
 	player,
 	classroom,
@@ -252,6 +264,7 @@ export default function ForumPostView({
 	const theme = useTheme()
 	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 
+	// Listen to post data
 	const [post, setPost] = useState<ForumPost | null>(null)
 	useEffect(() => {
 		if (postID) {
@@ -275,7 +288,7 @@ export default function ForumPostView({
 
 	const [comment, setComment] = useState<string>('')
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+	const handleSubmitComment = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 
 		const newComment = {
@@ -297,6 +310,7 @@ export default function ForumPostView({
 		}
 	}
 
+	// Listen to post comments
 	const [comments, setComments] = useState<Comment[] | null>(null)
 	useEffect(() => {
 		if (postID) {
@@ -311,93 +325,96 @@ export default function ForumPostView({
 	}, [classroom, postID])
 
 	// TODO With comment flexbox that avatar, name, and timestamp side by side, we have weird resizing behavior of the avatar. Fix by having the timestamp go below the avatar and name when card gets too small
-	if (post) {
-		return (
-			<>
-				<ForumPostCard forumPost={post} classroom={classroom} player={player} isLink={false} />
-				<Card variant='outlined' sx={{ mb: 2, width: !mobile ? '100%' : '120%' }}>
-					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
-						<Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '16px' }}>
-							Pinned Comments
-						</Typography>
-						{comments ? (
-							<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
-								{comments.map((comment) => {
-									if (post.pinnedComments.includes(comment.id)) {
-										return (
-											<OutgoingComment
-												post={post}
-												classroom={classroom}
-												player={player}
-												comment={comment}
-												key={comment.id}
-											/>
-										)
-									}
-								})}
-							</Stack>
-						) : (
-							<Loading>Loading comments...</Loading>
-						)}
-					</CardContent>
-				</Card>
 
-				<Card sx={{ width: !mobile ? '100%' : '120%' }} variant='outlined'>
-					<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
-						<Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '16px' }}>
-							Comments
-						</Typography>
-						{comments ? (
-							<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
-								{comments.map((comment) => {
-									if (comment.author === player.id) {
-										return (
-											<OutgoingComment
-												post={post}
-												classroom={classroom}
-												player={player}
-												comment={comment}
-												key={comment.id}
-											/>
-										)
-									} else {
-										return (
-											<IncomingComment
-												post={post}
-												player={player}
-												comment={comment}
-												classroom={classroom}
-												key={comment.id}
-											/>
-										)
-									}
-								})}
-							</Stack>
-						) : (
-							<Loading>Loading comments...</Loading>
-						)}
-					</CardContent>
-					<form onSubmit={handleSubmit}>
-						<CardActions>
-							<TextField
-								variant='outlined'
-								size='small'
-								fullWidth
-								label='Message'
-								value={comment}
-								onChange={(event) => setComment(event.target.value)}
-								sx={{ marginRight: '5px' }}
-								type='text'
-							/>
-							<Button variant='contained' type='submit'>
-								Send
-							</Button>
-						</CardActions>
-					</form>
-				</Card>
-			</>
-		)
-	} else {
+	if (!post) {
 		return <Loading>Loading post data...</Loading>
 	}
+
+	return (
+		<>
+			{/* Main forum post content */}
+			<ForumPostCard forumPost={post} classroom={classroom} player={player} isLink={false} />
+			{/* Pinned comments */}
+			<Card variant='outlined' sx={{ mb: 2, width: !mobile ? '100%' : '120%' }}>
+				<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
+					<Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+						Pinned Comments
+					</Typography>
+					{comments ? (
+						<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
+							{comments.map((comment) => {
+								if (post.pinnedComments.includes(comment.id)) {
+									return (
+										<OutgoingComment
+											post={post}
+											classroom={classroom}
+											player={player}
+											comment={comment}
+											key={comment.id}
+										/>
+									)
+								}
+							})}
+						</Stack>
+					) : (
+						<Loading>Loading comments...</Loading>
+					)}
+				</CardContent>
+			</Card>
+			{/* All comments */}
+			<Card sx={{ width: !mobile ? '100%' : '120%' }} variant='outlined'>
+				<CardContent sx={{ height: '400px', overflowY: 'scroll' }}>
+					<Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+						Comments
+					</Typography>
+					{comments ? (
+						<Stack direction='column' spacing={2} sx={{ width: '100%' }}>
+							{comments.map((comment) => {
+								if (comment.author === player.id) {
+									return (
+										<OutgoingComment
+											post={post}
+											classroom={classroom}
+											player={player}
+											comment={comment}
+											key={comment.id}
+										/>
+									)
+								} else {
+									return (
+										<IncomingComment
+											post={post}
+											player={player}
+											comment={comment}
+											classroom={classroom}
+											key={comment.id}
+										/>
+									)
+								}
+							})}
+						</Stack>
+					) : (
+						<Loading>Loading comments...</Loading>
+					)}
+				</CardContent>
+				<form onSubmit={handleSubmitComment}>
+					<CardActions>
+						<TextField
+							variant='outlined'
+							size='small'
+							fullWidth
+							label='Message'
+							value={comment}
+							onChange={(event) => setComment(event.target.value)}
+							sx={{ marginRight: '5px' }}
+							type='text'
+						/>
+						<Button variant='contained' type='submit'>
+							Send
+						</Button>
+					</CardActions>
+				</form>
+			</Card>
+		</>
+	)
 }

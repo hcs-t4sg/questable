@@ -15,6 +15,8 @@ import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
 import { truncate } from '../../utils/helperFunctions'
 
+// Table showing completed repeatables that are pending confirmation
+
 export default function ConfirmRepeatablesTable({
 	classroom,
 	completedRepeatables,

@@ -5,6 +5,8 @@ import BottomAppBar from './BottomBar'
 import ClassroomSidebar from './ClassroomSidebar'
 import background from '/src/assets/background.png'
 
+// Base layout implemented in most top-level app routes. Displays the classroom sidebar if inside a classroom, and adds foundational MUI layout elements (container, grid container)
+
 export default function Layout({
 	children,
 	classroom,

@@ -16,10 +16,12 @@ import {
 	ModalTitle,
 	TaskModalContent,
 	TeacherModalStyled,
-} from '../../styles/TaskModalStyles'
+} from '../../styles/ModalStyles'
 import { Classroom, Task } from '../../types'
 import modules from '../../utils/TextEditor'
 import { deleteTask, updateTask } from '../../utils/mutations/tasks'
+
+// Modal for viewing detailed information about a task
 
 export default function TaskModalTeacher({
 	task,
@@ -35,6 +37,7 @@ export default function TaskModalTeacher({
 	const [reward, setReward] = useState(task.reward)
 	const [date, setDate] = useState<Date | null>(task.due.toDate())
 	const [description, setDescription] = useState(task.description)
+	const [isEditing, setIsEditing] = useState(false)
 
 	const handleClickOpen = () => {
 		setOpen(true)
@@ -102,7 +105,6 @@ export default function TaskModalTeacher({
 		}
 	}
 
-	const [isEditing, setIsEditing] = useState(false)
 	const handleCancel = () => {
 		setIsEditing(false)
 		setName(task.name)

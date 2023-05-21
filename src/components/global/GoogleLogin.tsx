@@ -1,12 +1,14 @@
 /* eslint-disable camelcase */
 import { Button } from '@mui/material'
-import { SCOPES, clientID, clientSecret, googleProvider } from './google'
+import { SCOPES, clientID, clientSecret, googleProvider } from '../../utils/google'
 import { doc, updateDoc } from 'firebase/firestore'
-import { db } from './firebase'
+import { db } from '../../utils/firebase'
 import { User } from 'firebase/auth'
 import { useSnackbar } from 'notistack'
 
 export let accessToken: any
+
+// Google login button
 
 export default function GoogleLogin({ user }: { user: User }) {
 	const { enqueueSnackbar } = useSnackbar()

@@ -5,7 +5,10 @@ import { Item, Outfit } from '../../types'
 import { styled } from '@mui/system'
 import { Eyes } from '../../utils/items'
 
-export function ItemInfoCard({
+// Card displaying information about a particular item. Utilized in inventory, onboarding, and shop displays
+// Children of ItemInfoCardWrapper are specific actions pertaining to that item that vary based on the context (purchase, equip, etc)
+
+export function ItemInfoCardWrapper({
 	children,
 	item,
 	itemPrice,
@@ -18,6 +21,7 @@ export function ItemInfoCard({
 }) {
 	const mobile = useMediaQuery('(max-width:400px')
 
+	// TODO: There are some other instances of ItemBox in the codebase that may be refactored
 	const ItemBox = styled(Box)({
 		top: -20,
 		left: '18%',

@@ -5,10 +5,11 @@ import Box from '@mui/material/Box'
 
 import { styled } from '@mui/material/styles'
 
+// Styled components used in modals across the app
+
+// These styled components don't have any custom styling applied at the moment but could be styled in the future
 export const TeacherModalStyled = styled(Dialog)({})
-
 export const TaskModalContent = styled(DialogContent)({})
-
 export const StudentTaskModalBox = styled(DialogContent)({})
 
 export const BoxInModal = styled(Box)(({ theme }) => ({
@@ -20,7 +21,7 @@ export const BoxInModal = styled(Box)(({ theme }) => ({
 	marginBottom: theme.spacing(2),
 }))
 
-export const StudentBoxInModal = styled(Box)({
+export const LeftBoxInModal = styled(Box)({
 	width: '100%',
 	flexDirection: 'column',
 	display: 'flex',
@@ -32,20 +33,21 @@ interface Props {
 	text: string
 }
 
-export const TaskModalBox = styled(Box)({
-	width: '40%',
-	display: 'flex',
-	flexDirection: 'column',
-	alignItems: 'center',
-	justifyContent: 'center',
-	padding: '40px',
-	paddingTop: '40px',
-	backgroundColor: 'white',
-	marginBottom: '18px',
-})
+// * Not used at the moment
+// export const TaskModalBox = styled(Box)({
+// 	width: '40%',
+// 	display: 'flex',
+// 	flexDirection: 'column',
+// 	alignItems: 'center',
+// 	justifyContent: 'center',
+// 	padding: '40px',
+// 	paddingTop: '40px',
+// 	backgroundColor: 'white',
+// 	marginBottom: '18px',
+// })
 
 // TODO eventually - composition??
-/* Similarities between TaskModalTeacher and CreateTaskModal:
+/* Similarities between TaskModalTeacher and CreateAssignmentModal:
 	- same state variables
 	- same styled components (in this document)
 	- modal part is same

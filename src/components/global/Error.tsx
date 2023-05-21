@@ -2,6 +2,9 @@ import { Grid, Typography } from '@mui/material'
 import Layout from './Layout'
 import Loading from './Loading'
 
+// Error page
+// Note: We put all of the loading indicators on here for fun during demos, but it's probably best to remove them at some point for production LOL
+
 export default function Error({ message }: { message: string }) {
 	return (
 		<Layout>

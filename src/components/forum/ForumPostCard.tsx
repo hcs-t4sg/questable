@@ -27,6 +27,8 @@ import Chip from '@mui/material/Chip'
 import createDOMPurify from 'dompurify'
 const DOMPurify = createDOMPurify(window)
 
+// Condensed display of a particular forum post on the all posts page (ForumPostList)
+
 export default function ForumPostCard({
 	forumPost,
 	isLink,
@@ -81,7 +83,6 @@ export default function ForumPostCard({
 				>
 					{forumPost.title}
 				</Typography>
-
 				<Stack direction='row'>
 					<Chip
 						sx={{ mt: 0.7 }}
@@ -94,26 +95,24 @@ export default function ForumPostCard({
 					/>
 					{(player.role === 'teacher' ||
 						(forumPost.author.id === player.id && classroom.doForumPostEditing)) && (
-						<IconButton
-							onClick={(e) => {
-								setOpen(true)
-								e.preventDefault()
-							}}
-						>
-							<EditIcon></EditIcon>
-						</IconButton>
-					)}
-
-					{(player.role === 'teacher' ||
-						(forumPost.author.id === player.id && classroom.doForumPostEditing)) && (
-						<IconButton
-							onClick={(e) => {
-								handleDelete(forumPost)
-								e.preventDefault()
-							}}
-						>
-							<DeleteIcon />
-						</IconButton>
+						<>
+							<IconButton
+								onClick={(e) => {
+									setOpen(true)
+									e.preventDefault()
+								}}
+							>
+								<EditIcon />
+							</IconButton>
+							<IconButton
+								onClick={(e) => {
+									handleDelete(forumPost)
+									e.preventDefault()
+								}}
+							>
+								<DeleteIcon />
+							</IconButton>
+						</>
 					)}
 				</Stack>
 			</Stack>
@@ -144,8 +143,6 @@ export default function ForumPostCard({
 			</Box>
 			<Divider sx={{ margin: '10px 0' }} />
 			<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(forumPost.content) }} />
-
-			{/* <Typography variant='body2'>{forumPost.content}</Typography> */}
 		</CardContent>
 	)
 

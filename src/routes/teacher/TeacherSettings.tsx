@@ -11,8 +11,9 @@ import PlayerCard from '../../components/global/PlayerCard'
 import { Classroom, Player } from '../../types'
 import { db } from '../../utils/firebase'
 import { updateDoLeaderboard, updateLeaderboardSize } from '../../utils/mutations/classroom'
-
 import { doc, updateDoc } from 'firebase/firestore'
+
+// Route for teacher to manage classroom settings
 
 export default function TeacherSettings({
 	player,
@@ -63,6 +64,7 @@ export default function TeacherSettings({
 
 	return (
 		<>
+			{/* Teacher can edit their profile */}
 			<Grid item xs={12}>
 				<Typography
 					sx={{
@@ -76,6 +78,7 @@ export default function TeacherSettings({
 				</Typography>
 				<PlayerCard player={player} user={user} classroom={classroom} />
 			</Grid>
+			{/* Teacher can toggle student editing/deletion of forum posts */}
 			<Grid item xs={12}>
 				<Typography
 					sx={{
@@ -93,6 +96,7 @@ export default function TeacherSettings({
 					label='Students can edit/delete posts'
 				/>
 			</Grid>
+			{/* Teacher can change leaderboard-related settings/parameters */}
 			<Grid item xs={12}>
 				<Typography
 					sx={{

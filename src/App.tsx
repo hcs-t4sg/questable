@@ -15,19 +15,6 @@ import { syncUsers } from './utils/mutations/users'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import logo from './assets/logo.png'
 import Avatar from '@mui/material/Avatar'
-declare module '@mui/material/styles' {
-	interface BreakpointOverrides {
-		xs: true // removes the `xs` breakpoint
-		sm: true
-		md: true
-		lg: true
-		xl: true
-		mobile: true // adds the `mobile` breakpoint
-		tablet: true
-		laptop: true
-		desktop: true
-	}
-}
 
 declare module '@mui/material/styles' {
 	interface BreakpointOverrides {
@@ -128,11 +115,13 @@ const mdTheme = createTheme({
 	},
 })
 
+// Initialize React Query client
 const queryClient = new QueryClient()
 
 // App.js is the homepage and handles top-level functions like user auth.
 
 export default function App() {
+	// Listen for current authenticated user
 	const currentUser = useAuthUser(['user'], auth, {
 		onSuccess(user) {
 			if (user) {
@@ -208,11 +197,11 @@ export default function App() {
 								</Button>
 							</Toolbar>
 						</AppBar>
-
+						{/* Display routes if user is logged in */}
 						{currentUser.data ? (
 							/* Navigation routes set by react router. This is placed in
-          app.js rather than index.js so we can pass relevant top-level
-          props to the elements */
+									app.js rather than index.js so we can pass relevant top-level
+									props to the elements */
 							<Routes>
 								<Route path='/' element={<Home user={currentUser.data} />} />
 								<Route path='settings' element={<Settings user={currentUser.data} />} />

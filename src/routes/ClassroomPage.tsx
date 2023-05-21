@@ -11,6 +11,8 @@ import TeacherView from '../components/teacher/TeacherView'
 import { Classroom, Player } from '../types'
 import { db } from '../utils/firebase'
 
+// Route displaying the page for a particular classroom
+
 export default function ClassroomPage({ user }: { user: User }) {
 	// Use react router to fetch class ID from URL params
 	const params = useParams()
@@ -32,6 +34,7 @@ export default function ClassroomPage({ user }: { user: User }) {
 		}
 	}, [user, classID])
 
+	// Listen to user's corresponding player data for classroom
 	const [player, setPlayer] = useState<Player | null>(null)
 	useEffect(() => {
 		const updatePlayer = async () => {
@@ -50,6 +53,7 @@ export default function ClassroomPage({ user }: { user: User }) {
 		updatePlayer().catch(console.error)
 	}, [classID])
 
+	// Listen to whether the user has onboarded to the classroom or not
 	const [onboarded, setOnboarded] = useState<string[] | null>(null)
 	useEffect(() => {
 		const unsub = onSnapshot(doc(db, `users/${user.uid}`), (user) => {
@@ -87,6 +91,7 @@ export default function ClassroomPage({ user }: { user: User }) {
 		return <OnboardingPage classroom={classroom} user={user} player={player} />
 	}
 
+	// Return variable classroom views depending on user role in classroom
 	if (player.role === 'teacher') {
 		return <TeacherView player={player} classroom={classroom} user={user} />
 	} else if (player.role === 'student') {

@@ -26,6 +26,8 @@ const formatStatus = (task: CompletedTask) => {
 	}
 }
 
+// Table showing completed tasks that are pending confirmation
+
 export default function ConfirmTasksTable({
 	classroom,
 	completedTasks,

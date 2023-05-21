@@ -11,11 +11,13 @@ import {
 	ModalTitle,
 	TaskModalContent,
 	TeacherModalStyled,
-} from '../../styles/TaskModalStyles'
+} from '../../styles/ModalStyles'
 import { Classroom, CustomShopItems } from '../../types'
 import { updateReward } from '../../utils/mutations/shop'
 
-export default function ShopeTeacherEditModal({
+// Modal for viewing detailed information about a created custom reward and editing its status
+
+export default function ShopTeacherEditModal({
 	item,
 	classroom,
 }: {

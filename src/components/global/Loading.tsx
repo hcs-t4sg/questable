@@ -7,6 +7,8 @@ import pig from '../../assets/loadingAnimations/pig-loading.gif'
 import sheep from '../../assets/loadingAnimations/sheep-loading.gif'
 import { sample } from 'lodash'
 
+// Loading indicator for data fetching used throughout the app. Displays a random indicator if indicator not specified.
+
 export default function Loading({
 	children,
 	indicator,

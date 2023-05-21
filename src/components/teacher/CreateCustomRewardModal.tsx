@@ -18,10 +18,10 @@ import {
 	ModalTitle,
 	TaskModalContent,
 	TeacherModalStyled,
-} from '../../styles/TaskModalStyles'
+} from '../../styles/ModalStyles'
 import { addReward } from '../../utils/mutations/shop'
 
-export default function ShopTeacherModal({ classroom }: { classroom: Classroom }) {
+export default function CreateCustomRewardModal({ classroom }: { classroom: Classroom }) {
 	const { enqueueSnackbar } = useSnackbar()
 	const [open, setOpen] = useState(false)
 	const [name, setName] = useState('')

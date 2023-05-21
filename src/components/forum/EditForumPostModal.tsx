@@ -11,11 +11,14 @@ import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import { Classroom, Player, ForumPost } from '../../types'
 import { updateForumPost } from '../../utils/mutations/forum'
-import { TeacherModalStyled, ModalTitle, TaskModalContent } from '../../styles/TaskModalStyles'
+import { TeacherModalStyled, ModalTitle, TaskModalContent } from '../../styles/ModalStyles'
 import { useSnackbar } from 'notistack'
 import modules from '../../utils/TextEditor'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+
+// Modal for editing a forum post
+// TODO: This could be refactored with CreateForumPostModal in the future
 
 export default function EditForumPostModal({
 	isOpen,
@@ -82,72 +85,70 @@ export default function EditForumPostModal({
 	}
 
 	return (
-		<div>
-			<TeacherModalStyled open={isOpen} onClose={handleClose}>
-				<ModalTitle onClick={handleClose} text='Edit Thread' />
-				<Box
-					component='form'
-					onSubmit={(e) => {
-						handleSubmit()
-						e.preventDefault()
-					}}
-				>
-					<TaskModalContent>
-						<TextField
-							margin='normal'
-							id='subject'
-							label='Subject'
+		<TeacherModalStyled open={isOpen} onClose={handleClose}>
+			<ModalTitle onClick={handleClose} text='Edit Thread' />
+			<Box
+				component='form'
+				onSubmit={(e) => {
+					handleSubmit()
+					e.preventDefault()
+				}}
+			>
+				<TaskModalContent>
+					<TextField
+						margin='normal'
+						id='subject'
+						label='Subject'
+						fullWidth
+						variant='standard'
+						defaultValue={forumPost.title}
+						InputProps={{ readOnly: isDisabled }}
+						onChange={(event) => setSubject(event.target.value)}
+					/>
+					<ReactQuill
+						theme='snow'
+						onChange={setDescription}
+						value={description}
+						modules={modules}
+						readOnly={isDisabled}
+					/>
+					<FormControl fullWidth sx={{ marginTop: 2 }}>
+						<InputLabel id='category-label'>Category</InputLabel>
+						<Select
+							labelId='category-label'
+							id='category'
+							label='Category'
 							fullWidth
-							variant='standard'
-							defaultValue={forumPost.title}
-							InputProps={{ readOnly: isDisabled }}
-							onChange={(event) => setSubject(event.target.value)}
-						/>
-						<ReactQuill
-							theme='snow'
-							onChange={setDescription}
-							value={description}
-							modules={modules}
-							readOnly={isDisabled}
-						/>
-						<FormControl fullWidth sx={{ marginTop: 2 }}>
-							<InputLabel id='category-label'>Category</InputLabel>
-							<Select
-								labelId='category-label'
-								id='category'
-								label='Category'
-								fullWidth
-								defaultValue={forumPost.postType}
-								disabled={isDisabled}
-								onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
-							>
-								<MenuItem value={0}>General</MenuItem>
-								<MenuItem value={1}>Assignments</MenuItem>
-								<MenuItem value={2}>For Fun</MenuItem>
-								<MenuItem value={3}>Announcements</MenuItem>
-							</Select>
-						</FormControl>
-					</TaskModalContent>
-					<DialogActions sx={{ justifyContent: 'center' }}>
-						{isDisabled ? (
-							<Button
-								variant='contained'
-								color='success'
-								onClick={(event) => {
-									setIsDisabled(false)
-									event.preventDefault()
-								}}
-							>
-								Edit
-							</Button>
-						) : (
-							<Button variant='contained' color='success' type='submit'>
-								Submit
-							</Button>
-						)}
-					</DialogActions>
-				</Box>
-			</TeacherModalStyled>
-		</div>
+							defaultValue={forumPost.postType}
+							disabled={isDisabled}
+							onChange={(event) => setCategory(event.target.value as 0 | 1 | 2 | 3)}
+						>
+							<MenuItem value={0}>General</MenuItem>
+							<MenuItem value={1}>Assignments</MenuItem>
+							<MenuItem value={2}>For Fun</MenuItem>
+							<MenuItem value={3}>Announcements</MenuItem>
+						</Select>
+					</FormControl>
+				</TaskModalContent>
+				<DialogActions sx={{ justifyContent: 'center' }}>
+					{isDisabled ? (
+						<Button
+							variant='contained'
+							color='success'
+							onClick={(event) => {
+								setIsDisabled(false)
+								event.preventDefault()
+							}}
+						>
+							Edit
+						</Button>
+					) : (
+						<Button variant='contained' color='success' type='submit'>
+							Submit
+						</Button>
+					)}
+				</DialogActions>
+			</Box>
+		</TeacherModalStyled>
 	)
 }

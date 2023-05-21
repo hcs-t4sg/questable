@@ -1,45 +1,13 @@
-import { Box, Button } from '@mui/material'
+import { Button } from '@mui/material'
 import { format } from 'date-fns'
+import { useSnackbar } from 'notistack'
+import { useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { completeTask } from '../../utils/mutations/tasks'
-import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
-import green3 from '/src/assets/spriteSheets/potions/green3.png'
-import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
-import red3 from '/src/assets/spriteSheets/potions/red3.png'
-import { useSnackbar } from 'notistack'
-import { AssignmentContentStudent, Cluster } from './AssignmentContentStudent'
-import { useState } from 'react'
+import { AssignmentContentStudent } from './AssignmentContentStudent'
+import { Cluster } from '../global/Cluster'
 
-export function rewardPotion(rewardAmount: number) {
-	const rewardMatch =
-		rewardAmount === 10
-			? blue3
-			: rewardAmount === 20
-			? green3
-			: rewardAmount === 30
-			? purple3
-			: rewardAmount === 40
-			? red3
-			: ''
-
-	return (
-		<Box
-			component='img'
-			sx={{
-				imageRendering: 'pixelated',
-				maxHeight: { xs: 140, md: 200 },
-				maxWidth: { xs: 140, md: 200 },
-				minWidth: '28px',
-				minHeight: '31.5px',
-				position: 'relative',
-			}}
-			alt='Potion'
-			src={rewardMatch}
-			height='100%'
-			width='100%'
-		/>
-	)
-}
+// Detailed modal for a student's task
 
 export default function TaskModalStudent({
 	classroom,

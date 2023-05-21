@@ -1,6 +1,8 @@
 import Button from '@mui/material/Button'
 import { Item, Outfit } from '../../types'
-import { ItemInfoCard } from '../global/ItemInfoCard'
+import { ItemInfoCardWrapper } from '../global/ItemInfoCardWrapper'
+
+// Card for an item option in onboarding page
 
 export function OnboardingItemCard({
 	item,
@@ -15,7 +17,7 @@ export function OnboardingItemCard({
 	isEquipped: boolean
 }) {
 	return (
-		<ItemInfoCard item={item} bodyOutfit={bodyOutfit}>
+		<ItemInfoCardWrapper item={item} bodyOutfit={bodyOutfit}>
 			<Button
 				variant='contained'
 				color={isEquipped ? 'primary' : 'success'}
@@ -24,6 +26,6 @@ export function OnboardingItemCard({
 			>
 				{isEquipped ? 'Equipped' : 'Equip'}
 			</Button>
-		</ItemInfoCard>
+		</ItemInfoCardWrapper>
 	)
 }

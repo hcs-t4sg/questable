@@ -14,11 +14,13 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { addForumPost } from '../../utils/mutations/forum'
-import { TeacherModalStyled, ModalTitle, TaskModalContent } from '../../styles/TaskModalStyles'
+import { TeacherModalStyled, ModalTitle, TaskModalContent } from '../../styles/ModalStyles'
 import { useSnackbar } from 'notistack'
 import modules from '../../utils/TextEditor'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+
+// Modal for creating a forum post
 
 export default function CreateForumPostModal({
 	isOpen,

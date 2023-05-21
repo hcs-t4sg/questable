@@ -49,6 +49,8 @@ function LinearProgressWithLabel({ task, players }: { task: Task; players: numbe
 	)
 }
 
+// Table displaying created tasks
+
 export default function TasksTableTeacher({
 	classroom,
 	searchInput,
@@ -67,6 +69,8 @@ export default function TasksTableTeacher({
 		threshold: 0.4,
 		minMatchCharLength: 3,
 	}
+
+	// Listen to created classroom tasks
 	useEffect(() => {
 		const taskCollectionRef = collection(db, `classrooms/${classroom.id}/tasks`)
 		const taskCollectionQuery = query(taskCollectionRef, orderBy('created', 'desc'))
@@ -79,6 +83,8 @@ export default function TasksTableTeacher({
 		return unsub
 	}, [classroom])
 
+	// Filter tasks based on search input
+	// TODO: A useEffect may not be necessary here. You could just filter the queried tasks according to searchInput before returning. The current structure of two different useEffects managing tasks seems a bit complex and could possibly be simplified.
 	useEffect(() => {
 		if (searchInput != '') {
 			setTasks(fuse.search(searchInput).map((elem) => elem.item))

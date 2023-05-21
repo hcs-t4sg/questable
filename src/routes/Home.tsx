@@ -14,7 +14,10 @@ import Loading from '../components/global/Loading'
 
 import wood1 from '/src/assets/Wood1.png'
 
+// Route displaying the user's classrooms with options to create/join new classrooms
+
 export default function Home({ user }: { user: User }) {
+	// Listen for user's joined classrooms
 	const [classrooms, setClassrooms] = useState<Classroom[] | null>(null)
 	useEffect(() => {
 		const q = query(collection(db, 'classrooms'), where('playerList', 'array-contains', user.uid))
@@ -32,6 +35,7 @@ export default function Home({ user }: { user: User }) {
 		return unsub
 	}, [])
 
+	// Listen for user's pinned classroom settings
 	const [pinned, setPinned] = useState<string[] | null>(null)
 	useEffect(() => {
 		const unsub = onSnapshot(doc(db, `users/${user.uid}`), (user) => {
@@ -47,6 +51,7 @@ export default function Home({ user }: { user: User }) {
 		return unsub
 	}, [])
 
+	// Sort user's classrooms by pinned status and role
 	const pinnedClassrooms: Classroom[] = []
 	const studentClassrooms: Classroom[] = []
 	const teacherClassrooms: Classroom[] = []

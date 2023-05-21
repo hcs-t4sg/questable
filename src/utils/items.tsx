@@ -28,7 +28,13 @@ import reward from '../assets/spriteSheets/rewards/all_rewards.png'
 import { Item, Player } from '../types'
 import eyes from '../assets/spriteSheets/eyes/eyes.png'
 import CircleIcon from '@mui/icons-material/Circle'
-import { Stack } from '@mui/material'
+import { Box, Stack } from '@mui/material'
+import blue3 from '/src/assets/spriteSheets/potions/blue3.png'
+import green3 from '/src/assets/spriteSheets/potions/green3.png'
+import purple3 from '/src/assets/spriteSheets/potions/purple3.png'
+import red3 from '/src/assets/spriteSheets/potions/red3.png'
+
+// Functions and classes pertaining to rendering of item/clothing sprites
 
 // Guide to classes in Javascript: https://dmitripavlutin.com/javascript-classes-complete-guide/#32-private-instance-fields
 
@@ -129,7 +135,7 @@ export default function render(file: string, spriteStart: number, doAnimation: b
 	)
 }
 
-/* Class description for Body, Shirt, Pants, Shoes:
+/* Class description for Body, Shirt, Pants, Shoes, Eyes:
 
 Fields:
 - id: Integer starting from 0 that corresponds to the color of the item (see above mappings) and the spritesheet location of the item. Note that items across different types or subtypes may have the same id.
@@ -347,28 +353,28 @@ export function getHairItems() {
 	return bigArray.flat()
 }
 
-export function getShirtItems() {
+export function getAllShirtItems() {
 	const idList = [...Array(10).keys()]
 	const shirtItems = idList.map((id) => new Shirt(id))
 
 	return shirtItems
 }
 
-export function getPantsItems() {
+export function getAllPantsItems() {
 	const idList = [...Array(10).keys()]
 	const pantsItems = idList.map((id) => new Pants(id))
 
 	return pantsItems
 }
 
-export function getShoesItems() {
+export function getAllShoesItems() {
 	const idList = [...Array(10).keys()]
 	const shoesItems = idList.map((id) => new Shoes(id))
 
 	return shoesItems
 }
 
-export function getEyesItems() {
+export function getAllEyesItems() {
 	const idList = [...Array(14).keys()]
 	const eyesItems = idList.map((id) => new Eyes(id))
 
@@ -428,4 +434,37 @@ export function currentAvatar(player: Player) {
 	}
 
 	return playerOutfit
+}
+
+// Displays potion sprite representing a particular assignment (task/repeatable) depending on the reward amount for that assignment
+export function assignmentPotion(rewardAmount: number) {
+	// TODO: This needs to be kept in sync with the options for assignment rewards in Questable (such as during task/repeatable creation), so these values should be refactored into a master list of parameters that is referenced globally
+	const rewardMatch =
+		rewardAmount === 10
+			? blue3
+			: rewardAmount === 20
+			? green3
+			: rewardAmount === 30
+			? purple3
+			: rewardAmount === 40
+			? red3
+			: ''
+
+	return (
+		<Box
+			component='img'
+			sx={{
+				imageRendering: 'pixelated',
+				maxHeight: { xs: 140, md: 200 },
+				maxWidth: { xs: 140, md: 200 },
+				minWidth: '28px',
+				minHeight: '31.5px',
+				position: 'relative',
+			}}
+			alt='Potion'
+			src={rewardMatch}
+			height='100%'
+			width='100%'
+		/>
+	)
 }

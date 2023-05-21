@@ -14,7 +14,7 @@ import {
 	TableRow,
 } from '@mui/material'
 import { format } from 'date-fns'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Classroom, Player, TaskWithStatus } from '../../types'
 import { unsendTask, completeTask } from '../../utils/mutations/tasks'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
@@ -22,34 +22,66 @@ import Paper from '@mui/material/Paper'
 import Fuse from 'fuse.js'
 import { useSnackbar } from 'notistack'
 import { truncate } from '../../utils/helperFunctions'
-import { rewardPotion } from './AssignmentContentStudent'
+import { assignmentPotion } from '../../utils/items'
 import TaskModalStudent from './TaskModalStudent'
+import { a11yProps } from '../global/Tabs'
+import Loading from '../global/Loading'
+import { collection, onSnapshot, query } from 'firebase/firestore'
+import { db } from '../../utils/firebase'
 
-function a11yProps(index: number) {
-	return {
-		id: `simple-tab-${index}`,
-		'aria-controls': `simple-tabpanel-${index}`,
-	}
-}
+// Table containing student's tasks
 
 export default function TasksTableStudent({
-	assigned,
-	completed,
-	confirmed,
-	overdue,
 	classroom,
 	player,
 	searchInput,
 }: {
-	assigned: TaskWithStatus[]
-	completed: TaskWithStatus[]
-	confirmed: TaskWithStatus[]
-	overdue: TaskWithStatus[]
 	classroom: Classroom
 	player: Player
 	searchInput: string
 }) {
 	const { enqueueSnackbar } = useSnackbar()
+
+	// Listen to classroom tasks and partition into assigned, completed, confirmed, and overdue lists of tasks
+	const [assigned, setAssigned] = useState<TaskWithStatus[] | null>(null)
+	const [completed, setCompleted] = useState<TaskWithStatus[] | null>(null)
+	const [confirmed, setConfirmed] = useState<TaskWithStatus[] | null>(null)
+	const [overdue, setOverdue] = useState<TaskWithStatus[] | null>(null)
+	useEffect(() => {
+		const q = query(collection(db, `classrooms/${classroom.id}/tasks`))
+		const unsub = onSnapshot(q, (snapshot) => {
+			const assigned: TaskWithStatus[] = []
+			const completed: TaskWithStatus[] = []
+			const confirmed: TaskWithStatus[] = []
+			const overdue: TaskWithStatus[] = []
+
+			// TODO rewrite using Promise.all
+			snapshot.forEach((doc) => {
+				// if task is overdue, add to overdue list
+				if (doc.data().due.toDate() < new Date()) {
+					overdue.push(Object.assign({ id: doc.id, status: 3 }, doc.data()) as TaskWithStatus)
+				}
+				// Find assigned, completed, and confirmed tasks using player's id.
+				else if (doc.data().assigned?.includes(player.id)) {
+					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
+				} else if (doc.data().completed?.includes(player.id)) {
+					completed.push(Object.assign({ id: doc.id, status: 1 }, doc.data()) as TaskWithStatus)
+				} else if (doc.data().confirmed?.includes(player.id)) {
+					confirmed.push(Object.assign({ id: doc.id, status: 2 }, doc.data()) as TaskWithStatus)
+				} else {
+					// If player not in any arrays, treat task as assigned
+					// ! At the moment, this allows players who join classroom after task creation to still see task.
+					// TODO: Given this logic, the 'assigned' property of tasks and repeatables is unnecessary and should be removed in the future.
+					assigned.push(Object.assign({ id: doc.id, status: 0 }, doc.data()) as TaskWithStatus)
+				}
+			})
+			setAssigned(assigned)
+			setCompleted(completed)
+			setConfirmed(confirmed)
+			setOverdue(overdue)
+		})
+		return unsub
+	}, [classroom.id, player.id])
 
 	const [taskCategory, setTaskCategory] = useState<0 | 1 | 2 | 3>(0)
 	const handleChangeTaskRep = (event: React.SyntheticEvent, newValue: 0 | 1) => {
@@ -61,6 +93,10 @@ export default function TasksTableStudent({
 		includeScore: true,
 		threshold: 0.4,
 		minMatchCharLength: 3,
+	}
+
+	if (!(assigned && completed && confirmed && overdue)) {
+		return <Loading>Loading tasks...</Loading>
 	}
 
 	let selectedTasks: TaskWithStatus[]
@@ -92,7 +128,7 @@ export default function TasksTableStudent({
 		}
 	}
 
-	const handleUnsend = (task: TaskWithStatus) => {
+	const handleUnsendTask = (task: TaskWithStatus) => {
 		if (!task.completed.includes(player.id)) {
 			enqueueSnackbar('There was an issue unsending the task', { variant: 'error' })
 			return
@@ -111,7 +147,7 @@ export default function TasksTableStudent({
 	}
 
 	return (
-		<Box>
+		<>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 				<Tabs value={taskCategory} onChange={handleChangeTaskRep} aria-label='Task/repeatable tabs'>
 					<Tab label='Assigned' {...a11yProps(0)} />
@@ -144,11 +180,9 @@ export default function TasksTableStudent({
 										key={task.id}
 										sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 									>
-										<TableCell align='left'>{rewardPotion(task.reward)}</TableCell>
+										<TableCell align='left'>{assignmentPotion(task.reward)}</TableCell>
 										<TableCell align='left'>{task.name}</TableCell>
 										<TableCell align='left'>
-											{/* {task.description || 'None'} */}
-											{/* {truncate(task.description) || 'None'} */}
 											<div
 												dangerouslySetInnerHTML={{
 													__html: truncate(task.description.replace(/<[^>]+>/g, ''), 40),
@@ -173,7 +207,6 @@ export default function TasksTableStudent({
 											/>
 										</TableCell>
 										<TableCell align='center'>
-											{/* <TaskModalStudent task={task} classroom={classroom} player={player} /> */}
 											<TaskModalStudent classroom={classroom} player={player} task={task} />
 										</TableCell>
 										{taskCategory === 0 ? (
@@ -185,7 +218,7 @@ export default function TasksTableStudent({
 										) : null}
 										{taskCategory === 1 && task.due.toDate() >= new Date() ? (
 											<TableCell align='center'>
-												<Button onClick={() => handleUnsend(task)} color='error'>
+												<Button onClick={() => handleUnsendTask(task)} color='error'>
 													Unsend
 												</Button>
 											</TableCell>
@@ -196,6 +229,6 @@ export default function TasksTableStudent({
 					</Table>
 				</TableContainer>
 			</Grid>
-		</Box>
+		</>
 	)
 }

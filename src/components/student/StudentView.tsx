@@ -25,6 +25,21 @@ import { levelUp } from '../../utils/helperFunctions'
 import { refreshAllRepeatables } from '../../utils/mutations/repeatables'
 import ForumView from '../../routes/ForumView'
 
+const ThickProgress = styled(LinearProgress)(() => ({
+	height: 20,
+	borderRadius: 0,
+	marginTop: 20,
+	[`&.${linearProgressClasses.colorPrimary}`]: {
+		backgroundColor: 'rgba(102, 187, 106, .5)',
+	},
+	[`& .${linearProgressClasses.bar}`]: {
+		borderRadius: 0,
+		backgroundColor: '#1B710D',
+	},
+}))
+
+// Classroom view for student
+
 export default function StudentView({
 	player,
 	classroom,
@@ -34,19 +49,6 @@ export default function StudentView({
 	classroom: Classroom
 	user: User
 }) {
-	const ThickProgress = styled(LinearProgress)(() => ({
-		height: 20,
-		borderRadius: 0,
-		marginTop: 20,
-		[`&.${linearProgressClasses.colorPrimary}`]: {
-			backgroundColor: 'rgba(102, 187, 106, .5)',
-		},
-		[`& .${linearProgressClasses.bar}`]: {
-			borderRadius: 0,
-			backgroundColor: '#1B710D',
-		},
-	}))
-
 	const playerOutfit = currentAvatar(player)
 
 	// ! Refresh repeatables to ensure that student repeatable status is up to date
@@ -112,16 +114,6 @@ export default function StudentView({
 						>
 							{!mobile && <Avatar outfit={playerOutfit} />}
 						</Box>
-						{/* <Box
-								sx={{
-									width: '350px',
-									display: 'flex',
-									flexDirection: 'column',
-									marginLeft: '160px',
-								}}
-							> */}
-						{/* <ThickProgress variant='determinate' value={60} /> */}
-						{/* </Box> */}
 						<Box
 							sx={{
 								width: '350px',
@@ -154,15 +146,6 @@ export default function StudentView({
 								{totalXPNeededInCurrentLevel} xp to next level!
 							</Typography>
 						</Box>
-						{/* <Box
-								sx={{
-									width: '350px',
-									display: 'flex',
-									flexDirection: 'column',
-									marginLeft: '160px',
-								}}
-							> */}
-						{/* </Box> */}
 					</Box>
 				</Box>
 			</Grid>

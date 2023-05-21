@@ -11,6 +11,9 @@ import { joinClassroom } from '../../utils/mutations/classroom'
 import { User } from 'firebase/auth'
 import { useSnackbar } from 'notistack'
 
+// Dialog for joining a classroom with a join code
+// TODO: Join codes could be simplified to a smaller number of digits
+
 export default function JoinClassroomModal({ user }: { user: User }) {
 	const { enqueueSnackbar } = useSnackbar()
 
@@ -52,7 +55,6 @@ export default function JoinClassroomModal({ user }: { user: User }) {
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>{'Join Classroom'}</DialogTitle>
 				<DialogContent>
-					{/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
 					<TextField
 						id='classroom-name'
 						label='Classroom ID'

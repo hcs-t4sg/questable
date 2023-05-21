@@ -1,7 +1,9 @@
 import { Card, CardActions, CardContent, Typography, useMediaQuery } from '@mui/material'
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
-import PlayerModal from '../teacher/PlayerModal'
+import PlayerModal from './PlayerModal'
+
+// Card displaying player profile (utilized in settings)
 
 export default function PlayerCard({
 	player,

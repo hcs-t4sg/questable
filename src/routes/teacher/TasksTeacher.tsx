@@ -9,11 +9,13 @@ import {
 	useTheme,
 } from '@mui/material'
 import * as React from 'react'
-import CreateTaskModal from '../../components/teacher/CreateTaskModal'
+import CreateAssignmentModal from '../../components/teacher/CreateAssignmentModal'
 import TasksTableTeacher from '../../components/teacher/TasksTableTeacher'
 import RepeatableTableTeacher from '../../components/teacher/RepeatableTableTeacher'
 import { Classroom, Player } from '../../types'
 import CreateGCRTask from '../../components/teacher/CreateGCRTask'
+
+// Route for teacher to create new tasks/repeatables and view/edit created ones
 
 export default function TasksTeacher({
 	player,
@@ -40,7 +42,7 @@ export default function TasksTeacher({
 				</Typography>
 			</Grid>
 			<Grid item xs={6}>
-				<CreateTaskModal classroom={classroom} player={player} />
+				<CreateAssignmentModal classroom={classroom} player={player} />
 			</Grid>
 			<Grid item xs={6}>
 				<CreateGCRTask classroom={classroom} player={player} />

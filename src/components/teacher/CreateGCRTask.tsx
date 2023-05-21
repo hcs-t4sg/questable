@@ -15,7 +15,7 @@ import {
 	ModalTitle,
 	TaskModalContent,
 	TeacherModalStyled,
-} from '../../styles/TaskModalStyles'
+} from '../../styles/ModalStyles'
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { useEffect, useState } from 'react'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
@@ -28,6 +28,8 @@ import Loading from '../global/Loading'
 import modules from '../../utils/TextEditor'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+
+// Modal for creating a GCR-linked task
 
 export default function CreateGCRTask({
 	classroom,
@@ -52,6 +54,7 @@ export default function CreateGCRTask({
 	const [taskID, setTaskID] = useState('')
 	const [taskName, setTaskName] = useState('')
 
+	// Fetch user-specific Google API token from database, which was previously obtained and saved in the database in the google login process
 	useEffect(() => {
 		// pay attention to dependency array - empty now
 		const tokenRef = doc(db, 'users', player.id)
@@ -68,7 +71,8 @@ export default function CreateGCRTask({
 		fetchToken().catch(console.error)
 	}, [])
 
-	async function getCourses() {
+	// TODO: There is some repetition here with functions in Requests.tsx. Consider merging all GCR API-related logic (token fetching and API queries) into one file, perhaps as React context
+	async function getGCRCourses() {
 		// asking for variable before loaded (error upon refresh)
 		if (token) {
 			const response = await fetch('https://classroom.googleapis.com/v1/courses/', {
@@ -82,20 +86,23 @@ export default function CreateGCRTask({
 		}
 	}
 
-	async function getCourseWork(classID: string) {
-		const response = fetch(`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
+	async function getGCRCoursework(classID: string) {
+		const response = await fetch(
+			`https://classroom.googleapis.com/v1/courses/${classID}/courseWork`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
 			},
-		})
-		return (await response).json()
+		)
+		return response.json()
 	}
 
 	// async function which will make the API call and then set the state variable with the result.
 	const fetchGoogleClassrooms = async () => {
-		const classrooms = await getCourses()
+		const classrooms = await getGCRCourses()
 		setClassrooms(classrooms.courses)
 		if (typeof classrooms.courses == 'undefined' || classrooms.courses.length == 0) {
 			window.alert('Oops, classrooms not found! Try logging into Google in Settings first!')
@@ -108,7 +115,7 @@ export default function CreateGCRTask({
 	const fetchCourseWork = async (classID: string) => {
 		setTasks('loading')
 		if (classID != '') {
-			const coursework = await getCourseWork(classID)
+			const coursework = await getGCRCoursework(classID)
 			setTasks(coursework.courseWork)
 		}
 	}
@@ -173,17 +180,9 @@ export default function CreateGCRTask({
 		setTaskName('')
 		setOpen(false)
 	}
-	//	add onclick later
-	const actionButtons = (
-		<DialogActions>
-			<Button variant='contained' onClick={handleAdd}>
-				Add Task
-			</Button>
-		</DialogActions>
-	)
 
 	return (
-		<div>
+		<>
 			<Button
 				variant='contained'
 				sx={{
@@ -345,12 +344,15 @@ export default function CreateGCRTask({
 						</FormControl>
 					</BoxInModal>
 					<br />
-					{/* center the save button */}
 					<Grid container justifyContent='center'>
-						{actionButtons}
+						<DialogActions>
+							<Button variant='contained' onClick={handleAdd}>
+								Add Task
+							</Button>
+						</DialogActions>
 					</Grid>
 				</TaskModalContent>
 			</TeacherModalStyled>
-		</div>
+		</>
 	)
 }

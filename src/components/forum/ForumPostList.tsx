@@ -9,6 +9,8 @@ import Loading from '../global/Loading'
 import Fuse from 'fuse.js'
 import TextField from '@mui/material/TextField'
 
+// Lists forum posts in a particular classroom
+
 export default function ForumPostList({
 	player,
 	classroom,
@@ -33,6 +35,7 @@ export default function ForumPostList({
 		'3': 'Starred',
 	}
 
+	// Listen to forum posts
 	useEffect(() => {
 		const forumPostsRef = collection(db, `classrooms/${classroom.id}/forumPosts`)
 		const forumPostsQuery = query(forumPostsRef, orderBy('postTime', 'desc'))
@@ -66,6 +69,8 @@ export default function ForumPostList({
 		return unsub
 	}, [player, classroom])
 
+	// Update displayed forum posts based on search query
+	// TODO: A useEffect may not be necessary here. You could just filter the queried forum posts according to searchInput before returning. The current structure of two state variables (forumPosts and originalPosts) and two different useEffects managing forumPosts seems a bit complex and could possibly be simplified.
 	useEffect(() => {
 		let searchedPosts = [] as ForumPost[] | null
 

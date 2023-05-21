@@ -1,8 +1,10 @@
 import { PlayerWithEmail } from '../../types'
-import { Cluster } from './AssignmentContentStudent'
+import { Cluster } from '../global/Cluster'
 import { useState } from 'react'
 import { PlayerInfoModalWrapper } from '../global/PlayerInfoModalWrapper'
 import { levelUp } from '../../utils/helperFunctions'
+
+// Detailed modal for a particular player in Student class page
 
 export default function ClassStudentModal({ player }: { player: PlayerWithEmail }) {
 	const [open, setOpen] = useState(false)

@@ -16,11 +16,14 @@ import { Grid } from '@mui/material'
 import Loading from '../global/Loading'
 import { useSnackbar } from 'notistack'
 
+// Table showing purchased custom shop rewards that are pending confirmation
+
 export default function ConfirmRewardsTable({ classroom }: { classroom: Classroom }) {
 	const { enqueueSnackbar } = useSnackbar()
 
 	const [rewards, setRewards] = useState<PurchasedReward[] | null>(null)
 
+	// Listen to reward requests
 	useEffect(() => {
 		const rewardsQuery = query(collection(db, `classrooms/${classroom.id}/rewardRequests`))
 
@@ -64,7 +67,7 @@ export default function ConfirmRewardsTable({ classroom }: { classroom: Classroo
 												confirmReward(classroom.id, reward.playerID, reward.id)
 													.then(() => {
 														enqueueSnackbar(
-															`Confirmed purchase "${reward.name}" from ${reward.playerName}!`,
+															`Confirmed purchase "${reward.rewardName}" from ${reward.playerName}!`,
 															{ variant: 'success' },
 														)
 													})

@@ -11,7 +11,9 @@ import { Classroom, PlayerWithEmail } from '../../types'
 import { levelUp } from '../../utils/helperFunctions'
 import { updatePlayer } from '../../utils/mutations/users'
 import { PlayerInfoModalWrapper } from '../global/PlayerInfoModalWrapper'
-import { Cluster } from '../student/AssignmentContentStudent'
+import { Cluster } from '../global/Cluster'
+
+// Modal for detailed info about a player in teacher's class view
 
 export default function ClassTeacherModal({
 	player,

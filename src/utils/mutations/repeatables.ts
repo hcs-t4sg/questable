@@ -10,11 +10,15 @@ import {
 	serverTimestamp,
 	setDoc,
 	updateDoc,
-	where,
 	writeBatch,
 } from 'firebase/firestore'
 import { CompletionTime, RepeatableCompletion } from '../../types'
 import { db } from '../firebase'
+
+// Firestore mutations for repeatable functionality
+// TODO: These mutations were written under the paradigm that repeatables would only be assigned to players in the classroom at moment of the repeatable creation. However, we later modified some logic such that players joining the classroom after the creation of the repeatable could still view and complete that repeatable. With some careful thought, the logic of these mutations could be improved to remove some artifacts from the old approach (i.e. the assigned array) and remove some repetitions/redundancies related to how players without existing documents in lastRefresh, playerCompletions, and playerConfirmations are handled
+
+// Note: The current logic assumes that repeatables are refreshed every sunday. Adding more functionality will require significant modifications to the existing logic for these mutations. In this case I would recommend just writing them from scratch since there are also other inefficiencies to be fixed (see above)
 
 // Helper function to get last sunday 11:59 in current timezone
 function lastSunday() {
@@ -24,6 +28,7 @@ function lastSunday() {
 	return date
 }
 
+// Mutation to create a new repeatable
 export async function addRepeatable(
 	classID: string,
 	repeatable: {
@@ -34,7 +39,7 @@ export async function addRepeatable(
 	},
 	teacherID: string,
 ) {
-	// Update assignedTasks collection for every member in class except teacher
+	// Reference the given classroom
 	const classRef = doc(db, 'classrooms', classID)
 	const classSnap = await getDoc(classRef)
 
@@ -43,7 +48,7 @@ export async function addRepeatable(
 		return 'No such document!'
 	}
 
-	// Update tasks collection
+	// New document in repeatables collection; add all players to assigned array except teacher
 	const repeatableRef = await addDoc(collection(db, `classrooms/${classID}/repeatables`), {
 		name: repeatable.name,
 		description: repeatable.description,
@@ -54,7 +59,7 @@ export async function addRepeatable(
 		requestCount: 0,
 	})
 
-	// add subcollections
+	// Initialize lastRefresh, playerCompletions, and playerConfirmations subcollections for all players except teacher
 	classSnap
 		.data()
 		.playerList.filter((playerID: string) => playerID !== teacherID)
@@ -109,6 +114,9 @@ export async function deleteRepeatable(classroomID: string, repeatableID: string
 	await deleteDoc(doc(db, `classrooms/${classroomID}/repeatables/${repeatableID}`))
 }
 
+// ! Invariant: The sum of a player's queued completions and confirmations for a given repeatable should not add up to more than the repeatable's max completions
+
+// Mutation to queue a repeatable completion (for a given player)
 export async function completeRepeatable(
 	classroomID: string,
 	repeatableID: string,
@@ -138,9 +146,11 @@ export async function completeRepeatable(
 	if (confirmationsSnap.exists()) {
 		confirmations = confirmationsSnap.data().confirmations ?? 0
 	} else {
+		// Accounts for players who joined the classroom after the repeatable was created; in which case they may not have a document in playerConfirmations. However, this case may already be caught in refreshRepeatables.
 		confirmations = 0
 	}
 
+	// Update player completions
 	if (completionsSnap.exists()) {
 		// Error if max completions queued
 		if (
@@ -158,6 +168,7 @@ export async function completeRepeatable(
 			completions: increment(1),
 		})
 	} else {
+		// Accounts for players who joined the classroom after the repeatable was created; in which case they may not have a document in playerCompletions. However, this case may already be caught in refreshRepeatables.
 		await setDoc(completionsDocRef, {
 			completions: 1,
 		})
@@ -174,18 +185,18 @@ export async function completeRepeatable(
 	})
 
 	// Increment the requestCount
+	// ! Updating the requestCount variable is important for ensuring that the request is displayed in real time on the teacher's view, as the teacher view listens to repeatables with a nonzero requestCount.
 	updateDoc(repeatableRef, {
 		requestCount: increment(1),
 	})
 }
 
 // TODO Rewrite confirm and deny repeatable so that they don't have to refetch the completion time, as it should already be passed in in the confirmation table
-// Mutation to confirm repeatable completion
+// Mutation to confirm one or more repeatable completions
 export async function confirmRepeatables(repeatables: RepeatableCompletion[], classID: string) {
 	const classroomRef = doc(db, 'classrooms', classID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {
-		// console.error("Could not find classroom")
 		return 'Could not find classroom'
 	}
 
@@ -240,6 +251,7 @@ export async function confirmRepeatables(repeatables: RepeatableCompletion[], cl
 			}
 		}
 
+		// Update money and xp of player for repeatable completion
 		const playerRef = doc(db, `classrooms/${classID}/players/${playerID}`)
 		const playerSnap = await getDoc(playerRef)
 		if (playerSnap.exists()) {
@@ -249,7 +261,7 @@ export async function confirmRepeatables(repeatables: RepeatableCompletion[], cl
 			})
 		}
 
-		// increment streaks
+		// increment streaks (streaks are the total completions of that repeatable)
 		const streaksRef = doc(
 			db,
 			`classrooms/${classID}/repeatables/${repeatableID}/streaks/${playerID}`,
@@ -323,7 +335,7 @@ export async function denyRepeatable(
 	})
 }
 
-// Firestore mutations for repeatable functionality
+// Mutation to fetch all queued completions (completion time and corresponding player) for a given repeatable
 export async function getRepeatableCompletionTimes(classroomID: string, repeatableID: string) {
 	const completionTimesQuery = query(
 		collection(db, `classrooms/${classroomID}/repeatables/${repeatableID}/completionTimes`),
@@ -338,18 +350,16 @@ export async function getRepeatableCompletionTimes(classroomID: string, repeatab
 	return completionTimes as CompletionTime[]
 }
 
-// Mutation to refresh all repeatables for given classroom
+// Mutation to refresh all repeatables for given classroom/player
 export async function refreshAllRepeatables(classroomID: string, playerID: string) {
 	const classroomRef = doc(db, 'classrooms', classroomID)
 	const classroomSnap = await getDoc(classroomRef)
 	if (!classroomSnap.exists()) {
 		return 'Could not find classroom'
 	}
-	// refresh all repeatables to which player has been assigned
-	const repeatablesQuery = query(
-		collection(db, `classrooms/${classroomID}/repeatables`),
-		where('assigned', 'array-contains', playerID),
-	)
+
+	// refresh all repeatables for the given player
+	const repeatablesQuery = query(collection(db, `classrooms/${classroomID}/repeatables`))
 	const repeatablesSnap = await getDocs(repeatablesQuery)
 
 	await Promise.allSettled(

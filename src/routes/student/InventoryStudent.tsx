@@ -7,6 +7,8 @@ import Loading from '../../components/global/Loading'
 import { Classroom, DatabaseInventoryItem, Item, Player } from '../../types'
 import { Hair, Pants, Shirt, Shoes } from '../../utils/items'
 
+// Route for displaying inventory of student
+
 export default function InventoryStudent({
 	player,
 	classroom,
@@ -14,8 +16,8 @@ export default function InventoryStudent({
 	player: Player
 	classroom: Classroom
 }) {
+	// Listen to student inventory items
 	const [inventoryItems, setInventoryItems] = React.useState<DatabaseInventoryItem[] | null>(null)
-
 	useEffect(() => {
 		const q = query(collection(db, `classrooms/${classroom.id}/players/${player.id}/inventory`))
 
@@ -33,8 +35,10 @@ export default function InventoryStudent({
 			</Grid>
 		)
 	}
-	const inventoryObjects: Item[] = []
 
+	// Construct item objects from database item info
+	// Student has all bodies and eyes available to them for free, so those are not stored in database or manipulated here
+	const inventoryObjects: Item[] = []
 	inventoryItems.forEach((item) => {
 		if (item.type === 'hair') {
 			if (item.subtype) {
@@ -50,10 +54,6 @@ export default function InventoryStudent({
 	})
 
 	return (
-		<InventoryDisplay
-			player={player}
-			classroom={classroom}
-			inventoryObjects={inventoryObjects}
-		></InventoryDisplay>
+		<InventoryDisplay player={player} classroom={classroom} inventoryObjects={inventoryObjects} />
 	)
 }

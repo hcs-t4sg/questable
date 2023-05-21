@@ -59,6 +59,7 @@ export async function deleteForumPost(classroomID: string, postID: string) {
 	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}`))
 }
 
+// Mutation to update the likes on a forum post
 export async function updateForumPostLikes(
 	classroomID: string,
 	postID: string,
@@ -77,6 +78,7 @@ export async function updateForumPostLikes(
 	}
 }
 
+// Mutation to add comment to a forum post
 export async function addComment(
 	comment: {
 		content: string
@@ -102,6 +104,7 @@ export async function deleteForumComment(classroomID: string, postID: string, co
 	await deleteDoc(doc(db, `classrooms/${classroomID}/forumPosts/${postID}/comments/${commentID}`))
 }
 
+// Mutation to update the likes on a forum post comment
 export async function updateForumCommentLikes(
 	classroomID: string,
 	postID: string,
@@ -121,6 +124,7 @@ export async function updateForumCommentLikes(
 	}
 }
 
+// Mutation to update pinned comments on a forum post
 export async function updateForumPostPinned(
 	classroomID: string,
 	postID: string,

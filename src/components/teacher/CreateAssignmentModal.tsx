@@ -30,7 +30,7 @@ import {
 	ModalTitle,
 	TeacherModalStyled,
 	TaskModalContent,
-} from '../../styles/TaskModalStyles'
+} from '../../styles/ModalStyles'
 import { useSnackbar } from 'notistack'
 
 function containsOnlyNumbers(str: string) {
@@ -50,7 +50,10 @@ function maxCompletionsIsInvalid(maxCompletions: string) {
 	return false
 }
 
-export default function CreateTaskModal({
+// Modal for creating a regular assignment (task/repeatable)
+// TODO: Perhaps separate this into create task modal and create repeatable modal
+
+export default function CreateAssignmentModal({
 	classroom,
 	player,
 }: {
@@ -162,48 +165,33 @@ export default function CreateTaskModal({
 		}
 	}
 
-	const openButton = (
-		<Button
-			variant='contained'
-			sx={{
-				width: 1,
-				[theme.breakpoints.down('mobile')]: {
-					fontSize: '15px',
-				},
-			}}
-			onClick={handleOpen}
-			startIcon={<AddCircleOutlineIcon />}
-		>
-			Create Manually
-		</Button>
-	)
-
 	const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
 		setIsRepeatable(newValue === 1)
 	}
 
-	const repeatableButton = (
-		<Tabs variant='fullWidth' value={isRepeatable ? 1 : 0} onChange={handleTabChange}>
-			<Tab label='One Time' />
-			<Tab label='Repeatable' />
-		</Tabs>
-	)
-
-	const actionButtons = (
-		<DialogActions>
-			<Button variant='contained' type='submit'>
-				Add Task
-			</Button>
-		</DialogActions>
-	)
-
 	return (
 		<>
-			{openButton}
+			{/* Open button */}
+			<Button
+				variant='contained'
+				sx={{
+					width: 1,
+					[theme.breakpoints.down('mobile')]: {
+						fontSize: '15px',
+					},
+				}}
+				onClick={handleOpen}
+				startIcon={<AddCircleOutlineIcon />}
+			>
+				Create Manually
+			</Button>
+			{/* Modal */}
 			<TeacherModalStyled open={open} onClose={handleClose}>
 				<ModalTitle onClick={handleClose} text='Create Task' />
-
-				{repeatableButton}
+				<Tabs variant='fullWidth' value={isRepeatable ? 1 : 0} onChange={handleTabChange}>
+					<Tab label='One Time' />
+					<Tab label='Repeatable' />
+				</Tabs>
 				<TaskModalContent>
 					<Box
 						component='form'
@@ -277,12 +265,14 @@ export default function CreateTaskModal({
 									<MenuItem value={40}>40g</MenuItem>
 								</Select>
 							</FormControl>
-							{/* </Box> */}
 						</BoxInModal>
 						<br />
-						{/* center the save button */}
 						<Grid container justifyContent='center'>
-							{actionButtons}
+							<DialogActions>
+								<Button variant='contained' type='submit'>
+									{`Add ${isRepeatable ? 'Repeatable' : 'Task'}`}
+								</Button>
+							</DialogActions>
 						</Grid>
 					</Box>
 				</TaskModalContent>

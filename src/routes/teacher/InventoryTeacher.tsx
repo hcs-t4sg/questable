@@ -1,11 +1,18 @@
 import InventoryDisplay from '../../components/global/InventoryDisplay'
 import { Classroom, Item, Player } from '../../types'
-import { getHairItems, getPantsItems, getShirtItems, getShoesItems } from '../../utils/items'
+import {
+	getHairItems,
+	getAllPantsItems,
+	getAllShirtItems,
+	getAllShoesItems,
+} from '../../utils/items'
 
 const hairs: Item[] = getHairItems()
-const shirts: Item[] = getShirtItems()
-const pants: Item[] = getPantsItems()
-const shoes: Item[] = getShoesItems()
+const shirts: Item[] = getAllShirtItems()
+const pants: Item[] = getAllPantsItems()
+const shoes: Item[] = getAllShoesItems()
+
+// Route for teacher inventory
 
 export default function InventoryTeacher({
 	player,
@@ -14,13 +21,14 @@ export default function InventoryTeacher({
 	player: Player
 	classroom: Classroom
 }) {
-	const inventoryObjects = hairs.concat(shirts, pants, shoes)
+	// Teacher inventory contains all purchasable items (hair, shirts, pants, shoes). Note that all bodies and eye colors are available to both students and teachers (not purchasable), which is why they are not generated here.
+	const allPurchasableItems = hairs.concat(shirts, pants, shoes)
 
 	return (
 		<InventoryDisplay
 			player={player}
 			classroom={classroom}
-			inventoryObjects={inventoryObjects}
-		></InventoryDisplay>
+			inventoryObjects={allPurchasableItems}
+		/>
 	)
 }

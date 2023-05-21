@@ -4,6 +4,8 @@ import PlayerCard from '../../components/global/PlayerCard'
 import { User } from 'firebase/auth'
 import { Classroom, Player } from '../../types'
 
+// Route for displaying classroom-specific student settings
+
 export default function StudentSettings({
 	player,
 	classroom,
@@ -16,13 +18,11 @@ export default function StudentSettings({
 	const theme = useTheme()
 	const mobile = useMediaQuery(theme.breakpoints.down('mobile'))
 	return (
-		<>
-			<Grid item xs={12}>
-				<Typography sx={{ fontSize: !mobile ? '32px' : '18px' }} variant='h4'>
-					Student Profile
-				</Typography>
-				<PlayerCard player={player} user={user} classroom={classroom} />
-			</Grid>
-		</>
+		<Grid item xs={12}>
+			<Typography sx={{ fontSize: !mobile ? '32px' : '18px' }} variant='h4'>
+				Student Profile
+			</Typography>
+			<PlayerCard player={player} user={user} classroom={classroom} />
+		</Grid>
 	)
 }

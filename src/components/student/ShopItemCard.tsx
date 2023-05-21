@@ -1,8 +1,10 @@
 import Button from '@mui/material/Button'
 import { Classroom, Item, Outfit, Player } from '../../types'
 import { purchaseItem } from '../../utils/mutations/shop'
-import { ItemInfoCard } from '../global/ItemInfoCard'
+import { ItemInfoCardWrapper } from '../global/ItemInfoCardWrapper'
 import { useSnackbar } from 'notistack'
+
+// Card for a particular item in shop
 
 export function ShopItemCard({
 	item,
@@ -25,10 +27,10 @@ export function ShopItemCard({
 	}
 
 	return (
-		<ItemInfoCard item={item} itemPrice={itemPrice} bodyOutfit={bodyOutfit}>
+		<ItemInfoCardWrapper item={item} itemPrice={itemPrice} bodyOutfit={bodyOutfit}>
 			<Button variant='contained' color='success' size='small' onClick={handlePurchase}>
 				Purchase
 			</Button>
-		</ItemInfoCard>
+		</ItemInfoCardWrapper>
 	)
 }

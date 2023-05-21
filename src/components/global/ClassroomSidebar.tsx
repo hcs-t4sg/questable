@@ -38,6 +38,8 @@ const Drawer = styled(MuiDrawer, {
 	},
 }))
 
+// Component for page sidebar in classroom view
+
 export default function ClassroomSidebar({ role }: { role: UserRole }) {
 	const [open, setOpen] = React.useState(false)
 	const toggleDrawer = () => {

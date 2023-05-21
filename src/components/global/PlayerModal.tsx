@@ -10,6 +10,8 @@ import { useState } from 'react'
 import { Classroom, Player } from '../../types'
 import { updatePlayer } from '../../utils/mutations/users'
 
+// Modal showing detailed information about the user's current player (utilized in settings)
+
 export default function PlayerModal({
 	player,
 	user,

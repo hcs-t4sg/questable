@@ -22,6 +22,6 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-, "deprecated/ClassroomModalContent.tsx"  ]
+		"src"
+	]
 }

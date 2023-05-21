@@ -14,6 +14,8 @@ import ShopTeacher from './ShopTeacher'
 import Avatar from '../global/Avatar'
 import { currentAvatar } from '../../utils/items'
 
+// Teacher view of classroom page
+
 export default function TeacherView({
 	player,
 	classroom,

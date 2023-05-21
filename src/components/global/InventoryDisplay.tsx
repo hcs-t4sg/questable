@@ -2,37 +2,12 @@ import { Box, Grid, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/
 import React from 'react'
 import { InventoryItemCard } from '../student/InventoryItemCard'
 import { Classroom, Item, Player } from '../../types'
-import { currentAvatar, getBodyItems, getEyesItems } from '../../utils/items'
+import { currentAvatar, getBodyItems, getAllEyesItems } from '../../utils/items'
 import wood2 from '/src/assets/Wood2.png'
+import { TabPanel, a11yProps } from './Tabs'
 
-interface TabPanelProps {
-	children?: React.ReactNode
-	index: number
-	value: number
-}
-
-function TabPanel(props: TabPanelProps) {
-	const { children, value, index, ...other } = props
-
-	return (
-		<div
-			role='tabpanel'
-			hidden={value !== index}
-			id={`simple-tabpanel-${index}`}
-			aria-labelledby={`simple-tab-${index}`}
-			{...other}
-		>
-			{value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-		</div>
-	)
-}
-
-function a11yProps(index: number) {
-	return {
-		id: `simple-tab-${index}`,
-		'aria-controls': `simple-tabpanel-${index}`,
-	}
-}
+// Display a user's inventory given a set of items
+// TODO: The passing of props into InventoryDisplay could be better organized to avoid the use of many .filter() operations in this component
 
 export default function InventoryDisplay({
 	player,
@@ -184,7 +159,7 @@ export default function InventoryDisplay({
 					</TabPanel>
 					<TabPanel value={value} index={6}>
 						<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-							{getEyesItems().map((item, index) => (
+							{getAllEyesItems().map((item, index) => (
 								<Grid item xs={2} sm={3} md={3} key={index}>
 									<InventoryItemCard item={item} player={player} classroom={classroom} />
 								</Grid>

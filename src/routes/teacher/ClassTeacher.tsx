@@ -23,6 +23,8 @@ import { Classroom, Player, PlayerWithEmail } from '../../types'
 import { levelUp } from '../../utils/helperFunctions'
 import { currentAvatar } from '../../utils/items'
 
+// Route displaying class view for teacher
+
 export default function ClassTeacher({
 	player,
 	classroom,
@@ -30,16 +32,19 @@ export default function ClassTeacher({
 	player: Player
 	classroom: Classroom
 }) {
+	// TODO: For future refactoring the leaders state variable can be removed as the leaders can just be calculated from the students list. It is better to have a single source of state from which other parameters are calculated rather than maintaining multiple state variables in sync
 	const [students, setStudents] = useState<PlayerWithEmail[] | null>(null)
 	const [leaders, setLeaders] = useState<PlayerWithEmail[] | null>(null)
 
+	// Listen for list of students in classroom
 	useEffect(() => {
 		const playersRef = collection(db, `classrooms/${classroom.id}/players`)
 		const playerQuery = query(playersRef)
 
 		const unsub = onSnapshot(playerQuery, (snapshot) => {
-			const mapTeacher = async () => {
+			const fetchAllPlayerData = async () => {
 				const players = await Promise.all(
+					// Fetch user data (notably email) from list of students obtained from snapshot
 					snapshot.docs.map(async (player) => {
 						const playerData = await getUserData(player.id)
 						if (!playerData) {
@@ -70,7 +75,7 @@ export default function ClassTeacher({
 					setLeaders(leadersList)
 				}
 			}
-			mapTeacher().catch(console.error)
+			fetchAllPlayerData().catch(console.error)
 		})
 		return unsub
 	}, [classroom, player])

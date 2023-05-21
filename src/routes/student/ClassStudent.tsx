@@ -26,6 +26,8 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { levelUp } from '../../utils/helperFunctions'
 
+// Route displaying class view for student
+
 export default function ClassStudent({
 	player,
 	classroom,
@@ -43,9 +45,11 @@ export default function ClassStudent({
 		const playerRef = collection(db, `classrooms/${classroom.id}/players`)
 		const playerQuery = query(playerRef)
 
-		// TODO: Rewrite the promise.all call to prune the rejected users from the output array, not reject everything
+		// Listen for other students in classroom
 		const unsub = onSnapshot(playerQuery, (snapshot) => {
-			const mapTeacher = async () => {
+			const fetchPlayerData = async () => {
+				// TODO: Rewrite the promise.all call to prune the rejected users from the output array, not reject everything
+				// Fetch user data (notably email) from list of students obtained from snapshot
 				const players = await Promise.all(
 					snapshot.docs.map(async (player) => {
 						const playerData = await getUserData(player.id)
@@ -67,7 +71,7 @@ export default function ClassStudent({
 
 				const studentList = players.filter((player) => player.role !== 'teacher')
 				setStudents(studentList)
-
+				// TODO: For future refactoring the leaders state variable can be removed as the leaders can just be calculated from the students list. It is better to have a single source of state from which other parameters are calculated rather than maintaining multiple state variables in sync
 				const leadersList = players
 					.filter((player) => player.role !== 'teacher')
 					.sort((player1, player2) => player2.xp - player1.xp)
@@ -75,7 +79,7 @@ export default function ClassStudent({
 
 				setLeaders(leadersList)
 			}
-			mapTeacher().catch(console.error)
+			fetchPlayerData().catch(console.error)
 		})
 		return unsub
 	}, [player, classroom])

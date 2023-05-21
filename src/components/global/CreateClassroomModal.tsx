@@ -10,6 +10,8 @@ import { addClassroom } from '../../utils/mutations/classroom'
 import { User } from 'firebase/auth'
 import { useSnackbar } from 'notistack'
 
+// Dialog for creating a new classroom
+
 export default function CreateClassroomModal({ user }: { user: User }) {
 	const { enqueueSnackbar } = useSnackbar()
 
@@ -48,15 +50,11 @@ export default function CreateClassroomModal({ user }: { user: User }) {
 			})
 	}
 
-	const openButton = (
-		<Button variant='contained' onClick={handleClickOpen}>
-			Create classroom
-		</Button>
-	)
-
 	return (
 		<>
-			{openButton}
+			<Button variant='contained' onClick={handleClickOpen}>
+				Create classroom
+			</Button>
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>{'Create Classroom'}</DialogTitle>
 				<DialogContent>

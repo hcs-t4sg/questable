@@ -18,7 +18,7 @@ import {
 	ModalTitle,
 	BoxInModal,
 	TeacherModalStyled,
-} from '../../styles/TaskModalStyles'
+} from '../../styles/ModalStyles'
 import { useSnackbar } from 'notistack'
 
 function containsOnlyNumbers(str: string) {
@@ -37,6 +37,8 @@ function maxCompletionsIsInvalid(maxCompletions: string) {
 	}
 	return false
 }
+
+// Modal for viewing detailed information about a repeatable
 
 export default function RepeatableModalTeacher({
 	repeatable,

@@ -2,7 +2,7 @@ import { Typography } from '@mui/material'
 import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google'
 import { useState } from 'react'
 import jwt_decode from 'jwt-decode'
-import { clientID } from '../../utils/google'
+import { clientID } from '../src/utils/google'
 
 // need to fully understand https://www.youtube.com/watch?v=HtJKUQXmtok&ab_channel=CooperCodes
 

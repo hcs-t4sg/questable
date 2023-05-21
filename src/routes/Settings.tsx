@@ -1,8 +1,10 @@
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Layout from '../components/global/Layout'
-import GoogleLogin from '../utils/GoogleLogin'
+import GoogleLogin from '../components/global/GoogleLogin'
 import { User } from 'firebase/auth'
+
+// Route displaying global user settings
 
 export default function Settings({ user }: { user: User }) {
 	return (

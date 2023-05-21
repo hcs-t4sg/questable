@@ -21,6 +21,8 @@ import { useSnackbar } from 'notistack'
 import { truncate } from '../../utils/helperFunctions'
 import Fuse from 'fuse.js'
 
+// Table listing teacher's created repeatables
+
 export default function RepeatableTableTeacher({
 	classroom,
 	searchInput,
@@ -42,6 +44,7 @@ export default function RepeatableTableTeacher({
 		minMatchCharLength: 3,
 	}
 
+	// Listen to classroom repeatables
 	useEffect(() => {
 		const repeatableCollectionRef = collection(db, `classrooms/${classroom.id}/repeatables`)
 		const unsub = onSnapshot(repeatableCollectionRef, (snapshot) => {
@@ -53,6 +56,8 @@ export default function RepeatableTableTeacher({
 		return unsub
 	}, [classroom])
 
+	// Filter repeatables based on search input
+	// TODO: A useEffect may not be necessary here. You could just filter the queried repeatables according to searchInput before returning. The current structure of two different useEffects managing repeatables seems a bit complex and could possibly be simplified.
 	useEffect(() => {
 		if (searchInput != '') {
 			setRepeatables(fuse.search(searchInput).map((elem) => elem.item))

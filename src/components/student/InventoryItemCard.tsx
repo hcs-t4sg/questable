@@ -1,7 +1,9 @@
 import Button from '@mui/material/Button'
 import { Classroom, Item, Outfit, Player } from '../../types'
 import { updateAvatar } from '../../utils/mutations/users'
-import { ItemInfoCard } from '../global/ItemInfoCard'
+import { ItemInfoCardWrapper } from '../global/ItemInfoCardWrapper'
+
+// Card displaying an item in student inventory
 
 export function InventoryItemCard({
 	item,
@@ -22,10 +24,10 @@ export function InventoryItemCard({
 	}
 
 	return (
-		<ItemInfoCard item={item} bodyOutfit={bodyOutfit}>
+		<ItemInfoCardWrapper item={item} bodyOutfit={bodyOutfit}>
 			<Button variant='contained' color='success' size='small' onClick={handleEquip}>
 				Equip
 			</Button>
-		</ItemInfoCard>
+		</ItemInfoCardWrapper>
 	)
 }

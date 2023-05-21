@@ -13,8 +13,8 @@ import { db } from '../../utils/firebase'
 import Fuse from 'fuse.js'
 import { truncate } from '../../utils/helperFunctions'
 import Loading from '../global/Loading'
-import { rewardPotion } from './AssignmentContentStudent'
 import RepeatableModalStudent from './RepeatableModalStudent'
+import { assignmentPotion } from '../../utils/items'
 
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import { IconButton } from '@mui/material'
@@ -22,6 +22,8 @@ import createDOMPurify from 'dompurify'
 import { useSnackbar } from 'notistack'
 import { completeRepeatable } from '../../utils/mutations/repeatables'
 const DOMPurify = createDOMPurify(window)
+
+// Row in the repeatable table for a particular repeatable
 
 function RepeatableTableRow({
 	repeatable,
@@ -32,8 +34,16 @@ function RepeatableTableRow({
 	classroom: Classroom
 	player: Player
 }) {
+	const [modalIsOpen, setModalIsOpen] = useState(false)
+
+	const toggleOpen = () => {
+		setModalIsOpen(!modalIsOpen)
+	}
+
+	const { enqueueSnackbar } = useSnackbar()
+
+	// Listen to the number of completions the player has queued for this repeatable
 	const [completions, setCompletions] = useState<number | null>(null)
-	const [confirmations, setConfirmations] = useState<number | null>(null)
 	useEffect(() => {
 		const completionsRef = doc(
 			db,
@@ -44,12 +54,15 @@ function RepeatableTableRow({
 			if (doc.exists()) {
 				setCompletions(doc.data().completions)
 			} else {
+				// Accounts for players who joined the classroom after the repeatable was created; in which case they may not have a document in playerCompletions.
 				setCompletions(0)
 			}
 		})
 		return unsub
 	}, [repeatable, classroom, player])
 
+	// Listen to the number of confirmations the player has received for this repeatable
+	const [confirmations, setConfirmations] = useState<number | null>(null)
 	useEffect(() => {
 		const confirmationsRef = doc(
 			db,
@@ -60,6 +73,7 @@ function RepeatableTableRow({
 			if (doc.exists()) {
 				setConfirmations(doc.data().confirmations)
 			} else {
+				// Accounts for players who joined the classroom after the repeatable was created; in which case they may not have a document in playerCompletions.
 				setConfirmations(0)
 			}
 		})
@@ -71,14 +85,6 @@ function RepeatableTableRow({
 		completions: completions ?? 0,
 		confirmations: confirmations ?? 0,
 	}
-
-	const [modalIsOpen, setModalIsOpen] = useState(false)
-
-	const toggleOpen = () => {
-		setModalIsOpen(!modalIsOpen)
-	}
-
-	const { enqueueSnackbar } = useSnackbar()
 
 	const handleComplete = () => {
 		setModalIsOpen(false)
@@ -98,7 +104,7 @@ function RepeatableTableRow({
 
 	return (
 		<TableRow key={repeatable.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-			<TableCell>{rewardPotion(repeatable.reward)}</TableCell>
+			<TableCell>{assignmentPotion(repeatable.reward)}</TableCell>
 			<TableCell component='th' scope='row'>
 				{repeatable.name}
 			</TableCell>
@@ -132,6 +138,8 @@ function RepeatableTableRow({
 	)
 }
 
+// Table displaying repeatables for a student
+
 export default function RepeatableTableStudent({
 	classroom,
 	player,
@@ -152,6 +160,7 @@ export default function RepeatableTableStudent({
 		minMatchCharLength: 3,
 	}
 
+	// Listen to classroom repeatables
 	useEffect(() => {
 		const repeatableCollectionRef = query(collection(db, `classrooms/${classroom.id}/repeatables`))
 		const unsub = onSnapshot(repeatableCollectionRef, (snapshot) => {
@@ -169,6 +178,7 @@ export default function RepeatableTableStudent({
 		return unsub
 	}, [classroom, player])
 
+	// TODO: A useEffect may not be necessary here. You could just filter the queried repeatables according to searchInput before returning. The current structure of two different useEffects managing repeatables seems a bit complex and could possibly be simplified.
 	useEffect(() => {
 		if (searchInput != '') {
 			setRepeatables(fuse.search(searchInput).map((elem) => elem.item))
