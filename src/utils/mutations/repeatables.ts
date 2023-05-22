@@ -20,11 +20,11 @@ import { db } from '../firebase'
 
 // Note: The current logic assumes that repeatables are refreshed every sunday. Adding more functionality will require significant modifications to the existing logic for these mutations. In this case I would recommend just writing them from scratch since there are also other inefficiencies to be fixed (see above)
 
-// Helper function to get last sunday 11:59 in current timezone
+// Helper function to get last sunday 23:59:59.999 in current timezone
 function lastSunday() {
 	const date = new Date()
 	date.setDate(date.getDate() - date.getDay())
-	date.setHours(0, 0, 0, 0)
+	date.setHours(23, 59, 59, 999)
 	return date
 }
 
@@ -67,7 +67,7 @@ export async function addRepeatable(
 			await setDoc(
 				doc(db, `classrooms/${classID}/repeatables/${repeatableRef.id}/lastRefresh`, playerID),
 				{
-					// Set lastRefresh to most recent Sunday Midnight instead
+					// Set lastRefresh to most recent Sunday 23:59:59.999 instead
 					lastRefresh: lastSunday(),
 				},
 			)
