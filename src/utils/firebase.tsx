@@ -21,12 +21,12 @@ import { Grid, Typography } from '@mui/material'
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-	authDomain: 'questable-34d85.firebaseapp.com',
-	projectId: 'questable-34d85',
-	storageBucket: 'questable-34d85.appspot.com',
-	messagingSenderId: '904433822725',
+	authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+	projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+	storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+	messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
 	appId: import.meta.env.VITE_FIREBASE_APP_ID,
-	measurementId: 'G-DRESZ3V18Q',
+	measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 }
 
 // Configure FirebaseUI.
