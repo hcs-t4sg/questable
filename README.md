@@ -1,6 +1,8 @@
 # Questable
 
-![questable logo](https://github.com/hcs-t4sg/questable/blob/cdf0bdccbd73f53326383c13c0bd876807d2d3f2/.github/logo.png)
+<p align="center">
+  <img width="460" height="300" src="https://github.com/hcs-t4sg/questable/blob/cdf0bdccbd73f53326383c13c0bd876807d2d3f2/.github/logo.png">
+</p>
 
 Questable is an open-source, gamified learning management system (LMS) designed by Harvard Computer Society [Tech for Social Good](https://socialgood.hcs.harvard.edu) (T4SG). It integrates into the classroom workflow to provide an "RPG-style" learning experience that rewards students ingame for completing various classroom tasks (e.g. related to assignments, studying, or participation). Questable is targeted towards K-6 audiences and aims to provide educators with a valuable tool to motivate classroom participation and academic engagement.
 
