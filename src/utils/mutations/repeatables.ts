@@ -21,6 +21,7 @@ import { db } from '../firebase'
 // Note: The current logic assumes that repeatables are refreshed every sunday. Adding more functionality will require significant modifications to the existing logic for these mutations. In this case I would recommend just writing them from scratch since there are also other inefficiencies to be fixed (see above)
 
 // Helper function to get last sunday 23:59:59.999 in current timezone
+// TODO: Current repeatable refresh functionality assumes that both teacher and students are in the same timezone all the time. Refreshing will get buggy if either switches timezones. To avoid these bugs, you should add logic that prompts the teacher to set a classroom timezone, then modify lastSunday() to get the last sunday 23:59.999 in that specific timezone.
 function lastSunday() {
 	const date = new Date()
 	date.setDate(date.getDate() - date.getDay())

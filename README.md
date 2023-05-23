@@ -1,159 +1,82 @@
 # Questable
 
-## Pinned Resources
+Questable is an open-source, gamified learning management system (LMS) designed by Harvard Computer Society [Tech for Social Good](https://socialgood.hcs.harvard.edu) (T4SG). It integrates into the classroom workflow to provide an "RPG-style" learning experience that rewards students ingame for completing various classroom tasks (e.g. related to assignments, studying, or participation). Questable is targeted towards K-6 audiences and aims to provide educators with a valuable tool to motivate classroom participation and academic engagement.
 
-* [Database diagram](https://lucid.app/lucidchart/84a5f8af-49fd-4dac-8bdf-e5359f23e7cd/edit?viewport_loc=1704%2C37%2C1192%2C625%2C0_0&invitationId=inv_266a2ab9-176a-48f3-a437-fe2826087282)
-  * Contains the schema for the Firebase backend. At the moment this covers both present and yet-to-be-implemented functionality.
-* [Figma](https://www.figma.com/files/project/69509974/Questable?fuid=893746170428728405)
-  * Contains lo-fi and hi-fi designs for reference when implementing features
-* [Project specification](https://docs.google.com/document/d/1zEYQ_8ralRbhlfwCbdIvLIlCnB7eBjLtU0hESD7DCA8/edit?usp=sharing)
-  * High-level description of Questable's base features
+---
+## Overview of Functionality
 
-## Setup
+You can watch a video walkthrough of Questable's functionality as of May 2023 [here](https://youtu.be/9pHFQeNmg2M). A live demo version of Questable can be found at [questable.vercel.app](https://questable.vercel.app).
 
-### Clone repository
+### Logging in
+Users can log into Questable using an email and password or their Google account. Please use an email you have access to. 
 
-`cd` into a desired destination folder, then clone the repo (preferably using SSH):
+### Classrooms, teachers, and students
+On Questable's home page (accessible by clicking the logo in the top left), users can create new classrooms, join existing classrooms, and view all the classrooms they are currently in. They can also pin important classrooms to the top of the page. 
 
-```shell
-git clone git@github.com:hcs-t4sg/questable.git
+Users are set as teachers in classrooms they create and students in clasrooms they join. Teachers can copy the join code for their created classroom and distribute it to students, who can then join the classroom by entering the code.
+
+While on Questable's home page, clicking on the card for a classroom will open the page for that classroom.
+
+### In-game avatars
+Every member of a classroom (both teachers and students) has an in-game character unique to that classroom, represented by an avatar. Upon entering a classroom for the first time, the user will be prompted to enter their character's name and customize their avatar's appearance.
+
+### Tasks (One-time and repeatable)
+Teachers can create tasks in Questable that correspond to real-world classroom assignments (e.g. "Complete Monday's math homework", "Finish the essay on plants", "Bring signed permission slip", etc.). Tasks created in Questable are automatically assigned to all students in the classroom, even students that join after the task is created. As part of Questable's gamified experiences, tasks are represented to students as "quests" in the Quests page of the classroom. 
+
+Once a student completes the corresponding classroom assignment, they can mark the task as complete in their Quests page. This creates a request in the teacher's Requests page to verify the task's completion. Once the teacher verifies that the student completed the corresponding real-world assignment (e.g. checks to make sure the student wrote the essay), they can confirm the completion of the task, after which the student will be rewarded with a specified amount of in-game currency (gold). If the student marked the task as complete without actually completing the corresponding real-world assignment, the teacher can deny the completion of the task, and the task will be sent back to the student's Quests page for another try.
+
+Teachers have the option to create one-time tasks or repeatable tasks. One-time tasks have a specified due-date, after which students will not be able to mark the task as complete. These are useful for traditional, non-repeating classroom assignments like homework assignments, essays, exams, projects, etc. 
+
+On the other hand, repeatable tasks are better suited for regularly reoccurring items (e.g. weekly quizzes) or for classroom habits a teacher wishes to incentivize (e.g. "ask a question in class" or "help a classmate on an activity"). Instead of a due date, repeatable tasks have a specified maximum number of completions per week. Students can complete and receive confirmation for a repeatable task multiple times up to the maximum allowed number every week. Completions for repeatable tasks "reset" every Sunday at 11:59 PM, and the teacher does not have to recreate the repeatable.
+
+### Google Classroom integration
+To make it easier for teachers to maintain their Questable classrooms, Questable offers an integration with existing Google Classrooms when teachers log into their Google account in the Settings page. When creating a one-time task, teachers can import existing assignments from Google Classroom to autofill the task details. One-time tasks created this way are now linked to the corresponding Google Classroom assignments. On the Requests page, teachers have the option to mass-process all one-time tasks linked to Google Classroom, which will confirm or deny the task completion based on if the student has turned in the corresponding Google Classroom assignment.
+
+### In-game shop and rewards
+Students are rewarded with in-game currency ("gold") for completing tasks. Students can use their gold in the Shop page to purchase items/accessories to customize their in-game avatars. The teacher can also create and manage custom rewards to be displayed to students in the Shop (purchasable with gold). Teachers should set the description of these rewards to correspond to real-world classroom rewards (e.g. "lunch with the teacher", "homework pass", etc.). If a student purchases a custom reward, a record of that purchase will be added to the teacher's Requests page. The teacher should confirm the reward once given to the student in real life.
+
+### Class page, character levels, and experience
+The Class page shows an overview of all students in the classroom. The teacher's class page shows detailed statistics related to each student and allows the teacher to manually edit players' gold balances or character names, if needed. The students' class page shows the avatars, names, and emails of other students.
+
+Additionally, the students' class page displays a class leaderboard based on the students' character level. Every time a student gains gold for completing a task, they earn the same amount of experience points (xp). The student's character's level is then calculated from a formula using their total amount of experience points. For privacy reasons, students can only see each other students' levels but not their total experience points, and the class leaderboard only displays the highest-level students in the class. In the classroom settings, the teacher can toggle whether the leaderboard is visible to students and adjust the number of students to display in the leaderboard.
+
+### Class forum
+Each classroom has a forum where students/teachers can make posts discussing classroom material. Posts are searchable and can be assigned to one of several preset categories. When creating a post, the student has the option to post anonymously (such as for asking an anonymous question). In classroom settings, the teacher can toggle whether students are allowed to retroactively edit or delete their forum posts.
+
+Each forum post has a chatroom-style comment section where class participants can further discuss the post content. Finally, the teacher and author of the post have the option to pin helpful comments to the top of the post so that they are more visible. 
+
+### Other settings
+Students and teachers can change their character name in the Settings page for each classroom.
+
+---
+## Installation and setup
+
+Teachers/students wishing to test Questable's features can visit our live deployment at [questable.vercel.app](https://questable.vercel.app). Please note that Questable is still working towards a full "commercial-grade" deployment, so please do not store any sensitive data on the Questable website as it may be erased at some point.
+
+If you are a developer and wishing to host your own deployment of Questable, you will need to set up a Firebase project for authentication/database and Google Cloud project for the Google Classroom API connection. The following environment variables should be configured (such as in an `.env.local` and in the environment variables of a hosting provider) to connect to Firebase and Google Cloud:
+```
+# Google Cloud keys (for Google login)
+
+VITE_GOOGLE_CLIENT_ID=
+VITE_GOOGLE_CLIENT_SECRET=
+VITE_GOOGLE_API_KEY=
+
+# Firebase backend keys
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+VITE_FIREBASE_MEASUREMENT_ID=
 ```
 
-### Package installation and initial testing
+---
+## Acknowledgements
 
-1. Open the project folder in VSCode.
+We would like to thank the following teams for all of their hard work building Questable as a project under Harvard Tech for Social Good:
+* Hannah, Eileen, Matthew, Ron, Cole, Alex, 
+* Fall 2022: Alex, Cole, Eileen, Hannah, Matthew, and Ron
+* Spring 2023: Ashley, Eileen, Evelyn, Itzel, Jayden, and Matthew
 
-2. You should see a popup in the bottom right prompting you to install recommended extensions. Please install these, they'll be helpful for code formatting and developing the webapp. You can also view the recommended extensions in the extensions sidebar (`cmd + shift + X`.) You will also get a prompt to use the workspace's Typescript version; accept it.
-
-3. Open a terminal in the project folder by dragging up from the bottom of the code window or by going to `Terminal > New Terminal` in the menu bar.
-
-4. Run: `npm install` (`npm i` for short)
-
-   * You might get some sort of `ERESOLVE... dependency conflict` error. That's fine, just run `npm install -force` (`npm i -f` for short).
-   * If you get something like "command not found", you might not have `npm` installed.
-
-   * If successful you should see something like:
-
-   ```bash
-   added 1588 packages, and audited 1589 packages in 28s
-   
-   241 packages are looking for funding
-     run `npm fund` for details
-   
-   6 high severity vulnerabilities
-   
-   To address all issues (including breaking changes), run:
-     npm audit fix --force
-   
-   Run `npm audit` for details.
-   ```
-
-   * You don't have to do anything else with the output. Ignore the security vulnerabilities, they're not severe and usually just caused by poor maintenance by package developers.
-
-5. Run `npm start` to start the webapp. You should be able to open and view the app in `localhost` without any bugs.
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-## Tech and Development Stack Overview + Resources
-
-### Tech Stack
-
-* Current stack:
-  * Typescript
-    * [Documentation](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)
-    * [TS in 100 seconds](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=video&cd=&cad=rja&uact=8&ved=2ahUKEwjN3cqGuY79AhWKE1kFHYtdAlkQtwJ6BAgJEAI&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DzQnBQ4tB3ZA&usg=AOvVaw1iy4LRy3OK_iN9zbe6MJKl)
-  * React
-    * [Beta documentation](https://beta.reactjs.org) is most helpful
-    * Our frontend Javascript framework!
-  * Firebase
-    * [Cloud Firestore](https://firebase.google.com/docs/firestore): Our database
-    * [Firebase Authentication](https://firebase.google.com/docs/auth): Our user authentication framework
-  * MUI
-    * [Documentation](https://mui.com/material-ui/getting-started/overview/) 
-      * Make sure you're on v5 docs and not v4 docs!
-      * Generally the condensed code snippets in the documentation are enough for understanding the components, but you can click `<>` to view detailed source code in Typescript and/or Javascript
-    * Our current component library. We may at some point migrate out of this into a more streamlined, easy-to-use framework (see below)
-* Future stack:
-  * Next.js
-    * [Documentation](https://nextjs.org)
-    * An industry-grade "extension" of React with several optimizations for more performant webapps
-  * Potentially [Chakra UI](https://chakra-ui.com) or [Mantine](https://mantine.dev) or even [Tailwind UI](https://tailwindui.com/components) with [Tailwind CSS](https://tailwindcss.com)
-
-### Development Tools
-
-* Linting and formatting tools:
-
-  * ESLint: Our Javascript linter. Statically analyzes our code to detect issues in formatting/consistency
-  * Prettier: Our automatic code formatter. Better formatting capabilities than ESLint but doesn't handle quality issues
-  * EditorConfig: Helps VSCode conform to our formatting settings as we code. 
-
-  * Husky: Git hooks that auto-lint and format our code when we make a `git commit`
-
-* Misc:
-
-  * Better Comments: Allows you to add different types of comments like `// TODO` (todo), `// !` (error), `// ?` (question), etc.
-  * Git Blame: Shows who made the last commit to the current line of code in VS Code's bottom status bar
-  * VS Code Liveshare: Allows you to share your codespace with a teammate for working on the same files
-
-## Starter Project
-
-Questable moved quite quickly in development last semester, but as a result of the rapid feature implementation there's a decent amount of repetition, redundancy, and inefficiency in our code. These issues will make the code tough to maintain/continue developing on if not addressed. The purpose of this starter project is to help you get familiarized with Questable's codebase and figure out ways we can make it more streamlined.
-
-### Questable-related Reading (15 min)
-
-* Read through the [project specification](https://docs.google.com/document/d/1zEYQ_8ralRbhlfwCbdIvLIlCnB7eBjLtU0hESD7DCA8/edit?usp=sharing) for Questable from last semester, specifically the **MVP0 features** and the **Stretch goals highlighted in green** (those are the ones we got to last semester).
-* Read the [Guide for SWEs](https://t4sg-wiki.notion.site/Guide-for-SWEs-7701c0ae139b49cfa65f84156c329021) here!
-
-### Technical Reading (30 min)
-
-This reading contains info on the React/MUI functionality that will be extremely useful in streamlining our code.
-
-* Read [Managing State](https://beta.reactjs.org/learn/reacting-to-input-with-state) in the React beta documentation, from "Reacting to Input with State" to "Scaling Up with Reducer and Context"
-* Read about [custom hooks](https://beta.reactjs.org/learn/reusing-logic-with-custom-hooks) in the React beta documentation
-* Read about [composition](https://reactjs.org/docs/composition-vs-inheritance.html) in React using the `children` prop
-* Read about how [reusable custom components](https://mui.com/material-ui/customization/how-to-customize/#2-reusable-component) can be created in MUI
-
-### Exercise (1 hour 15 min)
-
-* Scan through the codebase of Questable starting from `app.tsx` and sketch out a "**file/component tree**" outlining parent-child relationships between components.
-  * Ex: `App()` has 4 major children specified by the `Route` components: `Home()`, `Settings()`, `ClassroomPage()`, and `SignInScreen`.
-* For each component in the tree, make quick annotations for:
-  * What is the purpose of the component?
-  * What `props` are being received from the parent, and what are passed down to children?
-  * What `state` variables are maintained in the component and for what purpose?
-  * What data is being requested/sent to the database, if any? Is it a one-time query like `getDoc` or a subscription like `onSnapshot`?
-* Now considering your constructed component tree and reading through the codebase, think deeply about the following and write down your thoughts:
-  * Are there any `props` passed down deep into the component tree that we could lift into global `context` and `reducers`?
-  * Is data being queried repetitively from the Firestore database in many components, when it could instead be queried once in a common parent and passed down to children through `props` or `context`?
-  * Can some data fetching processes be simplified by writing a custom `hook`?
-  * Do any components have similar interfaces/MUI components that we could factor out using composition (`children`) into reusable components?
-
-**Bring your notes + thoughts to our first team meeting** so that we can have a discussion on the specific steps we can take to refactor Questable's codebase! 
-
-Hopefully this helps you get familiar with the present code and also put some thinking into programmatic design and writing maintainable code. Let me know if you have any questions!
-
-## How to Debug
-
-Bugs in our code can come from several places:
-
-* ESlint: You have some formatting/quality issues. Reading the error message can help you figure out 
-* Typescript (ts): You have some issues with incompatible or unspecified data types somewhere. These can often be super informative.
-  * For instance, are you depending on a value that could possibly be `null`? Are you not passing in all `props` required to a component?
-  * The type interfaces are specified in `types.ts`. These help enforce the kind of data we pass around the app and to/from the database, so use them extensively!
-  * **Unless absolutely necessary, do not just escape typing errors by using the `any` type!** Typescript errors almost always expose some sort of bug that can arise in production. Avoiding typescript bugs by just using `any` significantly decreases the maintainability of the codebase and will lead to much more challenging bugs in the future.
-* Firebase/React: These bugs pretty much cover everything else, and the error will typically show up in your browser console. Visit your browser console periodically through DevTools to check for bugs, and you can use `console.log` to log values and view them in console.
+Additionally, we would like to thank the support of the T4SG board and community for their valuable support and guidance throughout the development of Questable.
