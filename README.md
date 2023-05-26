@@ -1,3 +1,17 @@
+- [Questable](#questable)
+  - [Overview of Functionality](#overview-of-functionality)
+    - [Logging in](#logging-in)
+    - [Classrooms, teachers, and students](#classrooms-teachers-and-students)
+    - [In-game avatars](#in-game-avatars)
+    - [Tasks (One-time and repeatable)](#tasks-one-time-and-repeatable)
+    - [Google Classroom integration](#google-classroom-integration)
+    - [In-game shop and rewards](#in-game-shop-and-rewards)
+    - [Class page, character levels, and experience](#class-page-character-levels-and-experience)
+    - [Class forum](#class-forum)
+    - [Other settings](#other-settings)
+  - [Installation and setup](#installation-and-setup)
+  - [Acknowledgements](#acknowledgements)
+
 # Questable
 
 <p align="center">
