@@ -1,4 +1,7 @@
+# Questable
+
 - [Questable](#questable)
+  - [Introduction](#introduction)
   - [Overview of Functionality](#overview-of-functionality)
     - [Logging in](#logging-in)
     - [Classrooms, teachers, and students](#classrooms-teachers-and-students)
@@ -12,7 +15,9 @@
   - [Installation and setup](#installation-and-setup)
   - [Acknowledgements](#acknowledgements)
 
-# Questable
+---
+
+## Introduction
 
 <p align="center">
   <img width="256" height="256" src="https://github.com/hcs-t4sg/questable/blob/cdf0bdccbd73f53326383c13c0bd876807d2d3f2/.github/logo.png">
